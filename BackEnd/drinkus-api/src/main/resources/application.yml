@@ -1,0 +1,16 @@
+spring:
+  profiles:
+    active: local
+    include:
+      - domain
+      - external
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 100MB
+
+token:
+  expiration_time: 86400000
+  secret: secret
