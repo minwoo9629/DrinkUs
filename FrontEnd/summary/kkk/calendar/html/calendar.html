@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/main.css" />
+    <title>Document</title>
+    <script type="text/javascript" src="../js/calendar.js"></script>
+
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Source+Code+Pro:wght@200&family=Yanone+Kaffeesatz:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Kanit&family=Source+Code+Pro:wght@200&family=Yanone+Kaffeesatz:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik+Moonrocks&display=swap" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: rgba(234, 234, 234, 0.604);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            box-sizing: border-box;
+        }
+
+        .date_text_wrap {
+            text-align: center;
+            padding: 10px;
+            margin-top: 15px;
+        }
+
+        /* 달력 */
+        .rap {
+            max-width: 1100px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .date_form div {
+            width: 150px;
+            padding: 10px 10px;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        .date_head {
+            margin-bottom: 10px;
+        }
+
+        .date_head div {
+            background: #968a7d;
+            color: #fff;
+            /* border-radius: 20px; */
+            text-align: center;
+            font-size: 20px;
+            line-height: 40px;
+            height: 60px;
+            border: 3px whitesmoke solid;
+
+            font-family: 'Yanone Kaffeesatz', sans-serif;
+        }
+
+        .date_form {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            grid-gap: 5px;
+        }
+
+        .dateSel div {
+            text-align: left;
+            color: #333;
+            min-height: 130px;
+            /* padding: 16px 20px; */
+            border: 1px solid #d6d6d6bb;
+            margin-bottom: 2px;
+
+            font-family: 'Yanone Kaffeesatz', sans-serif;
+        }
+
+        .background {
+            background: #d8d8d8;
+        }
+
+        #today {
+            background-color: #c984526a;
+            color: white;
+        }
+
+        .year_text {
+            font-size: 100px;
+            color: #c9835291;
+            font-family: 'Rubik Moonrocks', cursive;
+        }
+
+        .month_text {
+            text-align: center;
+            padding: 10px 0;
+            font-size: 50px;
+            /* font-family: 'Gowun Batang', serif; */
+            font-family: 'Bebas Neue', cursive;
+        }
+
+        .prev_btn, .next_btn{
+            display: inline-block;
+            width: 30px;
+        }
+
+        .prev_btn_img, .next_btn_img{
+            width: 100%;
+            height: 100%;
+        }
+
+        .btns{
+            margin-bottom: 15px;
+        }
+
+        main {
+            margin-top: 100px;
+            margin-bottom: 100px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav class="header-nav">
+            <div>
+                <a href="../index.html">
+                    <div class="logo">
+                        <img class="logo_img" src="../img/logo.png" alt="logo">
+                    </div>
+                </a>
+            </div>
+            <div>
+                <span class="nav-menu"><a href="#">로그인</a></span>
+                <span class="nav-menu"><a href="#">로그아웃</a></span>
+                <span class="nav-menu"><a href="#">정보수정</a></span>
+                <span class="nav-menu"><a href="#">회원탈퇴</a></span>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="date_text_wrap">
+            <h2 class='year_text'></h2>
+            <h2 class='month_text'></h2>
+
+            <div class="btns">
+                <div class="prev_btn" id="prev_month_btn" onclick="push_prev();">
+                    <img class="prev_btn_img" src="../img/prev.png">
+                </div>
+                <div class="next_btn" id="next_month_btn" onclick="push_next();">
+                    <img class="next_btn_img" src="../img/next.png">
+                </div>
+            </div>
+
+            <div class='date_item rap'>
+                <div class="grid date_form date_head">
+                    <div>SUN</div>
+                    <div>MON</div>
+                    <div>TUE</div>
+                    <div>WED</div>
+                    <div>THU</div>
+                    <div>FRI</div>
+                    <div>SAT</div>
+                </div>
+                <div class="grid date_form dateSel"></div>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>
