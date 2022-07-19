@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../css/main.css" />
+    <title>타이머</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+      const standard_time = 60;
+      let time = 0;
+      let h = 0;
+      let m = 0;
+      let s = 0;
+
+      $(function () {
+        getDate();
+
+        let myTimer = null;
+
+        $(".start_btn").on("click", function () {
+          $(this).css("display", "none");
+          $(".stop_btn").css("display", "inline-block");
+
+          // 타이머 시작
+          myTimer = setInterval(() => {
+            time++;
+            $(".sec").text(time);
+            setTimer();
+          }, 1000);
+        });
+
+        $(".stop_btn").on("click", function () {
+          $(this).css("display", "none");
+          $(".start_btn").css("display", "inline-block");
+
+          // 타이머 멈춰
+          clearInterval(myTimer);
+        });
+      });
+
+      // 시간초 재기 함수
+      function setTimer() {
+        s++;
+        if (s >= standard_time) {
+          s = 0;
+          m++;
+        }
+        if (m >= standard_time) {
+          m = 0;
+          h++;
+        }
+        updateTime(s, "sec");
+        updateTime(m, "min");
+        updateTime(h, "hour");
+      }
+
+      function updateTime(t, class_name) {
+        if (t < 10) {
+          $("." + class_name).html("0" + t);
+        } else {
+          $("." + class_name).html(t);
+        }
+      }
+
+      // 오늘 날짜 불러오기 함수
+      function getDate() {
+        date = new Date();
+        year = date.getFullYear();
+        month = date.getMonth() + 1;
+        if (month / 10 < 1) {
+          month = "0" + month;
+        }
+        day = date.getDate();
+        $(".today_date").html(year + "." + month + "." + day);
+      }
+    </script>
+  </head>
+
+  <body>
+    <header>
+      <nav class="header-nav">
+        <div>
+          <a href="../index.html">
+            <h1>홈페이지</h1>
+          </a>
+        </div>
+        <div>
+          <span class="nav-menu"><a href="#">로그인</a></span>
+          <span class="nav-menu"><a href="#">로그아웃</a></span>
+          <span class="nav-menu"><a href="#">정보수정</a></span>
+          <span class="nav-menu"><a href="#">회원탈퇴</a></span>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <div class="today_date"></div>
+      <div class="subject">과목명</div>
+      <div>
+        <span class="hour">00</span> : <span class="min">00</span> :
+        <span class="sec">00</span>
+      </div>
+      <input type="button" value="재생" class="start_btn" />
+      <input
+        type="button"
+        value="정지"
+        class="stop_btn"
+        style="display: none"
+      />
+      <input type="button" value="종료하기" class="back_btn" />
+    </main>
+  </body>
+</html>
