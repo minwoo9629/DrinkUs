@@ -14,3 +14,14 @@ spring:
 token:
   expiration_time: 86400000
   secret: secret
+
+security:
+  oauth2:
+    client:
+      registration:
+        google:
+          client-id: 544385537574-774c31vj941hkdl0fp70vt0skjc3je3n.apps.googleusercontent.com
+          client-secret: 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
+          scope:
+            - email
+            -
