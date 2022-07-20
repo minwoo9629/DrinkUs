@@ -2,6 +2,7 @@ package com.ssafy.drinkus.user.domain;
 
 import com.ssafy.drinkus.common.BaseEntity;
 import com.ssafy.drinkus.common.type.YN;
+import com.ssafy.drinkus.user.domain.type.UserProvider;
 import com.ssafy.drinkus.user.domain.type.UserRole;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -44,16 +45,17 @@ public class User extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
-    
+
     private String userImg;
-    
-    private String userProvider;
-    
+
+    @Enumerated(EnumType.STRING)
+    private UserProvider userProvider;
+
     private String userProviderId;
-    
+
     private int userPoint;
 
-    public static User createUser(String email, String pw, String name){
+    public static User createUser(String email, String pw, String name) {
         User user = new User();
         user.userEmail = email;
         user.userPw = pw;

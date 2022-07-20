@@ -49,7 +49,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(authenticationEntryPoint)
                 .accessDeniedHandler(accessDeniedHandler)
                 .and()
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                // 여기부터 소셜로그인용 security 설정
+                .oauth2Login()
+                .userInfoEndpoint()
+//                .userService(customOauth2UserService); // 서버에서 사용
+                // 소셜 로그인 설정 끝
+                ;
     }
 
     @Bean
