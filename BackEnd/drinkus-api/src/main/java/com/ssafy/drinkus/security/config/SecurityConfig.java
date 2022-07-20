@@ -1,5 +1,6 @@
 package com.ssafy.drinkus.security.config;
 
+import com.ssafy.drinkus.security.config.oauth.PrincipalOauth2UserService;
 import com.ssafy.drinkus.security.filter.JwtAuthenticationFilter;
 import com.ssafy.drinkus.security.handler.CustomAccessDeniedHandler;
 import com.ssafy.drinkus.security.handler.CustomAuthenticationEntryPoint;
@@ -26,6 +27,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final CustomAccessDeniedHandler accessDeniedHandler;
     private final CustomAuthenticationEntryPoint authenticationEntryPoint;
 
+    // 소셜로그인
+    private final PrincipalOauth2UserService PrincipalDetailsService;
+
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers("/docs/**");
@@ -41,7 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/ws-stomp/**", "/api/port","/actuator/health").permitAll()
+                .antMatchers("/ws-stomp/**", "/api/port", "/actuator/health").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/users", "/api/users/login").permitAll()
                 .anyRequest().hasAnyRole("USER", "ADMIN")
                 .and()
@@ -50,12 +54,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .accessDeniedHandler(accessDeniedHandler)
                 .and()
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                // 여기부터 소셜로그인용 security 설정
+                // 여기부터 소셜로그인용 security 설정.
                 .oauth2Login()
+                // .loginPage()  만약에 위에서 로그인 했을때 필터링해줄게 있다면 여기에서도 설정해주자
                 .userInfoEndpoint()
-//                .userService(customOauth2UserService); // 서버에서 사용
-                // 소셜 로그인 설정 끝
-                ;
+                .userService(PrincipalDetailsService); // 소셜 로그인 완료된 이후의 후처리 (OAuth2UserService 타입)
+        ; // 이어서 코드작성 . . .
     }
 
     @Bean
@@ -73,7 +77,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean //수동bean 등록
-    public BCryptPasswordEncoder passwordEncoder(){
+    public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 }
