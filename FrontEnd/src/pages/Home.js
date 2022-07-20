@@ -38,6 +38,7 @@ const NeonSignTitle = styled.h1`
   border: 0.4rem solid #fff;
   border-radius: 2rem;
   text-transform: uppercase;
+  font-family: "Monoton";
   animation: ${NeonSignAnimation} 1.5s infinite alternate;
 `;
 
