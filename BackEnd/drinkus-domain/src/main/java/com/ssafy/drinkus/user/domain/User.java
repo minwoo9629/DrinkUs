@@ -32,9 +32,9 @@ public class User extends BaseEntity {
 
     private String userNickname;
 
-    private int userPopularity;
+    private Integer userPopularity;
 
-    private int userPopularityLimit; // 5 -> 0
+    private Integer userPopularityLimit; // 5 -> 0
 
     private LocalDate userBirthday;
 
@@ -60,9 +60,9 @@ public class User extends BaseEntity {
 
     private LocalDateTime userStopDate; // 정지기한 -> 추가기능
 
-    private int user_soju;
+    private Integer userSoju;
 
-    private int user_beer;
+    private Integer userBeer;
 
     // 회원가입
     // 이메일 비밀번호 이름 생년월일
@@ -72,6 +72,7 @@ public class User extends BaseEntity {
         user.userPw = pw;
         user.userName = name;
         user.userRole = UserRole.ROLE_USER;
+        user.userPopularityLimit = 5;
         return user;
     }
 
