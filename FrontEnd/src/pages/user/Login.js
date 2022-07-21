@@ -1,5 +1,7 @@
 import { useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { logIn } from "../../store/actions/user";
 import styled from "styled-components";
 const Wrapper = styled.div`
   background-color: black;
@@ -11,21 +13,17 @@ const Wrapper = styled.div`
 `;
 
 const NeonLoginWrapper = styled.div`
-  /* box-shadow: 0 0 0.2rem #fff, 0 0 0.2rem #fff, 0 0 2rem #bc13fe,
-    0 0 0.8rem #bc13fe, 0 0 2.8rem #bc13fe, inset 0 0 1.3rem; */
   display: flex;
   justify-content: center;
   border-radius: 40px;
   height: 700px;
   background-color: #131317;
   width: 450px;
-  /* border: 1px solid whitesmoke; */
 `;
 const LoginWrapper = styled.div`
   display: flex;
   justify-content: center;
   flex-direction: column;
-
   align-items: center;
 `;
 
@@ -73,9 +71,31 @@ const LoginButton = styled.button`
 
 const LinkWrapper = styled.div`
   display: flex;
-  width: 360px;
-  margin: 14px;
+  width: 300px;
+  margin: 14px 14px 20px 14px;
   justify-content: space-between;
+`;
+
+const SocialWrapper = styled.div`
+  margin-top: 30px;
+  display: flex;
+  justify-content: space-between;
+  width: 120px;
+`;
+const SocialButton = styled.img`
+  padding: 8px;
+  border-radius: 100%;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+`;
+
+const KaKaoSocialButton = styled(SocialButton)`
+  background-color: yellow;
+`;
+
+const GoogleSocialButton = styled(SocialButton)`
+  background-color: white;
 `;
 
 const Login = () => {
@@ -83,6 +103,8 @@ const Login = () => {
     userId: "",
     password: "",
   });
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const userIdInput = useRef();
   const passwordInput = useRef();
@@ -91,7 +113,8 @@ const Login = () => {
     setState({ ...state, [e.target.name]: e.target.value });
   };
 
-  const onHandleSubmit = () => {
+  const onHandleSubmit = (event) => {
+    event.preventDefault();
     if (state.userId.length === 0) {
       userIdInput.current.focus();
       return;
@@ -100,16 +123,22 @@ const Login = () => {
       passwordInput.current.focus();
       return;
     }
-    alert("로그인 요청 로직 작성하기");
+
+    const data = {
+      userId: state.userId,
+      password: state.password,
+    };
+    dispatch(logIn(data));
+    navigate("/");
   };
   return (
     <>
       <Wrapper>
         <NeonLoginWrapper>
           <LoginWrapper>
-            <LoginForm>
+            <LoginForm onSubmit={onHandleSubmit}>
               <InputWrapper>
-                <i class="fas fa-envelope"></i>
+                <i className="fas fa-envelope"></i>
                 <LoginInput
                   value={state.userId}
                   ref={userIdInput}
@@ -119,7 +148,7 @@ const Login = () => {
                 />
               </InputWrapper>
               <InputWrapper>
-                <i class="fas fa-lock"></i>
+                <i className="fas fa-lock"></i>
                 <LoginInput
                   type="password"
                   value={state.password}
@@ -129,7 +158,7 @@ const Login = () => {
                   placeholder="Password"
                 />
               </InputWrapper>
-              <LoginButton onClick={onHandleSubmit}>로그인</LoginButton>
+              <LoginButton type="submit">로그인</LoginButton>
             </LoginForm>
             <LinkWrapper>
               <Link to={"/"} style={{ color: "cornflowerblue" }}>
@@ -144,7 +173,10 @@ const Login = () => {
                 회원가입
               </Link>
             </LinkWrapper>
-            <img src="assets/kakao_login.png" />
+            <SocialWrapper>
+              <KaKaoSocialButton src="assets/kakao_icon.png" />
+              <GoogleSocialButton src="assets/google_icon.png" />
+            </SocialWrapper>
           </LoginWrapper>
         </NeonLoginWrapper>
       </Wrapper>

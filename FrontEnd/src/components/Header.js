@@ -1,3 +1,4 @@
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
@@ -19,6 +20,7 @@ const HeaderMenu = styled.ul`
   justify-content: ${(props) => props.justify};
 `;
 const Header = () => {
+  const user = useSelector((state) => state.user);
   return (
     <DrinkUsHeader>
       <Logo>
@@ -37,13 +39,27 @@ const Header = () => {
         </li>
       </HeaderMenu>
       <HeaderMenu width={25} justify={"end"}>
-        <li>
-          <Link to={"/login"}>로그인</Link>
-        </li>
+        {user.isLogin ? (
+          <>
+            <li>
+              <Link to={"/login"}>{user.data.nickName}님 반갑습니다.</Link>
+            </li>
 
-        <li>
-          <Link to={"/join"}>회원가입</Link>
-        </li>
+            <li>
+              <Link to={"/signUp"}>로그아웃</Link>
+            </li>
+          </>
+        ) : (
+          <>
+            <li>
+              <Link to={"/login"}>로그인</Link>
+            </li>
+
+            <li>
+              <Link to={"/signUp"}>회원가입</Link>
+            </li>
+          </>
+        )}
       </HeaderMenu>
     </DrinkUsHeader>
   );
