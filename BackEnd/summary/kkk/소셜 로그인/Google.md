@@ -51,5 +51,26 @@ super.loadUser(userRequest).getAttributes() = {sub=구글아이디의넘버, nam
 ````        
 `GetAttributes()`로 얻어낸 `sub`가 해당 플랫폼의 유저 고유 키가 된다.     
 즉, 우리 DB에는 `google_sub` 형태로 ID를 넣어주면 고유 키가 될 수 있음      
-패스워드는 널만 아니면 아무거나 암호화해서 넣으면 됨
+패스워드는 널만 아니면 아무거나 암호화해서 넣으면 됨     
+
+- 회원 이메일: getAttribute의 이메일
+- 회원 비밀번호: 아무거나 암호화한 비밀번호
+- 회원 이름: 가져온 이름
+- 회원 닉네임: 랜덤 생성된 닉네임
+- 인기도: 0
+- 인기도 횟수 제한: 5
+- 생년월일: 받아올 수 있으면 받아서 넣고 없으면 비워둠
+- 자기소개: null
+- 프로필 이미지: null
+- 가입일: 현재 날짜
+- 탈퇴일: null
+- 탈퇴 여부: N
+- 회원 역할: ROLE_USER
+- 회원 프로바이더: getClientRegistration의 registrationId
+- 회원 프로바이더 ID: 회원프로바이더 + getAttributes의 sub 
+- 회원 포인트: 0
+- 정지기한: null
+- 소주: 0
+- 맥주: 0
+
 
