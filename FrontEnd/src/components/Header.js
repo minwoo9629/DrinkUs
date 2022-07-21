@@ -42,7 +42,7 @@ const Header = () => {
         </li>
 
         <li>
-          <Link to={"/signUp"}>회원가입</Link>
+          <Link to={"/join"}>회원가입</Link>
         </li>
       </HeaderMenu>
     </DrinkUsHeader>
