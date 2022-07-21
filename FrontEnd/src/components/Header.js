@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import styled from "styled-components";
+// import "./Header.css";
 
 const DrinkUsHeader = styled.div`
   display: flex;
@@ -11,52 +12,44 @@ const DrinkUsHeader = styled.div`
   max-width: 1200px;
 `;
 
-const Logo = styled.div`
-  width: 25%;
-`;
 const HeaderMenu = styled.ul`
   display: flex;
   width: ${(props) => props.width}%;
   justify-content: ${(props) => props.justify};
 `;
+
 const Header = () => {
   const user = useSelector((state) => state.user);
   return (
     <DrinkUsHeader>
-      <Logo>
-        <Link to="/">DrinkUs</Link>
-      </Logo>
-      <HeaderMenu width={50} justify={"space-between"}>
+      <HeaderMenu width={100} justify={"space-between"}>
         <li>
-          <Link to={"/live"}>술Live</Link>
-        </li>
-
-        <li>
-          <Link to={"/community"}>커뮤니티</Link>
+          <NavLink to="/">DrinkUs</NavLink>
         </li>
         <li>
-          <Link to={"/notice"}>공지사항</Link>
+          <NavLink to={"/live"}>술Live</NavLink>
         </li>
-      </HeaderMenu>
-      <HeaderMenu width={25} justify={"end"}>
+        <li>
+          <NavLink to={"/community"}>커뮤니티</NavLink>
+        </li>
         {user.isLogin ? (
           <>
             <li>
-              <Link to={"/login"}>{user.data.nickName}님 반갑습니다.</Link>
+              <NavLink to={"/login"}>{user.data.nickName}님</NavLink>
             </li>
 
             <li>
-              <Link to={"/signUp"}>로그아웃</Link>
+              <NavLink to={"/signUp"}>로그아웃</NavLink>
             </li>
           </>
         ) : (
           <>
             <li>
-              <Link to={"/login"}>로그인</Link>
+              <NavLink to={"/login"}>로그인</NavLink>
             </li>
 
             <li>
-              <Link to={"/signUp"}>회원가입</Link>
+              <NavLink to={"/signUp"}>회원가입</NavLink>
             </li>
           </>
         )}
