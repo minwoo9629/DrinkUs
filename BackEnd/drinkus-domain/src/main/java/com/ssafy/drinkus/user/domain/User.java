@@ -14,17 +14,17 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
-@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED) // 무분별한 객체 생성에 대해 한번 더 체크할 수 있는 수단
+@AllArgsConstructor // 모든 생성자를 구현하는 annotation
+@Getter // JPA에서 lombok @Setter는 거의 쓰지 않습니다
 public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
-    private Long id;
+    @Column(name = "user_no")
+    private Long userNo;
 
-    private String userEmail;
+    private String userId;
 
     private String userPw;
 
@@ -32,21 +32,23 @@ public class User extends BaseEntity {
 
     private String userNickname;
 
-    private int userPopularity;
+    private Integer userPopularity;
 
-    private int userPopularityLimit; // 5 -> 0
+    private Integer userPopularityLimit; // 5 -> 0
 
     private LocalDate userBirthday;
+
+    private String userIntroduce;
+
+    private String userImg;
 
     private LocalDateTime userDeleteDate;
 
     @Enumerated(EnumType.STRING)
-    private YN userDeletedYn;
+    private YN userDeleted; // Boolean type을 YN enum으로 사용
 
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
-
-    private String userImg;
 
     @Enumerated(EnumType.STRING)
     private UserProvider userProvider;
@@ -55,15 +57,40 @@ public class User extends BaseEntity {
 
     private int userPoint;
 
-    public static User createUser(String email, String pw, String name) {
+    private LocalDateTime userStopDate; // 정지기한 -> 추가기능
+
+    private Integer userSoju;
+
+    private Integer userBeer;
+
+    private void setDefaultUser(){
+        userPopularityLimit = 5;
+    }
+
+    // 로컬 회원가입
+    // 이메일 비밀번호 이름 생년월일
+    public static User createUser(String userId, String userPw, String userName) {
         User user = new User();
-        user.userEmail = email;
-        user.userPw = pw;
-        user.userName = name;
         user.userRole = UserRole.ROLE_USER;
+        user.userId = userId;
+        user.userPw = userPw;
+        user.userName = userName;
         return user;
     }
 
+    // 소셜 회원가입
+//    public static User createUser(String userId, ) {
+//        user.userRole = UserRole.ROLE_SOCIAL;
+//
+//    }
+
+    // 회원수정
+    // 닉네임 주량 자기소개
+//    public void updateUser(String nickname) {
+//        this.userNickname = nickname;
+//    }
+
+    //비밀번호 수정
     public void updateUser(String name) {
         this.userName = name;
     }

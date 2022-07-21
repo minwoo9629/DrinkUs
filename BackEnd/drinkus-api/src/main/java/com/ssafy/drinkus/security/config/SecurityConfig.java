@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -20,6 +21,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration //설정파일임을 알려줌
 @RequiredArgsConstructor // final이 달려있는 애들만
+@EnableWebSecurity // 스프링 시큐리티 필터가 스프링 필터 체인에 등록이 됨
 // 보안관련 설정사항들이 있음
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -37,6 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        http.formLogin().disable();
         http
                 .httpBasic().disable()
                 .cors().configurationSource(corsConfigurationSource())
@@ -45,10 +48,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/ws-stomp/**", "/api/port", "/actuator/health").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/users", "/api/users/login").permitAll()
-                .anyRequest().hasAnyRole("USER", "ADMIN")
+                .antMatchers("/ws-stomp/**", "/api/port","/actuator/health").permitAll()
+//                .antMatchers(HttpMethod.POST,  "/users/join").permitAll()
+                .antMatchers(HttpMethod.GET,  "/**").permitAll() // 테스트 끝나면 지우기
+                .antMatchers(HttpMethod.GET,  "/test/**").permitAll() // 테스트 끝나면 지우기
+//                .anyRequest().hasAnyRole("USER", "ADMIN")
+                .anyRequest().permitAll()  // 테스트 끝나면 지우거나 authenticated()로 변경
                 .and()
+                // 시큐리티의 로그인 처리
                 .exceptionHandling()
                 .authenticationEntryPoint(authenticationEntryPoint)
                 .accessDeniedHandler(accessDeniedHandler)

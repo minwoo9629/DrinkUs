@@ -1,5 +1,6 @@
 package com.ssafy.drinkus.security.config.oauth;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -17,9 +18,9 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         System.out.println("userRequest.getClientRegistration() = " + userRequest.getClientRegistration());
         System.out.println("userRequest.getAccessToken() = " + userRequest.getAccessToken());
         System.out.println("super.loadUser(userRequest).getAttributes() = " + super.loadUser(userRequest).getAttributes());
-        
-        // 이제 회원가입 진행하면 됨
 
-        return super.loadUser(userRequest);
+        OAuth2User oAuth2User = super.loadUser(userRequest);
+
+        return oAuth2User;
     }
 }

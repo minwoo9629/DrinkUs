@@ -15,30 +15,34 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("/users")
+    //회원가입
+    @PostMapping("/join")
     public ResponseEntity<Void> createUser(@RequestBody @Valid UserCreateRequest request){
         userService.createUser(request);
         return ResponseEntity.ok().build();
     }
 
+    //로그인
     @PostMapping("/users/login")
     public ResponseEntity<Void> loginUser(@RequestBody @Valid UserLoginRequest request){
         String accessToken = userService.loginUser(request);
         return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, accessToken).build();
     }
 
+    //회원수정
     @PatchMapping("/users")
-    //
     public ResponseEntity<Void> updateUser(@LoginUser User user,
                                            @RequestBody @Valid UserUpdateRequest request){
         userService.updateUser(request, user);
         return ResponseEntity.ok().build();
     }
+
+    //회원탈퇴
 
 }

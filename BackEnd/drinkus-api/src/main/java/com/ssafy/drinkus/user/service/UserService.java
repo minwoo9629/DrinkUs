@@ -28,17 +28,16 @@ public class UserService {
 
     @Transactional
     public void createUser(UserCreateRequest request) {
-        if(userRepository.findByUserEmail(request.getEmail()).isPresent()){
+        if(userRepository.findByUserId(request.getEmail()).isPresent()){
             throw new DuplicateException("이미 가입된 회원입니다.");
         }
-
         User user = User.createUser(request.getEmail(), passwordEncoder.encode(request.getPw()), request.getName());
         userRepository.save(user);
     }
 
     public String loginUser(UserLoginRequest request) {
 
-        User findUser = userRepository.findByUserEmail(request.getEmail())
+        User findUser = userRepository.findByUserId(request.getEmail())
                 .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
 
         if(!passwordEncoder.matches(request.getPw(), findUser.getUserPw())){
@@ -46,13 +45,13 @@ public class UserService {
             throw new NotMatchException("회원의 비밀번호가 일치하지 않습니다.");
         }
 
-        return jwtUtil.createToken(findUser.getId());
+        return jwtUtil.createToken(findUser.getUserNo());
     }
 
     @Transactional
     public void updateUser(UserUpdateRequest request, User user) {
 
-        User findUser = userRepository.findById(user.getId())
+        User findUser = userRepository.findById(user.getUserNo())
                 .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
 
         findUser.updateUser(request.getName());
