@@ -12,6 +12,8 @@ body {
   -webkit-user-select: none;
   user-select: none;
   background-color: black;
+  overflow-x: hidden;
+  max-width: 1350px;
 }
 
 * {
@@ -25,7 +27,7 @@ li {
 
 a {
   text-decoration: none;
-  color: whitesmoke;
+  color: #BDCFF2;
   font-family: "Black Han Sans";
   font-size: 18px;
 }

@@ -1,5 +1,6 @@
 import styled, { keyframes } from "styled-components";
 import Header from "../components/Header";
+
 const neon_text_color = "#5904de";
 const neon_border_color = "#08f";
 const NeonSignAnimation = keyframes`
@@ -46,16 +47,30 @@ const Wrapper = styled.section`
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #000;
-  height: 90vh;
+  background: ${(props) => props.background};
+  height: ${(props) => props.height};
   width: 100vw;
 `;
+
+const Mainimage = styled.image`
+  position: absolute;
+  width: 800px;
+  height: 308px;
+  top: ${(props) => props.height};
+  background: #BDCFF2;
+`
+
 const Home = () => {
   return (
     <div>
       <Header />
-      <Wrapper>
+      <Wrapper background={"#000"} height={"100vh"}>
         <NeonSignTitle>OPEN DRINKUS</NeonSignTitle>
+      </Wrapper>
+      <Wrapper background={"#FFF"} height={"400vh"}>
+        <Mainimage height={"1000px"}></Mainimage>
+        <Mainimage height={"1500px"}></Mainimage>
+        <Mainimage height={"2000px"}></Mainimage>
       </Wrapper>
     </div>
   );
