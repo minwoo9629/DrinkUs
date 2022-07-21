@@ -1,15 +1,16 @@
 import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
-// import "./Header.css";
 
 const DrinkUsHeader = styled.div`
+  position: fixed;
   display: flex;
-  padding: 40px 100px;
+  padding: 40px 6rem;
   justify-content: center;
-  background-color: black;
+  background-color: transparent;
   margin: auto;
-  max-width: 1200px;
+  width: calc(100% - 11rem);
+  max-width: 1350px;
 `;
 
 const HeaderMenu = styled.ul`
@@ -22,7 +23,7 @@ const Header = () => {
   const user = useSelector((state) => state.user);
   return (
     <DrinkUsHeader>
-      <HeaderMenu width={100} justify={"space-between"}>
+      <HeaderMenu width={75} justify={"space-between"}>
         <li>
           <NavLink to="/">DrinkUs</NavLink>
         </li>
@@ -39,7 +40,7 @@ const Header = () => {
             </li>
 
             <li>
-              <NavLink to={"/signUp"}>로그아웃</NavLink>
+              <NavLink to={"/logout"}>로그아웃</NavLink>
             </li>
           </>
         ) : (
@@ -49,7 +50,7 @@ const Header = () => {
             </li>
 
             <li>
-              <NavLink to={"/signUp"}>회원가입</NavLink>
+              <NavLink to={"/join"}>회원가입</NavLink>
             </li>
           </>
         )}
