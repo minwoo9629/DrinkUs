@@ -53,8 +53,6 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private UserProvider userProvider;
 
-    private String userProviderId;
-
     private int userPoint;
 
     private LocalDateTime userStopDate; // 정지기한 -> 추가기능
@@ -63,26 +61,41 @@ public class User extends BaseEntity {
 
     private Integer userBeer;
 
-    private void setDefaultUser(){
+    private void defaultUserSettings() {
+        userPopularity = 0;
         userPopularityLimit = 5;
+        userNickname = String.valueOf(Math.random());
+        userDeleted = YN.N;
+        userPoint = 0;
+        userSoju = 0;
+        userBeer = 0;
     }
 
     // 로컬 회원가입
     // 이메일 비밀번호 이름 생년월일
-    public static User createUser(String userId, String userPw, String userName) {
+    public static User createUser(String userId, String userPw, String userName, LocalDate userBirthday) {
         User user = new User();
+        user.defaultUserSettings();
         user.userRole = UserRole.ROLE_USER;
+        user.userProvider = UserProvider.local;
         user.userId = userId;
         user.userPw = userPw;
         user.userName = userName;
+        user.userBirthday = userBirthday;
         return user;
     }
 
     // 소셜 회원가입
-//    public static User createUser(String userId, ) {
-//        user.userRole = UserRole.ROLE_SOCIAL;
-//
-//    }
+    public static User createUser(UserProvider userProvider, String userId, String userName) {
+        User user = new User();
+        user.defaultUserSettings();
+        user.userRole = UserRole.ROLE_SOCIAL;
+        user.userProvider = userProvider;
+        user.userId = userId;
+        user.userPw = "비밀번호임";
+        user.userName = userName;
+        return user;
+    }
 
     // 회원수정
     // 닉네임 주량 자기소개

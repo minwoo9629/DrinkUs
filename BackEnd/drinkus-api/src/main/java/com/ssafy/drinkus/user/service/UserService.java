@@ -28,10 +28,10 @@ public class UserService {
 
     @Transactional
     public void createUser(UserCreateRequest request) {
-        if(userRepository.findByUserId(request.getEmail()).isPresent()){
+        if (userRepository.findByUserId(request.getUserId()).isPresent()) {
             throw new DuplicateException("이미 가입된 회원입니다.");
         }
-        User user = User.createUser(request.getEmail(), passwordEncoder.encode(request.getPw()), request.getName());
+        User user = User.createUser(request.getUserId(), passwordEncoder.encode(request.getUserPw()), request.getUserName(), request.getUserBirthday());
         userRepository.save(user);
     }
 
@@ -40,7 +40,7 @@ public class UserService {
         User findUser = userRepository.findByUserId(request.getEmail())
                 .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
 
-        if(!passwordEncoder.matches(request.getPw(), findUser.getUserPw())){
+        if (!passwordEncoder.matches(request.getPw(), findUser.getUserPw())) {
             // 예외 던짐 -> 캐치하는곳 필요
             throw new NotMatchException("회원의 비밀번호가 일치하지 않습니다.");
         }
