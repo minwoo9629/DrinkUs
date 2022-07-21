@@ -56,7 +56,7 @@ const Header = () => {
             </li>
 
             <li>
-              <Link to={"/join"}>회원가입</Link>
+              <Link to={"/join/agree"}>회원가입</Link>
             </li>
           </>
         )}
