@@ -5,6 +5,7 @@ import Login from "./pages/user/Login";
 // import SignUp from "./pages/auth/SignUp";
 import Join from "./pages/user/Join";
 import JoinAgree from "./pages/user/JoinAgree"
+import JoinType from "./pages/user/JoinType";
 function App() {
   return (
     <BrowserRouter>
@@ -15,6 +16,7 @@ function App() {
           {/* <Route path="/signUp" element={<SignUp />} /> */}
           <Route path="/join" element={<Join />} />
           <Route path="/join/agree" element={<JoinAgree />} />
+          <Route path="/join/type" element={<JoinType />} />
         </Routes>
       </div>
     </BrowserRouter>
