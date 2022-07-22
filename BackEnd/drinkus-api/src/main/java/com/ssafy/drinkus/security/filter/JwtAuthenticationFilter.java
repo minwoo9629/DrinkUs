@@ -1,7 +1,7 @@
 package com.ssafy.drinkus.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ssafy.drinkus.security.service.CustomUserDetailsService;
+import com.ssafy.drinkus.security.service.UserPrincipal;
 import com.ssafy.drinkus.security.util.JwtUtil;
 import com.ssafy.drinkus.user.domain.User;
 import com.ssafy.drinkus.user.domain.UserRepository;
@@ -33,8 +33,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     private JwtUtil jwtUtil;
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private CustomUserDetailsService customUserDetailsService;
 
     @Override
     @Autowired
@@ -58,7 +56,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         Optional<User> oUser = userRepository.findByUserId(credentials.getUserId());
         User user = oUser.get();
 
-        UserDetails userDetails = customUserDetailsService.loadUserByUsername(user.getUserId());
+        UserDetails userDetails = UserPrincipal.create(user);
         // 유효한 유저에 대한 로그인 토큰을 생성한다.
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, credentials.getUserPw());
 
