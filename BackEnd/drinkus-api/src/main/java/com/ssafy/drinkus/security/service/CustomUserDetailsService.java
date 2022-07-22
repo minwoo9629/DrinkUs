@@ -21,6 +21,8 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         Optional<User> oUser = userRepository.findByUserId(userId);
 
+        System.out.println("oUser = " + oUser.get());
+
         User user = oUser
                 .orElseThrow(() ->
                         new UsernameNotFoundException("User not found with email: " + userId));
