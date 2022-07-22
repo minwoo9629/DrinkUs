@@ -8,6 +8,7 @@ import com.ssafy.drinkus.user.domain.User;
 import com.ssafy.drinkus.user.domain.UserRepository;
 import com.ssafy.drinkus.user.request.UserCreateRequest;
 import com.ssafy.drinkus.user.request.UserLoginRequest;
+import com.ssafy.drinkus.user.request.UserUpdatePasswordRequest;
 import com.ssafy.drinkus.user.request.UserUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,33 +29,61 @@ public class UserService {
 
     @Transactional
     public void createUser(UserCreateRequest request) {
-        if(userRepository.findByUserEmail(request.getEmail()).isPresent()){
+        if(userRepository.findByUserId(request.getUserId()).isPresent()){
             throw new DuplicateException("이미 가입된 회원입니다.");
         }
-
-        User user = User.createUser(request.getEmail(), passwordEncoder.encode(request.getPw()), request.getName());
+        User user = User.createUser(request.getUserId(), passwordEncoder.encode(request.getUserPw()), request.getUserName());
         userRepository.save(user);
     }
 
     public String loginUser(UserLoginRequest request) {
 
-        User findUser = userRepository.findByUserEmail(request.getEmail())
+        User findUser = userRepository.findByUserId(request.getUserId())
                 .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
 
-        if(!passwordEncoder.matches(request.getPw(), findUser.getUserPw())){
+        if(!passwordEncoder.matches(request.getUserPw(), findUser.getUserPw())){
             // 예외 던짐 -> 캐치하는곳 필요
             throw new NotMatchException("회원의 비밀번호가 일치하지 않습니다.");
         }
 
-        return jwtUtil.createToken(findUser.getId());
+        return jwtUtil.createToken(findUser.getUserNo());
     }
 
+    //회원수정
     @Transactional
     public void updateUser(UserUpdateRequest request, User user) {
 
-        User findUser = userRepository.findById(user.getId())
+        User findUser = userRepository.findById(user.getUserNo())
                 .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
 
-        findUser.updateUser(request.getName());
+        findUser.updateUser(request.getUserName());
+    }
+
+    //비밀번호 수정
+    @Transactional
+    public void updatePassword(UserUpdatePasswordRequest request) {
+        //회원번호로 회원 조회
+        User findUser = userRepository.findByUserNo(request.getUserNo())
+                .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
+
+        //이전 비밀번호 같은 지 확인
+        if(!passwordEncoder.matches(request.getUserBeforePw(), findUser.getUserPw())){
+            // 예외 던짐 -> 캐치하는곳 필요
+            throw new NotMatchException("회원의 비밀번호가 일치하지 않습니다.");
+        }
+
+        //새 비밀번호 == 새 비밀번호 확인
+        if(!request.getUserPw().equals(request.getUserCheckPw())){
+            throw new NotMatchException("회원의 비밀번호가 일치하지 않습니다.");
+        }
+
+        findUser.updateUserPassword(passwordEncoder.encode(request.getUserPw()));
+    }
+
+    //아이디 찾기
+    public void findByUserId(String id){
+        if(userRepository.findByUserId(id).isPresent()){
+            throw new DuplicateException("이미 가입된 회원입니다.");
+        }
     }
 }
