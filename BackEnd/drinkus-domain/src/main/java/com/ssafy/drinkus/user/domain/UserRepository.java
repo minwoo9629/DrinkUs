@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    Boolean existsByUserId(String userId);
+    Boolean existsByUserName(String userName);
 
     // 인기도 limit 초기화
     @Modifying
@@ -18,14 +18,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Integer resetUserPopularityLimit(@Param("limit")int limit);
 
     //아이디로 회원 찾기
-    Optional<User> findByUserId(String userId);
+    Optional<User> findByUserName(String userName);
 
     //회원번호로 회원 찾기
-    Optional<User> findByUserNo(Long userNo);
+    Optional<User> findByUserId(Long userId);
 
     //인기도 수정
     @Modifying
-    @Query("update User set userPopularity = userPopularity + :popularNum where userNo = :userNo")
-    Integer updatePopularity(@Param("userNo") Long userNo, @Param("popularNum") Integer popularNum);
+    @Query("update User set userPopularity = userPopularity + :popularNum where userId = :userId")
+    Integer updatePopularity(@Param("userId") Long userId, @Param("popularNum") Integer popularNum);
 
 }

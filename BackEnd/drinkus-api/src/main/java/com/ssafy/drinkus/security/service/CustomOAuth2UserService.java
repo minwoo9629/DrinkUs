@@ -43,17 +43,16 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private OAuth2User processOAuth2User(OAuth2UserRequest oAuth2UserRequest, OAuth2User oAuth2User) {
         OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(oAuth2UserRequest.getClientRegistration().getRegistrationId(), oAuth2User.getAttributes());
 
-        System.out.println("oAuth2UserInfo.getUserId() = " + oAuth2UserInfo.getUserId());
-        System.out.println("oAuth2UserInfo.getUserName() = " + oAuth2UserInfo.getUserName());
+        System.out.println("oAuth2UserInfo.getUserEmail() = " + oAuth2UserInfo.getUserEmail());
+        System.out.println("oAuth2UserInfo.getUserFullName() = " + oAuth2UserInfo.getUserFullName());
         System.out.println("oAuth2UserInfo.getAttributes() = " + oAuth2UserInfo.getAttributes());
-        if (StringUtils.isEmpty(oAuth2UserInfo.getUserId())) {
+        if (StringUtils.isEmpty(oAuth2UserInfo.getUserEmail())) {
             throw new NotFoundException("불러온 이메일이 존재하지 않습니다.");
         }
 
-        String userId = oAuth2UserInfo.getUserId();
-
-        System.out.println("userRepository = " + userRepository.findByUserId(oAuth2UserInfo.getUserId()));
-        Optional<User> userOptional = userRepository.findByUserId(oAuth2UserInfo.getUserId());
+        // 이메일이 아닌 고유 아이디를 이용하여 가입 여부를 조회
+        System.out.println("userRepository = " + userRepository.findByUserName(oAuth2UserInfo.getUserName()));
+        Optional<User> userOptional = userRepository.findByUserName(oAuth2UserInfo.getUserName());
         User user;
         if (userOptional.isPresent()) {
             user = userOptional.get();
@@ -66,13 +65,15 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     }
 
 
-    private User registerNewUser(OAuth2UserRequest oAuth2UserRequest, OAuth2UserInfo oAuth2UseRInfo) {
+    private User registerNewUser(OAuth2UserRequest oAuth2UserRequest, OAuth2UserInfo oAuth2UserInfo) {
         UserProvider userProvider = UserProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId());
-        String userName = oAuth2UseRInfo.getUserName();
-        String userId = oAuth2UseRInfo.getUserId();
-        User user = User.createUser(userProvider, userId, userName);
+        String userFullName = oAuth2UserInfo.getUserFullName();
+        String userEmail = oAuth2UserInfo.getUserEmail();
+        String userProviderId = oAuth2UserInfo.getUserProviderId();
+        String userName = oAuth2UserInfo.getUserName();
+        User user = User.createUser(userProvider, userProviderId, userName, userEmail, userFullName);
 
-        System.out.println("새 회원을 등록합니다.");
+        System.out.println("소셜 로그인: 새 회원을 등록합니다.");
         return userRepository.save(user);
     }
 }

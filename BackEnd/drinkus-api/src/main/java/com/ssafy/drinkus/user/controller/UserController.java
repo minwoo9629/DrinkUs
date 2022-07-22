@@ -35,17 +35,17 @@ public class UserController {
 
     //회원수정
     @PutMapping
-    public ResponseEntity<Void> updateUser(@LoginUser Long userNo,
+    public ResponseEntity<Void> updateUser(@LoginUser Long userId,
                                            @RequestBody @Valid UserUpdateRequest request){
-        userService.updateUser(userNo, request);
+        userService.updateUser(userId, request);
         return ResponseEntity.ok().build();
     }
 
     // 비밀번호 수정
     @PatchMapping("/pw")
-    public ResponseEntity<Void> updatePassword(@LoginUser Long userNo,
+    public ResponseEntity<Void> updatePassword(@LoginUser Long userId,
                                                @RequestBody @Valid UserUpdatePasswordRequest request){
-        userService.updatePassword(userNo, request);
+        userService.updatePassword(userId, request);
         return ResponseEntity.ok().build();
     }
 
@@ -54,8 +54,8 @@ public class UserController {
 
     // 아이디 중복 검사
     @PostMapping("/join/id")
-    public ResponseEntity<Void> findByUserId(@RequestPart String id){
-        userService.findByUserId(id);
+    public ResponseEntity<Void> findByUserId(@RequestPart String userName){
+        userService.findByUserName(userName);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 

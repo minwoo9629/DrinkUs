@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 public class UserCreateRequest {
     @NotBlank(message = "이메일은 필수값입니다.")
     @Email(message = "이메일 형식에 맞춰주세요")
-    private String userId;
+    private String userName;
 
     @NotBlank(message = "비밀번호는 필수값입니다.")
     @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,20}", message = "비밀번호는 영문 " +
@@ -26,7 +26,7 @@ public class UserCreateRequest {
     private String userPw;
 
     @NotBlank(message = "이름은 필수값입니다.")
-    private String userName;
+    private String userFullName;
 
     private LocalDate userBirthday;
 }
