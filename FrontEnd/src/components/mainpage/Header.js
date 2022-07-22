@@ -5,25 +5,25 @@ import styled from "styled-components";
 const DrinkUsHeader = styled.div`
   position: fixed;
   display: flex;
-  padding: 40px 6rem;
+  padding: 40px 4rem;
   justify-content: center;
   background-color: transparent;
   margin: auto;
   width: calc(100% - 11rem);
-  max-width: 1350px;
 `;
 
 const HeaderMenu = styled.ul`
   display: flex;
-  width: ${(props) => props.width}%;
+  width: calc(${(props) => props.width}% - 11rem);
   justify-content: ${(props) => props.justify};
+  
 `;
 
 const Header = () => {
   const user = useSelector((state) => state.user);
   return (
     <DrinkUsHeader>
-      <HeaderMenu width={75} justify={"space-between"}>
+      <HeaderMenu width={100} justify={"space-between"}>
         <li>
           <NavLink to="/">DrinkUs</NavLink>
         </li>

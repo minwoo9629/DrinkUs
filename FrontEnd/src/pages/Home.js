@@ -1,5 +1,8 @@
 import styled, { keyframes } from "styled-components";
-import Header from "../components/Header";
+import Header from "../components/mainpage/Header";
+import Footer from "../components/mainpage/Footer";
+import HomeSlide from "../components/mainpage/HomeSlide";
+import TopButton from "../components/mainpage/TopButton";
 
 const neon_text_color = "#5904de";
 const neon_border_color = "#08f";
@@ -56,7 +59,7 @@ const Mainimage = styled.image`
   position: absolute;
   width: 800px;
   height: 308px;
-  top: ${(props) => props.height};
+  top: ${(props) => props.top};
   background: #BDCFF2;
 `
 
@@ -67,11 +70,14 @@ const Home = () => {
       <Wrapper background={"#000"} height={"100vh"}>
         <NeonSignTitle>OPEN DRINKUS</NeonSignTitle>
       </Wrapper>
-      <Wrapper background={"#FFF"} height={"400vh"}>
-        <Mainimage height={"1000px"}></Mainimage>
-        <Mainimage height={"1500px"}></Mainimage>
-        <Mainimage height={"2000px"}></Mainimage>
+      <Wrapper background={"#FFF"} height={"190vh"}>
+        <Mainimage top={"130vh"}></Mainimage>
+        <Mainimage top={"180vh"}></Mainimage>
+        <Mainimage top={"230vh"}></Mainimage>
       </Wrapper>
+      <HomeSlide />
+      <Footer />
+      <TopButton />
     </div>
   );
 };
