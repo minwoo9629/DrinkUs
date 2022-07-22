@@ -69,11 +69,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/ws-stomp/**", "/api/port", "/actuator/health").permitAll()
-//                .antMatchers(HttpMethod.POST,  "/users/join").permitAll()
-                .antMatchers(HttpMethod.GET, "/**").permitAll() // 테스트 끝나면 지우기
-//                .anyRequest().hasAnyRole("USER", "ADMIN")
-                .anyRequest().permitAll()  // 테스트 끝나면 지우거나 authenticated()로 변경
+                .antMatchers("/ws-stomp/**", "/api/port","/actuator/health").permitAll()
+                .antMatchers(HttpMethod.POST,  "/users/join","/users/login", "/users/join/id").permitAll()
+                .antMatchers(HttpMethod.PATCH,  "/users/pw").permitAll()
+                .anyRequest().hasAnyRole("USER", "ADMIN")
                 .and()
                 // 여기부터 소셜로그인용 security 설정.
                 .oauth2Login()

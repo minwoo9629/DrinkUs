@@ -55,12 +55,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         // 지금 어디는 userId고 어디는 email로 되어있어서 조금 개같은데 빠른 수정 요망
         // request로부터 읽어들인 로그인 정보를 바탕으로 존재하는 유저인지 판단
-        Optional<User> oUser = userRepository.findByUserId(credentials.getEmail());
+        Optional<User> oUser = userRepository.findByUserId(credentials.getUserId());
         User user = oUser.get();
 
         UserDetails userDetails = customUserDetailsService.loadUserByUsername(user.getUserId());
         // 유효한 유저에 대한 로그인 토큰을 생성한다.
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, credentials.getPw());
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, credentials.getUserPw());
 
         Authentication authentication = authenticationManager.authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication); // 인증 완료된 후 세션에 넣는다.

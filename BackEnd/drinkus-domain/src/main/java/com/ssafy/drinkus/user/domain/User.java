@@ -53,7 +53,7 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private UserProvider userProvider;
 
-    private int userPoint;
+    private Long userPoint;
 
     private LocalDateTime userStopDate; // 정지기한 -> 추가기능
 
@@ -66,7 +66,7 @@ public class User extends BaseEntity {
         userPopularityLimit = 5;
         userNickname = String.valueOf(Math.random());
         userDeleted = YN.N;
-        userPoint = 0;
+        userPoint = 0L;
         userSoju = 0;
         userBeer = 0;
     }
@@ -99,12 +99,18 @@ public class User extends BaseEntity {
 
     // 회원수정
     // 닉네임 주량 자기소개
-//    public void updateUser(String nickname) {
-//        this.userNickname = nickname;
-//    }
-
-    //비밀번호 수정
     public void updateUser(String name) {
         this.userName = name;
+    }
+
+    //비밀번호 수정
+    public void updateUserPassword(String userPw) {
+        this.userPw = userPw;
+    }
+
+    // 회원 비활성화
+    public void disableUser() {
+        this.userDeleted = YN.Y;
+        this.userDeleteDate = LocalDateTime.now();
     }
 }
