@@ -66,7 +66,7 @@ public class UserResponse {
 
     public static UserResponse of(User user) {
         UserResponse res = new UserResponse();
-        res.setUserEmail(user.getUserEmail());
+        res.setUserEmail(user.getUserId());
         res.setUserName(user.getUserName());
         res.setUserNickname(user.getUserNickname());
         res.setUserPopularity(user.getUserPopularity());

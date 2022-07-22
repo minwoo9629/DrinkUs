@@ -30,14 +30,14 @@ public class UserController {
     }
 
     //로그인
-    @PostMapping("/users/login")
+    @PostMapping("/login")
     public ResponseEntity<Void> loginUser(@RequestBody @Valid UserLoginRequest request){
         String accessToken = userService.loginUser(request);
         return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, accessToken).build();
     }
 
     //회원수정
-    @PatchMapping("/users")
+    @PatchMapping("")
     public ResponseEntity<Void> updateUser(@LoginUser User user,
                                            @RequestBody @Valid UserUpdateRequest request){
         userService.updateUser(request, user);

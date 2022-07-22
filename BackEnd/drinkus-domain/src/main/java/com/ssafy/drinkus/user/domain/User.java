@@ -2,12 +2,12 @@ package com.ssafy.drinkus.user.domain;
 
 import com.ssafy.drinkus.common.BaseEntity;
 import com.ssafy.drinkus.common.type.YN;
+import com.ssafy.drinkus.user.domain.type.UserProvider;
 import com.ssafy.drinkus.user.domain.type.UserRole;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -48,13 +48,12 @@ public class User extends BaseEntity {
     private YN userDeleted; // Boolean type을 YN enum으로 사용
 
     @Enumerated(EnumType.STRING)
-    private UserRole userRole; // ROLE_USER와 ROLE_ADMIN형식
+    private UserRole userRole;
 
-    private String userProvider; // 제공자 -> 추가기능
+    @Enumerated(EnumType.STRING)
+    private UserProvider userProvider;
 
-    private String userProviderId; // 제공자ID -> 추가기능
-
-    private Long userPoint; // 포인트 -> 추가기능
+    private Long userPoint;
 
     private LocalDateTime userStopDate; // 정지기한 -> 추가기능
 
@@ -62,15 +61,39 @@ public class User extends BaseEntity {
 
     private Integer userBeer;
 
-    // 회원가입
+    private void defaultUserSettings() {
+        userPopularity = 0;
+        userPopularityLimit = 5;
+        userNickname = String.valueOf(Math.random());
+        userDeleted = YN.N;
+        userPoint = 0L;
+        userSoju = 0;
+        userBeer = 0;
+    }
+
+    // 로컬 회원가입
     // 이메일 비밀번호 이름 생년월일
-    public static User createUser(String id, String pw, String name){
+    public static User createUser(String userId, String userPw, String userName, LocalDate userBirthday) {
         User user = new User();
-        user.userId = id;
-        user.userPw = pw;
-        user.userName = name;
+        user.defaultUserSettings();
         user.userRole = UserRole.ROLE_USER;
-        user.userPopularityLimit = 5;
+        user.userProvider = UserProvider.local;
+        user.userId = userId;
+        user.userPw = userPw;
+        user.userName = userName;
+        user.userBirthday = userBirthday;
+        return user;
+    }
+
+    // 소셜 회원가입
+    public static User createUser(UserProvider userProvider, String userId, String userName) {
+        User user = new User();
+        user.defaultUserSettings();
+        user.userRole = UserRole.ROLE_SOCIAL;
+        user.userProvider = userProvider;
+        user.userId = userId;
+        user.userPw = "비밀번호임";
+        user.userName = userName;
         return user;
     }
 
@@ -79,9 +102,6 @@ public class User extends BaseEntity {
     public void updateUser(String name) {
         this.userName = name;
     }
-//    public void updateUser(String nickname) {
-//        this.userNickname = nickname;
-//    }
 
     //비밀번호 수정
     public void updateUserPassword(String userPw) {
