@@ -87,4 +87,10 @@ public class User extends BaseEntity {
     public void updateUserPassword(String userPw) {
         this.userPw = userPw;
     }
+
+    // 회원 비활성화
+    public void disableUser() {
+        this.userDeleted = YN.Y;
+        this.userDeleteDate = LocalDateTime.now();
+    }
 }
