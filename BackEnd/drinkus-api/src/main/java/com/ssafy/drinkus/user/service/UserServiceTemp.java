@@ -1,10 +1,12 @@
 package com.ssafy.drinkus.user.service;
 
 import com.ssafy.drinkus.common.NotFoundException;
+import com.ssafy.drinkus.common.type.YN;
 import com.ssafy.drinkus.security.util.JwtUtil;
 import com.ssafy.drinkus.user.domain.User;
 import com.ssafy.drinkus.user.domain.UserRepository;
-import com.ssafy.drinkus.user.response.UserResponse;
+import com.ssafy.drinkus.user.response.UserMyInfoResponse;
+import com.ssafy.drinkus.user.response.UserProfileResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -12,7 +14,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -24,10 +29,15 @@ public class UserServiceTemp {
     private final JwtUtil jwtUtil;
 
     @Transactional(readOnly = true)
-    public UserResponse findUserById(Long userNo){
+    public UserProfileResponse findUserProfile(Long userNo){
         User user = userRepository.findById(userNo).orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
-        //System.out.println(user.getUserName());
-        return UserResponse.of(user);
+        return UserProfileResponse.from(user);
+    }
+
+    @Transactional(readOnly = true)
+    public UserMyInfoResponse findUserMyInfo(Long userNo){
+        User user = userRepository.findById(userNo).orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
+        return UserMyInfoResponse.from(user);
     }
 
     @Transactional
@@ -35,31 +45,28 @@ public class UserServiceTemp {
         User findUser = userRepository.findById(userNo)
                 .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
         findUser.disableUser();
-
-//        public void disableUser() {
-//            this.userDeleted = YN.Y;
-//            this.deleteDate = LocalDateTime.now();
-//        }
     }
 
-    @Scheduled(cron = "0 0 5 * * *")
+    // 전체 유저 대상, disableDate + 7일 인지 확인, 맞으면 DB에서 삭제
+    @Scheduled(cron = "0 0 6 * * *") // 매일 6시 정각
     @Transactional
     public void deleteUser(){
-        // 1. user_no 값 중 최대값을 받아온다.
-        Long maxUserNo = userRepository.findMaxUserNo();
-        System.out.println(maxUserNo);
-        // 2. 1 ~ 최대user_no 반복문을 돌면서 유저 검사
-        // 3. not found면 다음, 찾으면 disable_date + 7일 인지 확인
-        // 4. 맞으면 삭제
+        final int WAITING_DAYS = 7;
+        List<User> userList = userRepository.findAll();
 
-//        User findUser = userRepository.findById(userNo)
-//                .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
-//        userRepository.delete(findUser);
+        for(User user : userList){
+            LocalDateTime disableDate = user.getUserDeleteDate();
+            LocalDateTime todayDate = LocalDateTime.now();
+            if(user.getUserDeleted().equals(YN.Y) && todayDate.isAfter(disableDate.plusDays(WAITING_DAYS))){
+                userRepository.delete(user);
+            }
+        }
     }
 
-    @Scheduled(cron = "0 0 6 * * *")
+    @Scheduled(cron = "0 0 12 * * *") // 매일 12시 정각
     @Transactional
     public void resetPopularityLimit(){
-
+        final int POPULARITY_LIMIT = 5;
+        userRepository.resetUserPopularityLimit(POPULARITY_LIMIT);
     }
 }

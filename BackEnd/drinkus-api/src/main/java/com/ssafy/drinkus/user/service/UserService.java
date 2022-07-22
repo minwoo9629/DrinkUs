@@ -39,12 +39,10 @@ public class UserService {
             throw new DuplicateException("이미 가입된 회원입니다.");
         }
         User user = User.createUser(request.getUserId(), passwordEncoder.encode(request.getUserPw()), request.getUserName(), request.getUserBirthday());
-
         userRepository.save(user);
     }
 
     public String loginUser(UserLoginRequest request) {
-
         User findUser = userRepository.findByUserId(request.getUserId())
                 .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
 
@@ -55,9 +53,7 @@ public class UserService {
 
         // 전달받은 request를 가지고 authentication 생성
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUserId(), request.getUserPw()));
-
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
         String token = jwtUtil.createToken(authentication);
 
         return token;
@@ -65,19 +61,18 @@ public class UserService {
 
     //회원수정
     @Transactional
-    public void updateUser(UserUpdateRequest request, User user) {
-
-        User findUser = userRepository.findById(user.getUserNo())
+    public void updateUser(Long userNo, UserUpdateRequest request) {
+        User findUser = userRepository.findById(userNo)
                 .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
 
-        findUser.updateUser(request.getUserName());
+        findUser.updateUser(request.getUserNickname(), request.getUserIntroduce(), request.getUserSoju(), request.getUserBeer(), request.getUserImg());
     }
 
     //비밀번호 수정
     @Transactional
-    public void updatePassword(UserUpdatePasswordRequest request) {
+    public void updatePassword(Long userNo, UserUpdatePasswordRequest request) {
         //회원번호로 회원 조회
-        User findUser = userRepository.findByUserNo(request.getUserNo())
+        User findUser = userRepository.findByUserNo(userNo)
                 .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
 
         //이전 비밀번호 같은 지 확인
@@ -99,5 +94,11 @@ public class UserService {
         if(userRepository.findByUserId(id).isPresent()){
             throw new DuplicateException("이미 가입된 회원입니다.");
         }
+    }
+
+    //인기도 수정
+    @Transactional
+    public void updatePopularity(Long userNo, Integer popularNum){
+        userRepository.updatePopularity(userNo,popularNum);
     }
 }
