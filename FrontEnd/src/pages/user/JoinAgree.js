@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Header from "../../components/Header";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
@@ -22,10 +23,20 @@ const NeonLoginWrapper = styled.div`
 `;
 
 const AgreeWrapper = styled.div`
-  display: flex;
+  /* display: flex; */
   justify-content: center;
   flex-direction: column;
   align-items: center;
+`;
+
+const AgreeContent = styled.div`
+  justify-content: space-between;
+  width: 320px;
+  height: 64px;
+  border-radius: 36px;
+  background-color: #131317;
+  margin: 14px;
+  position: relative;
 `;
 
 const ButtonWrapper = styled.div`
@@ -48,23 +59,79 @@ const Button = styled.button`
   cursor: pointer;
 `;
 
-const JoinAgree = () => {
+const JoinAgree = ({ history }) => {
+  const [checkedButtons, setCheckedButtons] = useState([]);
+  const isAllChecked = checkedButtons.length === 3;
+  const disabled = !isAllChecked;
+
+
+  const changeHandler = (checked, id) => {
+    if (checked) {
+      setCheckedButtons([...checkedButtons, id]);
+    } else {
+      setCheckedButtons(checkedButtons.filter(button => button !== id));
+    }
+  };
+
 
   return (
     <div>
       <Header/>
       <Wrapper>
         <NeonLoginWrapper>
-          <AgreeWrapper> 이용정보 동의 받을 곳
-          </AgreeWrapper>
-          <ButtonWrapper>
-            <Link to="/join/type">
-              <Button>NEXT</Button>
-            </Link>
-            <Link to="/">
-              <Button>MAIN</Button>
-            </Link>
-          </ButtonWrapper>
+          <AgreeWrapper> 이용정보 동의 받을 곳 </AgreeWrapper>
+            <AgreeContent>
+              동의하세요
+              <input
+                type="checkbox"
+                id="check"
+                onChange={e => {
+                  changeHandler(e.currentTarget.checked, 'check');
+                }}
+                checked={checkedButtons.includes('check') ? true : false}
+                ></input>
+                <label id="check" htmlFor="check"></label>
+            </AgreeContent>
+            <AgreeContent>
+              동의하세요
+              <input
+                type="checkbox"
+                id="check2"
+                onChange={e => {
+                  changeHandler(e.currentTarget.checked, 'check2');
+                }}
+                checked={checkedButtons.includes('check2') ? true : false}
+                ></input>
+                <label id="check2" htmlFor="check2"></label>
+            </AgreeContent>
+            <AgreeContent>
+              동의하세요
+              <input
+                type="checkbox"
+                id="check3"
+                onChange={e => {
+                  changeHandler(e.currentTarget.checked, 'check3');
+                }}
+                checked={checkedButtons.includes('check3') ? true : false}
+                ></input>
+                <label id="check3" htmlFor="check3"></label>
+            </AgreeContent>
+            <ButtonWrapper>
+                <Link to="/">
+                  <Button>MAIN</Button>
+                </Link>
+                <Link to="/join/type">
+                  <Button
+                    disabled={disabled}
+                    onClick={() => history.push('/join/type')}
+                    style={
+                      disabled
+                        ? { backgroundColor: '#131317' }
+                        : { backgroundColor: '#605D9F' }
+                    }
+                  >NEXT</Button>
+                </Link>
+            </ButtonWrapper>
         </NeonLoginWrapper>
       </Wrapper>
     </div>
