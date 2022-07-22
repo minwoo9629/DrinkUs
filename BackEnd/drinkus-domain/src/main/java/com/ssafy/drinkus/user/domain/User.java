@@ -24,7 +24,7 @@ public class User extends BaseEntity {
     @Column(name = "user_no")
     private Long userNo;
 
-    private String userEmail;
+    private String userId;
 
     private String userPw;
 
@@ -41,7 +41,6 @@ public class User extends BaseEntity {
     private String userIntroduce;
 
     private String userImg;
-
 
     private LocalDateTime userDeleteDate;
 
@@ -65,9 +64,9 @@ public class User extends BaseEntity {
 
     // 회원가입
     // 이메일 비밀번호 이름 생년월일
-    public static User createUser(String email, String pw, String name){
+    public static User createUser(String id, String pw, String name){
         User user = new User();
-        user.userEmail = email;
+        user.userId = id;
         user.userPw = pw;
         user.userName = name;
         user.userRole = UserRole.ROLE_USER;
@@ -77,13 +76,16 @@ public class User extends BaseEntity {
 
     // 회원수정
     // 닉네임 주량 자기소개
+    public void updateUser(String name) {
+        this.userName = name;
+    }
 //    public void updateUser(String nickname) {
 //        this.userNickname = nickname;
 //    }
 
     //비밀번호 수정
-    public void updateUser(String name ) {
-        this.userName = name;
+    public void updateUserPassword(String userPw) {
+        this.userPw = userPw;
     }
 
     // 회원 비활성화
