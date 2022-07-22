@@ -51,9 +51,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             e.printStackTrace();
         }
 
-        // 지금 어디는 userId고 어디는 email로 되어있어서 조금 개같은데 빠른 수정 요망
         // request로부터 읽어들인 로그인 정보를 바탕으로 존재하는 유저인지 판단
-        Optional<User> oUser = userRepository.findByUserId(credentials.getUserId());
+        Optional<User> oUser = userRepository.findByUserName(credentials.getUserName());
         User user = oUser.get();
 
         UserDetails userDetails = UserPrincipal.create(user);

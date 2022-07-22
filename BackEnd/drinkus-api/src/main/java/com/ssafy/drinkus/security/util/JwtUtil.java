@@ -38,7 +38,7 @@ public class JwtUtil {
         Date expireDate = Date.from(localDateTime.atZone(defaultZoneId).toInstant());
 
         String token = Jwts.builder()
-                .setSubject(Long.toString(principal.getUserNo()))
+                .setSubject(Long.toString(principal.getUserId()))
                 .setIssuedAt(new Date())
                 .setExpiration(expireDate)
                 .signWith(SignatureAlgorithm.HS256, secretKey).compact();

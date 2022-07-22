@@ -1,5 +1,7 @@
 package com.ssafy.drinkus.user.domain.oauth;
 
+import com.ssafy.drinkus.user.domain.type.UserProvider;
+
 import javax.persistence.Embeddable;
 import java.util.Map;
 
@@ -15,7 +17,13 @@ public abstract class OAuth2UserInfo {
         return attributes;
     }
 
-    public abstract String getUserId(); // 이메일
+    public abstract String getUserEmail(); // 이메일
+
+    public abstract String getUserFullName();
+
+    public abstract UserProvider getUserProvider();
+
+    public abstract String getUserProviderId();
 
     public abstract String getUserName();
 }

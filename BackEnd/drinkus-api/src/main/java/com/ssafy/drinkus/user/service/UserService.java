@@ -35,15 +35,15 @@ public class UserService {
 
     @Transactional
     public void createUser(UserCreateRequest request) {
-        if (userRepository.existsByUserId(request.getUserId())) {
+        if (userRepository.existsByUserName(request.getUserName())) {
             throw new DuplicateException("이미 가입된 회원입니다.");
         }
-        User user = User.createUser(request.getUserId(), passwordEncoder.encode(request.getUserPw()), request.getUserName(), request.getUserBirthday());
+        User user = User.createUser(request.getUserName(), passwordEncoder.encode(request.getUserPw()), request.getUserFullName(), request.getUserBirthday(), request.getUserName());
         userRepository.save(user);
     }
 
     public String loginUser(UserLoginRequest request) {
-        User findUser = userRepository.findByUserId(request.getUserId())
+        User findUser = userRepository.findByUserName(request.getUserName())
                 .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
 
         if(!passwordEncoder.matches(request.getUserPw(), findUser.getUserPw())){
@@ -52,7 +52,7 @@ public class UserService {
         }
 
         // 전달받은 request를 가지고 authentication 생성
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUserId(), request.getUserPw()));
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUserName(), request.getUserPw()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtUtil.createToken(authentication);
 
@@ -61,8 +61,8 @@ public class UserService {
 
     //회원수정
     @Transactional
-    public void updateUser(Long userNo, UserUpdateRequest request) {
-        User findUser = userRepository.findById(userNo)
+    public void updateUser(Long userId, UserUpdateRequest request) {
+        User findUser = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
 
         findUser.updateUser(request.getUserNickname(), request.getUserIntroduce(), request.getUserSoju(), request.getUserBeer(), request.getUserImg());
@@ -70,9 +70,9 @@ public class UserService {
 
     //비밀번호 수정
     @Transactional
-    public void updatePassword(Long userNo, UserUpdatePasswordRequest request) {
+    public void updatePassword(Long userId, UserUpdatePasswordRequest request) {
         //회원번호로 회원 조회
-        User findUser = userRepository.findByUserNo(userNo)
+        User findUser = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
 
         //이전 비밀번호 같은 지 확인
@@ -90,15 +90,15 @@ public class UserService {
     }
 
     //아이디 찾기
-    public void findByUserId(String id){
-        if(userRepository.findByUserId(id).isPresent()){
+    public void findByUserName(String userName){
+        if(userRepository.existsByUserName(userName)){
             throw new DuplicateException("이미 가입된 회원입니다.");
         }
     }
 
     //인기도 수정
     @Transactional
-    public void updatePopularity(Long userNo, Integer popularNum){
-        userRepository.updatePopularity(userNo,popularNum);
+    public void updatePopularity(Long userId, Integer popularNum){
+        userRepository.updatePopularity(userId,popularNum);
     }
 }

@@ -21,14 +21,16 @@ public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_no")
-    private Long userNo;
+    @Column(name = "user_id")
+    private Long userId;
 
-    private String userId;
+    private String userName;
+
+    private String userEmail;
 
     private String userPw;
 
-    private String userName;
+    private String userFullName;
 
     private String userNickname;
 
@@ -53,6 +55,8 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private UserProvider userProvider;
 
+    private String userProviderId;
+
     private Long userPoint;
 
     private LocalDateTime userStopDate; // 정지기한 -> 추가기능
@@ -73,27 +77,32 @@ public class User extends BaseEntity {
 
     // 로컬 회원가입
     // 이메일 비밀번호 이름 생년월일
-    public static User createUser(String userId, String userPw, String userName, LocalDate userBirthday) {
+    public static User createUser(String userName, String userPw, String userFullName, LocalDate userBirthday, String userEmail) {
         User user = new User();
         user.defaultUserSettings();
         user.userRole = UserRole.ROLE_USER;
         user.userProvider = UserProvider.local;
-        user.userId = userId;
-        user.userPw = userPw;
+
         user.userName = userName;
+        user.userEmail = userEmail;
+        user.userPw = userPw;
+        user.userFullName = userFullName;
         user.userBirthday = userBirthday;
         return user;
     }
 
     // 소셜 회원가입
-    public static User createUser(UserProvider userProvider, String userId, String userName) {
+    public static User createUser(UserProvider userProvider, String userProviderId, String userName, String userEmail, String userFullName) {
         User user = new User();
         user.defaultUserSettings();
         user.userRole = UserRole.ROLE_SOCIAL;
-        user.userProvider = userProvider;
-        user.userId = userId;
         user.userPw = "비밀번호임";
+
+        user.userProvider = userProvider;
+        user.userProviderId = userProviderId;
         user.userName = userName;
+        user.userEmail = userEmail;
+        user.userFullName = userFullName;
         return user;
     }
 
