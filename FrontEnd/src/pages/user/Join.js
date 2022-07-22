@@ -95,7 +95,7 @@ width: 120px;
 const JoinButton = styled.button`
   font-size: 1rem;
   font-weight: 200;
-  font-style: italic;
+  /* font-style: italic; */
   color: #fff;
   padding: 1rem 1.2rem 1.1rem;
   border: 0.4rem solid #131317;
@@ -105,144 +105,52 @@ const JoinButton = styled.button`
   cursor: pointer;
 `;
 
-// const Wallpaper = styled.div`
-//   background-color: #black;
-//   width: 100vw;
-//   height: 100vh;
-//   display: 12rem;
-//   justify-content: center;
-//   align-items: center;
-// `;
+const Join = () => {
+  const [state, setState] = useState({
+      userId: "",
+      certificationNumber: "",
+      password: "",
+      passwordCheck: "",
+      userName: "",
+      userBirth: "",
+  });
 
-// const JoinForm = styled.div`
-//   background-color: #131317;
-//   width: 40vw;
-//   height: 100vh;
-//   display: table;
-//   margin-left: auto;
-//   margin-right: auto;
-//   justify-content: center;
-//   align-items: center;
-//   border-radius: 40px;
-// `;
+  
 
-// const InputContainer = styled.div`
-//   display: flex;
-//   width: 500px;
-//   justify-content: center;
-//   flex-direction: column;
-//   margin: 14px;
-//   align-items: flex-start;
-// `;
+  const userIdInput = useRef();
+  const passwordInput = useRef();
+  const passwordCheckInput = useRef();
+  const userNameInput = useRef();
+  const userBirthInput = useRef();
 
-// const UserInput = styled.input`
-//   position: relative;
-//   height: 64px;
-//   width: 280px;
-//   top: 7px;
-//   font-size: 18px;
-//   background-color: #b1a5c8;
-//   outline: none;
-//   border: 1px solid black;
-//   margin: 0px;
-//   color: white;
-//   border-radius: 20px;
-// `;
+  const onHandleInput = (e) => {
+      setState({ ...state, [e.target.name]: e.target.value });
+    };
 
-// const DuplicationCheckButton = styled.button`
-//   width: 40px;
-//   height: 40px;
-//   border-radius: 10px;
-//   border: 1px solid black;
-//   background-color: #fff;
-//   margin: 14px;
-//   font-size: 4px;
-//   color: #535353;
-//   cursor: pointer;
-// `;
-
-// const neon_text_color = "#5904de";
-// const NeonSignAnimation = 
-// 0%,
-//   19%,
-//   21%,
-//   23%,
-//   25%,
-//   54%,
-//   56%,
-//   100% {
-//     text-shadow: -0.2rem -0.2rem 1rem #fff, 0.2rem 0.2rem 1rem #fff,
-//       0 0 2rem ${neon_text_color}, 0 0 4rem ${neon_text_color},
-//       0 0 6rem ${neon_text_color}, 0 0 8rem ${neon_text_color},
-//       0 0 10rem ${neon_text_color};
-//   }
-
-//   20%,
-//   24%,
-//   55% {
-//     text-shadow: none;
-//     box-shadow: none;
-//   }
-// `;
-
-// const JoinButton = styled.button`
-//   font-size: 1rem;
-//   font-weight: 200;
-//   font-style: italic;
-//   color: #fff;
-//   padding: 1rem 1.2rem 1.1rem;
-//   border: 0.4rem solid #131317;
-//   border-radius: 2rem;
-//   text-transform: uppercase;
-//   background-color: #131317;
-//   cursor: pointer;
-//   animation: ${NeonSignAnimation} 10000s infinite alternate;
-// `;
-
-
- const Join = () => {
-     const [state, setState] = useState({
-         userId: "",
-          certificationNumber: "",
-         password: "",
-         passwordCheck: "",
-         userName: "",
-         userBirth: "",
-     });
-
-     const userIdInput = useRef();
-     const passwordInput = useRef();
-     const passwordCheckInput = useRef();
-     const userNameInput = useRef();
-     const userBirthInput = useRef();
-
-     const onHandleInput = (e) => {
-         setState({ ...state, [e.target.name]: e.target.value });
-       };
-    
-     const onHandleSubmit = () => {
-      if (state.userId.length === 0) {
-          userIdInput.current.focus();
-          return;
+  const onHandleSubmit = () => {
+  if (state.userId.length === 0) {
+      userIdInput.current.focus();
+      return;
+  }
+  if (state.password.length === 0) {
+      passwordInput.current.focus();
+      return;
+  }
+  if (state.passwordCheck !== state.password) {
+      passwordCheckInput.current.focus();
+      alert("비밀번호가 일치하지 않습니다")
+      return;
       }
-      if (state.password.length === 0) {
-          passwordInput.current.focus();
-          return;
-      }
-      if (state.passwordCheck.length === 0) {
-          passwordCheckInput.current.focus();
-          return;
-          }
-      if (state.userName.length === 0) {
-          userNameInput.current.focus();
-          return;
-      }
-      if (state.userBirth.length === 0) {
-          userBirthInput.current.focus();
-          return;
-      }
-     alert("(userName)님 드링커스에 오신걸 환영합니다");
-   };
+  if (state.userName.length === 0) {
+      userNameInput.current.focus();
+      return;
+  }
+  if (state.userBirth.length === 0) {
+      userBirthInput.current.focus();
+      return;
+  }
+  alert("(userName)님 드링커스에 오신걸 환영합니다");
+  };
    return (
      <div>
        <Header />
@@ -273,7 +181,7 @@ const JoinButton = styled.button`
                   </InputWrapper>
                   <InputWrapper>
                     <PasswordInput
-                      type="passwordCheck"
+                      type="password"
                       value={state.passwordCheck}
                       ref={passwordCheckInput}
                       name="passwordCheck"
@@ -300,13 +208,17 @@ const JoinButton = styled.button`
                       onChange={onHandleInput}
                       placeholder="생년월일"
                     />
+                    <form>
+                      <p><input type="date" value="2000-01-01" min="1900-01-01" max="2003-01-01" /></p>
+                      <p><input type="submit" value="Submit" /></p>
+                    </form>
                   </InputWrapper>
                 </JoinForm>
              </JoinWrapper>
              <ButtonWrapper>
                  <JoinButton onClick={onHandleSubmit}>JOIN</JoinButton>
                  <Link to="/">
-                   <JoinButton>MAIN</JoinButton>
+                   <JoinButton>MAIN 보다는 뒤로가기가 나을거같음 왜냐면 다시 동의 다하기 넘 귀찮</JoinButton>
                  </Link>
              </ButtonWrapper>
          </NeonLoginWrapper>
