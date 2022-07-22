@@ -20,6 +20,7 @@ public class UserControllerTemp {
     @GetMapping("{user_no}")
     public ResponseEntity<UserResponse> findUserById(@PathVariable("user_no")Long userNo){
         UserResponse body = userService.findUserById(userNo);
+        userService.deleteUser();
         return ResponseEntity.ok().body(body);
     }
 
@@ -29,6 +30,4 @@ public class UserControllerTemp {
         userService.disableUser(userNo);
         return ResponseEntity.ok().build();
     }
-
-    // 회원 삭제
 }

@@ -42,7 +42,6 @@ public class User extends BaseEntity {
 
     private String userImg;
 
-    private LocalDateTime createdDate;
 
     private LocalDateTime userDeleteDate;
 
@@ -85,5 +84,11 @@ public class User extends BaseEntity {
     //비밀번호 수정
     public void updateUser(String name ) {
         this.userName = name;
+    }
+
+    // 회원 비활성화
+    public void disableUser() {
+        this.userDeleted = YN.Y;
+        this.userDeleteDate = LocalDateTime.now();
     }
 }
