@@ -77,7 +77,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 // 여기부터 소셜로그인용 security 설정.
                 .oauth2Login()
-                // .loginPage()  만약에 위에서 로그인 했을때 필터링해줄게 있다면 여기에서도 설정해주자
                 .userInfoEndpoint()
                 .userService(customOAuth2UserService)
                 .and()
