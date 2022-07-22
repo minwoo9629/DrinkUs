@@ -99,8 +99,12 @@ public class User extends BaseEntity {
 
     // 회원수정
     // 닉네임 주량 자기소개
-    public void updateUser(String name) {
-        this.userName = name;
+    public void updateUser(String userNickname, String userIntroduce, Integer userSoju, Integer userBeer, String userImg) {
+        this.userNickname = userNickname;
+        this.userIntroduce = userIntroduce;
+        this.userSoju = userSoju;
+        this.userBeer = userBeer;
+        this.userImg = userImg;
     }
 
     //비밀번호 수정
