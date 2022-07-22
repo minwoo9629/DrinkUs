@@ -11,8 +11,6 @@ import javax.validation.constraints.Pattern;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserUpdatePasswordRequest {
-    private Long userNo;
-
     private String userBeforePw;
 
     @NotBlank(message = "비밀번호는 필수값입니다.")

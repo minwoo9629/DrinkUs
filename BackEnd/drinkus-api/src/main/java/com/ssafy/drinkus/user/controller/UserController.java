@@ -2,10 +2,7 @@ package com.ssafy.drinkus.user.controller;
 
 import com.ssafy.drinkus.config.LoginUser;
 import com.ssafy.drinkus.user.domain.User;
-import com.ssafy.drinkus.user.request.UserCreateRequest;
-import com.ssafy.drinkus.user.request.UserLoginRequest;
-import com.ssafy.drinkus.user.request.UserUpdatePasswordRequest;
-import com.ssafy.drinkus.user.request.UserUpdateRequest;
+import com.ssafy.drinkus.user.request.*;
 import com.ssafy.drinkus.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -37,17 +34,18 @@ public class UserController {
     }
 
     //회원수정
-    @PatchMapping("")
-    public ResponseEntity<Void> updateUser(@LoginUser User user,
+    @PutMapping
+    public ResponseEntity<Void> updateUser(@LoginUser Long userNo,
                                            @RequestBody @Valid UserUpdateRequest request){
-        userService.updateUser(request, user);
+        userService.updateUser(userNo, request);
         return ResponseEntity.ok().build();
     }
 
     // 비밀번호 수정
     @PatchMapping("/pw")
-    public ResponseEntity<Void> updatePassword(@RequestBody @Valid UserUpdatePasswordRequest request){
-        userService.updatePassword(request);
+    public ResponseEntity<Void> updatePassword(@LoginUser Long userNo,
+                                               @RequestBody @Valid UserUpdatePasswordRequest request){
+        userService.updatePassword(userNo, request);
         return ResponseEntity.ok().build();
     }
 
@@ -55,11 +53,17 @@ public class UserController {
 
 
     // 아이디 중복 검사
-    // part로 보내줌
     @PostMapping("/join/id")
     public ResponseEntity<Void> findByUserId(@RequestPart String id){
         userService.findByUserId(id);
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    // 인기도 수정
+    @PatchMapping("/popularity")
+    public ResponseEntity<Void> updatePopularity(@LoginUser Long userNo, @RequestBody UserPopularityRequest request){
+        userService.updatePopularity(userNo, request.getPopularNum());
+        return ResponseEntity.ok().build();
     }
 
 }
