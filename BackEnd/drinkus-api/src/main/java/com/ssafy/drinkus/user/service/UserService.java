@@ -12,6 +12,10 @@ import com.ssafy.drinkus.user.request.UserUpdatePasswordRequest;
 import com.ssafy.drinkus.user.request.UserUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,12 +31,15 @@ public class UserService {
 
     private final JwtUtil jwtUtil;
 
+    private final AuthenticationManager authenticationManager;
+
     @Transactional
     public void createUser(UserCreateRequest request) {
-        if(userRepository.findByUserId(request.getUserId()).isPresent()){
+        if (userRepository.existsByUserId(request.getUserId())) {
             throw new DuplicateException("이미 가입된 회원입니다.");
         }
-        User user = User.createUser(request.getUserId(), passwordEncoder.encode(request.getUserPw()), request.getUserName());
+        User user = User.createUser(request.getUserId(), passwordEncoder.encode(request.getUserPw()), request.getUserName(), request.getUserBirthday());
+
         userRepository.save(user);
     }
 
@@ -46,7 +53,14 @@ public class UserService {
             throw new NotMatchException("회원의 비밀번호가 일치하지 않습니다.");
         }
 
-        return jwtUtil.createToken(findUser.getUserNo());
+        // 전달받은 request를 가지고 authentication 생성
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUserId(), request.getUserPw()));
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        String token = jwtUtil.createToken(authentication);
+
+        return token;
     }
 
     //회원수정
