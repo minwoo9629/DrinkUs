@@ -2,20 +2,15 @@ package com.ssafy.drinkus.security.config;
 
 import com.ssafy.drinkus.security.filter.JwtAuthenticationFilter;
 import com.ssafy.drinkus.security.filter.JwtAuthorizationFilter;
-import com.ssafy.drinkus.security.handler.CustomAccessDeniedHandler;
 import com.ssafy.drinkus.security.handler.CustomAuthenticationEntryPoint;
 import com.ssafy.drinkus.security.service.CustomOAuth2UserService;
-import com.ssafy.drinkus.security.service.CustomUserDetailsService;
 import com.ssafy.drinkus.security.util.JwtUtil;
 import com.ssafy.drinkus.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -43,7 +38,6 @@ import java.io.IOException;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CustomAuthenticationEntryPoint authenticationEntryPoint;
-    private final CustomUserDetailsService customUserDetailsService;
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
 
@@ -116,10 +110,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean //수동bean 등록
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(customUserDetailsService).passwordEncoder(passwordEncoder());
     }
 
     @Override

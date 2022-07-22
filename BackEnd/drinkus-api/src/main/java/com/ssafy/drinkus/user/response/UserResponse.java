@@ -85,7 +85,7 @@ public class UserResponse {
         return res;
     }
 
-    public static UserResponse ofPublic(User user){
+    public static UserResponse ofPublic(User user) {
         UserResponse res = new UserResponse();
         res.setUserNickname(user.getUserNickname());
         res.setUserPopularity(user.getUserPopularity());
