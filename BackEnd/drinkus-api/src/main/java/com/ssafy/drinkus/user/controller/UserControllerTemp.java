@@ -14,23 +14,23 @@ public class UserControllerTemp {
     private final UserServiceTemp userService;
 
     // 프로필 조회
-    @GetMapping("/profile/{user_no}")
-    public ResponseEntity<UserProfileResponse> findUserProfile(@PathVariable("user_no")Long userNo){
-        UserProfileResponse body = userService.findUserProfile(userNo);
+    @GetMapping("/profile/{user_id}")
+    public ResponseEntity<UserProfileResponse> findUserProfile(@PathVariable("user_id")Long userId){
+        UserProfileResponse body = userService.findUserProfile(userId);
         return ResponseEntity.ok().body(body);
     }
 
     // 마이페이지 내정보 조회
-    @GetMapping("{user_no}")
-    public ResponseEntity<UserMyInfoResponse> findUserMyInfo(@PathVariable("user_no")Long userNo){
-        UserMyInfoResponse body = userService.findUserMyInfo(userNo);
+    @GetMapping("{user_id}")
+    public ResponseEntity<UserMyInfoResponse> findUserMyInfo(@PathVariable("user_id")Long userId){
+        UserMyInfoResponse body = userService.findUserMyInfo(userId);
         return ResponseEntity.ok().body(body);
     }
 
     // 회원 비활성화 (탈퇴 대기)
-    @PutMapping("/disable/{user_no}")
-    public ResponseEntity<Void> disableUser(@PathVariable("user_no") Long userNo) {
-        userService.disableUser(userNo);
+    @PutMapping("/disable/{user_id}")
+    public ResponseEntity<Void> disableUser(@PathVariable("user_id") Long userId) {
+        userService.disableUser(userId);
         return ResponseEntity.ok().build();
     }
 }

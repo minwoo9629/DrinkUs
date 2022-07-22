@@ -12,8 +12,8 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class UserMyInfoResponse {
 
-    private String userId;
     private String userName;
+    private String userFullName;
     private String userNickname;
     private Integer userPopularity;
     private LocalDate userBirthday;
@@ -24,7 +24,7 @@ public class UserMyInfoResponse {
     private Integer userBeer;
 
     public static UserMyInfoResponse from(User user){
-        return new UserMyInfoResponse(user.getUserId(), user.getUserName(), user.getUserNickname(), user.getUserPopularity(), user.getUserBirthday(),
+        return new UserMyInfoResponse(user.getUserName(), user.getUserFullName(), user.getUserNickname(), user.getUserPopularity(), user.getUserBirthday(),
                 user.getUserIntroduce(), user.getUserImg(), user.getUserPoint(), user.getUserSoju(), user.getUserBeer());
     }
 }

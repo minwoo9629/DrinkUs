@@ -13,16 +13,20 @@ import java.util.*;
 @Data
 public class UserPrincipal implements UserDetails, OAuth2User {
 
-    private Long userNo;
-    private String userId; // 이메일
+    private Long userId;
+    private String userName;
     private String userPw;
+    private String userEmail;
+    private String userFullName;
     private Collection<? extends GrantedAuthority> authorities;
     private Map<String, Object> attributes;
 
-    public UserPrincipal(Long userNo, String userId, String userPw, Collection<? extends GrantedAuthority> authorities) {
-        this.userNo = userNo;
+    public UserPrincipal(Long userId, String userName, String userPw, String userEmail, String userFullName, Collection<? extends GrantedAuthority> authorities) {
         this.userId = userId;
+        this.userName = userName;
         this.userPw = userPw;
+        this.userEmail = userEmail;
+        this.userFullName = userFullName;
         this.authorities = authorities;
     }
 
@@ -32,9 +36,11 @@ public class UserPrincipal implements UserDetails, OAuth2User {
                 singletonList(new SimpleGrantedAuthority(String.valueOf(user.getUserRole())));
 
         return new UserPrincipal(
-                user.getUserNo(),
                 user.getUserId(),
+                user.getUserName(),
                 user.getUserPw(),
+                user.getUserEmail(),
+                user.getUserFullName(),
                 authorities
         );
     }
@@ -45,17 +51,13 @@ public class UserPrincipal implements UserDetails, OAuth2User {
         return userPrincipal;
     }
 
-    public Long getUserNo() {
-        return userNo;
-    }
-
-    public String getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
     @Override
     public String getName() {
-        return String.valueOf(userNo);
+        return String.valueOf(userId);
     }
 
     @Override
@@ -75,7 +77,7 @@ public class UserPrincipal implements UserDetails, OAuth2User {
 
     @Override
     public String getUsername() {
-        return userId;
+        return userName;
     }
 
     @Override

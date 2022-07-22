@@ -1,5 +1,7 @@
 package com.ssafy.drinkus.user.domain.oauth;
 
+import com.ssafy.drinkus.user.domain.type.UserProvider;
+
 import java.util.Map;
 
 public class KakaoOAuthUserInfo extends OAuth2UserInfo {
@@ -14,12 +16,27 @@ public class KakaoOAuthUserInfo extends OAuth2UserInfo {
     }
 
     @Override
-    public String getUserId() {
+    public String getUserEmail() {
         return attributesAccount.get("email").toString();
     }
 
     @Override
-    public String getUserName() {
+    public String getUserFullName() {
         return attributesProfile.get("nickname").toString();
+    }
+
+    @Override
+    public UserProvider getUserProvider() {
+        return UserProvider.kakao;
+    }
+
+    @Override
+    public String getUserProviderId() {
+        return "카카오인디" + getUserName();
+    }
+
+    @Override
+    public String getUserName() {
+        return "asdasd@asdasd.com";
     }
 }

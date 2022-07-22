@@ -29,20 +29,20 @@ public class UserServiceTemp {
     private final JwtUtil jwtUtil;
 
     @Transactional(readOnly = true)
-    public UserProfileResponse findUserProfile(Long userNo){
-        User user = userRepository.findById(userNo).orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
+    public UserProfileResponse findUserProfile(Long userId){
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
         return UserProfileResponse.from(user);
     }
 
     @Transactional(readOnly = true)
-    public UserMyInfoResponse findUserMyInfo(Long userNo){
-        User user = userRepository.findById(userNo).orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
+    public UserMyInfoResponse findUserMyInfo(Long userId){
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
         return UserMyInfoResponse.from(user);
     }
 
     @Transactional
-    public void disableUser(Long userNo){
-        User findUser = userRepository.findById(userNo)
+    public void disableUser(Long userId){
+        User findUser = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
         findUser.disableUser();
     }

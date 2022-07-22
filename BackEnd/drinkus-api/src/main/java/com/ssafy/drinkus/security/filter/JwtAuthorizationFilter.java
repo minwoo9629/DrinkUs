@@ -56,10 +56,10 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
         if (token != null) {
             Claims claims = jwtUtil.getClaims(token);
-            Long id = Long.parseLong(claims.getSubject()); // getSubject 값은 users의 userno값
+            Long id = Long.parseLong(claims.getSubject()); // getSubject 값은 users의 userid값
 
             if (id != null) {
-                Optional<User> oUser = userRepository.findByUserNo(id);
+                Optional<User> oUser = userRepository.findByUserId(id);
                 User user = oUser.get();
                 UserPrincipal principal = UserPrincipal.create(user);
 
