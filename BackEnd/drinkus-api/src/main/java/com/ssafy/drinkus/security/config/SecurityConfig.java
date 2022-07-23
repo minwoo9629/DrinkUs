@@ -76,6 +76,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     @Override
                     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
                         // 인증에 성공할 시 JWT 발행
+                        System.out.println("SecurityConfig.onAuthenticationSuccess");
                         String token = jwtUtil.createToken(authentication);
                         response.addHeader("Authorization", "Bearer " + token);
                         String targetUrl = "/auth/success";
@@ -116,5 +117,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
-
 }

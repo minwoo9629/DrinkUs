@@ -1,6 +1,7 @@
 package com.ssafy.drinkus.user.controller;
 
 import com.ssafy.drinkus.config.LoginUser;
+import com.ssafy.drinkus.security.util.JwtUtil;
 import com.ssafy.drinkus.user.domain.User;
 import com.ssafy.drinkus.user.request.*;
 import com.ssafy.drinkus.user.response.UserMyInfoResponse;
@@ -10,6 +11,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -31,7 +36,10 @@ public class UserController {
     //로그인
     @PostMapping("/login")
     public ResponseEntity<Void> loginUser(@RequestBody @Valid UserLoginRequest request){
+        System.out.println("UserController.loginUser");
         String accessToken = userService.loginUser(request);
+        System.out.println("accessToken 발급 완료");
+
         return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, accessToken).build();
     }
 
