@@ -39,7 +39,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         String header = request.getHeader("Authorization");
 
         // If header does not contain BEARER or is null delegate to Spring impl and exit
-        if (header == null || !header.startsWith("Bearer")) {
+        if (header == null || !header.startsWith("Bearer ")) {
             chain.doFilter(request, response);
             return;
         }
@@ -51,8 +51,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     }
 
     private Authentication getUsernamePasswordAuthentication(HttpServletRequest request) {
-        String token = request.getHeader("Authorization")
-                .replace("Bearer", "");
+        String token = request.getHeader("Authorization").substring(7);
 
         if (token != null) {
             Claims claims = jwtUtil.getClaims(token);
@@ -65,10 +64,9 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
                 // OAuth 인지 일반 로그인인지 구분할 필요가 없음. 왜냐하면 password를 Authentication이 가질 필요가 없으니!!
                 // JWT가 로그인 프로세스를 가로채서 인증다 해버림. (OAuth2.0이든 그냥 일반 로그인 이든)
-
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(principal, null, principal.getAuthorities());
-                SecurityContextHolder.getContext().setAuthentication(authentication); // 세션에 넣기
+                SecurityContextHolder.getContext().setAuthentication(authentication);
                 return authentication;
             }
         }

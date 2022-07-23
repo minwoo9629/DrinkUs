@@ -42,6 +42,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+        System.out.println("JwtAuthenticationFilter.attemptAuthentication");
         // 로그인하려는 유저에게 권한이 있는지 확인
         UserLoginRequest credentials = null;
 
@@ -67,6 +68,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
+        System.out.println("JwtAuthenticationFilter.successfulAuthentication");
         // 토큰 생성 후 발행
         String token = jwtUtil.createToken(authResult);
         response.addHeader("Authorization", "Bearer " + token);
