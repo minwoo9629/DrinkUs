@@ -4,21 +4,24 @@ import com.ssafy.drinkus.user.domain.type.UserProvider;
 
 import java.util.Map;
 
-public class GoogleOAuth2UserInfo extends OAuth2UserInfo {
+public class NaverOAuth2UserInfo extends OAuth2UserInfo {
 
-    public GoogleOAuth2UserInfo(Map<String, Object> attributes) {
+    private Map<String, Object> attributesAccount;
+
+    public NaverOAuth2UserInfo(Map<String, Object> attributes) {
         super(attributes);
+        this.attributesAccount = (Map<String, Object>) attributes.get("kakao_account");
     }
 
     @Override
     public String getUserEmail() {
-        return (String) attributes.get("email");
+        return attributesAccount.get("email").toString();
     }
 
 
     @Override
     public UserProvider getUserProvider() {
-        return UserProvider.google;
+        return UserProvider.naver;
     }
 
     @Override
@@ -28,6 +31,6 @@ public class GoogleOAuth2UserInfo extends OAuth2UserInfo {
 
     @Override
     public String getUserName() {
-        return (String) attributes.get("sub");
+        return String.valueOf(attributes.get("id"));
     }
 }

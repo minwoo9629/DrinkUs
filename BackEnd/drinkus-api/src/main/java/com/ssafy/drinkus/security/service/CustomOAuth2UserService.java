@@ -44,13 +44,12 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(oAuth2UserRequest.getClientRegistration().getRegistrationId(), oAuth2User.getAttributes());
 
         System.out.println("oAuth2UserInfo.getUserEmail() = " + oAuth2UserInfo.getUserEmail());
-        System.out.println("oAuth2UserInfo.getUserFullName() = " + oAuth2UserInfo.getUserFullName());
         System.out.println("oAuth2UserInfo.getAttributes() = " + oAuth2UserInfo.getAttributes());
         if (StringUtils.isEmpty(oAuth2UserInfo.getUserEmail())) {
             throw new NotFoundException("불러온 이메일이 존재하지 않습니다.");
         }
 
-        // 이메일이 아닌 고유 아이디를 이용하여 가입 여부를 조회
+        // 고유 아이디를 이용하여 가입 여부를 조회
         System.out.println("userRepository = " + userRepository.findByUserName(oAuth2UserInfo.getUserName()));
         Optional<User> userOptional = userRepository.findByUserName(oAuth2UserInfo.getUserName());
         User user;
@@ -67,11 +66,17 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private User registerNewUser(OAuth2UserRequest oAuth2UserRequest, OAuth2UserInfo oAuth2UserInfo) {
         UserProvider userProvider = UserProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId());
-        String userFullName = oAuth2UserInfo.getUserFullName();
         String userEmail = oAuth2UserInfo.getUserEmail();
         String userProviderId = oAuth2UserInfo.getUserProviderId();
         String userName = oAuth2UserInfo.getUserName();
-        User user = User.createUser(userProvider, userProviderId, userName, userEmail, userFullName);
+
+        System.out.println("####유저정보####");
+        System.out.println("userEmail = " + userEmail);
+        System.out.println("userProvider = " + userProvider);
+        System.out.println("userProviderId = " + userProviderId);
+        System.out.println("userName = " + userName);
+        
+        User user = User.createUser(userProvider, userProviderId, userName, userEmail);
 
         System.out.println("소셜 로그인: 새 회원을 등록합니다.");
         return userRepository.save(user);

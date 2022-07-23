@@ -6,5 +6,7 @@ import lombok.Getter;
 public enum UserProvider {
     local,
     google,
-    kakao
+    kakao,
+    naver,
+    facebook
 }

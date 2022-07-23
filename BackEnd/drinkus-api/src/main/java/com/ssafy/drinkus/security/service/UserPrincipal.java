@@ -17,16 +17,14 @@ public class UserPrincipal implements UserDetails, OAuth2User {
     private String userName;
     private String userPw;
     private String userEmail;
-    private String userFullName;
     private Collection<? extends GrantedAuthority> authorities;
     private Map<String, Object> attributes;
 
-    public UserPrincipal(Long userId, String userName, String userPw, String userEmail, String userFullName, Collection<? extends GrantedAuthority> authorities) {
+    public UserPrincipal(Long userId, String userName, String userPw, String userEmail, Collection<? extends GrantedAuthority> authorities) {
         this.userId = userId;
         this.userName = userName;
         this.userPw = userPw;
         this.userEmail = userEmail;
-        this.userFullName = userFullName;
         this.authorities = authorities;
     }
 
@@ -40,7 +38,6 @@ public class UserPrincipal implements UserDetails, OAuth2User {
                 user.getUserName(),
                 user.getUserPw(),
                 user.getUserEmail(),
-                user.getUserFullName(),
                 authorities
         );
     }

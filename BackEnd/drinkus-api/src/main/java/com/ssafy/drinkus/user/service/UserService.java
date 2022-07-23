@@ -38,7 +38,7 @@ public class UserService {
         if (userRepository.existsByUserName(request.getUserName())) {
             throw new DuplicateException("이미 가입된 회원입니다.");
         }
-        User user = User.createUser(request.getUserName(), passwordEncoder.encode(request.getUserPw()), request.getUserFullName(), request.getUserBirthday(), request.getUserName());
+        User user = User.createUser(request.getUserName(), passwordEncoder.encode(request.getUserPw()), request.getUserBirthday(), request.getUserName());
         userRepository.save(user);
     }
 
