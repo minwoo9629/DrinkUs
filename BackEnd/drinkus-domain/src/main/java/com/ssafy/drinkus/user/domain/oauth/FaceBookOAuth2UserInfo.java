@@ -4,9 +4,9 @@ import com.ssafy.drinkus.user.domain.type.UserProvider;
 
 import java.util.Map;
 
-public class GoogleOAuth2UserInfo extends OAuth2UserInfo {
+public class FaceBookOAuth2UserInfo extends OAuth2UserInfo {
 
-    public GoogleOAuth2UserInfo(Map<String, Object> attributes) {
+    public FaceBookOAuth2UserInfo(Map<String, Object> attributes) {
         super(attributes);
     }
 
@@ -15,10 +15,9 @@ public class GoogleOAuth2UserInfo extends OAuth2UserInfo {
         return (String) attributes.get("email");
     }
 
-
     @Override
     public UserProvider getUserProvider() {
-        return UserProvider.google;
+        return UserProvider.facebook;
     }
 
     @Override
@@ -28,6 +27,6 @@ public class GoogleOAuth2UserInfo extends OAuth2UserInfo {
 
     @Override
     public String getUserName() {
-        return (String) attributes.get("sub");
+        return (String) attributes.get("id");
     }
 }
