@@ -36,9 +36,16 @@ const Header = () => {
         {user.isLogin ? (
           <>
             <li>
-              <NavLink to={"/login"}>{user.data.nickName}님</NavLink>
+              <NavLink to={"/users/{user_no}"}>{user.data.nickName}님</NavLink>
             </li>
-
+            <li>
+              {/* api 문서 나오면 주소 일치시켜야 해 */}
+              <NavLink to={"/alarm"}><i class="far fa-heart"></i></NavLink>
+            </li>
+            <li>
+              {/* api 문서 나오면 주소 일치시켜야 해 */}
+              <NavLink to={"/friend"}><i class="fa-solid fa-user-group"></i></NavLink>
+            </li>
             <li>
               <NavLink to={"/logout"}>로그아웃</NavLink>
             </li>
