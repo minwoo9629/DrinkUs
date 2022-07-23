@@ -4,15 +4,13 @@ import com.ssafy.drinkus.user.domain.type.UserProvider;
 
 import java.util.Map;
 
-public class KakaoOAuthUserInfo extends OAuth2UserInfo {
+public class KakaoOAuth2UserInfo extends OAuth2UserInfo {
 
     private Map<String, Object> attributesAccount;
-    private Map<String, Object> attributesProfile;
 
-    public KakaoOAuthUserInfo(Map<String, Object> attributes) {
+    public KakaoOAuth2UserInfo(Map<String, Object> attributes) {
         super(attributes);
         this.attributesAccount = (Map<String, Object>) attributes.get("kakao_account");
-        this.attributesProfile = (Map<String, Object>) attributesAccount.get("profile");
     }
 
     @Override
@@ -20,10 +18,6 @@ public class KakaoOAuthUserInfo extends OAuth2UserInfo {
         return attributesAccount.get("email").toString();
     }
 
-    @Override
-    public String getUserFullName() {
-        return attributesProfile.get("nickname").toString();
-    }
 
     @Override
     public UserProvider getUserProvider() {
@@ -32,11 +26,11 @@ public class KakaoOAuthUserInfo extends OAuth2UserInfo {
 
     @Override
     public String getUserProviderId() {
-        return "카카오인디" + getUserName();
+        return getUserProvider() + "_" + getUserName();
     }
 
     @Override
     public String getUserName() {
-        return "asdasd@asdasd.com";
+        return String.valueOf(attributes.get("id"));
     }
 }
