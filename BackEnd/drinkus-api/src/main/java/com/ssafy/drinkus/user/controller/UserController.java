@@ -3,6 +3,8 @@ package com.ssafy.drinkus.user.controller;
 import com.ssafy.drinkus.config.LoginUser;
 import com.ssafy.drinkus.user.domain.User;
 import com.ssafy.drinkus.user.request.*;
+import com.ssafy.drinkus.user.response.UserMyInfoResponse;
+import com.ssafy.drinkus.user.response.UserProfileResponse;
 import com.ssafy.drinkus.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -49,9 +51,6 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    //회원탈퇴
-
-
     // 아이디 중복 검사
     @PostMapping("/join/id")
     public ResponseEntity<Void> findByUserId(@RequestPart String userName){
@@ -61,9 +60,29 @@ public class UserController {
 
     // 인기도 수정
     @PatchMapping("/popularity")
-    public ResponseEntity<Void> updatePopularity(@LoginUser Long userNo, @RequestBody UserPopularityRequest request){
-        userService.updatePopularity(userNo, request.getPopularNum());
+    public ResponseEntity<Void> updatePopularity(@LoginUser Long userId, @RequestBody UserPopularityRequest request){
+        userService.updatePopularity(userId, request.getPopularNum());
         return ResponseEntity.ok().build();
     }
 
+    // 프로필 조회
+    @GetMapping("/profile/{user_id}")
+    public ResponseEntity<UserProfileResponse> findUserProfile(@PathVariable("user_id")Long userId){
+        UserProfileResponse body = userService.findUserProfile(userId);
+        return ResponseEntity.ok().body(body);
+    }
+
+    // 내정보 조회
+    @GetMapping("")
+    public ResponseEntity<UserMyInfoResponse> findUserMyInfo(@LoginUser Long userId){
+        UserMyInfoResponse body = userService.findUserMyInfo(userId);
+        return ResponseEntity.ok().body(body);
+    }
+
+    // 회원 탈퇴 (삭제 대기)
+    @PutMapping("/disable")
+    public ResponseEntity<Void> disableUser(@LoginUser Long userId) {
+        userService.disableUser(userId);
+        return ResponseEntity.ok().build();
+    }
 }

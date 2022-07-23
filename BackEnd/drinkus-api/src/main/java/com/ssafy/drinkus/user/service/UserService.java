@@ -3,6 +3,7 @@ package com.ssafy.drinkus.user.service;
 import com.ssafy.drinkus.common.DuplicateException;
 import com.ssafy.drinkus.common.NotFoundException;
 import com.ssafy.drinkus.common.NotMatchException;
+import com.ssafy.drinkus.common.type.YN;
 import com.ssafy.drinkus.security.util.JwtUtil;
 import com.ssafy.drinkus.user.domain.User;
 import com.ssafy.drinkus.user.domain.UserRepository;
@@ -10,8 +11,11 @@ import com.ssafy.drinkus.user.request.UserCreateRequest;
 import com.ssafy.drinkus.user.request.UserLoginRequest;
 import com.ssafy.drinkus.user.request.UserUpdatePasswordRequest;
 import com.ssafy.drinkus.user.request.UserUpdateRequest;
+import com.ssafy.drinkus.user.response.UserMyInfoResponse;
+import com.ssafy.drinkus.user.response.UserProfileResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,6 +23,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -100,5 +107,52 @@ public class UserService {
     @Transactional
     public void updatePopularity(Long userId, Integer popularNum){
         userRepository.updatePopularity(userId,popularNum);
+    }
+
+    // 회원 프로필 조회
+    @Transactional(readOnly = true)
+    public UserProfileResponse findUserProfile(Long userId){
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
+        return UserProfileResponse.from(user);
+    }
+
+    // 회원 내정보 조회
+    @Transactional(readOnly = true)
+    public UserMyInfoResponse findUserMyInfo(Long userId){
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
+        return UserMyInfoResponse.from(user);
+    }
+
+    // 회원 탈퇴 (삭제 대기)
+    @Transactional
+    public void disableUser(Long userId){
+        User findUser = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
+        findUser.disableUser();
+    }
+
+    // 회원 삭제 스케줄 task
+    @Scheduled(cron = "0 0 6 * * *") // 매일 6시 정각
+    @Transactional
+    public void deleteUser(){
+        // 전체 유저 대상, disableDate + 7일 인지 확인, 맞으면 DB에서 삭제
+        final int WAITING_DAYS = 7;
+        List<User> userList = userRepository.findAll();
+
+        for(User user : userList){
+            LocalDateTime disableDate = user.getUserDeleteDate();
+            LocalDateTime todayDate = LocalDateTime.now();
+            if(user.getUserDeleted().equals(YN.Y) && todayDate.isAfter(disableDate.plusDays(WAITING_DAYS))){
+                userRepository.delete(user);
+            }
+        }
+    }
+
+    // 인기도 제한 초기화 스케줄 task
+    @Scheduled(cron = "0 0 7 * * *") // 매일 7시 정각
+    @Transactional
+    public void resetPopularityLimit(){
+        final int POPULARITY_LIMIT = 5;
+        userRepository.resetUserPopularityLimit(POPULARITY_LIMIT);
     }
 }
