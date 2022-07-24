@@ -102,9 +102,10 @@ public class UserController {
         return ResponseEntity.ok().body(body);
     }
 
-    // 비밀번호 찾기
-    @GetMapping("/pw")
+    // 비밀번호 재설정 및 이메일 발송
+    @PutMapping("/pw")
     public ResponseEntity<?> findMyPw(@RequestBody @Valid UserFindMyPwRequest request){
+        userService.resetPw(request);
         return ResponseEntity.ok().build();
     }
 }
