@@ -47,7 +47,7 @@ public class UserService {
         if (userRepository.existsByUserName(request.getUserName())) {
             throw new DuplicateException("이미 가입된 회원입니다.");
         }
-        User user = User.createUser(request.getUserName(), passwordEncoder.encode(request.getUserPw()), request.getUserBirthday(), request.getUserName());
+        User user = User.createUser(request.getUserName(), passwordEncoder.encode(request.getUserPw()), request.getUserFullname(), request.getUserBirthday(), request.getUserName());
         userRepository.save(user);
     }
 
@@ -148,7 +148,7 @@ public class UserService {
         List<String> newUserNameList = new ArrayList<>();
         for(String userName : userNameList){
             int nameLen = userName.indexOf("@");
-            int halfNameLen = nameLen / 2;
+            int halfNameLen = (nameLen / 2) + 1;
 
             StringBuilder sb = new StringBuilder(userName);
             for(int i = halfNameLen ; i < nameLen ; i++){

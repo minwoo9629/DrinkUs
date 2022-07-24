@@ -14,6 +14,5 @@ public class UserFindMyIdRequest {
     @NotBlank(message = "이름 입력은 필수입니다.")
     private String userFullname;
 
-    @NotBlank(message = "생년월일 입력은 필수입니다.")
     private LocalDate userBirthday;
 }

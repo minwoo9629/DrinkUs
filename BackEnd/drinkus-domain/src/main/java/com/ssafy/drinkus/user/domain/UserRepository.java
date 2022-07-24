@@ -32,5 +32,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     // 본명과 생년월일에 해당하는 유저 아이디 리스트 조회
     @Query(value = "SELECT user_name FROM user WHERE user_fullname = :userFullName AND user_birthday = :userBirthday", nativeQuery = true)
-    Optional<List<String>> findByUserFullnameAndUserBirthday(String userFullname, LocalDate userBirthday);
+    Optional<List<String>> findByUserFullnameAndUserBirthday(@Param("userFullName") String userFullname, @Param("userBirthday") LocalDate userBirthday);
 }
