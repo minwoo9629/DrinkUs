@@ -22,8 +22,8 @@ const NeonLoginWrapper = styled.div`
   font-size: 30px;
 `;
 
-const AgreeWrapper = styled.div`
-  /* display: flex; */
+const AgreeForm = styled.div`
+  display: flex;
   justify-content: center;
   flex-direction: column;
   align-items: center;
@@ -41,7 +41,7 @@ const AgreeContent = styled.div`
 
 const ButtonWrapper = styled.div`
 margin-top: 30px;
-display: flex;
+/* display: flex; */
 justify-content: space-between;
 width: 120px;
 `;
@@ -49,7 +49,6 @@ width: 120px;
 const Button = styled.button`
   font-size: 1rem;
   font-weight: 200;
-  font-style: italic;
   color: #fff;
   padding: 1rem 1.2rem 1.1rem;
   border: 0.4rem solid #131317;
@@ -57,6 +56,17 @@ const Button = styled.button`
   text-transform: uppercase;
   background-color: #131317;
   cursor: pointer;
+`;
+
+const OverTwenty = styled.button`
+font-size: 1rem;
+font-weight: 200;
+color: #fff;
+padding: 1rem 1.2rem 1.1rem;
+border: 0.4rem solid #131317;
+border-radius: 2rem;
+text-transform: uppercase;
+background-color: #131317;
 `;
 
 const JoinAgree = ({ history }) => {
@@ -79,9 +89,13 @@ const JoinAgree = ({ history }) => {
       <Header/>
       <Wrapper>
         <NeonLoginWrapper>
-          <AgreeWrapper> 이용정보 동의 받을 곳 </AgreeWrapper>
+          <AgreeForm> 이용약관 동의 </AgreeForm>
             <AgreeContent>
-              동의하세요
+              <Button
+                onClick={() => window.open('https://admitted-evening-312.notion.site/3-Drinkus-97e5baba6ee845ed8ed6a9148c7f6901', '_blank')}
+                >
+                <u>개인정보수집</u>
+              </Button>
               <input
                 type="checkbox"
                 id="check"
@@ -93,7 +107,11 @@ const JoinAgree = ({ history }) => {
                 <label id="check" htmlFor="check"></label>
             </AgreeContent>
             <AgreeContent>
-              동의하세요
+              <Button
+                onClick={() => window.open('https://admitted-evening-312.notion.site/3-Drinkus-97e5baba6ee845ed8ed6a9148c7f6901', '_blank')}
+              >
+                <u>이용약관</u>
+              </Button>
               <input
                 type="checkbox"
                 id="check2"
@@ -105,7 +123,10 @@ const JoinAgree = ({ history }) => {
                 <label id="check2" htmlFor="check2"></label>
             </AgreeContent>
             <AgreeContent>
-              동의하세요
+              <OverTwenty
+              >
+                20세 이상입니다
+              </OverTwenty>
               <input
                 type="checkbox"
                 id="check3"
