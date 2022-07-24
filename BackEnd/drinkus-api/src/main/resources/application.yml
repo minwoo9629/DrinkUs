@@ -60,7 +60,7 @@ spring:
     host: smtp.naver.com
     port: 465 # 네이버 이메일 포트
     username: wolfmob@naver.com
-    password: asfos9612!
+    password: asfos9612!@
     # 전송 위한 prop, ssl의 신뢰 및 권한 등 사용허가
     properties:
       mail.smtp.auth: true
