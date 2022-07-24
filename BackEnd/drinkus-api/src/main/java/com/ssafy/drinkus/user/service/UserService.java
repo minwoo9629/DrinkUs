@@ -212,7 +212,7 @@ public class UserService {
         mailDto.setTitle("[DrinkUs] 비밀번호 재설정 안내입니다.");
         StringBuilder content = new StringBuilder();
         content.append("<div class='container' align='left'>");
-        content.append("    <div>안녕하세요, HappyHouse입니다.</div>");
+        content.append("    <div>안녕하세요, DrinkUs입니다.</div>");
         content.append("    <div>고객님의 비밀번호를 재설정하여 다음과 같이 알려드립니다.</div><br>");
         content.append("    <div>비밀번호 : <strong style='background-color: yellow;'>" + password +  "</strong></div><br>");
         content.append("    <div>안내된 비밀번호로 로그인 후 비밀번호 재설정 바랍니다.</div>");
