@@ -30,6 +30,8 @@ public class User extends BaseEntity {
 
     private String userPw;
 
+    private String userFullname;
+
     private String userNickname;
 
     private Integer userPopularity;
@@ -75,7 +77,7 @@ public class User extends BaseEntity {
 
     // 로컬 회원가입
     // 이메일 비밀번호 이름 생년월일
-    public static User createUser(String userName, String userPw, LocalDate userBirthday, String userEmail) {
+    public static User createUser(String userName, String userPw, String userFullname, LocalDate userBirthday, String userEmail) {
         User user = new User();
         user.defaultUserSettings();
         user.userRole = UserRole.ROLE_USER;
@@ -84,6 +86,7 @@ public class User extends BaseEntity {
         user.userName = userName;
         user.userEmail = userEmail;
         user.userPw = userPw;
+        user.userFullname = userFullname;
         user.userBirthday = userBirthday;
         return user;
     }
