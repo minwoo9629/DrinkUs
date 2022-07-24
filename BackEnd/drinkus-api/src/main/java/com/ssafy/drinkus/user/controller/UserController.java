@@ -103,7 +103,7 @@ public class UserController {
     }
 
     // 비밀번호 재설정 및 이메일 발송
-    @PutMapping("/pw")
+    @PostMapping("/pw")
     public ResponseEntity<?> findMyPw(@RequestBody @Valid UserFindMyPwRequest request){
         userService.resetPw(request);
         return ResponseEntity.ok().build();

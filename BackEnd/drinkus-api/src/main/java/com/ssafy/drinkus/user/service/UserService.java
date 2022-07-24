@@ -15,6 +15,7 @@ import com.ssafy.drinkus.user.response.UserMyInfoResponse;
 import com.ssafy.drinkus.user.response.UserProfileResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -47,6 +48,8 @@ public class UserService {
     private final AuthenticationManager authenticationManager;
 
     private final JavaMailSender mailSender;
+    @Value("${spring.mail.username}")
+    private String sender;
 
     @Transactional
     public void createUser(UserCreateRequest request) {
@@ -205,6 +208,7 @@ public class UserService {
     public void sendMail(String receiver, String password) throws MailSendFailException, MessagingException {
         // 이메일 발송 정보 설정
         EmailDto mailDto = new EmailDto();
+        mailDto.setFromAddress(sender);
         mailDto.setTitle("[DrinkUs] 비밀번호 재설정 안내입니다.");
         StringBuilder content = new StringBuilder();
         content.append("<div class='container' align='left'>");
