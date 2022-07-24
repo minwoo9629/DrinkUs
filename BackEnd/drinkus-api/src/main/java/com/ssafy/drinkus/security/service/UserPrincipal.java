@@ -79,21 +79,25 @@ public class UserPrincipal implements UserDetails, OAuth2User {
     }
 
     @Override
+    // 계정 만료 여부
     public boolean isAccountNonExpired() {
         return true;
     }
 
     @Override
+    // 계정 잠겨있는지
     public boolean isAccountNonLocked() {
         return true;
     }
 
     @Override
+    // 계정 비밀번호 넘 오래 사용했을 때
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
     @Override
+    // 계정 활성화 여부
     public boolean isEnabled() {
         return true;
     }

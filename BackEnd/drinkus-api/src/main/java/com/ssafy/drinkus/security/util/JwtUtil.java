@@ -40,7 +40,7 @@ public class JwtUtil {
                 .setExpiration(expireDate)
                 .signWith(SignatureAlgorithm.HS256, secretKey).compact();
 
-        return "Bearer " + token;
+        return token;
     }
 
     // 원래 UserId로 받던 부분을 로그인 시 전달되는 authentication으로 처리

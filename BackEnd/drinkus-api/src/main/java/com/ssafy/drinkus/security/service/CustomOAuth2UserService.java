@@ -69,7 +69,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String userEmail = oAuth2UserInfo.getUserEmail();
         String userProviderId = oAuth2UserInfo.getUserProviderId();
         String userName = oAuth2UserInfo.getUserName();
-
         System.out.println("####유저정보####");
         System.out.println("userEmail = " + userEmail);
         System.out.println("userProvider = " + userProvider);

@@ -26,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserService {
 
-    private final UserRepository userRepository;
+    private  final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
     private final JwtUtil jwtUtil;
@@ -54,14 +54,14 @@ public class UserService {
 
         // 전달받은 request를 가지고 authentication 생성
         // 현재 여기에서 에러 나는 중
-//        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUserName(), request.getUserPw()));
-//        System.out.println("authentication 객체 생성 완료");
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
-//        System.out.println("스레드에등록");
-//        String token = jwtUtil.createToken(authentication);
-//        System.out.println("토큰 생성 완료");
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUserName(), request.getUserPw()));
+        System.out.println("authentication 객체 생성 완료");
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        System.out.println("스레드에등록");
+        String token = jwtUtil.createToken(authentication);
+        System.out.println("토큰 생성 완료");
 
-        String token = jwtUtil.createToken(findUser.getUserId());
+//        String token = jwtUtil.createToken(findUser.getUserId());
         return token;
     }
 
