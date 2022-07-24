@@ -56,6 +56,23 @@ spring:
       max-file-size: 10MB
       max-request-size: 100MB
 
+  mail:
+    host: smtp.gmail.com
+    port: 465
+    username: wolfmob9612@gmail.com
+    password: ingjpyytdhsojlxg
+    protocol: smtps
+    # 전송 위한 prop, ssl의 신뢰 및 권한 등 사용허가
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.enable: true
+      mail.smtp.timeout: 5000
+      mail.smtp.starttls.enable: false
+      mail.smtp.starttls.required: true
+      mail.smtp.ssl.enable: false
+      mail.smtp.ssl.trust: smtp.gmail.com
+      mail.smtp.socketFactory:fallback: true
+
 token:
   expiration_time: 86400000
   secret: secret
