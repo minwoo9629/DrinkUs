@@ -18,6 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -91,6 +92,19 @@ public class UserController {
     @PutMapping("/disable")
     public ResponseEntity<Void> disableUser(@LoginUser Long userId) {
         userService.disableUser(userId);
+        return ResponseEntity.ok().build();
+    }
+
+    // 아이디 찾기
+    @GetMapping("/id")
+    public ResponseEntity<List<String>> findMyId(@RequestBody @Valid UserFindMyIdRequest request){
+        List<String> body = userService.findMyUserName(request.getUserFullname(), request.getUserBirthday());
+        return ResponseEntity.ok().body(body);
+    }
+
+    // 비밀번호 찾기
+    @GetMapping("/pw")
+    public ResponseEntity<?> findMyPw(@RequestBody @Valid UserFindMyPwRequest request){
         return ResponseEntity.ok().build();
     }
 }

@@ -30,6 +30,8 @@ public class User extends BaseEntity {
 
     private String userPw;
 
+    private String userFullname;
+
     private String userNickname;
 
     private Integer userPopularity;

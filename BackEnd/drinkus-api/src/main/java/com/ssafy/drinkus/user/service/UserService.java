@@ -24,7 +24,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -136,6 +138,25 @@ public class UserService {
         User findUser = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
         findUser.disableUser();
+    }
+
+    // 아이디 찾기
+    public List<String> findMyUserName(String userFullname, LocalDate userBirthday){
+        List<String> userNameList = userRepository.findByUserFullnameAndUserBirthday(userFullname, userBirthday)
+                .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
+
+        List<String> newUserNameList = new ArrayList<>();
+        for(String userName : userNameList){
+            int nameLen = userName.indexOf("@");
+            int halfNameLen = nameLen / 2;
+
+            StringBuilder sb = new StringBuilder(userName);
+            for(int i = halfNameLen ; i < nameLen ; i++){
+                sb.setCharAt(i, '*');
+            }
+            newUserNameList.add(sb.toString());
+        }
+        return newUserNameList;
     }
 
     // 회원 삭제 스케줄 task
