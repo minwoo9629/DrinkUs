@@ -34,6 +34,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+        System.out.println("JwtAuthorizationFilter.doFilterInternal");
 
         // Read the Authorization header, where the JWT token should be
         String header = request.getHeader("Authorization");
@@ -51,16 +52,20 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     }
 
     private Authentication getUsernamePasswordAuthentication(HttpServletRequest request) {
+        System.out.println("JwtAuthorizationFilter.getUsernamePasswordAuthentication");
+
         String token = request.getHeader("Authorization").substring(7);
 
         if (token != null) {
             Claims claims = jwtUtil.getClaims(token);
             Long id = Long.parseLong(claims.getSubject()); // getSubject 값은 users의 userid값
+            System.out.println("id = " + id);
 
             if (id != null) {
                 Optional<User> oUser = userRepository.findByUserId(id);
                 User user = oUser.get();
                 UserPrincipal principal = UserPrincipal.create(user);
+                System.out.println("user = " + user);
 
                 // OAuth 인지 일반 로그인인지 구분할 필요가 없음. 왜냐하면 password를 Authentication이 가질 필요가 없으니!!
                 // JWT가 로그인 프로세스를 가로채서 인증다 해버림. (OAuth2.0이든 그냥 일반 로그인 이든)

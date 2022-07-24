@@ -25,7 +25,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         User user = oUser
                 .orElseThrow(() ->
-                        new UsernameNotFoundException("User not found with username : " + userName)
+                        new UsernameNotFoundException("해당 userName의 회원은 존재하지 않습니다. : " + userName)
                 );
 
         return UserPrincipal.create(user);

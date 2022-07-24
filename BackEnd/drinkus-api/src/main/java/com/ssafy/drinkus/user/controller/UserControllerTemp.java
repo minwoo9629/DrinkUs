@@ -24,6 +24,7 @@ public class UserControllerTemp {
     @GetMapping("{user_id}")
     public ResponseEntity<UserMyInfoResponse> findUserMyInfo(@PathVariable("user_id")Long userId){
         UserMyInfoResponse body = userService.findUserMyInfo(userId);
+        System.out.println(body.getUserName());
         return ResponseEntity.ok().body(body);
     }
 

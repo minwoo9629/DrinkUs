@@ -25,12 +25,12 @@ public class KakaoOAuth2UserInfo extends OAuth2UserInfo {
     }
 
     @Override
-    public String getUserProviderId() {
-        return getUserProvider() + "_" + getUserName();
+    public String getUserName() {
+        return getUserProvider() + "_" + getUserProviderId();
     }
 
     @Override
-    public String getUserName() {
+    public String getUserProviderId() {
         return String.valueOf(attributes.get("id"));
     }
 }
