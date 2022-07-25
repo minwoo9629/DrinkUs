@@ -23,5 +23,8 @@ public class UserCreateRequest {
             " 적어도 1개 이상씩 포함된 8자~20자의 비밀번호여야 합니다.")
     private String userPw;
 
+    @NotBlank(message = "이름은 필수값입니다.")
+    private String userFullname;
+
     private LocalDate userBirthday;
 }

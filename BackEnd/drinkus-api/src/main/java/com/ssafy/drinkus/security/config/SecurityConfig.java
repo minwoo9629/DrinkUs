@@ -66,6 +66,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilter(new JwtAuthorizationFilter(authenticationManager(), jwtUtil, userRepository))
                 .authorizeRequests()
                 .antMatchers("/ws-stomp/**", "/api/port", "/actuator/health").permitAll()
+                .antMatchers(HttpMethod.GET, "users/id").permitAll()
                 .antMatchers(HttpMethod.POST, "/users/join", "/users/login", "/users/join/id").permitAll()
                 .anyRequest().hasAnyRole("USER", "ADMIN", "SOCIAL")
                 .and()

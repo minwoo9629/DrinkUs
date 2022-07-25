@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -28,4 +30,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("update User set userPopularity = userPopularity + :popularNum where userId = :userId")
     Integer updatePopularity(@Param("userId") Long userId, @Param("popularNum") Integer popularNum);
 
+    // 본명과 생년월일에 해당하는 유저 아이디 리스트 조회
+    @Query(value = "SELECT user_name FROM user WHERE user_fullname = :userFullName AND user_birthday = :userBirthday", nativeQuery = true)
+    Optional<List<String>> findByUserFullnameAndUserBirthday(@Param("userFullName") String userFullname, @Param("userBirthday") LocalDate userBirthday);
 }
