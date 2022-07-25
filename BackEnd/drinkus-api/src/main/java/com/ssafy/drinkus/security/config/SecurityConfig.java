@@ -76,7 +76,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .userService(customOAuth2UserService)
                 .and()
                 .successHandler(new AuthenticationSuccessHandler() {
-                    @Override
+                    @Overrides
                     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
                         // 인증에 성공할 시 JWT 발행
                         System.out.println("SecurityConfig.onAuthenticationSuccess");
