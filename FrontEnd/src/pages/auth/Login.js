@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { logIn } from "../../store/actions/user";
 import {Wrapper, RoundedWrapper} from "../../components/styled/Wrapper"
 import styled from "styled-components";
+import axios from "axios";
 
 
 
@@ -162,9 +163,13 @@ const Login = () => {
       userId: state.userId,
       password: state.password,
     };
-    dispatch(logIn(data));
-    navigate("/");
+    // dispatch(logIn(data));
+    axios.post("http://localhost:8080/users/login", {userName: state.userId, userPw: state.password}).then(response => response)
+    // navigate("/");    
   };
+  const socialLogin = (e) =>{
+    window.location.replace(`http://localhost:8080/oauth2/authorization/${e.target.name}?redirect_uri=http://localhost:3000/`)
+  }
   return (
     <>
       <Wrapper>
@@ -206,8 +211,8 @@ const Login = () => {
               </Link>
             </LinkWrapper>
             <SocialWrapper>
-              <KaKaoSocialButton src="assets/kakao_icon.png" />
-              <GoogleSocialButton src="assets/google_icon.png" />
+              <KaKaoSocialButton src="assets/kakao_icon.png" name="kakao" onClick={socialLogin}/>
+              <GoogleSocialButton src="assets/google_icon.png" name="google" onClick={socialLogin}/>
             </SocialWrapper>
           </LoginFormWrapper>
         </RoundedWrapper>
