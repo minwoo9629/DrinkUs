@@ -20,17 +20,6 @@ body {
   padding: 0;
 }
 
-li {
-  list-style: none;
-}
-
-a {
-  text-decoration: none;
-  color: #BDCFF2;
-  font-family: "Black Han Sans";
-  font-size: 18px;
-}
-
 /* userId Password Icon CSS */
 .fa-envelope,
 .fa-lock {
@@ -49,9 +38,4 @@ a {
 }
 .fa-lock {
   padding: 10px 11px;
-}
-
-/* header active 색깔 변경 */
-.active {
-  color: #5904DE;
 }
