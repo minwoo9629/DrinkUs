@@ -28,9 +28,9 @@ public class UserPrincipal implements UserDetails, OAuth2User {
         this.authorities = authorities;
     }
 
+    // 일반 로그인 시
     public static UserPrincipal create(User user) {
-
-        System.out.println("UserPrincipal.create");
+        System.out.println("일반유저 : UserPrincipal.create");
         List<GrantedAuthority> authorities = Collections.
                 singletonList(new SimpleGrantedAuthority(String.valueOf(user.getUserRole())));
 
@@ -43,6 +43,7 @@ public class UserPrincipal implements UserDetails, OAuth2User {
         );
     }
 
+    // 소셜 로그인 시, attributes 와 함께 전달
     public static UserPrincipal create(User user, Map<String, Object> attributes) {
         UserPrincipal userPrincipal = UserPrincipal.create(user);
         userPrincipal.setAttributes(attributes);
@@ -79,21 +80,25 @@ public class UserPrincipal implements UserDetails, OAuth2User {
     }
 
     @Override
+    // 계정 만료 여부
     public boolean isAccountNonExpired() {
         return true;
     }
 
     @Override
+    // 계정 잠겨있는지
     public boolean isAccountNonLocked() {
         return true;
     }
 
     @Override
+    // 계정 비밀번호 넘 오래 사용했을 때
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
     @Override
+    // 계정 활성화 여부
     public boolean isEnabled() {
         return true;
     }

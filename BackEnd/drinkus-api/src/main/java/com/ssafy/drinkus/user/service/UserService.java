@@ -61,25 +61,18 @@ public class UserService {
     }
 
     public String loginUser(UserLoginRequest request) {
-        System.out.println("UserService.loginUser");
         User findUser = userRepository.findByUserName(request.getUserName())
                 .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
-        System.out.println("유저 찾음");
-        if(!passwordEncoder.matches(request.getUserPw(), findUser.getUserPw())){
+        if (!passwordEncoder.matches(request.getUserPw(), findUser.getUserPw())) {
             // 예외 던짐 -> 캐치하는곳 필요
             throw new NotMatchException("회원의 비밀번호가 일치하지 않습니다.");
         }
 
         // 전달받은 request를 가지고 authentication 생성
-        // 현재 여기에서 에러 나는 중
-//        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUserName(), request.getUserPw()));
-//        System.out.println("authentication 객체 생성 완료");
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
-//        System.out.println("스레드에등록");
-//        String token = jwtUtil.createToken(authentication);
-//        System.out.println("토큰 생성 완료");
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUserName(), request.getUserPw()));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String token = jwtUtil.createToken(authentication);
 
-        String token = jwtUtil.createToken(findUser.getUserId());
         return token;
     }
 
@@ -100,13 +93,13 @@ public class UserService {
                 .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
 
         //이전 비밀번호 같은 지 확인
-        if(!passwordEncoder.matches(request.getUserBeforePw(), findUser.getUserPw())){
+        if (!passwordEncoder.matches(request.getUserBeforePw(), findUser.getUserPw())) {
             // 예외 던짐 -> 캐치하는곳 필요
             throw new NotMatchException("회원의 비밀번호가 일치하지 않습니다.");
         }
 
         //새 비밀번호 == 새 비밀번호 확인
-        if(!request.getUserPw().equals(request.getUserCheckPw())){
+        if (!request.getUserPw().equals(request.getUserCheckPw())) {
             throw new NotMatchException("회원의 비밀번호가 일치하지 않습니다.");
         }
 
@@ -114,16 +107,16 @@ public class UserService {
     }
 
     //아이디 찾기
-    public void findByUserName(String userName){
-        if(userRepository.existsByUserName(userName)){
+    public void findByUserName(String userName) {
+        if (userRepository.existsByUserName(userName)) {
             throw new DuplicateException("이미 가입된 회원입니다.");
         }
     }
 
     //인기도 수정
     @Transactional
-    public void updatePopularity(Long userId, Integer popularNum){
-        userRepository.updatePopularity(userId,popularNum);
+    public void updatePopularity(Long userId, Integer popularNum) {
+        userRepository.updatePopularity(userId, popularNum);
     }
 
 

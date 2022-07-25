@@ -1,9 +1,8 @@
 package com.ssafy.drinkus.security.config;
 
-import com.ssafy.drinkus.security.filter.JwtAuthenticationFilter;
 import com.ssafy.drinkus.security.filter.JwtAuthorizationFilter;
-import com.ssafy.drinkus.security.handler.CustomAuthenticationEntryPoint;
 import com.ssafy.drinkus.security.service.CustomOAuth2UserService;
+import com.ssafy.drinkus.security.service.CustomUserDetailsService;
 import com.ssafy.drinkus.security.util.JwtUtil;
 import com.ssafy.drinkus.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -34,14 +34,17 @@ import java.io.IOException;
 @Configuration //설정파일임을 알려줌
 @RequiredArgsConstructor // final이 달려있는 애들만
 @EnableWebSecurity // 스프링 시큐리티 필터가 스프링 필터 체인에 등록이 됨
+@EnableGlobalMethodSecurity(
+        securedEnabled = true,
+        jsr250Enabled = true,
+        prePostEnabled = true)
 // 보안관련 설정사항들이 있음
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final CustomAuthenticationEntryPoint authenticationEntryPoint;
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
 
-    // 소셜로그인
+    private final CustomUserDetailsService customUserDetailsService;
     private final CustomOAuth2UserService customOAuth2UserService;
 
 
@@ -53,20 +56,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .formLogin().disable()
+                .formLogin().disable() // 서버의 로그인 폼으로 로그인하는 형태가 아니고 우리는 단지 토큰만을 전달
                 .httpBasic().disable()
-                .addFilter(new JwtAuthenticationFilter())
-                .addFilter(new JwtAuthorizationFilter(authenticationManager(), jwtUtil, userRepository))
-                .cors().configurationSource(corsConfigurationSource())
+                .cors().configurationSource(corsConfigurationSource()) // @CrossOrigin 어노테이션으로 걸면 인증이 필요한 요청까지 인증 없이 전부 허용해버리게 됨
                 .and()
                 .csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션, 쿠키를 만들지 않고 stateless한 서버를 만들겠다
                 .and()
+                .addFilter(new JwtAuthorizationFilter(authenticationManager(), jwtUtil, userRepository))
                 .authorizeRequests()
-                .antMatchers("/ws-stomp/**", "/api/port","/actuator/health").permitAll()
+                .antMatchers("/ws-stomp/**", "/api/port", "/actuator/health").permitAll()
                 .antMatchers(HttpMethod.GET, "users/id").permitAll()
-                .antMatchers(HttpMethod.POST,  "/users/join","/users/login", "/users/join/id", "/users/pw").permitAll()
-                .anyRequest().hasAnyRole("USER", "ADMIN")
+                .antMatchers(HttpMethod.POST, "/users/join", "/users/login", "/users/join/id").permitAll()
+                .anyRequest().hasAnyRole("USER", "ADMIN", "SOCIAL")
                 .and()
                 // 여기부터 소셜로그인용 security 설정.
                 .oauth2Login()
@@ -79,7 +81,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         // 인증에 성공할 시 JWT 발행
                         System.out.println("SecurityConfig.onAuthenticationSuccess");
                         String token = jwtUtil.createToken(authentication);
-                        response.addHeader("Authorization", "Bearer " + token);
                         String targetUrl = "/auth/success";
                         RequestDispatcher dis = request.getRequestDispatcher(targetUrl);
                         dis.forward(request, response);
@@ -89,6 +90,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     @Override
                     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
                         // 실패할 시 에러 인증 실패 에러 전송
+                        System.out.println("SecurityConfig.onAuthenticationFailure");
                         response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
                     }
                 });
@@ -98,10 +100,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.addAllowedOriginPattern("*");
-        configuration.addAllowedHeader("*");
-        configuration.addAllowedMethod("*");
-        configuration.setAllowCredentials(true);
+        configuration.addAllowedOriginPattern("*"); // 모든 IP에 응답 허용
+        configuration.addAllowedHeader("*"); // 모든 헤더에 응답 허용
+        configuration.addAllowedMethod("*"); // 모든 POST,GEt 등등 응답 허용
+        configuration.setAllowCredentials(true); // 서버가 응답할 때 json을 js에서 처리할 수 있도록 설정
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
