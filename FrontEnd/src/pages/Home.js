@@ -55,12 +55,12 @@ const Wrapper = styled.section`
   width: 100vw;
 `;
 
-const Mainimage = styled.image`
-  position: absolute;
+const Mainimage = styled.div`
   width: 800px;
   height: 308px;
   top: ${(props) => props.top};
   background: #BDCFF2;
+  margin-bottom: 15vh;
 `
 
 const Home = () => {
@@ -71,9 +71,11 @@ const Home = () => {
         <NeonSignTitle>OPEN DRINKUS</NeonSignTitle>
       </Wrapper>
       <Wrapper background={"#FFF"} height={"190vh"}>
-        <Mainimage top={"130vh"}></Mainimage>
-        <Mainimage top={"180vh"}></Mainimage>
-        <Mainimage top={"230vh"}></Mainimage>
+        <center>
+          <Mainimage top={"130vh"}></Mainimage>
+          <Mainimage top={"180vh"}></Mainimage>
+          <Mainimage top={"230vh"}></Mainimage>
+        </center>
       </Wrapper>
       <HomeSlide />
       <Footer />
