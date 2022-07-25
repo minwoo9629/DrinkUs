@@ -1,6 +1,7 @@
 package com.ssafy.drinkus.security.config;
 
 import com.ssafy.drinkus.security.filter.JwtAuthorizationFilter;
+import com.ssafy.drinkus.security.handler.CustomSimpleRulAuthenticationSuccessHandler;
 import com.ssafy.drinkus.security.service.CustomOAuth2UserService;
 import com.ssafy.drinkus.security.service.CustomUserDetailsService;
 import com.ssafy.drinkus.security.util.JwtUtil;
@@ -8,7 +9,9 @@ import com.ssafy.drinkus.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -22,6 +25,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -46,6 +50,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtUtil jwtUtil;
 
     private final CustomOAuth2UserService customOAuth2UserService;
+
+    private final CustomSimpleRulAuthenticationSuccessHandler customSimpleRulAuthenticationSuccessHandler;
 
 
     @Override
@@ -75,19 +81,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .userInfoEndpoint()
                 .userService(customOAuth2UserService)
                 .and()
-                .successHandler(new AuthenticationSuccessHandler() {
-                    @Override
-                    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-                        // 인증에 성공할 시 JWT 발행
-                        System.out.println("SecurityConfig.onAuthenticationSuccess");
-                        String token = jwtUtil.createToken(authentication);
-                        String targetUrl = "/auth/success";
-                        RequestDispatcher dis = request.getRequestDispatcher(targetUrl);
-                        SecurityContextHolder.getContext().setAuthentication(authentication);
-                        response.addHeader("Authorization", token);
-                        dis.forward(request, response);
+                .successHandler(new SimpleUrlAuthenticationSuccessHandler() {
 
-                    }
                 })
                 .failureHandler(new AuthenticationFailureHandler() {
                     @Override
