@@ -4,15 +4,16 @@ import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import './Header.css'
 
-// const DrinkUsHeader = styled.div`
-//   position: fixed;
-//   display: flex;
-//   padding: 40px 4rem;
-//   justify-content: center;
-//   background-color: ${(props) => props.color};
-//   margin: auto;
-//   width: calc(100% - 11rem);
-// `;
+const DrinkUsHeader = styled.div`
+  position: fixed;
+  display: flex;
+  padding: 40px 4rem;
+  justify-content: center;
+  background-color: ${(props) => props.color};
+  margin: auto;
+  width: calc(100% - 8rem);
+  opacity: ${(props) => props.opacity};
+`;
 
 const HeaderMenu = styled.ul`
   display: flex;
@@ -45,7 +46,7 @@ const Header = () => {
 
   const user = useSelector((state) => state.user);
   return (
-    <div className={HeaderStatus ? "header active" : "header"}>
+    <DrinkUsHeader color={HeaderStatus ? "white" : "black"} opacity={HeaderStatus ? "0.9" : "0.7"}>
       <HeaderMenu width={100} justify={"space-between"}>
         <li>
           <NavLink to="/" className={HeaderStatus ? "a" : "a light"}>DrinkUs</NavLink>
@@ -84,7 +85,7 @@ const Header = () => {
           </>
         )}
       </HeaderMenu>
-    </div>
+    </DrinkUsHeader>
   );
 };
 
