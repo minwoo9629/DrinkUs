@@ -30,9 +30,10 @@ a {
   font-size: 18px;
 }
 
-/* userId Password Icon CSS */
+/* userId Password Icon Css */
 .fa-envelope,
-.fa-lock {
+.fa-lock,
+.fa-calendar-alt, .fa-user {
   margin-right: 24px;
   top: 9px;
   left: 10px;
@@ -43,9 +44,29 @@ a {
   border-radius: 100%;
 }
 
+.fa-calendar-alt, .fa-user{
+  padding: 10px 12px;
+}
+
 .fa-envelope {
   padding: 10px;
 }
 .fa-lock {
-  padding: 10px 11px;
+  padding: 10px 12px;
+}
+
+@media screen and (max-width : 500px){
+  .fa-envelope,.fa-lock, .fa-calendar-alt, .fa-user{
+    font-size: 16px;
+    top: 0px;
+    left: 5px;
+    margin-right: 12px;
+  }
+
+  .fa-lock, .fa-calendar-alt, .fa-user{
+    padding: 8px 10px;
+  }
+  .fa-envelope{
+    padding: 8px;
+  }
 }
