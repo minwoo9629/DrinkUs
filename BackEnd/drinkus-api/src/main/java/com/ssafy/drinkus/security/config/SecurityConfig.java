@@ -18,6 +18,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -44,7 +45,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
 
-    private final CustomUserDetailsService customUserDetailsService;
     private final CustomOAuth2UserService customOAuth2UserService;
 
 
@@ -83,7 +83,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         String token = jwtUtil.createToken(authentication);
                         String targetUrl = "/auth/success";
                         RequestDispatcher dis = request.getRequestDispatcher(targetUrl);
+                        SecurityContextHolder.getContext().setAuthentication(authentication);
+                        response.addHeader("Authorization", token);
                         dis.forward(request, response);
+
                     }
                 })
                 .failureHandler(new AuthenticationFailureHandler() {
