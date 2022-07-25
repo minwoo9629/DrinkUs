@@ -1,4 +1,4 @@
-.topBtn {
+.topButton {
   position: fixed; 
   opacity: 0; 
   bottom: 50px; 
@@ -11,21 +11,21 @@
   background: #FFF;
   color: #BDCFF2;
   border: 2px solid #BDCFF2;
-  font-size: 18px;
+  font-size: 25px;
   font-weight: bold;
   letter-spacing: -0.06em;
   box-shadow: 1px 1px 6px 3px rgba(0,0,0,0.3);
   cursor: pointer;
-  transition: opacity 0.3s ease-in;
+  transition: all 0.4s linear;
 }
 
-.topBtn.active {
+.topButton.active {
   z-index: 10; 
-  opacity: 1; 
+  opacity: 1;
 }
 
-.topBtn:hover,
-.topBtn:focus,
-.topBtn:active { 
+.topButton:hover,
+.topButton:focus,
+.topButton:active { 
   outline: 0 none; 
 }
