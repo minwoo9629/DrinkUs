@@ -26,8 +26,10 @@ public class JwtUtil {
     @Value("${token.expiration_time}")
     private long expirationTime;
 
-    // 토큰 전달 전 토큰 생성하는 부분
-    private String tokenGenerator(Long userId) {
+    // 원래 UserId로 받던 부분을 로그인 시 전달되는 authentication으로 처리
+    public String createToken(Authentication authentication) {
+        UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
+
         LocalDateTime localDateTime = LocalDateTime.now();
         long sec = expirationTime / 1000;
         localDateTime = localDateTime.plusSeconds(sec);
@@ -35,24 +37,12 @@ public class JwtUtil {
         Date expireDate = Date.from(localDateTime.atZone(defaultZoneId).toInstant());
 
         String token = Jwts.builder()
-                .setSubject(Long.toString(userId))
+                .setSubject(Long.toString(principal.getUserId()))
                 .setIssuedAt(new Date())
                 .setExpiration(expireDate)
                 .signWith(SignatureAlgorithm.HS256, secretKey).compact();
 
-        return "Bearer " + token;
-    }
-
-    // 원래 UserId로 받던 부분을 로그인 시 전달되는 authentication으로 처리
-    public String createToken(Authentication authentication) {
-        UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
-
-        return tokenGenerator(principal.getUserId());
-    }
-
-    // AuthenticationManager의 StackoverFlowError 해결할 수 없음 -> 일반 유저용 토큰 생성메서드
-    public String createToken(Long userId) {
-        return tokenGenerator(userId);
+        return token;
     }
 
     public String getSubject(String jwtToken) {

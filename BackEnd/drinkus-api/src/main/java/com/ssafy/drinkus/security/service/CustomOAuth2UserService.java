@@ -55,7 +55,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         User user;
         if (userOptional.isPresent()) {
             user = userOptional.get();
-            System.out.println("이미 존재하는 회원입니다");
+            System.out.println("이미 존재하는 회원입니다. 로그인만 진행");
         } else {
             user = registerNewUser(oAuth2UserRequest, oAuth2UserInfo);
         }
@@ -70,12 +70,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String userProviderId = oAuth2UserInfo.getUserProviderId();
         String userName = oAuth2UserInfo.getUserName();
 
-        System.out.println("####유저정보####");
-        System.out.println("userEmail = " + userEmail);
-        System.out.println("userProvider = " + userProvider);
-        System.out.println("userProviderId = " + userProviderId);
-        System.out.println("userName = " + userName);
-        
         User user = User.createUser(userProvider, userProviderId, userName, userEmail);
 
         System.out.println("소셜 로그인: 새 회원을 등록합니다.");
