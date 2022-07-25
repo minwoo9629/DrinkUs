@@ -1,5 +1,5 @@
 import styled, { keyframes } from "styled-components";
-import Header from "../components/mainpage/Header";
+import Header from "../components/common/Header";
 import Footer from "../components/mainpage/Footer";
 import HomeSlide from "../components/mainpage/HomeSlide";
 import TopButton from "../components/mainpage/TopButton";
