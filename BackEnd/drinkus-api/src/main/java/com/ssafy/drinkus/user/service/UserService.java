@@ -116,19 +116,22 @@ public class UserService {
     //인기도 수정
     @Transactional
     public void updatePopularity(Long userId, Integer popularNum) {
-        userRepository.updatePopularity(userId, popularNum);
+        // 회원번호 회원을 조회 -> 인기도를 get한다.
+        User findUser = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
+
+        // 인기도의 수정 값만 바꿔준다
+        findUser.updatePopularity(popularNum);
     }
 
 
     // 회원 프로필 조회
-    @Transactional(readOnly = true)
     public UserProfileResponse findUserProfile(Long userId){
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
         return UserProfileResponse.from(user);
     }
 
     // 회원 내정보 조회
-    @Transactional(readOnly = true)
     public UserMyInfoResponse findUserMyInfo(Long userId){
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
         return UserMyInfoResponse.from(user);
@@ -144,15 +147,14 @@ public class UserService {
 
     // 아이디 찾기
     public List<String> findMyUserName(String userFullname, LocalDate userBirthday){
-        List<String> userNameList = userRepository.findByUserFullnameAndUserBirthday(userFullname, userBirthday)
-                .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
+        List<User> findUsers = userRepository.findByUserFullnameAndUserBirthday(userFullname, userBirthday);
 
         List<String> newUserNameList = new ArrayList<>();
-        for(String userName : userNameList){
-            int nameLen = userName.indexOf("@");
+        for(User user : findUsers){
+            int nameLen = user.getUserName().indexOf("@");
             int halfNameLen = (nameLen / 2) + 1;
 
-            StringBuilder sb = new StringBuilder(userName);
+            StringBuilder sb = new StringBuilder(user.getUserName());
             for(int i = halfNameLen ; i < nameLen ; i++){
                 sb.setCharAt(i, '*');
             }
@@ -233,14 +235,14 @@ public class UserService {
         for(User user : userList){
             LocalDateTime disableDate = user.getUserDeleteDate();
             LocalDateTime todayDate = LocalDateTime.now();
-            if(user.getUserDeleted().equals(YN.Y) && todayDate.isAfter(disableDate.plusDays(WAITING_DAYS))){
+            if(user.getUserDeleted() == YN.Y && todayDate.isAfter(disableDate.plusDays(WAITING_DAYS))){
                 userRepository.delete(user);
             }
         }
     }
 
     // 인기도 제한 초기화 스케줄 task
-    @Scheduled(cron = "0 0 7 * * *") // 매일 7시 정각
+    @Scheduled(cron = "0 0 6 * * *") // 매일 6시 정각
     @Transactional
     public void resetPopularityLimit(){
         final int POPULARITY_LIMIT = 5;

@@ -72,8 +72,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilter(new JwtAuthorizationFilter(authenticationManager(), jwtUtil, userRepository))
                 .authorizeRequests()
                 .antMatchers("/ws-stomp/**", "/api/port", "/actuator/health").permitAll()
-                .antMatchers(HttpMethod.GET, "users/id").permitAll()
-                .antMatchers(HttpMethod.POST, "/users/join", "/users/login", "/users/join/id").permitAll()
+                //.antMatchers(HttpMethod.GET, "users/id").permitAll()
+                .antMatchers(HttpMethod.POST, "/users/join", "/users/login", "/users/join/id","/users/pw","users/id").permitAll()
                 .anyRequest().hasAnyRole("USER", "ADMIN", "SOCIAL")
                 .and()
                 // 여기부터 소셜로그인용 security 설정.
@@ -102,7 +102,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         configuration.addAllowedHeader("*"); // 모든 헤더에 응답 허용
         configuration.addAllowedMethod("*"); // 모든 POST,GEt 등등 응답 허용
         configuration.setAllowCredentials(true); // 서버가 응답할 때 json을 js에서 처리할 수 있도록 설정
-
+        configuration.addExposedHeader("Authorization");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

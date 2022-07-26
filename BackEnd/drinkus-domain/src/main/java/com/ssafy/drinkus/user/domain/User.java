@@ -2,6 +2,7 @@ package com.ssafy.drinkus.user.domain;
 
 import com.ssafy.drinkus.common.BaseEntity;
 import com.ssafy.drinkus.common.type.YN;
+import com.ssafy.drinkus.room.RoomHistory;
 import com.ssafy.drinkus.user.domain.type.UserProvider;
 import com.ssafy.drinkus.user.domain.type.UserRole;
 import lombok.AccessLevel;
@@ -12,6 +13,8 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // 무분별한 객체 생성에 대해 한번 더 체크할 수 있는 수단
@@ -64,6 +67,9 @@ public class User extends BaseEntity {
     private Integer userSoju;
 
     private Integer userBeer;
+
+    @OneToMany(mappedBy = "user")
+    private List<RoomHistory> roomHistories = new ArrayList<>();
 
     private void defaultUserSettings() {
         userPopularity = 0;
@@ -124,5 +130,10 @@ public class User extends BaseEntity {
     public void disableUser() {
         this.userDeleted = YN.Y;
         this.userDeleteDate = LocalDateTime.now();
+    }
+
+    //인기도 수정
+    public void updatePopularity(Integer popularNum){
+        this.userPopularity += popularNum;
     }
 }

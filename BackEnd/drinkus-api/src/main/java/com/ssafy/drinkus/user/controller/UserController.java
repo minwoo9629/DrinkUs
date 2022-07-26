@@ -87,7 +87,7 @@ public class UserController {
     }
 
     // 아이디 찾기
-    @GetMapping("/id")
+    @PostMapping("/id")
     public ResponseEntity<List<String>> findMyId(@RequestBody @Valid UserFindMyIdRequest request) {
         List<String> body = userService.findMyUserName(request.getUserFullname(), request.getUserBirthday());
         return ResponseEntity.ok().body(body);
