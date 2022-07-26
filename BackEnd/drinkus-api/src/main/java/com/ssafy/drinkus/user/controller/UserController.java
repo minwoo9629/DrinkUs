@@ -1,11 +1,13 @@
 package com.ssafy.drinkus.user.controller;
 
 import com.ssafy.drinkus.config.LoginUser;
+import com.ssafy.drinkus.security.service.UserPrincipal;
 import com.ssafy.drinkus.user.request.*;
 import com.ssafy.drinkus.user.response.UserMyInfoResponse;
 import com.ssafy.drinkus.user.response.UserProfileResponse;
 import com.ssafy.drinkus.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -98,5 +100,11 @@ public class UserController {
     public ResponseEntity<?> findMyPw(@RequestBody @Valid UserFindMyPwRequest request) {
         userService.resetPw(request);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/test")
+    public ResponseEntity<UserMyInfoResponse> test(UserPrincipal userPrincipal) {
+        UserMyInfoResponse body = userService.test(userPrincipal);
+        return ResponseEntity.ok().body(body);
     }
 }

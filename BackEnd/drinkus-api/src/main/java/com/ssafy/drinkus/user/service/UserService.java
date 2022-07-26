@@ -7,6 +7,7 @@ import com.ssafy.drinkus.common.NotMatchException;
 import com.ssafy.drinkus.common.type.YN;
 import com.ssafy.drinkus.email.dto.EmailDto;
 import com.ssafy.drinkus.email.handler.MailHandler;
+import com.ssafy.drinkus.security.service.UserPrincipal;
 import com.ssafy.drinkus.security.util.JwtUtil;
 import com.ssafy.drinkus.user.domain.User;
 import com.ssafy.drinkus.user.domain.UserRepository;
@@ -33,6 +34,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -245,5 +247,27 @@ public class UserService {
     public void resetPopularityLimit(){
         final int POPULARITY_LIMIT = 5;
         userRepository.resetUserPopularityLimit(POPULARITY_LIMIT);
+    }
+
+    public UserMyInfoResponse test(UserPrincipal userPrincipal){
+        Optional<User> oUser = userRepository.findByUserId(userPrincipal.getUserId());
+        if(!oUser.isPresent())
+            throw new NotFoundException(NotFoundException.USER_NOT_FOUND);
+        User user = oUser.get();
+
+        UserMyInfoResponse response = new UserMyInfoResponse(
+                user.getUserName(),
+                user.getUserNickname(),
+                user.getUserPopularity(),
+                user.getUserBirthday(),
+                user.getUserIntroduce(),
+                user.getUserImg(),
+                user.getUserPoint(),
+                user.getUserSoju(),
+                user.getUserBeer()
+        );
+
+        return response;
+
     }
 }
