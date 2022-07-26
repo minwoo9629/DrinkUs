@@ -1,5 +1,6 @@
 package com.ssafy.drinkus.user.controller;
 
+import com.ssafy.drinkus.config.CurrentUser;
 import com.ssafy.drinkus.config.LoginUser;
 import com.ssafy.drinkus.security.service.UserPrincipal;
 import com.ssafy.drinkus.user.request.*;
@@ -8,12 +9,15 @@ import com.ssafy.drinkus.user.response.UserProfileResponse;
 import com.ssafy.drinkus.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import org.hibernate.annotations.Parameter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Target;
 import java.util.List;
 
 @RestController
@@ -103,7 +107,7 @@ public class UserController {
     }
 
     @GetMapping("/test")
-    public ResponseEntity<UserMyInfoResponse> test(UserPrincipal userPrincipal) {
+    public ResponseEntity<UserMyInfoResponse> test(@CurrentUser UserPrincipal userPrincipal) {
         UserMyInfoResponse body = userService.test(userPrincipal);
         return ResponseEntity.ok().body(body);
     }
