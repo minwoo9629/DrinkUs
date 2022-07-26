@@ -72,8 +72,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilter(new JwtAuthorizationFilter(authenticationManager(), jwtUtil, userRepository))
                 .authorizeRequests()
                 .antMatchers("/ws-stomp/**", "/api/port", "/actuator/health").permitAll()
-                .antMatchers(HttpMethod.GET, "users/id").permitAll()
-                .antMatchers(HttpMethod.POST, "/users/join", "/users/login", "/users/join/id", "/users/pw").permitAll()
+                .antMatchers(HttpMethod.POST, "/users/join", "/users/login", "/users/join/id", "/users/id", "/users/pw").permitAll()
                 .anyRequest().hasAnyRole("USER", "ADMIN", "SOCIAL")
                 .and()
                 // 여기부터 소셜로그인용 security 설정.
@@ -81,9 +80,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .userInfoEndpoint()
                 .userService(customOAuth2UserService)
                 .and()
-                .successHandler(new SimpleUrlAuthenticationSuccessHandler() {
-
-                })
+                .successHandler(customSimpleRulAuthenticationSuccessHandler)
                 .failureHandler(new AuthenticationFailureHandler() {
                     @Override
                     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {

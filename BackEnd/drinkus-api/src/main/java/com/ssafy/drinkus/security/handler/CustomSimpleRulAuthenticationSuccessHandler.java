@@ -27,7 +27,7 @@ public class CustomSimpleRulAuthenticationSuccessHandler extends SimpleUrlAuthen
         SecurityContextHolder.getContext().setAuthentication(authentication);
         response.addHeader("Authorization", token);
 
-        String target = UriComponentsBuilder.fromUriString("http://localhost:3000")
+        String target = UriComponentsBuilder.fromUriString("http://localhost:3000/oauth2/redirect")
                 .queryParam("token", token)
                 .build().toString();
 
