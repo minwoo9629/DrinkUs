@@ -73,7 +73,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/ws-stomp/**", "/api/port", "/actuator/health").permitAll()
                 .antMatchers(HttpMethod.GET, "users/id").permitAll()
-                .antMatchers(HttpMethod.POST, "/users/join", "/users/login", "/users/join/id").permitAll()
+                .antMatchers(HttpMethod.POST, "/users/join", "/users/login", "/users/join/id", "/users/pw").permitAll()
                 .anyRequest().hasAnyRole("USER", "ADMIN", "SOCIAL")
                 .and()
                 // 여기부터 소셜로그인용 security 설정.
