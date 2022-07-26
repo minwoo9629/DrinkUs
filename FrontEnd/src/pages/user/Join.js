@@ -1,6 +1,6 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
-
 import Header from "../../components/Header";
 
 const Wrapper = styled.div`
@@ -10,7 +10,8 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-`
+`;
+
 const NeonLoginWrapper = styled.div`
   display: flex;
   justify-content: center;
@@ -74,22 +75,27 @@ const Button = styled.button`
   margin: 14px;
   font-size: 4px;
   color: #535353;
-  cursor: pointer;
 `;
+
 
 const Join = () => {
   const [state, setState] = useState({
     userId: "",
     userPw: "",
     userPwCheck: "",
+    userName: "",
+    userBday: "",
 
     idMsg: "",
     pwMsg: "",
     pwCheckMsg: "",
+    nameMsg: "",
+    bdayMsg: "",
 
     idValid: "",
     pwValid: "",
     pwCheckValid: "",
+    bdayValid: "",
   });
 
   const onHandleInput = (e) => {
@@ -100,7 +106,7 @@ const Join = () => {
     e.preventDefault();
     // 이메일 유효성 체크
     const idRegex =
-      /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i
+      /([\w-.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/
         const idCurrent = state.userId
         if (!idRegex.test(idCurrent)) {
           setState({...state, idMsg: "유효하지 않은 이메일 형식입니다"});
@@ -113,13 +119,14 @@ const Join = () => {
         }
     
     // 비밀번호 유효성 체크
-    const pwRegex = 
-      /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,20}$/i
+    const pwRegex =
+      // /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,20}$/
+      /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,20}$/i
         const pwCurrent = state.userPw
         if (!pwRegex.test(pwCurrent)) {
           setState({...state, pwMsg: "비밀번호는 영문 대,소문자와 숫자,특수기호가 적어도 1개 이상씩 포함된 8자~20자의 비밀번호여야 합니다."});
           setState({ ...state, pwValid: "false" });
-          alert("유효하지 않은 비밀번호 형식입니다")
+          alert("비밀번호는 영문 대,소문자와 숫자,특수기호가 적어도 1개 이상씩 포함된 8자~20자의 비밀번호여야 합니다.")
           console.log("비밀번호 통과X")
         } else {
           setState({ ...state, idMsg: "비밀번호OK" });
@@ -127,8 +134,12 @@ const Join = () => {
           alert("비밀번호 OK")
           console.log('비밀번호 통과O')
         }
-    
-
+    // 비밀번호 중복 체크
+    const pwCheck = state.userPwCheck
+    if (pwCheck !== state.userPw) {
+      alert("비밀번호가 일치하지 않습니다")
+      console.log("비밀번호 일치X")
+    }
   }
 
   return (
@@ -139,7 +150,7 @@ const Join = () => {
           <JoinWrapper>
             {/* 제출 폼 */}
             <JoinForm>
-              <GuideLine>유효한 이메일인지 체크</GuideLine>
+              <GuideLine>이메일</GuideLine>
               <InputWrapper>
                 <JoinInput
                   type="userId"
@@ -147,8 +158,8 @@ const Join = () => {
                   name="userId"
                   onChange={onHandleInput}
                 />
-                </InputWrapper>
-              <GuideLine>유효한 비번인지 체크</GuideLine>
+              </InputWrapper>
+              <GuideLine>비밀번호</GuideLine>
               <InputWrapper>
                 <JoinInput
                   type="userpw"
@@ -157,7 +168,7 @@ const Join = () => {
                   onChange={onHandleInput}
                 />
               </InputWrapper>
-              <GuideLine>비밀번호 확인 체크</GuideLine>
+              <GuideLine>비밀번호 확인</GuideLine>
               <InputWrapper>
                 <JoinInput
                   type="pwCheck"
@@ -165,9 +176,22 @@ const Join = () => {
                   name="userPwCheck"
                   onChange={onHandleInput}
                 />
-
               </InputWrapper>
-              <Button onClick={onHandleSubmit}>최종쳌</Button>
+              <GuideLine>이름</GuideLine>
+              <InputWrapper>
+                <JoinInput
+                  type="userName"
+                  value={state.userName}
+                  name="userName"
+                  onChange={onHandleInput}
+                />
+              </InputWrapper>
+              <GuideLine>생년월일</GuideLine>
+              <input type="date" min="1900-01-01" max="2003-12-31" />
+            <Button onClick={onHandleSubmit}>JOIN</Button>
+            <Link to="/"> 
+              <Button>MAIN</Button>
+            </Link>
             </JoinForm>
           </JoinWrapper>
         </NeonLoginWrapper>
