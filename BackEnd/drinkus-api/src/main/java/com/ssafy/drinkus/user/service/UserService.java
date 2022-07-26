@@ -249,12 +249,7 @@ public class UserService {
         userRepository.resetUserPopularityLimit(POPULARITY_LIMIT);
     }
 
-    public UserMyInfoResponse test(UserPrincipal userPrincipal){
-        Optional<User> oUser = userRepository.findByUserId(userPrincipal.getUserId());
-        if(!oUser.isPresent())
-            throw new NotFoundException(NotFoundException.USER_NOT_FOUND);
-        User user = oUser.get();
-
+    public UserMyInfoResponse test(User user){
         UserMyInfoResponse response = new UserMyInfoResponse(
                 user.getUserName(),
                 user.getUserNickname(),
@@ -270,4 +265,26 @@ public class UserService {
         return response;
 
     }
+
+//    public UserMyInfoResponse test(UserPrincipal userPrincipal){
+//        Optional<User> oUser = userRepository.findByUserId(userPrincipal.getUserId());
+//        if(!oUser.isPresent())
+//            throw new NotFoundException(NotFoundException.USER_NOT_FOUND);
+//        User user = oUser.get();
+//
+//        UserMyInfoResponse response = new UserMyInfoResponse(
+//                user.getUserName(),
+//                user.getUserNickname(),
+//                user.getUserPopularity(),
+//                user.getUserBirthday(),
+//                user.getUserIntroduce(),
+//                user.getUserImg(),
+//                user.getUserPoint(),
+//                user.getUserSoju(),
+//                user.getUserBeer()
+//        );
+//
+//        return response;
+//
+//    }
 }

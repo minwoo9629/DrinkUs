@@ -3,6 +3,7 @@ package com.ssafy.drinkus.user.controller;
 import com.ssafy.drinkus.config.CurrentUser;
 import com.ssafy.drinkus.config.LoginUser;
 import com.ssafy.drinkus.security.service.UserPrincipal;
+import com.ssafy.drinkus.user.domain.User;
 import com.ssafy.drinkus.user.request.*;
 import com.ssafy.drinkus.user.response.UserMyInfoResponse;
 import com.ssafy.drinkus.user.response.UserProfileResponse;
@@ -106,9 +107,15 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+//    @GetMapping("/test")
+//    public ResponseEntity<UserMyInfoResponse> test(@CurrentUser UserPrincipal userPrincipal) {
+//        UserMyInfoResponse body = userService.test(userPrincipal);
+//        return ResponseEntity.ok().body(body);
+//    }
+
     @GetMapping("/test")
-    public ResponseEntity<UserMyInfoResponse> test(@CurrentUser UserPrincipal userPrincipal) {
-        UserMyInfoResponse body = userService.test(userPrincipal);
+    public ResponseEntity<UserMyInfoResponse> test(@LoginUser User user) {
+        UserMyInfoResponse body = userService.test(user);
         return ResponseEntity.ok().body(body);
     }
 }
