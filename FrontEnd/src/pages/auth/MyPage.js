@@ -1,4 +1,3 @@
-import Header from "../../components/Header";
 import { Wrapper } from "../../components/styled/Wrapper";
 import styled from "styled-components";
 import { useState } from "react";
@@ -8,6 +7,7 @@ import EditPassword from "./mypage/EditPassword";
 import EditInterest from "./mypage/EditInterest";
 import MyArticle from "./mypage/MyArticle";
 import MySchedule from "./mypage/MySchedule";
+import Header from "../../components/common/Header";
 
 const EditWrapper = styled.div`
   width: 100%;
