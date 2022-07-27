@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
-import java.time.LocalDate;
+import javax.validation.constraints.Size;
 
 @Data
 @NoArgsConstructor
@@ -14,5 +14,6 @@ public class UserFindMyIdRequest {
     @NotBlank(message = "이름 입력은 필수입니다.")
     private String userFullname;
 
-    private LocalDate userBirthday;
+    @Size(max = 8)
+    private String userBirthday;
 }

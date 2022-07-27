@@ -30,7 +30,6 @@ public class UserPrincipal implements UserDetails, OAuth2User {
 
     // 일반 로그인 시
     public static UserPrincipal create(User user) {
-        System.out.println("일반유저 : UserPrincipal.create");
         List<GrantedAuthority> authorities = Collections.
                 singletonList(new SimpleGrantedAuthority(String.valueOf(user.getUserRole())));
 

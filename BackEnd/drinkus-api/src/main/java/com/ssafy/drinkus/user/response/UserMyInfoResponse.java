@@ -5,8 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,7 +13,7 @@ public class UserMyInfoResponse {
     private String userName;
     private String userNickname;
     private Integer userPopularity;
-    private LocalDate userBirthday;
+    private String userBirthday;
     private String userIntroduce;
     private String userImg;
     private Long userPoint;

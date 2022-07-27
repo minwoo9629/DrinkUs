@@ -1,5 +1,6 @@
 package com.ssafy.drinkus.email.handler;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
@@ -7,10 +8,11 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.util.List;
 
+@RequiredArgsConstructor
 public class MailHandler {
-    private JavaMailSender sender;
-    private MimeMessage message;
-    private MimeMessageHelper messageHelper;
+    private final JavaMailSender sender;
+    private final MimeMessage message;
+    private final MimeMessageHelper messageHelper;
 
     // 생성자
     public MailHandler(JavaMailSender jSender) throws MessagingException{
