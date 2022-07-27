@@ -233,4 +233,20 @@ public class UserService {
     public void resetPopularityLimit(){
         userRepository.resetUserPopularityLimit(POPULARITY_LIMIT);
     }
+
+    public UserMyInfoResponse test(User user){
+        UserMyInfoResponse response = new UserMyInfoResponse(
+                user.getUserName(),
+                user.getUserNickname(),
+                user.getUserPopularity(),
+                user.getUserBirthday(),
+                user.getUserIntroduce(),
+                user.getUserImg(),
+                user.getUserPoint(),
+                user.getUserSoju(),
+                user.getUserBeer()
+        );
+
+        return response;
+    }
 }

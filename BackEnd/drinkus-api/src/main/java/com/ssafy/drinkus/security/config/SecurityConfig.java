@@ -5,8 +5,6 @@ import com.ssafy.drinkus.security.handler.CustomAccessDeniedHandler;
 import com.ssafy.drinkus.security.handler.CustomAuthenticationEntryPoint;
 import com.ssafy.drinkus.security.handler.CustomSimpleRulAuthenticationSuccessHandler;
 import com.ssafy.drinkus.security.service.CustomOAuth2UserService;
-import com.ssafy.drinkus.security.util.JwtUtil;
-import com.ssafy.drinkus.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,7 +19,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -31,8 +28,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-
-import static org.hibernate.criterion.Restrictions.and;
 
 @Configuration //설정파일임을 알려줌
 @RequiredArgsConstructor // final이 달려있는 애들만
@@ -68,7 +63,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/ws-stomp/**", "/api/port", "/actuator/health").permitAll()
-                .antMatchers(HttpMethod.POST, "/users/join", "/users/login", "/users/join/id", "/users/pw", "/users/id").permitAll()
+                .antMatchers(HttpMethod.POST, "/users/join", "/users/login", "/users/join/id", "/users/id", "/users/pw").permitAll()
                 .anyRequest().hasAnyRole("USER", "ADMIN", "SOCIAL")
                 .and()
                 .exceptionHandling()
