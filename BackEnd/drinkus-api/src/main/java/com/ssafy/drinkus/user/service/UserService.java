@@ -6,7 +6,7 @@ import com.ssafy.drinkus.common.NotFoundException;
 import com.ssafy.drinkus.common.NotMatchException;
 import com.ssafy.drinkus.common.type.YN;
 import com.ssafy.drinkus.email.dto.EmailDto;
-import com.ssafy.drinkus.email.handler.MailHandler;
+import com.ssafy.drinkus.email.handler.EmailHandler;
 import com.ssafy.drinkus.security.util.JwtUtil;
 import com.ssafy.drinkus.user.domain.User;
 import com.ssafy.drinkus.user.domain.UserRepository;
@@ -204,12 +204,12 @@ public class UserService {
         mailDto.addToAddress(receiver);
 
         // 메일 발송
-        MailHandler mailHandler = new MailHandler(mailSender);
-        mailHandler.setFrom(mailDto.getFromAddress());
-        mailHandler.setTo(mailDto.getToAddressList());
-        mailHandler.setSubject(mailDto.getTitle());
-        mailHandler.setText(mailDto.getContent(), true);
-        mailHandler.send();
+        EmailHandler emailHandler = new EmailHandler(mailSender);
+        emailHandler.setFrom(mailDto.getFromAddress());
+        emailHandler.setTo(mailDto.getToAddressList());
+        emailHandler.setSubject(mailDto.getTitle());
+        emailHandler.setText(mailDto.getContent(), true);
+        emailHandler.send();
     }
 
     // 회원 삭제 스케줄 task
