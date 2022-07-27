@@ -54,8 +54,8 @@ public class UserController {
 
     // 아이디 중복 검사
     @PostMapping("/join/id")
-    public ResponseEntity<Void> findByUserId(@RequestPart String userName) {
-        userService.findByUserName(userName);
+    public ResponseEntity<Void> findByUserId(@RequestBody @Valid UserDuplicateCheckIdRequest request) {
+        userService.findByUserName(request);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 

@@ -97,8 +97,8 @@ public class UserService {
     }
 
     //아이디 찾기
-    public void findByUserName(String userName) {
-        if (userRepository.existsByUserName(userName)) {
+    public void findByUserName(UserDuplicateCheckIdRequest request) {
+        if (userRepository.existsByUserName(request.getUserName())) {
             throw new DuplicateException("이미 가입된 회원입니다.");
         }
     }

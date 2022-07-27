@@ -3,12 +3,15 @@ package com.ssafy.drinkus.room.controller;
 import com.ssafy.drinkus.room.request.RoomCreateRequest;
 import com.ssafy.drinkus.room.request.RoomSearchRequest;
 import com.ssafy.drinkus.room.request.RoomUpdateRequest;
+import com.ssafy.drinkus.room.response.RoomInfoResponse;
+import com.ssafy.drinkus.room.response.RoomListResponse;
 import com.ssafy.drinkus.room.service.RoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/rooms")
@@ -19,19 +22,17 @@ public class RoomController {
 
     //화상방 상세조회
     @GetMapping("/{room_id}")
-    //RoomInfoResponse
-    public ResponseEntity<Void> findByRoomId(@PathVariable Long roomId){
-        roomService.findByRoomId(roomId);
+    public ResponseEntity<RoomInfoResponse> findByRoomId(@PathVariable Long roomId){
+        RoomInfoResponse body = roomService.findByRoomId(roomId);
         return ResponseEntity.ok().build();
     }
 
     //화상방 리스트 전체 조회
-    @GetMapping
-    //List<RoomInfoResponse>
-    public ResponseEntity<Void> findBySearchRequest(@Valid RoomSearchRequest request){
-        roomService.findBySearchRequest(request);
-        return ResponseEntity.ok().build();
-    }
+//    @GetMapping
+//    public ResponseEntity<List<RoomListResponse>> findBySearchRequest(@Valid RoomSearchRequest request){
+//        List<RoomListResponse> body = roomService.findBySearchRequest(request);
+//        return ResponseEntity.ok().build();
+//    }
 
     //화상방 생성
     @PostMapping

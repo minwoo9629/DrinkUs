@@ -1,6 +1,5 @@
 package com.ssafy.drinkus.room;
 
-import com.ssafy.drinkus.common.Ages;
 import com.ssafy.drinkus.common.BaseEntity;
 import com.ssafy.drinkus.common.type.YN;
 import lombok.AccessLevel;
@@ -35,10 +34,38 @@ public class Room extends BaseEntity {
 
     private Integer peopleLimit;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "ages_20")
+    private YN ages20;
 
-    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    @JoinColumn(name = "ages_id")
-    private Ages ages;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "ages_30")
+    private YN ages30;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "ages_40")
+    private YN ages40;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "ages_50")
+    private YN ages50;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "ages_60")
+    private YN ages60;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "ages_70")
+    private YN ages70;
+
+    @Enumerated(EnumType.STRING)
+    private String interestFirst;
+
+    @Enumerated(EnumType.STRING)
+    private String interestSecond;
+
+    @Enumerated(EnumType.STRING)
+    private String interestThird;
 
     @OneToMany(mappedBy = "room")
     private List<RoomHistory> roomHistories = new ArrayList<>();
