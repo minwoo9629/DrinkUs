@@ -143,6 +143,7 @@ public class UserService {
     }
 
     // 아이디 찾기
+    @Transactional
     public List<String> findMyUserName(String userFullname, LocalDate userBirthday){
         List<String> userNameList = userRepository.findByUserFullnameAndUserBirthday(userFullname, userBirthday)
                 .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
