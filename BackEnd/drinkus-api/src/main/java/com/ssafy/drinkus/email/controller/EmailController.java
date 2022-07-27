@@ -17,7 +17,7 @@ public class EmailController {
     private final EmailService emailService;
 
     // 회원가입 이메일 인증 발송
-    @PostMapping("/join")
+    @PostMapping("/sendCheckMail")
     public ResponseEntity<Void> sendUserNameCheckEmail(@RequestBody @Valid UserNameCheckRequest request) throws MessagingException {
         System.out.println("*** EmailController - sendUserNameCheckEmail ***");
         emailService.createEmailAuth(request);
