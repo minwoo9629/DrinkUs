@@ -7,27 +7,32 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import com.ssafy.drinkus.common.NotFoundException;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import java.util.ArrayList;
+import java.util.List;
+import static com.ssafy.drinkus.common.NotFoundException.USER_NOT_FOUND;
 
-import javax.transaction.Transactional;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
-
     private final UserRepository userRepository;
 
     @Override
-    @Transactional
-    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-        Optional<User> oUser = userRepository.findByUserName(userName);
+    //회원정보를 불러오고 회원정보를 받아서 반환
+    public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
+        System.out.println("CustomUserDetailsService.loadUserByUsername");
+        System.out.println(userId);
+        User findUser = userRepository.findById(Long.valueOf(userId))
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
 
-        User user = oUser
-                .orElseThrow(() ->
-                        new UsernameNotFoundException("해당 userName의 회원은 존재하지 않습니다. : " + userName)
-                );
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(String.valueOf(findUser.getUserRole())));
 
-        return UserPrincipal.create(user);
+        LoginUserDetails loginUserDetails = new LoginUserDetails(findUser.getUserName(), "", authorities);
+        loginUserDetails.setUser(findUser);
+        return loginUserDetails;
     }
 }

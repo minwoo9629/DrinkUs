@@ -1,6 +1,7 @@
 package com.ssafy.drinkus.user.controller;
 
 import com.ssafy.drinkus.config.LoginUser;
+import com.ssafy.drinkus.user.domain.User;
 import com.ssafy.drinkus.user.request.*;
 import com.ssafy.drinkus.user.response.UserMyInfoResponse;
 import com.ssafy.drinkus.user.response.UserProfileResponse;
@@ -74,8 +75,8 @@ public class UserController {
 
     // 내정보 조회
     @GetMapping("")
-    public ResponseEntity<UserMyInfoResponse> findUserMyInfo(@LoginUser Long userId) {
-        UserMyInfoResponse body = userService.findUserMyInfo(userId);
+    public ResponseEntity<UserMyInfoResponse> findUserMyInfo(@LoginUser User User) {
+        UserMyInfoResponse body = userService.findUserMyInfo(User.getUserId());
         return ResponseEntity.ok().body(body);
     }
 
@@ -87,15 +88,15 @@ public class UserController {
     }
 
     // 아이디 찾기
-    @GetMapping("/id")
-    public ResponseEntity<List<String>> findMyId(@RequestBody @Valid UserFindMyIdRequest request) {
-        List<String> body = userService.findMyUserName(request.getUserFullname(), request.getUserBirthday());
+    @PostMapping("/id")
+    public ResponseEntity<List<String>> findMyUserName(@RequestBody @Valid UserFindMyIdRequest request) {
+        List<String> body = userService.findMyUserName(request);
         return ResponseEntity.ok().body(body);
     }
 
     // 비밀번호 재설정 및 이메일 발송
     @PostMapping("/pw")
-    public ResponseEntity<?> findMyPw(@RequestBody @Valid UserFindMyPwRequest request) {
+    public ResponseEntity<Void> findMyPw(@RequestBody @Valid UserFindMyPwRequest request) {
         userService.resetPw(request);
         return ResponseEntity.ok().build();
     }

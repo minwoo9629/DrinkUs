@@ -1,7 +1,6 @@
 package com.ssafy.drinkus.email.handler;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
@@ -14,6 +13,7 @@ public class EmailHandler {
     private JavaMailSender sender;
     private MimeMessage message;
     private MimeMessageHelper messageHelper;
+
 
     // 생성자
     public EmailHandler(JavaMailSender jSender) throws MessagingException{

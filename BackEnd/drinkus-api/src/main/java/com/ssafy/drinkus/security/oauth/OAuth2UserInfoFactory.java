@@ -1,4 +1,4 @@
-package com.ssafy.drinkus.user.domain.oauth;
+package com.ssafy.drinkus.security.oauth;
 
 import com.ssafy.drinkus.common.NotExistException;
 import com.ssafy.drinkus.user.domain.type.UserProvider;

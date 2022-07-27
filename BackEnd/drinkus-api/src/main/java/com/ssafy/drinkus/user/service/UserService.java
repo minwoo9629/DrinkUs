@@ -18,17 +18,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
 import java.security.SecureRandom;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -39,17 +34,17 @@ import java.util.List;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class UserService {
+    @Value("${spring.mail.username}")
+    private String sender;
+    final int PASSWORD_SIZE = 15;
+    final int WAITING_DAYS = 7;
+    final int POPULARITY_LIMIT = 5;
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
-
     private final JwtUtil jwtUtil;
-
-    private final AuthenticationManager authenticationManager;
-
     private final JavaMailSender mailSender;
-    @Value("${spring.mail.username}")
-    private String sender;
+
 
     @Transactional
     public void createUser(UserCreateRequest request) {
@@ -68,12 +63,7 @@ public class UserService {
             throw new NotMatchException("회원의 비밀번호가 일치하지 않습니다.");
         }
 
-        // 전달받은 request를 가지고 authentication 생성
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUserName(), request.getUserPw()));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String token = jwtUtil.createToken(authentication);
-
-        return token;
+        return jwtUtil.createToken(findUser.getUserId());
     }
 
     //회원수정
@@ -116,19 +106,22 @@ public class UserService {
     //인기도 수정
     @Transactional
     public void updatePopularity(Long userId, Integer popularNum) {
-        userRepository.updatePopularity(userId, popularNum);
+        // 회원번호 회원을 조회 -> 인기도를 get한다.
+        User findUser = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
+
+        // 인기도의 수정 값만 바꿔준다
+        findUser.updatePopularity(popularNum);
     }
 
 
     // 회원 프로필 조회
-    @Transactional(readOnly = true)
     public UserProfileResponse findUserProfile(Long userId){
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
         return UserProfileResponse.from(user);
     }
 
     // 회원 내정보 조회
-    @Transactional(readOnly = true)
     public UserMyInfoResponse findUserMyInfo(Long userId){
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
         return UserMyInfoResponse.from(user);
@@ -143,16 +136,15 @@ public class UserService {
     }
 
     // 아이디 찾기
-    public List<String> findMyUserName(String userFullname, LocalDate userBirthday){
-        List<String> userNameList = userRepository.findByUserFullnameAndUserBirthday(userFullname, userBirthday)
-                .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
-
+    public List<String> findMyUserName(UserFindMyIdRequest request){
+        List<User> findUsers = userRepository.findByUserFullnameAndUserBirthday(request.getUserFullname(), request.getUserBirthday());
         List<String> newUserNameList = new ArrayList<>();
-        for(String userName : userNameList){
-            int nameLen = userName.indexOf("@");
+
+        for(User user : findUsers){
+            int nameLen = user.getUserName().indexOf("@");
             int halfNameLen = (nameLen / 2) + 1;
 
-            StringBuilder sb = new StringBuilder(userName);
+            StringBuilder sb = new StringBuilder(user.getUserName());
             for(int i = halfNameLen ; i < nameLen ; i++){
                 sb.setCharAt(i, '*');
             }
@@ -162,18 +154,17 @@ public class UserService {
     }
 
     // 비밀번호 재설정 및 이메일 발송
+    @Transactional
     public void resetPw(UserFindMyPwRequest request) {
-        String receiver = request.getUserName();
-        String password = makeNewPassword();
-
-        // 재설정한 비밀번호 DB에 업데이트
-        User findUser = userRepository.findByUserName(receiver)
+        User findUser = userRepository.findByUserName(request.getUserName())
                 .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
+
+        String password = makeNewPassword();
         findUser.updateUserPassword(passwordEncoder.encode(password));
 
         // 이메일 발송
         try {
-            sendMail(receiver, password);
+            sendMail(request.getUserName(), password);
         } catch (MessagingException e) {
             throw new MailSendFailException(MailSendFailException.MAIL_SEND_FAIL);
         }
@@ -188,11 +179,10 @@ public class UserService {
         StringBuilder sb = new StringBuilder();
         SecureRandom sr = new SecureRandom();
         sr.setSeed(new Date().getTime());
-        int size = 15; // 패스워드의 길이
-        int len = charSet.length;
+
         int idx = 0;
-        for(int i = 0 ; i < size ; i++){
-            idx = sr.nextInt(len);
+        for(int i = 0 ; i < PASSWORD_SIZE ; i++){
+            idx = sr.nextInt(charSet.length);
             sb.append(charSet[idx]);
         }
         return sb.toString();
@@ -226,24 +216,37 @@ public class UserService {
     @Scheduled(cron = "0 0 6 * * *") // 매일 6시 정각
     @Transactional
     public void deleteUser(){
-        // 전체 유저 대상, disableDate + 7일 인지 확인, 맞으면 DB에서 삭제
-        final int WAITING_DAYS = 7;
         List<User> userList = userRepository.findAll();
 
         for(User user : userList){
             LocalDateTime disableDate = user.getUserDeleteDate();
             LocalDateTime todayDate = LocalDateTime.now();
-            if(user.getUserDeleted().equals(YN.Y) && todayDate.isAfter(disableDate.plusDays(WAITING_DAYS))){
+            if(user.getUserDeleted() == YN.Y && todayDate.isAfter(disableDate.plusDays(WAITING_DAYS))){
                 userRepository.delete(user);
             }
         }
     }
 
     // 인기도 제한 초기화 스케줄 task
-    @Scheduled(cron = "0 0 7 * * *") // 매일 7시 정각
+    @Scheduled(cron = "0 0 6 * * *") // 매일 6시 정각
     @Transactional
     public void resetPopularityLimit(){
-        final int POPULARITY_LIMIT = 5;
         userRepository.resetUserPopularityLimit(POPULARITY_LIMIT);
+    }
+
+    public UserMyInfoResponse test(User user){
+        UserMyInfoResponse response = new UserMyInfoResponse(
+                user.getUserName(),
+                user.getUserNickname(),
+                user.getUserPopularity(),
+                user.getUserBirthday(),
+                user.getUserIntroduce(),
+                user.getUserImg(),
+                user.getUserPoint(),
+                user.getUserSoju(),
+                user.getUserBeer()
+        );
+
+        return response;
     }
 }
