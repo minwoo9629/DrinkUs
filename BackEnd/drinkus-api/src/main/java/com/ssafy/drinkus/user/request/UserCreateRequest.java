@@ -4,9 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 
 @Data // Getter, Setter, RequiredArgsConstructor, ToString, EqualsAndHashCode, Value
@@ -26,5 +24,6 @@ public class UserCreateRequest {
     @NotBlank(message = "이름은 필수값입니다.")
     private String userFullname;
 
-    private LocalDate userBirthday;
+    @Size(max = 8)
+    private String userBirthday;
 }
