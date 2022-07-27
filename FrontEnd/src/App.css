@@ -4,7 +4,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap");
 
 body {
-  /* background-color: black; */
   width: 100vw;
   -ms-user-select: none;
   -moz-user-select: -moz-none;
@@ -12,6 +11,8 @@ body {
   -webkit-user-select: none;
   user-select: none;
   background-color: black;
+  overflow-x: hidden;
+  /* max-width: 1350px; */
 }
 
 * {
@@ -19,18 +20,7 @@ body {
   padding: 0;
 }
 
-li {
-  list-style: none;
-}
-
-a {
-  text-decoration: none;
-  color: whitesmoke;
-  font-family: "Black Han Sans";
-  font-size: 18px;
-}
-
-/* userId Password Icon Css */
+/* userId Password Icon CSS */
 .fa-envelope,
 .fa-lock,
 .fa-calendar-alt, .fa-user {
@@ -52,7 +42,7 @@ a {
   padding: 10px;
 }
 .fa-lock {
-  padding: 10px 12px;
+  padding: 10px 11px;
 }
 
 @media screen and (max-width : 500px){
