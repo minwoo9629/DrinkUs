@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link} from "react-router-dom";
 import styled from "styled-components";
 import Header from "../../components/Header";
+import axios from "axios";
 
 const Wrapper = styled.div`
   background-color: black;
@@ -140,6 +141,22 @@ const Join = () => {
       alert("비밀번호가 일치하지 않습니다")
       console.log("비밀번호 일치X")
     }
+
+    // axios 요청
+    axios.post("http://localhost:8080/users/join", {
+      userId: state.userId,
+      userPw: state.userPw,
+      userName: state.userName,
+      userBday: state.userBday
+    }).then(function (response) {
+      if(response.data.code === 200) {
+        console.log("회원가입 완료")
+      } else {
+        console.log("회원가입 실패")
+      }
+    }).catch(function(error) {
+      console.log(error);
+    })
   }
 
   return (
@@ -187,7 +204,14 @@ const Join = () => {
                 />
               </InputWrapper>
               <GuideLine>생년월일</GuideLine>
-              <input type="date" min="1900-01-01" max="2003-12-31" />
+              <JoinInput
+               type="date"
+               value={state.userBday}
+               name="userBday"
+               min="1900-01-01"
+               max="2003-12-31"
+               onChange={onHandleInput}
+               />
             <Button onClick={onHandleSubmit}>JOIN</Button>
             <Link to="/"> 
               <Button>MAIN</Button>
