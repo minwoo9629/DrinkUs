@@ -1,6 +1,5 @@
 package com.ssafy.drinkus.user.controller;
 
-import com.ssafy.drinkus.config.CurrentUser;
 import com.ssafy.drinkus.config.LoginUser;
 import com.ssafy.drinkus.user.domain.User;
 import com.ssafy.drinkus.user.request.*;
@@ -8,16 +7,12 @@ import com.ssafy.drinkus.user.response.UserMyInfoResponse;
 import com.ssafy.drinkus.user.response.UserProfileResponse;
 import com.ssafy.drinkus.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.java.Log;
-import org.hibernate.annotations.Parameter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Target;
 import java.util.List;
 
 @RestController
