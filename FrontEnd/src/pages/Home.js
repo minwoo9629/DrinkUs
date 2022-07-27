@@ -1,5 +1,9 @@
 import styled, { keyframes } from "styled-components";
-import Header from "../components/Header";
+import Header from "../components/common/Header";
+import Footer from "../components/mainpage/Footer";
+import HomeSlide from "../components/mainpage/HomeSlide";
+import TopButton from "../components/mainpage/TopButton";
+
 const neon_text_color = "#5904de";
 const neon_border_color = "#08f";
 const NeonSignAnimation = keyframes`
@@ -30,7 +34,7 @@ const NeonSignAnimation = keyframes`
 `;
 
 const NeonSignTitle = styled.h1`
-  font-size: 6rem;
+  font-size: 5rem;
   font-weight: 200;
   font-style: italic;
   color: #fff;
@@ -46,17 +50,36 @@ const Wrapper = styled.section`
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #000;
-  height: 90vh;
+  background: ${(props) => props.background};
+  height: ${(props) => props.height};
   width: 100vw;
 `;
+
+const Mainimage = styled.div`
+  width: 800px;
+  height: 308px;
+  top: ${(props) => props.top};
+  background: #BDCFF2;
+  margin-bottom: 15vh;
+`
+
 const Home = () => {
   return (
     <div>
       <Header />
-      <Wrapper>
+      <Wrapper background={"#000"} height={"100vh"}>
         <NeonSignTitle>OPEN DRINKUS</NeonSignTitle>
       </Wrapper>
+      <Wrapper background={"#FFF"} height={"190vh"}>
+        <center>
+          <Mainimage top={"130vh"}></Mainimage>
+          <Mainimage top={"180vh"}></Mainimage>
+          <Mainimage top={"230vh"}></Mainimage>
+        </center>
+      </Wrapper>
+      <HomeSlide />
+      <Footer />
+      <TopButton />
     </div>
   );
 };
