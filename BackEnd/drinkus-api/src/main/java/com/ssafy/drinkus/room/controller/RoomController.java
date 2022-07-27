@@ -1,10 +1,8 @@
 package com.ssafy.drinkus.room.controller;
 
-import com.ssafy.drinkus.config.LoginUser;
 import com.ssafy.drinkus.room.request.RoomCreateRequest;
 import com.ssafy.drinkus.room.request.RoomSearchRequest;
 import com.ssafy.drinkus.room.request.RoomUpdateRequest;
-import com.ssafy.drinkus.room.response.RoomInfoResponse;
 import com.ssafy.drinkus.room.service.RoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

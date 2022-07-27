@@ -11,7 +11,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +40,7 @@ public class User extends BaseEntity {
 
     private Integer userPopularityLimit; // 5 -> 0
 
-    private LocalDate userBirthday;
+    private String userBirthday;
 
     private String userIntroduce;
 
@@ -83,7 +82,7 @@ public class User extends BaseEntity {
 
     // 로컬 회원가입
     // 이메일 비밀번호 이름 생년월일
-    public static User createUser(String userName, String userPw, String userFullname, LocalDate userBirthday, String userEmail) {
+    public static User createUser(String userName, String userPw, String userFullname, String userBirthday, String userEmail) {
         User user = new User();
         user.defaultUserSettings();
         user.userRole = UserRole.ROLE_USER;
@@ -102,7 +101,7 @@ public class User extends BaseEntity {
         User user = new User();
         user.defaultUserSettings();
         user.userRole = UserRole.ROLE_SOCIAL;
-        user.userPw = "비밀번호임";
+        user.userPw = null;
 
         user.userProvider = userProvider;
         user.userProviderId = userProviderId;

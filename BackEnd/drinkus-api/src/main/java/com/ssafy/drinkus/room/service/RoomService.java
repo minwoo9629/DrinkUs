@@ -4,18 +4,10 @@ import com.ssafy.drinkus.room.RoomRepository;
 import com.ssafy.drinkus.room.request.RoomCreateRequest;
 import com.ssafy.drinkus.room.request.RoomSearchRequest;
 import com.ssafy.drinkus.room.request.RoomUpdateRequest;
-import com.ssafy.drinkus.room.response.RoomInfoResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import javax.validation.Valid;
 
 @Slf4j
 @Service
@@ -31,7 +23,6 @@ public class RoomService {
 
     //화상방 리스트 전체 조회
     public void findBySearchRequest(RoomSearchRequest request){
-        // 호
     }
 
     //화상방 생성

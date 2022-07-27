@@ -28,8 +28,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     @Override
     public OAuth2User loadUser(OAuth2UserRequest oAuth2UserRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(oAuth2UserRequest);
-        System.out.println("oAuth2User = " + oAuth2User);
-
         try {
             return processOAuth2User(oAuth2UserRequest, oAuth2User);
         } catch (AuthenticationException ex) {
@@ -42,20 +40,15 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private OAuth2User processOAuth2User(OAuth2UserRequest oAuth2UserRequest, OAuth2User oAuth2User) {
         OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(oAuth2UserRequest.getClientRegistration().getRegistrationId(), oAuth2User.getAttributes());
-
-        System.out.println("oAuth2UserInfo.getUserEmail() = " + oAuth2UserInfo.getUserEmail());
-        System.out.println("oAuth2UserInfo.getAttributes() = " + oAuth2UserInfo.getAttributes());
         if (StringUtils.isEmpty(oAuth2UserInfo.getUserEmail())) {
             throw new NotFoundException("불러온 이메일이 존재하지 않습니다.");
         }
 
         // 고유 아이디를 이용하여 가입 여부를 조회
-        System.out.println("userRepository = " + userRepository.findByUserName(oAuth2UserInfo.getUserName()));
         Optional<User> userOptional = userRepository.findByUserName(oAuth2UserInfo.getUserName());
         User user;
         if (userOptional.isPresent()) {
             user = userOptional.get();
-            System.out.println("이미 존재하는 회원입니다. 로그인만 진행");
         } else {
             user = registerNewUser(oAuth2UserRequest, oAuth2UserInfo);
         }
@@ -72,7 +65,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         User user = User.createUser(userProvider, userProviderId, userName, userEmail);
 
-        System.out.println("소셜 로그인: 새 회원을 등록합니다.");
         return userRepository.save(user);
     }
 }

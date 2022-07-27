@@ -35,7 +35,6 @@ public class Room extends BaseEntity {
 
     private Integer peopleLimit;
 
-    // 관심사
 
     @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name = "ages_id")
