@@ -1,12 +1,12 @@
 import { useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { logIn } from "../../store/actions/user";
-import {Wrapper, RoundedWrapper} from "../../components/styled/Wrapper"
+import { getUserProfile } from "../../store/actions/user";
+import { Wrapper, RoundedWrapper } from "../../components/styled/Wrapper";
 import styled from "styled-components";
-
-
-
+import { BackButton } from "../../components/common/BackButton";
+import { FailAlert, SuccessAlert } from "../../lib/sweetAlert";
+import { client } from "../../api/client";
 export const LoginFormWrapper = styled.div`
   display: flex;
   justify-content: center;
@@ -30,7 +30,7 @@ export const InputWrapper = styled.div`
   background-color: #676775;
   margin: 14px;
   position: relative;
-  @media screen and (max-width : 500px){
+  @media screen and (max-width: 500px) {
     width: 250px;
     height: 42px;
   }
@@ -46,21 +46,19 @@ export const LoginInput = styled.input`
   border: none;
   margin: 0px;
   color: white;
-  @media screen and (max-width : 500px){
+  @media screen and (max-width: 500px) {
     width: 160px;
     height: 42px;
     font-size: 16px;
     top: 0px;
     left: 5px;
-    &::placeholder{
-    font-size: 14px
+    &::placeholder {
+      font-size: 14px;
+    }
   }
+  &::placeholder {
+    color: white;
   }
-  &::placeholder{
-    color: white
-  }
-  
-  
 `;
 
 export const LoginButton = styled.button`
@@ -73,7 +71,7 @@ export const LoginButton = styled.button`
   font-size: 20px;
   color: #535353;
   cursor: pointer;
-  @media screen and (max-width : 500px){
+  @media screen and (max-width: 500px) {
     width: 250px;
     height: 42px;
     font-size: 14px;
@@ -86,18 +84,17 @@ const LinkWrapper = styled.div`
   margin: 14px 14px 20px 14px;
   justify-content: space-between;
   align-items: center;
-  @media screen and (max-width : 500px){
+  @media screen and (max-width: 500px) {
     width: 200px;
     height: 42px;
-    & a{
-    font-size: 14px;
-    font-weight: 100;
+    & a {
+      font-size: 14px;
+      font-weight: 100;
     }
-    & span{
-    font-size: 14px
-    }   
+    & span {
+      font-size: 14px;
+    }
   }
- 
 `;
 
 const SocialWrapper = styled.div`
@@ -106,7 +103,7 @@ const SocialWrapper = styled.div`
   justify-content: space-between;
   width: 120px;
   align-items: center;
-  @media screen and (max-width : 500px){
+  @media screen and (max-width: 500px) {
     margin-top: 20px;
   }
 `;
@@ -116,20 +113,11 @@ const SocialButton = styled.img`
   width: 30px;
   height: 30px;
   cursor: pointer;
-  @media screen and (max-width : 500px){
+  background-color: ${({ color }) => color};
+  @media screen and (max-width: 500px) {
     width: 20px;
     height: 20px;
   }
-`;
-
-
-
-const KaKaoSocialButton = styled(SocialButton)`
-  background-color: yellow;
-`;
-
-const GoogleSocialButton = styled(SocialButton)`
-  background-color: white;
 `;
 
 const Login = () => {
@@ -147,9 +135,11 @@ const Login = () => {
     setState({ ...state, [e.target.name]: e.target.value });
   };
 
-  const onHandleSubmit = (event) => {
+  const onHandleSubmit = async (event) => {
     event.preventDefault();
+    // 로딩스피너띄우고
     if (state.userId.length === 0) {
+      FailAlert("ID 또는 PW가 일치하지 않습니다");
       userIdInput.current.focus();
       return;
     }
@@ -159,16 +149,36 @@ const Login = () => {
     }
 
     const data = {
-      userId: state.userId,
-      password: state.password,
+      userName: state.userId,
+      userPw: state.password,
     };
-    dispatch(logIn(data));
-    navigate("/");
+
+    const response = await client
+      .post(`/users/login`, data)
+      .then((response) => response)
+      .catch((error) => error.response);
+
+    if (response.status === 400) {
+      FailAlert(response.data.message);
+      return;
+    }
+    const accessToken = response.headers["authorization"];
+    sessionStorage.setItem("ACCESS_TOKEN", accessToken);
+
+    // 로딩스피너끄고
+    dispatch(getUserProfile());
+    SuccessAlert("로그인되었습니다", navigate);
   };
   return (
     <>
+      <BackButton />
       <Wrapper>
-        <RoundedWrapper width={"450"} height={"700"} mWidth={"300"} mHeight={"460"}>
+        <RoundedWrapper
+          width={"450"}
+          height={"700"}
+          mWidth={"300"}
+          mHeight={"460"}
+        >
           <LoginFormWrapper>
             <LoginForm onSubmit={onHandleSubmit}>
               <InputWrapper>
@@ -179,6 +189,7 @@ const Login = () => {
                   name="userId"
                   onChange={onHandleInput}
                   placeholder="Email ID"
+                  autoComplete="off"
                 />
               </InputWrapper>
               <InputWrapper>
@@ -190,6 +201,7 @@ const Login = () => {
                   name="password"
                   onChange={onHandleInput}
                   placeholder="Password"
+                  autoComplete="off"
                 />
               </InputWrapper>
               <LoginButton type="submit">로그인</LoginButton>
@@ -206,8 +218,12 @@ const Login = () => {
               </Link>
             </LinkWrapper>
             <SocialWrapper>
-              <KaKaoSocialButton src="assets/kakao_icon.png" />
-              <GoogleSocialButton src="assets/google_icon.png" />
+              <a href="">
+                <SocialButton src="assets/kakao_icon.png" color="yellow" />
+              </a>
+              <a href="http://localhost:8080/oauth2/authorization/google">
+                <SocialButton src="assets/google_icon.png" color="white" />
+              </a>
             </SocialWrapper>
           </LoginFormWrapper>
         </RoundedWrapper>
