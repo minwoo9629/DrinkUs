@@ -59,6 +59,13 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
+    // 닉네임 중복 검사
+    @GetMapping("/nickname/duplicate")
+    public ResponseEntity<Void> findByUserNickname(@RequestParam("userNickname") String userNickname){
+        userService.findByUserNickname(userNickname);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
     // 인기도 수정
     @PatchMapping("/popularity")
     public ResponseEntity<Void> updatePopularity(@LoginUser Long userId, @RequestBody UserPopularityRequest request) {
