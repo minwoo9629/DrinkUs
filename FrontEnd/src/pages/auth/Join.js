@@ -137,11 +137,12 @@ const Join = () => {
   });
   const navigate = useNavigate();
 
-
+  // 입력
   const onHandleInput = (e) => {
     setState({ ...state, [e.target.name]: e.target.value });
   };
 
+  // 제출
   const onHandleSubmit = (e) => {
     e.preventDefault();
     // 이메일 유효성 체크
