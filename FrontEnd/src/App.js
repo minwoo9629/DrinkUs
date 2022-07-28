@@ -11,7 +11,7 @@ import FindId from "./pages/auth/FindId";
 import Join from "./pages/user/Join";
 import JoinAgree from "./pages/auth/JoinAgree"
 import JoinType from "./pages/auth/JoinType";
-import Profile from "./pages/user/profile";
+// import Profile from "./pages/user/profile";
 function App() {
   return (
     <Provider store={store}>
@@ -27,7 +27,7 @@ function App() {
             <Route path="/join" element={<Join />} />
             <Route path="/join/agree" element={<JoinAgree />} />
             <Route path="/join/type" element={<JoinType />} />
-            <Route path="/profile" element={<Profile />} />
+            {/* <Route path="/profile" element={<Profile />} /> */}
           </Routes>
         </div>
       </BrowserRouter>
