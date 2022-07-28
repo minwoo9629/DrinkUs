@@ -1,13 +1,16 @@
 package com.ssafy.drinkus.security.util;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
 import java.util.Date;
 
+/**
+ * JWT 토큰 생성을 위한 클래스
+ */
 @Component
 @RequiredArgsConstructor
 public class JwtUtil {
@@ -18,7 +21,9 @@ public class JwtUtil {
     @Value("${token.expiration_time}")
     private long expirationTime;
 
+    // 원래 UserId로 받던 부분을 로그인 시 전달되는 authentication으로 처리
     public String createToken(Long userId) {
+
         Date now = new Date();
 
         return Jwts.builder()
@@ -40,6 +45,15 @@ public class JwtUtil {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public Claims getClaims(String token) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(secretKey)
+                .parseClaimsJws(token)
+                .getBody();
+
+        return claims;
     }
 
 }

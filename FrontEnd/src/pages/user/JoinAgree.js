@@ -3,6 +3,8 @@ import Header from "../../components/Header";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
+
+// 체크박스 포커스 주기
 const Wrapper = styled.div`
   background-color: black;
   width: 100vw;
@@ -19,14 +21,20 @@ const NeonLoginWrapper = styled.div`
   height: 700px;
   background-color: #131317;
   width: 450px;
-  font-size: 30px;
 `;
 
 const AgreeForm = styled.div`
   display: flex;
   justify-content: center;
-  flex-direction: column;
   align-items: center;
+  flex-direction: column;
+`;
+
+const AgreeWrapper = styled.div`
+display: flex;
+justify-content: center;
+flex-direction: column;
+align-items: center;
 `;
 
 const AgreeContent = styled.div`
@@ -40,10 +48,10 @@ const AgreeContent = styled.div`
 `;
 
 const ButtonWrapper = styled.div`
-margin-top: 30px;
-/* display: flex; */
-justify-content: space-between;
-width: 120px;
+  margin-top: 30px;
+  /* display: flex; */
+  justify-content: space-between;
+  width: 120px;
 `;
 
 const Button = styled.button`
@@ -59,18 +67,20 @@ const Button = styled.button`
 `;
 
 const OverTwenty = styled.button`
-font-size: 1rem;
-font-weight: 200;
-color: #fff;
-padding: 1rem 1.2rem 1.1rem;
-border: 0.4rem solid #131317;
-border-radius: 2rem;
-text-transform: uppercase;
-background-color: #131317;
+  font-size: 1rem;
+  font-weight: 200;
+  color: #fff;
+  padding: 1rem 1.2rem 1.1rem;
+  border: 0.4rem solid #131317;
+  border-radius: 2rem;
+  text-transform: uppercase;
+  background-color: #131317;
 `;
 
 const JoinAgree = ({ history }) => {
   const [checkedButtons, setCheckedButtons] = useState([]);
+  // 상수 변수로 빼기 (??)
+  // 체크박스 개수 변수 설정하기
   const isAllChecked = checkedButtons.length === 3;
   const disabled = !isAllChecked;
 
@@ -90,6 +100,8 @@ const JoinAgree = ({ history }) => {
       <Wrapper>
         <NeonLoginWrapper>
           <AgreeForm> 이용약관 동의 </AgreeForm>
+          <AgreeWrapper>
+
             <AgreeContent>
               <Button
                 onClick={() => window.open('https://admitted-evening-312.notion.site/3-Drinkus-97e5baba6ee845ed8ed6a9148c7f6901', '_blank')}
@@ -106,6 +118,7 @@ const JoinAgree = ({ history }) => {
                 ></input>
                 <label id="check" htmlFor="check"></label>
             </AgreeContent>
+          </AgreeWrapper>
             <AgreeContent>
               <Button
                 onClick={() => window.open('https://admitted-evening-312.notion.site/3-Drinkus-97e5baba6ee845ed8ed6a9148c7f6901', '_blank')}
