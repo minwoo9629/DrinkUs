@@ -1,7 +1,11 @@
 package com.ssafy.drinkus.room.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.querydsl.core.annotations.QueryProjection;
 import com.ssafy.drinkus.common.type.YN;
+import com.ssafy.drinkus.interest.Category;
 import com.ssafy.drinkus.room.Room;
+import com.ssafy.drinkus.user.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,22 +21,32 @@ import java.time.LocalDateTime;
 public class RoomInfoResponse {
     private Long roomId;
     private String roomName;
-    private Long roomAdminId;
+    private User roomAdminId;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String roomPw;
     private String placeTheme;
     private Integer peopleLimit;
     private LocalDateTime createdDate;
     // 연령대
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private YN ages20;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private YN ages30;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private YN ages40;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private YN ages50;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private YN ages60;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private YN ages70;
     //관심사
-    private String interestFirst;
-    private String interestSecond;
-    private String interestThird;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private Category categoryFirst;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private Category categorySecond;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private Category categoryThird;
 
     public static RoomInfoResponse from(Room room){
         return new RoomInfoResponse(
@@ -49,8 +63,8 @@ public class RoomInfoResponse {
                 room.getAges50(),
                 room.getAges60(),
                 room.getAges70(),
-                room.getInterestFirst(),
-                room.getInterestSecond(),
-                room.getInterestThird());
+                room.getCategoryFirst(),
+                room.getCategorySecond(),
+                room.getCategoryThird());
     }
 }

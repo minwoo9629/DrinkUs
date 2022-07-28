@@ -2,6 +2,7 @@ package com.ssafy.drinkus.user.domain;
 
 import com.ssafy.drinkus.common.BaseEntity;
 import com.ssafy.drinkus.common.type.YN;
+import com.ssafy.drinkus.room.Room;
 import com.ssafy.drinkus.room.RoomHistory;
 import com.ssafy.drinkus.user.domain.type.UserProvider;
 import com.ssafy.drinkus.user.domain.type.UserRole;
@@ -69,6 +70,9 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user")
     private List<RoomHistory> roomHistories = new ArrayList<>();
+
+    @OneToMany(mappedBy = "roomAdminId")
+    private List<Room> room = new ArrayList<>();
 
     private void defaultUserSettings() {
         userPopularity = 0;

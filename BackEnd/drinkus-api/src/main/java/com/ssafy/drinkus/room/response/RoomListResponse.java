@@ -1,5 +1,6 @@
 package com.ssafy.drinkus.room.response;
 
+import com.querydsl.core.annotations.QueryProjection;
 import com.ssafy.drinkus.room.Room;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,12 +21,22 @@ public class RoomListResponse {
 
     private LocalDateTime createdDate;
 
+    @QueryProjection
+    public RoomListResponse(Room room){
+       this.roomId = room.getRoomId();
+       this.roomName = room.getRoomName();
+       this.placeTheme = room.getPlaceTheme();
+       this.peopleLimit = room.getPeopleLimit();
+       this.createdDate = room.getCreatedDate();
+    }
+
     public static RoomListResponse from(Room room){
-        return new RoomListResponse(
-                room.getRoomId(),
-                room.getRoomName(),
-                room.getPlaceTheme(),
-                room.getPeopleLimit(),
-                room.getCreatedDate());
+        RoomListResponse roomListResponse = new RoomListResponse();
+        roomListResponse.roomId = room.getRoomId();
+        roomListResponse.roomName = room.getRoomName();
+        roomListResponse.placeTheme = room.getPlaceTheme();
+        roomListResponse.peopleLimit = room.getPeopleLimit();
+        roomListResponse.createdDate = room.getCreatedDate();
+        return roomListResponse;
     }
 }

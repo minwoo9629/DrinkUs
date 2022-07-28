@@ -21,9 +21,11 @@ public class RoomSearchRequest {
     // 오래된순, 최신순
     private Integer sortOrder;
 
-    private String interestFirst;
+    // Todo 카테고리 5개 다 선택할수 있게끔 하기 StringList(0~5)
+    //관심사
+    private Integer categoryFirst;
 
-    private String interestSecond;
+    private Integer categorySecond;
 
-    private String interestThird;
+    private Integer categoryThird;
 }

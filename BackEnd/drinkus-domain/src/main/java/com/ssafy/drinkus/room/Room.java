@@ -2,12 +2,17 @@ package com.ssafy.drinkus.room;
 
 import com.ssafy.drinkus.common.BaseEntity;
 import com.ssafy.drinkus.common.type.YN;
+import com.ssafy.drinkus.interest.Category;
+import com.ssafy.drinkus.user.domain.User;
+import com.ssafy.drinkus.user.domain.type.UserProvider;
+import com.ssafy.drinkus.user.domain.type.UserRole;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,12 +28,12 @@ public class Room extends BaseEntity {
 
     private String roomName;
 
-    private Long roomAdminId;
+    //방장
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "room_admin_id")
+    private User roomAdminId;
 
     private String roomPw;
-
-    @Enumerated(EnumType.STRING)
-    private YN isActived;
 
     private String placeTheme;
 
@@ -58,16 +63,58 @@ public class Room extends BaseEntity {
     @Column(name = "ages_70")
     private YN ages70;
 
-    @Enumerated(EnumType.STRING)
-    private String interestFirst;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_first")
+    private Category categoryFirst;
 
-    @Enumerated(EnumType.STRING)
-    private String interestSecond;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_second")
+    private Category categorySecond;
 
-    @Enumerated(EnumType.STRING)
-    private String interestThird;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_third")
+    private Category categoryThird;
 
     @OneToMany(mappedBy = "room")
     private List<RoomHistory> roomHistories = new ArrayList<>();
+
+    //방 생성하기
+    public static Room createRoom(String roomName, User roomAdminId, String roomPw, String placeTheme, Integer peopleLimit,
+                                  YN ages20, YN ages30, YN ages40,YN ages50, YN ages60, YN ages70, Category categoryFirst, Category categorySecond, Category categoryThird) {
+        Room room = new Room();
+        room.roomName = roomName;
+        room.roomAdminId = roomAdminId;
+        room.roomPw = roomPw;
+        room.placeTheme = placeTheme;
+        room.peopleLimit = peopleLimit;
+        room.ages20 = ages20;
+        room.ages30 = ages30;
+        room.ages40 = ages40;
+        room.ages50 = ages50;
+        room.ages60 = ages60;
+        room.ages70 = ages70;
+        room.categoryFirst = categoryFirst;
+        room.categorySecond = categorySecond;
+        room.categoryThird = categoryThird;
+        return room;
+    }
+
+    //방 수정하기 (제목, 나이, 관심사, 인원, 비밀번호)
+    public void updateRoom(String roomName, String roomPw, Integer peopleLimit,  YN ages20, YN ages30, YN ages40,YN ages50, YN ages60, YN ages70, Category categoryFirst, Category categorySecond, Category categoryThird) {
+        this.roomName = roomName;
+        this.roomPw = roomPw;
+        this.peopleLimit = peopleLimit;
+        this.ages20 = ages20;
+        this.ages30 = ages30;
+        this.ages40 = ages40;
+        this.ages50 = ages50;
+        this.ages60 = ages60;
+        this.ages70 = ages70;
+        this.categoryFirst = categoryFirst;
+        this.categorySecond = categorySecond;
+        this.categoryThird = categoryThird;
+    }
+
+    // 방 삭제하기
 
 }

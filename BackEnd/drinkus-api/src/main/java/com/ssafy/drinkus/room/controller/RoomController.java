@@ -28,11 +28,11 @@ public class RoomController {
     }
 
     //화상방 리스트 전체 조회
-//    @GetMapping
-//    public ResponseEntity<List<RoomListResponse>> findBySearchRequest(@Valid RoomSearchRequest request){
-//        List<RoomListResponse> body = roomService.findBySearchRequest(request);
-//        return ResponseEntity.ok().build();
-//    }
+    @GetMapping
+    public ResponseEntity<List<RoomListResponse>> findBySearchRequest(@Valid RoomSearchRequest request){
+        List<RoomListResponse> body = roomService.findBySearchRequest(request);
+        return ResponseEntity.ok().build();
+    }
 
     //화상방 생성
     @PostMapping
