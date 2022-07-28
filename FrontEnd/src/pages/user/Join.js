@@ -29,7 +29,7 @@ const JoinWrapper = styled.div`
   align-items: center;
 `;
 
-const JoinForm = styled.form`
+const JoinForm = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -131,7 +131,7 @@ const Join = () => {
 
     // 유효 여부
     nameValid: "",
-    confirmValid: "",  // 인증번호 유효
+    confirmValid: false,  // 인증번호 유효
     userPwValid: "",
     userPwCheckValid: "",
   });
@@ -196,47 +196,52 @@ const Join = () => {
     }).catch(function(error) {
       console.log(error);
     })
+
+    
   };
+  
+  // 이메일 인증번호 전송
+  const onSendEmail = (e) => {  
+    e.preventDefault();
+    axios.post("http://localhost:8080/email/sendCheckMail", {
+      userName: state.userName,
+    }).then(function (response) {
+    }).catch(function(error) {
+      console.log(error);
+    })
+    }
 
-  // // 이메일 인증번호 전송
-  // const onSendEmail = (e) => {
-  //   e.preventDeafult();
-  //   axios.post("http://localhost:8080/email/sendCheckMail", {
-  //     userName: state.userName,
-  //   }).then(function (response) {
-  //   }).catch(function(error) {
-  //     console.log(error);
-  //   })
-  //   }
-
-  // // 인증번호 확인
-  // const onConfirmEmail = (e) => {
-  //   e.preventDefault();
-  //   axios.patch("http://localhost:8080/email/confirm", {
-  //     authToken: state.authToken,
-  //   }).then(function (response)  {
-  //     this.setState({
-  //       confirmValid: true,
-  //       confirmMsg: response.message
-  //     })
-  //   })
-  //   .catch(function (error) {
-  //     console.log(error);
-  //   })
-  //   }
+  // 인증번호 확인
+  const onConfirmEmail = (e) => {
+    e.preventDefault();   
+    axios.patch("http://localhost:8080/email/confirm", {
+      userName: state.userName,
+      authToken: state.authToken,
+    }).then(function (response)  {
+      setState({...state, confirmValid: true})
+      console.log(state.confirmValid)
+      alert("유효한 인증번호입니다")
+    })
+    .catch(function (error) {
+      console.log(error);
+      alert("유효하지 않은 인증번호입니다")
+    })
+    }
   
   // 중복확인 버튼 --> requestBody로 수정되면 확인할 것!!!!!!!!
-  // const onDoubleCheck = (e) => {
-  //   e.preventDefault();
-  //   // axios 요청
-  //   axios.post("http://localhost:8080/users/join/id", {
-  //     userName: state.userName,
-  //   }).then(function (response) {
-  //     // console.log(response)
-  //   }).catch(function(error) {
-  //     console.log(error);
-  //   })
-  // };
+  const onDoubleCheck = (e) => {
+    e.preventDefault();
+
+    console.log("중복확인")
+    // // axios 요청
+    // axios.post("http://localhost:8080/users/join/id", {
+    //   userName: state.userName,
+    // }).then(function (response) {
+    //   // console.log(response)
+    // }).catch(function(error) {
+    //   console.log(error);
+    // })
+  };
 
 
   return (
@@ -255,11 +260,11 @@ const Join = () => {
                   name="userName"
                   onChange={onHandleInput}
                 />
-                {/* <DoubleCheckButton onClick={onDoubleCheck}> */}
-                <DoubleCheckButton>
+                
+                <DoubleCheckButton onClick={onDoubleCheck}>
                   중복확인
                 </DoubleCheckButton>
-                {/* <SendEmailButton onClick={onSendEmail}>
+                <SendEmailButton onClick={onSendEmail}>
                   이메일 인증 보내기
                 </SendEmailButton>
               </InputWrapper>
@@ -273,7 +278,7 @@ const Join = () => {
                 />
                 <ConfirmButton onClick={onConfirmEmail}>
                   인증번호 확인
-                </ConfirmButton> */}
+                </ConfirmButton>
               </InputWrapper>
               <GuideLine>비밀번호</GuideLine>
               <InputWrapper>
@@ -316,7 +321,7 @@ const Join = () => {
             {/* 모든 유효성 검사 후 버튼 활성화 */}
             <Button
               onClick={onHandleSubmit}
-              // disabled={!( state.userPwValid && state.userPwCheckValid )}
+              disabled={!( state.nameValid ) && (state.confirmValid) && ( state.userPwValid ) && ( state.userPwCheckValid )}
             >JOIN</Button>
             <Link to="/"> 
               <Button>MAIN</Button>
