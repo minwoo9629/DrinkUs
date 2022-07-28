@@ -20,7 +20,7 @@ export const FailAlert = (text) => {
     icon: "error",
     text: `${text}`,
     showConfirmButton: false,
-    timer: 1000,
+    timer: 1200,
   });
 };
 

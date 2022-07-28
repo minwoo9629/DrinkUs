@@ -1,19 +1,40 @@
 import { useState, useEffect } from "react";
-import "./TopButton.css";
+import styled from "styled-components";
 
+const TopButtonStyled = styled.button`
+  position: fixed; 
+  opacity: 0; 
+  bottom: 50px; 
+  right: 50px;
+  z-index: -10; 
+  width: 6rem; 
+  height: 6rem;
+  border-radius: 100%;
+  border: 0 none;
+  background: #FFF;
+  color: #BDCFF2;
+  border: 2px solid #BDCFF2;
+  font-size: 25px;
+  font-weight: bold;
+  letter-spacing: -0.06em;
+  box-shadow: 1px 1px 6px 3px rgba(0,0,0,0.3);
+  cursor: pointer;
+  transition: all 0.4s linear;
+  &.active{
+    z-index: 10; 
+   opacity: 1;
+  }
+  &:hover, &:focus, &:active{
+    outline: 0 none; 
+  }
+`
 const TopButton = () => {
   const [ScrollY, setScrollY] = useState(0);
   const [ButtonStatus, setButtonStatus] = useState(false); // 버튼 상태
 
   const onToggleTopButton = () => {
     setScrollY(window.pageYOffset);
-    if (ScrollY > 100) {
-      // 100 이상이면 버튼이 보이게
-      setButtonStatus(true);
-    } else {
-      // 100 이하면 버튼이 사라지게
-      setButtonStatus(false);
-    }
+    ScrollY > 100? setButtonStatus(true):setButtonStatus(false);
   };
 
   const onHandleTop = () => {
@@ -36,13 +57,13 @@ const TopButton = () => {
   });
 
   return (
-    <div className="wrap">
-      <button
-        className={ButtonStatus ? "topButton active" : "topButton"} // 버튼 노출 여부
+    <div>
+      <TopButtonStyled
+        className={ButtonStatus ? "active" : ""} // 버튼 노출 여부
         onClick={onHandleTop} // 버튼 클릭시 함수 호출
       >
         <i className="fas fa-arrow-up"></i>
-      </button>
+      </TopButtonStyled>
     </div>
   );
 };

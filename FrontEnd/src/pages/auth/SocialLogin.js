@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { SuccessAlert } from "../../lib/sweetAlert";
+import { SuccessAlert } from "../../utils/sweetAlert";
 import { getUserProfile } from "../../store/actions/user";
 
 const SocialLogin = () => {

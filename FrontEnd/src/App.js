@@ -5,8 +5,8 @@ import Login from "./pages/auth/Login";
 import Join from "./pages/auth/Join";
 import { Provider } from "react-redux";
 import store from "./store/store";
-import FindPassword from "./pages/auth/FindPassword";
-import FindId from "./pages/auth/FindId";
+import FindPassword from "./pages/auth/find/FindPassword";
+import FindId from "./pages/auth/find/FindId";
 import SocialLogin from "./pages/auth/SocialLogin";
 import MyPage from "./pages/auth/MyPage";
 function App() {

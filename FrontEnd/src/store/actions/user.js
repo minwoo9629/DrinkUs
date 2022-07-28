@@ -1,13 +1,12 @@
 import { SET_USER_PROFILE, LOG_OUT } from "../types/user";
-import { client } from "../../api/client";
+import { getProfile } from "../../api/AuthAPI";
 
 // async action creator
 const getUserProfile = () => {
   // async action
   return (dispatch, getState) => {
-    client.get("/users/test").then((response) => {
-      dispatch(setUserProfile(response.data));
-    });
+    const response = getProfile();
+    dispatch(setUserProfile(response.data));
   };
 };
 
