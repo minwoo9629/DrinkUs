@@ -168,7 +168,7 @@ const Login = () => {
     // navigate("/");    
   };
   const socialLogin = (e) =>{
-    window.location.replace(`http://localhost:8080/oauth2/authorization/${e.target.name}?redirect_uri=http://localhost:3000/`)
+    window.location.replace(`http://localhost:8080/oauth2/authorization/${e.target.name}`)
   }
   return (
     <>
