@@ -1,30 +1,15 @@
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  LoginFormWrapper,
-  LoginForm,
-  InputWrapper,
-  LoginInput,
-  LoginButton,
-} from "./Login";
-import { Wrapper, RoundedWrapper } from "../../components/styled/Wrapper";
-import axios from "axios";
-import { BackButton } from "../../components/common/BackButton";
-import { EmptyAlert, FailAlert } from "../../lib/sweetAlert";
-import styled from "styled-components";
+import { Wrapper, RoundedWrapper,BaseFlexColWrapper, InputWrapper} from "../../../components/styled/Wrapper";
+import { BackButton } from "../../../components/common/buttons/BackButton";
+import { EmptyAlert, FailAlert } from "../../../utils/sweetAlert";
+import { AuthInput } from "../../../components/common/inputs/AuthInput";
+import { AuthButton } from "../../../components/common/buttons/AuthButton";
+import { GoToButton } from "../../../components/common/buttons/GoToButton";
+import { BaseForm } from "../../../components/common/Forms/Form";
+import { findPassword } from "../../../api/AuthAPI";
 
-import { client } from "../../api/client";
 
-const GoToButton = styled.button`
-  padding: 12px 24px;
-  border-radius: 11px;
-  background-color: #bdcff2;
-  color: white;
-  font-size: 18px;
-  margin-top: 40px;
-  border: 3px solid gray;
-  cursor: pointer;
-`;
 
 const FindPassword = () => {
   const [state, setState] = useState({
@@ -50,11 +35,7 @@ const FindPassword = () => {
       userName: state.userId,
     };
 
-    const response = await client
-      .post(`/users/pw`, data)
-      .then((response) => response)
-      .catch((error) => error.response);
-
+    const response = findPassword(data) 
     if (response.status === 200) {
       setState({ ...state, type: "result" });
     } else {
@@ -73,11 +54,11 @@ const FindPassword = () => {
             mWidth={"300"}
             mHeight={"460"}
           >
-            <LoginFormWrapper>
-              <LoginForm onSubmit={onHandleSubmit}>
+            <BaseFlexColWrapper>
+              <BaseForm onSubmit={onHandleSubmit}>
                 <InputWrapper>
                   <i className="fas fa-envelope"></i>
-                  <LoginInput
+                  <AuthInput
                     value={state.userId}
                     ref={userIdInput}
                     name="userId"
@@ -85,9 +66,9 @@ const FindPassword = () => {
                     placeholder="Email ID"
                   />
                 </InputWrapper>
-                <LoginButton type="submit">비밀번호 찾기</LoginButton>
-              </LoginForm>
-            </LoginFormWrapper>
+                <AuthButton type="submit">비밀번호 찾기</AuthButton>
+              </BaseForm>
+            </BaseFlexColWrapper>
           </RoundedWrapper>
         </>
       ) : (
