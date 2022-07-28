@@ -1,82 +1,19 @@
 import { useRef, useState } from "react";
 import { useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { getUserProfile } from "../../store/actions/user";
-import { Wrapper, RoundedWrapper } from "../../components/styled/Wrapper";
+import { Wrapper, RoundedWrapper, BaseFlexColWrapper, InputWrapper } from "../../components/styled/Wrapper";
+import { BaseForm } from "../../components/common/Forms/Form";
 import styled from "styled-components";
-import { BackButton } from "../../components/common/BackButton";
-import { FailAlert, SuccessAlert } from "../../lib/sweetAlert";
-import { client } from "../../api/client";
-export const LoginFormWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
-`;
-
-export const LoginForm = styled.form`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-`;
-
-export const InputWrapper = styled.div`
-  justify-content: space-between;
-  width: 380px;
-  height: 64px;
-  border-radius: 36px;
-  border: 1px solid black;
-  background-color: #676775;
-  margin: 14px;
-  position: relative;
-  @media screen and (max-width: 500px) {
-    width: 250px;
-    height: 42px;
-  }
-`;
-export const LoginInput = styled.input`
-  position: relative;
-  height: 30px;
-  width: 280px;
-  top: 7px;
-  font-size: 18px;
-  background-color: transparent;
-  outline: none;
-  border: none;
-  margin: 0px;
-  color: white;
-  @media screen and (max-width: 500px) {
-    width: 160px;
-    height: 42px;
-    font-size: 16px;
-    top: 0px;
-    left: 5px;
-    &::placeholder {
-      font-size: 14px;
-    }
-  }
-  &::placeholder {
-    color: white;
-  }
-`;
-
-export const LoginButton = styled.button`
-  width: 380px;
-  height: 64px;
-  border-radius: 36px;
-  border: 1px solid black;
-  background-color: #bdcff2;
-  margin: 14px;
-  font-size: 20px;
-  color: #535353;
-  cursor: pointer;
-  @media screen and (max-width: 500px) {
-    width: 250px;
-    height: 42px;
-    font-size: 14px;
-  }
-`;
+import { BackButton } from "../../components/common/buttons/BackButton";
+import { FailAlert, SuccessAlert } from "../../utils/sweetAlert";
+import { client } from "../../utils/client";
+import { AuthInput } from "../../components/common/inputs/AuthInput";
+import { AuthButton } from "../../components/common/buttons/AuthButton";
+import { SocialButton } from "../../components/common/buttons/SocialButton";
+import { BaseLink } from "../../components/Link/BaseLink";
+import { AUTH_CONSTANT } from "../../constants/AuthConstant";
+import { login } from "../../api/AuthAPI";
 
 const LinkWrapper = styled.div`
   display: flex;
@@ -107,18 +44,7 @@ const SocialWrapper = styled.div`
     margin-top: 20px;
   }
 `;
-const SocialButton = styled.img`
-  padding: 8px;
-  border-radius: 100%;
-  width: 30px;
-  height: 30px;
-  cursor: pointer;
-  background-color: ${({ color }) => color};
-  @media screen and (max-width: 500px) {
-    width: 20px;
-    height: 20px;
-  }
-`;
+
 
 const Login = () => {
   const [state, setState] = useState({
@@ -153,11 +79,7 @@ const Login = () => {
       userPw: state.password,
     };
 
-    const response = await client
-      .post(`/users/login`, data)
-      .then((response) => response)
-      .catch((error) => error.response);
-
+    const response = login(data)
     if (response.status === 400) {
       FailAlert(response.data.message);
       return;
@@ -179,11 +101,11 @@ const Login = () => {
           mWidth={"300"}
           mHeight={"460"}
         >
-          <LoginFormWrapper>
-            <LoginForm onSubmit={onHandleSubmit}>
+          <BaseFlexColWrapper>
+            <BaseForm onSubmit={onHandleSubmit}>
               <InputWrapper>
                 <i className="fas fa-envelope"></i>
-                <LoginInput
+                <AuthInput
                   value={state.userId}
                   ref={userIdInput}
                   name="userId"
@@ -194,7 +116,7 @@ const Login = () => {
               </InputWrapper>
               <InputWrapper>
                 <i className="fas fa-lock"></i>
-                <LoginInput
+                <AuthInput
                   type="password"
                   value={state.password}
                   ref={passwordInput}
@@ -204,18 +126,14 @@ const Login = () => {
                   autoComplete="off"
                 />
               </InputWrapper>
-              <LoginButton type="submit">로그인</LoginButton>
-            </LoginForm>
+              <AuthButton type="submit">로그인</AuthButton>
+            </BaseForm>
             <LinkWrapper>
-              <Link to={"/findId"} style={{ color: "cornflowerblue" }}>
-                아이디 찾기
-              </Link>
-              <Link to={"/findPassword"} style={{ color: "cornflowerblue" }}>
-                비밀번호 찾기
-              </Link>
-              <Link to={"/signup"} style={{ color: "cornflowerblue" }}>
-                회원가입
-              </Link>
+              {AUTH_CONSTANT.map((item)=>(
+                <BaseLink to={item.link} color={"cornflowerblue"}>
+                  {item.linkName}
+                </BaseLink>
+              ))}
             </LinkWrapper>
             <SocialWrapper>
               <a href="">
@@ -225,7 +143,7 @@ const Login = () => {
                 <SocialButton src="assets/google_icon.png" color="white" />
               </a>
             </SocialWrapper>
-          </LoginFormWrapper>
+          </BaseFlexColWrapper>
         </RoundedWrapper>
       </Wrapper>
     </>
