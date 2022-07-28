@@ -1,6 +1,8 @@
 package com.ssafy.drinkus.user.controller;
 
 import com.ssafy.drinkus.config.LoginUser;
+import com.ssafy.drinkus.email.request.UserNameAuthRequest;
+import com.ssafy.drinkus.email.request.UserNameCheckRequest;
 import com.ssafy.drinkus.user.domain.User;
 import com.ssafy.drinkus.user.request.*;
 import com.ssafy.drinkus.user.response.UserMyInfoResponse;
@@ -12,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -60,9 +63,9 @@ public class UserController {
     }
 
     // 닉네임 중복 검사
-    @GetMapping("/nickname/duplicate")
-    public ResponseEntity<Void> findByUserNickname(@RequestParam("userNickname") String userNickname){
-        userService.findByUserNickname(userNickname);
+    @GetMapping("/nickname")
+    public ResponseEntity<Void> findByUserNickname(@RequestBody @Valid UserDuplicateCheckNicknameRequest request){
+        userService.findByUserNickname(request.getUserNickname());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
@@ -105,6 +108,20 @@ public class UserController {
     @PostMapping("/pw")
     public ResponseEntity<Void> findMyPw(@RequestBody @Valid UserFindMyPwRequest request) {
         userService.resetPw(request);
+        return ResponseEntity.ok().build();
+    }
+
+    // 회원가입 이메일 인증 발송
+    @PostMapping("/sendConfirmEmail")
+    public ResponseEntity<Void> sendUserNameCheckEmail(@RequestBody @Valid UserNameCheckRequest request) throws MessagingException {
+        userService.sendEmailAuthEmail(request);
+        return ResponseEntity.ok().build();
+    }
+
+    // 이메일 토큰 인증 확인
+    @PatchMapping("/confirmToken")
+    public ResponseEntity<Void> confirmUserNameCheck(@RequestBody @Valid UserNameAuthRequest request){
+        userService.confirmUserName(request);
         return ResponseEntity.ok().build();
     }
 }

@@ -1,12 +1,11 @@
 package com.ssafy.drinkus.user.service;
 
-import com.ssafy.drinkus.common.DuplicateException;
-import com.ssafy.drinkus.common.MailSendFailException;
-import com.ssafy.drinkus.common.NotFoundException;
-import com.ssafy.drinkus.common.NotMatchException;
+import com.ssafy.drinkus.common.*;
 import com.ssafy.drinkus.common.type.YN;
-import com.ssafy.drinkus.email.dto.EmailDto;
-import com.ssafy.drinkus.email.handler.EmailHandler;
+import com.ssafy.drinkus.email.request.UserNameAuthRequest;
+import com.ssafy.drinkus.email.request.UserNameCheckRequest;
+import com.ssafy.drinkus.email.service.EmailService;
+import com.ssafy.drinkus.email_auth.EmailAuth;
 import com.ssafy.drinkus.security.util.JwtUtil;
 import com.ssafy.drinkus.user.domain.User;
 import com.ssafy.drinkus.user.domain.UserRepository;
@@ -15,8 +14,6 @@ import com.ssafy.drinkus.user.response.UserMyInfoResponse;
 import com.ssafy.drinkus.user.response.UserProfileResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -28,14 +25,14 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class UserService {
-    @Value("${spring.mail.username}")
-    private String sender;
+
     final int PASSWORD_SIZE = 15;
     final int WAITING_DAYS = 7;
     final int POPULARITY_LIMIT = 5;
@@ -43,7 +40,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
-    private final JavaMailSender mailSender;
+    private final EmailService emailService;
 
 
     @Transactional
@@ -171,10 +168,32 @@ public class UserService {
 
         // 이메일 발송
         try {
-            sendMail(request.getUserName(), password);
+            emailService.sendResetPwEmail(request.getUserName(), password);
         } catch (MessagingException e) {
             throw new MailSendFailException(MailSendFailException.MAIL_SEND_FAIL);
         }
+    }
+
+    // 회원가입 이메일 인증 토큰 생성 및 발송
+    @Transactional
+    public void sendEmailAuthEmail(UserNameCheckRequest request) {
+        if (userRepository.existsByUserName(request.getUserName())){
+            throw new DuplicateException("이미 가입된 회원입니다.");
+        }
+
+        EmailAuth emailAuth = EmailAuth.createEmailAuth(request.getUserName(), UUID.randomUUID().toString());
+        emailService.saveEmailAuth(emailAuth);
+        try{
+            emailService.sendUserNameCheckEmail(emailAuth.getUserName(), emailAuth.getAuthToken());
+        }catch (MessagingException e){
+            throw new MailSendFailException(MailSendFailException.MAIL_SEND_FAIL);
+        }
+    }
+
+    // 회원가입 이메일 인증 토큰 확인
+    @Transactional
+    public void confirmUserName(UserNameAuthRequest request){
+        emailService.confirmEmailAuth(request);
     }
 
     // 비밀번호 랜덤 재생성
@@ -193,30 +212,6 @@ public class UserService {
             sb.append(charSet[idx]);
         }
         return sb.toString();
-    }
-
-    public void sendMail(String receiver, String password) throws MailSendFailException, MessagingException {
-        // 이메일 발송 정보 설정
-        EmailDto mailDto = new EmailDto();
-        mailDto.setFromAddress(sender);
-        mailDto.setTitle("[DrinkUs] 비밀번호 재설정 안내입니다.");
-        StringBuilder content = new StringBuilder();
-        content.append("<div class='container' align='left'>");
-        content.append("    <div>안녕하세요, DrinkUs입니다.</div>");
-        content.append("    <div>고객님의 비밀번호를 재설정하여 다음과 같이 알려드립니다.</div><br>");
-        content.append("    <div>비밀번호 : <strong style='background-color: yellow;'>" + password +  "</strong></div><br>");
-        content.append("    <div>안내된 비밀번호로 로그인 후 비밀번호 재설정 바랍니다.</div>");
-        content.append("</div>");
-        mailDto.setContent(content.toString());
-        mailDto.addToAddress(receiver);
-
-        // 메일 발송
-        EmailHandler emailHandler = new EmailHandler(mailSender);
-        emailHandler.setFrom(mailDto.getFromAddress());
-        emailHandler.setTo(mailDto.getToAddressList());
-        emailHandler.setSubject(mailDto.getTitle());
-        emailHandler.setText(mailDto.getContent(), true);
-        emailHandler.send();
     }
 
     // 회원 삭제 스케줄 task
