@@ -2,39 +2,27 @@ import { useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { logIn } from "../../store/actions/user";
+import {Wrapper, RoundedWrapper} from "../../components/styled/Wrapper"
 import styled from "styled-components";
-const Wrapper = styled.div`
-  background-color: black;
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
+import axios from "axios";
 
-const NeonLoginWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  border-radius: 40px;
-  height: 700px;
-  background-color: #131317;
-  width: 450px;
-`;
-const LoginWrapper = styled.div`
+
+
+export const LoginFormWrapper = styled.div`
   display: flex;
   justify-content: center;
   flex-direction: column;
   align-items: center;
 `;
 
-const LoginForm = styled.form`
+export const LoginForm = styled.form`
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
 `;
 
-const InputWrapper = styled.div`
+export const InputWrapper = styled.div`
   justify-content: space-between;
   width: 380px;
   height: 64px;
@@ -43,8 +31,12 @@ const InputWrapper = styled.div`
   background-color: #676775;
   margin: 14px;
   position: relative;
+  @media screen and (max-width : 500px){
+    width: 250px;
+    height: 42px;
+  }
 `;
-const LoginInput = styled.input`
+export const LoginInput = styled.input`
   position: relative;
   height: 30px;
   width: 280px;
@@ -55,9 +47,24 @@ const LoginInput = styled.input`
   border: none;
   margin: 0px;
   color: white;
+  @media screen and (max-width : 500px){
+    width: 160px;
+    height: 42px;
+    font-size: 16px;
+    top: 0px;
+    left: 5px;
+    &::placeholder{
+    font-size: 14px
+  }
+  }
+  &::placeholder{
+    color: white
+  }
+  
+  
 `;
 
-const LoginButton = styled.button`
+export const LoginButton = styled.button`
   width: 380px;
   height: 64px;
   border-radius: 36px;
@@ -67,6 +74,11 @@ const LoginButton = styled.button`
   font-size: 20px;
   color: #535353;
   cursor: pointer;
+  @media screen and (max-width : 500px){
+    width: 250px;
+    height: 42px;
+    font-size: 14px;
+  }
 `;
 
 const LinkWrapper = styled.div`
@@ -74,6 +86,19 @@ const LinkWrapper = styled.div`
   width: 300px;
   margin: 14px 14px 20px 14px;
   justify-content: space-between;
+  align-items: center;
+  @media screen and (max-width : 500px){
+    width: 200px;
+    height: 42px;
+    & a{
+    font-size: 14px;
+    font-weight: 100;
+    }
+    & span{
+    font-size: 14px
+    }   
+  }
+ 
 `;
 
 const SocialWrapper = styled.div`
@@ -81,6 +106,10 @@ const SocialWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   width: 120px;
+  align-items: center;
+  @media screen and (max-width : 500px){
+    margin-top: 20px;
+  }
 `;
 const SocialButton = styled.img`
   padding: 8px;
@@ -88,7 +117,13 @@ const SocialButton = styled.img`
   width: 30px;
   height: 30px;
   cursor: pointer;
+  @media screen and (max-width : 500px){
+    width: 20px;
+    height: 20px;
+  }
 `;
+
+
 
 const KaKaoSocialButton = styled(SocialButton)`
   background-color: yellow;
@@ -128,14 +163,18 @@ const Login = () => {
       userId: state.userId,
       password: state.password,
     };
-    dispatch(logIn(data));
-    navigate("/");
+    // dispatch(logIn(data));
+    axios.post("http://localhost:8080/users/login", {userName: state.userId, userPw: state.password}).then(response => response)
+    // navigate("/");    
   };
+  const socialLogin = (e) =>{
+    window.location.replace(`http://localhost:8080/oauth2/authorization/${e.target.name}?redirect_uri=http://localhost:3000/`)
+  }
   return (
     <>
       <Wrapper>
-        <NeonLoginWrapper>
-          <LoginWrapper>
+        <RoundedWrapper width={"450"} height={"700"} mWidth={"300"} mHeight={"460"}>
+          <LoginFormWrapper>
             <LoginForm onSubmit={onHandleSubmit}>
               <InputWrapper>
                 <i className="fas fa-envelope"></i>
@@ -161,24 +200,22 @@ const Login = () => {
               <LoginButton type="submit">로그인</LoginButton>
             </LoginForm>
             <LinkWrapper>
-              <Link to={"/"} style={{ color: "cornflowerblue" }}>
+              <Link to={"/findId"} style={{ color: "cornflowerblue" }}>
                 아이디 찾기
               </Link>
-              <span style={{ color: "cornflowerblue" }}>|</span>
               <Link to={"/findPassword"} style={{ color: "cornflowerblue" }}>
                 비밀번호 찾기
               </Link>
-              <span style={{ color: "cornflowerblue" }}>|</span>
               <Link to={"/signup"} style={{ color: "cornflowerblue" }}>
                 회원가입
               </Link>
             </LinkWrapper>
             <SocialWrapper>
-              <KaKaoSocialButton src="assets/kakao_icon.png" />
-              <GoogleSocialButton src="assets/google_icon.png" />
+              <KaKaoSocialButton src="assets/kakao_icon.png" name="kakao" onClick={socialLogin}/>
+              <GoogleSocialButton src="assets/google_icon.png" name="google" onClick={socialLogin}/>
             </SocialWrapper>
-          </LoginWrapper>
-        </NeonLoginWrapper>
+          </LoginFormWrapper>
+        </RoundedWrapper>
       </Wrapper>
     </>
   );
