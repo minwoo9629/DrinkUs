@@ -1,6 +1,7 @@
 package com.ssafy.drinkus.dailyboard.service;
 
 import com.ssafy.drinkus.common.AuthenticationException;
+import com.ssafy.drinkus.common.InvalidException;
 import com.ssafy.drinkus.common.NotFoundException;
 import com.ssafy.drinkus.dailyboard.DailyBoard;
 import com.ssafy.drinkus.dailyboard.DailyBoardRepository;
@@ -33,7 +34,7 @@ public class DailyBoardService {
     @Transactional
     public void createDailyBoard(Long userId, DailyBoardCreateRequest request) {
         User user = userService.findById(userId);
-        DailyBoard dailyBoard = DailyBoard.createDailyBoard(user.getUserId(), user.getUserId(), request.getBoardContent());
+        DailyBoard dailyBoard = DailyBoard.createDailyBoard(user, user, request.getBoardContent());
         dailyBoardRepository.save(dailyBoard);
     }
 
@@ -41,7 +42,14 @@ public class DailyBoardService {
     @Transactional
     public void createComment(Long userId, DailyBoardCreateRequest request, Long parentId) {
         User user = userService.findById(userId);
-        DailyBoard dailyBoard = DailyBoard.createDailyBoard(user.getUserId(), user.getUserId(), request.getBoardContent(), parentId);
+
+        DailyBoard parentBoard = dailyBoardRepository.findByBoardId(parentId)
+                .orElseThrow(() -> new NotFoundException(NotFoundException.BOARD_DAILY_NOT_FOUND));
+        if (parentBoard.getParentId() != null) {
+            throw new InvalidException("답글에는 답글을 작성할 수 없습니다.");
+        }
+
+        DailyBoard dailyBoard = DailyBoard.createDailyBoard(user, user, request.getBoardContent(), parentId);
         dailyBoardRepository.save(dailyBoard);
     }
 
@@ -53,12 +61,12 @@ public class DailyBoardService {
         DailyBoard dailyBoard = dailyBoardRepository.findByBoardId(boardId)
                 .orElseThrow(() -> new NotFoundException(NotFoundException.BOARD_DAILY_NOT_FOUND));
 
-        if (user.getUserRole() != UserRole.ROLE_ADMIN && user.getUserId() != dailyBoard.getCreaterId()) {
+        if (user.getUserRole() != UserRole.ROLE_ADMIN && !user.equals(dailyBoard.getCreater())) {
             // 원글 작성자이거나 관리자 권한일 때만 수정 가능
             throw new AuthenticationException("본인이 쓴 글만 수정 할 수 있습니다.");
         }
 
-        dailyBoard.updateDailyBoard(user.getUserId(), request.getBoardContent());
+        dailyBoard.updateDailyBoard(user, request.getBoardContent());
     }
 
     // 글 삭제
@@ -69,7 +77,7 @@ public class DailyBoardService {
         DailyBoard dailyBoard = dailyBoardRepository.findByBoardId(boardId)
                 .orElseThrow(() -> new NotFoundException(NotFoundException.BOARD_DAILY_NOT_FOUND));
 
-        if (user.getUserRole() != UserRole.ROLE_ADMIN && user.getUserId() != dailyBoard.getCreaterId()) {
+        if (user.getUserRole() != UserRole.ROLE_ADMIN && !user.equals(dailyBoard.getCreater())) {
             // 원글 작성자이거나 관리자 권한일 때만 삭제 가능
             throw new AuthenticationException("본인이 쓴 글만 삭제 할 수 있습니다.");
         }
@@ -77,7 +85,7 @@ public class DailyBoardService {
         if (dailyBoard.getParentId() == null) {
             // 부모 Id가 없음 = 원게시물
             dailyBoardRepository.delete(dailyBoard); // 글 삭제 시 글에 대한 답글들도 모두 삭제
-        } 
+        }
 
         dailyBoardQueryRepository.deleteAllReplies(dailyBoard.getBoardId()); // 해당 게시물 삭제
     }
