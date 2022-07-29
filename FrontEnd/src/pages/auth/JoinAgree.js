@@ -3,6 +3,8 @@ import Header from "../../components/Header";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
+
+// 체크박스 포커스 주기
 const Wrapper = styled.div`
   background-color: black;
   width: 100vw;
@@ -19,14 +21,20 @@ const NeonLoginWrapper = styled.div`
   height: 700px;
   background-color: #131317;
   width: 450px;
-  font-size: 30px;
 `;
 
 const AgreeForm = styled.div`
   display: flex;
   justify-content: center;
-  flex-direction: column;
   align-items: center;
+  flex-direction: column;
+`;
+
+const AgreeWrapper = styled.div`
+display: flex;
+justify-content: center;
+flex-direction: column;
+align-items: center;
 `;
 
 const AgreeContent = styled.div`
@@ -40,13 +48,21 @@ const AgreeContent = styled.div`
 `;
 
 const ButtonWrapper = styled.div`
-margin-top: 30px;
-/* display: flex; */
-justify-content: space-between;
-width: 120px;
+  margin-top: 30px;
+  display: flex;
+  justify-content: space-between;
+  width: 120px;
 `;
 
 const Button = styled.button`
+  display: flex;
+  font-size: 20px;
+  color: #fff;
+  background-color: #131317;
+  cursor: pointer;
+`;
+
+const OverTwenty = styled.button`
   font-size: 1rem;
   font-weight: 200;
   color: #fff;
@@ -55,22 +71,12 @@ const Button = styled.button`
   border-radius: 2rem;
   text-transform: uppercase;
   background-color: #131317;
-  cursor: pointer;
-`;
-
-const OverTwenty = styled.button`
-font-size: 1rem;
-font-weight: 200;
-color: #fff;
-padding: 1rem 1.2rem 1.1rem;
-border: 0.4rem solid #131317;
-border-radius: 2rem;
-text-transform: uppercase;
-background-color: #131317;
 `;
 
 const JoinAgree = ({ history }) => {
   const [checkedButtons, setCheckedButtons] = useState([]);
+  // 상수 변수로 빼기 (??)
+  // 체크박스 개수 변수 설정하기
   const isAllChecked = checkedButtons.length === 3;
   const disabled = !isAllChecked;
 
@@ -83,6 +89,9 @@ const JoinAgree = ({ history }) => {
     }
   };
 
+  // pdf 파일 불러오자
+  // const pdfviewer = document.getElementById('container').ej2_instances[0];
+
 
   return (
     <div>
@@ -90,28 +99,28 @@ const JoinAgree = ({ history }) => {
       <Wrapper>
         <NeonLoginWrapper>
           <AgreeForm> 이용약관 동의 </AgreeForm>
+          <AgreeWrapper>
+
             <AgreeContent>
-              <Button
-                onClick={() => window.open('https://admitted-evening-312.notion.site/3-Drinkus-97e5baba6ee845ed8ed6a9148c7f6901', '_blank')}
-                >
+              {/* <Button
+                onClick={() => pdfviewer.load('test.pdf', null)}
+              > */}
+              <Button>
                 <u>개인정보수집</u>
+                <input
+                  type="checkbox"
+                  id="check"
+                  onChange={e => {
+                    changeHandler(e.currentTarget.checked, 'check');
+                  }}
+                  checked={checkedButtons.includes('check') ? true : false}
+                  ></input>
+                  <label id="check" htmlFor="check"></label>
               </Button>
-              <input
-                type="checkbox"
-                id="check"
-                onChange={e => {
-                  changeHandler(e.currentTarget.checked, 'check');
-                }}
-                checked={checkedButtons.includes('check') ? true : false}
-                ></input>
-                <label id="check" htmlFor="check"></label>
-            </AgreeContent>
-            <AgreeContent>
               <Button
-                onClick={() => window.open('https://admitted-evening-312.notion.site/3-Drinkus-97e5baba6ee845ed8ed6a9148c7f6901', '_blank')}
+                // onClick={() => window.open('https://admitted-evening-312.notion.site/3-Drinkus-97e5baba6ee845ed8ed6a9148c7f6901', '_blank')}
               >
                 <u>이용약관</u>
-              </Button>
               <input
                 type="checkbox"
                 id="check2"
@@ -121,8 +130,7 @@ const JoinAgree = ({ history }) => {
                 checked={checkedButtons.includes('check2') ? true : false}
                 ></input>
                 <label id="check2" htmlFor="check2"></label>
-            </AgreeContent>
-            <AgreeContent>
+              </Button>
               <OverTwenty
               >
                 20세 이상입니다
@@ -137,6 +145,7 @@ const JoinAgree = ({ history }) => {
                 ></input>
                 <label id="check3" htmlFor="check3"></label>
             </AgreeContent>
+          </AgreeWrapper>
             <ButtonWrapper>
                 <Link to="/">
                   <Button>MAIN</Button>

@@ -134,6 +134,9 @@ const Join = () => {
     confirmValid: false,  // 인증번호 유효
     userPwValid: "",
     userPwCheckValid: "",
+    fullNameValid: false,  // 이름은 필수 항목
+    bdayValid: false,  // 생일은 필수 항목
+
   });
   const navigate = useNavigate();
 
@@ -183,6 +186,17 @@ const Join = () => {
     } else {
       setState({...state, userPwCheckValid: true });
     }
+
+    // 이름 유효 체크
+    // const fullNameValid = state.fullNameValid
+    if (state.userFullname.length === 0) {
+      alert("이름은 필수 입력 항목입니다")
+    }
+
+    // 생년월일 유효 체크
+    if (state.userBirthday.length === 0) {
+      alert("생년월일은 필수 입력 항목입니다")
+    }
   
     // 회원가입 axios 요청
     axios.post("http://localhost:8080/users/join", {
@@ -231,16 +245,14 @@ const Join = () => {
   // 중복확인 버튼 --> requestBody로 수정되면 확인할 것!!!!!!!!
   const onDoubleCheck = (e) => {
     e.preventDefault();
-
-    console.log("중복확인")
-    // // axios 요청
-    // axios.post("http://localhost:8080/users/join/id", {
-    //   userName: state.userName,
-    // }).then(function (response) {
-    //   // console.log(response)
-    // }).catch(function(error) {
-    //   console.log(error);
-    // })
+    // axios 요청
+    axios.post("http://localhost:8080/users/join/id", {
+      userName: state.userName,
+    }).then(function (response) {
+      // console.log(response)
+    }).catch(function(error) {
+      console.log(error);
+    })
   };
 
 
