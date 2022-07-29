@@ -1,23 +1,32 @@
-import { client } from "../utils/client" 
+import { client } from "../utils/client";
 
 const login = async (data) => {
-    client.post(`/users/login`, data).then((response) => response).catch((error) => error.response);
-}
+  const result = await client
+    .post(`/users/login`, data)
+    .then((response) => response)
+    .catch((error) => error.response);
+  return result;
+};
 
 const findId = async (data) => {
-    client
-      .post(`/users/id`, data)
-      .then((response) => response)
-      .catch((error) => error.response);
-}
+  const result = await client
+    .post(`/users/id`, data)
+    .then((response) => response)
+    .catch((error) => error.response);
+  return result;
+};
 
 const findPassword = async (data) => {
-    client.post(`/users/pw`, data).then((response) => response).catch((error) => error.response);
-}
+  const result = await client
+    .post(`/users/pw`, data)
+    .then((response) => response)
+    .catch((error) => error.response);
+  return result;
+};
 
 const getProfile = async () => {
-    client.get("/users").then((response) => response);
-}
+  const result = await client.get("/users").then((response) => response);
+  return result;
+};
 
-
-export {login, findId, findPassword, getProfile}
+export { login, findId, findPassword, getProfile };
