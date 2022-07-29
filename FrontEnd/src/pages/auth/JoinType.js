@@ -2,6 +2,7 @@ import Header from "../../components/Header";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
+// 소셜 로그인 종류 보고 api 문서 페이지에서 url 걸어주기
 const Wrapper = styled.div`
   background-color: black;
   width: 100vw;
@@ -40,6 +41,10 @@ const Button = styled.button`
   cursor: pointer;
 `;
 
+// const socialLogin = (e) =>{
+//   window.location.replace(`http://localhost:8080/oauth2/authorization/${e.target.name}?redirect_uri=http://localhost:3000/`)
+// }
+
 const JoinType = () => {
 
   return (
@@ -52,9 +57,11 @@ const JoinType = () => {
             <Link to="/join">
               <Button>로컬 회원가입</Button>
             </Link>
-              <Button>카카오로 시작하기</Button>
-              <Button>구글로 시작하기</Button>
-              <Button>네이버로 시작하기</Button>
+              {/* <Button name="kakao" onClick={socialLogin}>카카오로 시작하기</Button> */}
+              <Button onClick={() => window.open(`http://localhost:8080/oauth2/authorization/kakao?redirect_uri=http://localhost:3000/`)}>카카오로 시작하기</Button>
+              {/* <Button name="google" onClick={socialLogin}>구글로 시작하기</Button> */}
+              <Button onClick={() => window.open(`http://localhost:8080/oauth2/authorization/google?redirect_uri=http://localhost:3000/`)}>구글로 시작하기</Button>
+              {/* <Button name="naver" onClick={socialLogin}>네이버로 시작하기</Button> */}
           </JoinForm>
         </NeonLoginWrapper>
       </Wrapper>
