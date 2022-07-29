@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 public class DailyBoardQueryRepository {
     private  final JPAQueryFactory queryFactory;
 
+    // 원글에 대한 답글 모두 삭제
     public void deleteAllReplies(Long boardId){
         QDailyBoard qDailyBoard = new QDailyBoard("dailyBoard");
 

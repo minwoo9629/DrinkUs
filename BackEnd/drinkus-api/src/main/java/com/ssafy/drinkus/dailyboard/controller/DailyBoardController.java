@@ -23,6 +23,8 @@ public class DailyBoardController {
 //        @GetMapping("")
 //        public ResponseEntity<Void> find
 
+        // 댓글 조회
+
         // 글 작성
         @PostMapping
         public ResponseEntity<Void> createDailyBoard(@LoginUser User user, @RequestBody @Valid DailyBoardCreateRequest request){
@@ -50,6 +52,4 @@ public class DailyBoardController {
                 dailyBoardService.deleteDailyBoard(user.getUserId(), boardId);
                 return ResponseEntity.ok().build();
         }
-
-        // 댓글 조회
 }

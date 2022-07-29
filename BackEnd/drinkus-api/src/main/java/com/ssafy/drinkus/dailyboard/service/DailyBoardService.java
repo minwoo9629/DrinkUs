@@ -27,6 +27,8 @@ public class DailyBoardService {
 
     // 원글 조회
 
+    // 댓글 조회
+
     // 원글 작성
     @Transactional
     public void createDailyBoard(Long userId, DailyBoardCreateRequest request) {
@@ -72,9 +74,11 @@ public class DailyBoardService {
             throw new AuthenticationException("본인이 쓴 글만 삭제 할 수 있습니다.");
         }
 
-        dailyBoardRepository.delete(dailyBoard); // 글 삭제 시 글에 대한 답글들도 모두 삭제
-        dailyBoardQueryRepository.deleteAllReplies(dailyBoard.getBoardId());
-    }
+        if (dailyBoard.getParentId() == null) {
+            // 부모 Id가 없음 = 원게시물
+            dailyBoardRepository.delete(dailyBoard); // 글 삭제 시 글에 대한 답글들도 모두 삭제
+        } 
 
-    // 댓글 조회
+        dailyBoardQueryRepository.deleteAllReplies(dailyBoard.getBoardId()); // 해당 게시물 삭제
+    }
 }
