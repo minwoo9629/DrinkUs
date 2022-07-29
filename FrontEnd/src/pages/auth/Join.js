@@ -188,12 +188,11 @@ const Join = () => {
     }
 
     // 이름 유효 체크
-    // const fullNameValid = state.fullNameValid
     if (state.userFullname.length === 0) {
       alert("이름은 필수 입력 항목입니다")
     }
 
-    // 생년월일 유효 체크
+    // 생년월일 유효 체크  나중에 8자리 됐을 때 20살 이상인지 체크하는거 추가하자
     if (state.userBirthday.length === 0) {
       alert("생년월일은 필수 입력 항목입니다")
     }
@@ -210,8 +209,6 @@ const Join = () => {
     }).catch(function(error) {
       console.log(error);
     })
-
-    
   };
   
   // 이메일 인증번호 전송
@@ -223,7 +220,7 @@ const Join = () => {
     }).catch(function(error) {
       console.log(error);
     })
-    }
+    };
 
   // 인증번호 확인
   const onConfirmEmail = (e) => {
@@ -233,23 +230,20 @@ const Join = () => {
       authToken: state.authToken,
     }).then(function (response)  {
       setState({...state, confirmValid: true})
-      console.log(state.confirmValid)
       alert("유효한 인증번호입니다")
     })
     .catch(function (error) {
       console.log(error);
       alert("유효하지 않은 인증번호입니다")
     })
-    }
+    };
   
   // 중복확인 버튼 --> requestBody로 수정되면 확인할 것!!!!!!!!
   const onDoubleCheck = (e) => {
     e.preventDefault();
-    // axios 요청
     axios.post("http://localhost:8080/users/join/id", {
       userName: state.userName,
     }).then(function (response) {
-      // console.log(response)
     }).catch(function(error) {
       console.log(error);
     })
@@ -271,8 +265,7 @@ const Join = () => {
                   value={state.userName}
                   name="userName"
                   onChange={onHandleInput}
-                />
-                
+                />      
                 <DoubleCheckButton onClick={onDoubleCheck}>
                   중복확인
                 </DoubleCheckButton>
