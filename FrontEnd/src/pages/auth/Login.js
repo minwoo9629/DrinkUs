@@ -2,7 +2,12 @@ import { useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { getUserProfile } from "../../store/actions/user";
-import { Wrapper, RoundedWrapper, BaseFlexColWrapper, InputWrapper } from "../../components/styled/Wrapper";
+import {
+  Wrapper,
+  RoundedWrapper,
+  BaseFlexColWrapper,
+  InputWrapper,
+} from "../../components/styled/Wrapper";
 import { BaseForm } from "../../components/common/Forms/Form";
 import styled from "styled-components";
 import { BackButton } from "../../components/common/buttons/BackButton";
@@ -45,7 +50,6 @@ const SocialWrapper = styled.div`
   }
 `;
 
-
 const Login = () => {
   const [state, setState] = useState({
     userId: "",
@@ -79,7 +83,7 @@ const Login = () => {
       userPw: state.password,
     };
 
-    const response = login(data)
+    const response = await login(data);
     if (response.status === 400) {
       FailAlert(response.data.message);
       return;
@@ -129,8 +133,8 @@ const Login = () => {
               <AuthButton type="submit">로그인</AuthButton>
             </BaseForm>
             <LinkWrapper>
-              {AUTH_CONSTANT.map((item)=>(
-                <BaseLink to={item.link} color={"cornflowerblue"}>
+              {AUTH_CONSTANT.map((item, idx) => (
+                <BaseLink key={idx} to={item.link} color={"cornflowerblue"}>
                   {item.linkName}
                 </BaseLink>
               ))}
