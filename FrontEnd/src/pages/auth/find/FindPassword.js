@@ -1,6 +1,11 @@
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Wrapper, RoundedWrapper,BaseFlexColWrapper, InputWrapper} from "../../../components/styled/Wrapper";
+import {
+  Wrapper,
+  RoundedWrapper,
+  BaseFlexColWrapper,
+  InputWrapper,
+} from "../../../components/styled/Wrapper";
 import { BackButton } from "../../../components/common/buttons/BackButton";
 import { EmptyAlert, FailAlert } from "../../../utils/sweetAlert";
 import { AuthInput } from "../../../components/common/inputs/AuthInput";
@@ -8,8 +13,6 @@ import { AuthButton } from "../../../components/common/buttons/AuthButton";
 import { GoToButton } from "../../../components/common/buttons/GoToButton";
 import { BaseForm } from "../../../components/common/Forms/Form";
 import { findPassword } from "../../../api/AuthAPI";
-
-
 
 const FindPassword = () => {
   const [state, setState] = useState({
@@ -35,7 +38,7 @@ const FindPassword = () => {
       userName: state.userId,
     };
 
-    const response = findPassword(data) 
+    const response = await findPassword(data);
     if (response.status === 200) {
       setState({ ...state, type: "result" });
     } else {
