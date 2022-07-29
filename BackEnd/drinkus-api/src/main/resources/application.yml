@@ -75,6 +75,7 @@ spring:
 
 token:
   expiration_time: 86400000
+  refresh_token_expiration_time: 604800000
   secret: secret
 
 
