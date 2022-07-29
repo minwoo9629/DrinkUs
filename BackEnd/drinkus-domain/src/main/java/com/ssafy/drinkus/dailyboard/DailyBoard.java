@@ -1,5 +1,6 @@
 package com.ssafy.drinkus.dailyboard;
 
+import com.ssafy.drinkus.user.domain.User;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,39 +18,43 @@ public class DailyBoard {
     @Column(name = "board_id")
     private Long boardId; // 글 번호
 
-    private Long createrId; // 작성자 번호
+    @ManyToOne
+    @JoinColumn(name = "creater_id")
+    private User creater; // 작성자
 
-    private Long modifierId; // 수정자 번호
+    @ManyToOne
+    @JoinColumn(name = "modifier_id")
+    private User modifier; // 수정자
 
     private String boardContent; // 글 내용
 
     private Long parentId; // 원글 번호
 
     // 원글
-    public static DailyBoard createDailyBoard(Long createrId, Long modifierId, String boardContent) {
+    public static DailyBoard createDailyBoard(User creater, User modifier, String boardContent) {
         DailyBoard dailyBoard = new DailyBoard();
 
-        dailyBoard.createrId = createrId;
-        dailyBoard.modifierId = modifierId;
+        dailyBoard.creater = creater;
+        dailyBoard.modifier = modifier;
         dailyBoard.boardContent = boardContent;
 
         return dailyBoard;
     }
 
     // 답글
-    public static DailyBoard createDailyBoard(Long createrId, Long modifierId, String boardContent, Long parentId) {
+    public static DailyBoard createDailyBoard(User creater, User modifier, String boardContent, Long parentId) {
         DailyBoard dailyBoard = new DailyBoard();
 
-        dailyBoard.createrId = createrId;
-        dailyBoard.modifierId = modifierId;
+        dailyBoard.creater = creater;
+        dailyBoard.modifier = modifier;
         dailyBoard.boardContent = boardContent;
         dailyBoard.parentId = parentId;
 
         return dailyBoard;
     }
 
-    public void updateDailyBoard(Long modifierId, String boardContent){
-        this.modifierId = modifierId;
+    public void updateDailyBoard(User modifier, String boardContent){
+        this.modifier = modifier;
         this.boardContent = boardContent;
     }
 }
