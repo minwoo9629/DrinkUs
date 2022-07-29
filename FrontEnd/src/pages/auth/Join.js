@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import Header from "../../components/Header";
+import Header from "../../components/layout/Header";
 import axios from "axios";
 
 const Wrapper = styled.div`
