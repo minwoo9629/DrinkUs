@@ -1,6 +1,6 @@
-package com.ssafy.drinkus.interest;
+package com.ssafy.drinkus.interest.domain;
 
-import com.ssafy.drinkus.room.Room;
+import com.ssafy.drinkus.room.domain.Room;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,12 +22,9 @@ public class Category {
 
     private String categoryName;
 
-    @OneToMany(mappedBy = "category_first")
-    private List<Room> roomFirst = new ArrayList<>();
+    @OneToMany(mappedBy = "category")
+    private List<Room> roomList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "category_second")
-    private List<Room> roomSecond = new ArrayList<>();
-
-    @OneToMany(mappedBy = "category_third")
-    private List<Room> roomThird = new ArrayList<>();
+    @OneToMany(mappedBy = "category")
+    private List<Interest> interestList = new ArrayList<>();
 }
