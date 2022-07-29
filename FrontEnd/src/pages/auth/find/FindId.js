@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Wrapper, RoundedWrapper, BaseFlexColWrapper, InputWrapper } from "../../../components/styled/Wrapper";
+import {
+  Wrapper,
+  RoundedWrapper,
+  BaseFlexColWrapper,
+  InputWrapper,
+} from "../../../components/styled/Wrapper";
 import { BaseForm } from "../../../components/common/Forms/Form";
 import { BackButton } from "../../../components/common/buttons/BackButton";
 import { EmptyAlert, FailAlert } from "../../../utils/sweetAlert";
@@ -8,8 +13,21 @@ import { AuthInput } from "../../../components/common/inputs/AuthInput";
 import { AuthButton } from "../../../components/common/buttons/AuthButton";
 import { GoToButton } from "../../../components/common/buttons/GoToButton";
 import { findId } from "../../../api/AuthAPI";
+import styled from "styled-components";
 
+const FindIdListWrapper = styled.div`
+  margin-top: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(25%, auto));
+  display: grid;
+  box-sizing: border-box;
+  width: 100%;
+`;
 
+const FindIdListItemWrapper = styled.div`
+  text-align: center;
+  padding: 8px 20px;
+  color: white;
+`;
 const FindId = () => {
   const [state, setState] = useState({
     userName: "",
@@ -36,8 +54,8 @@ const FindId = () => {
     const data = {
       userFullname: state.userName,
       userBirthday: state.dateOfBirth,
-    }
-    const response = findId(data)
+    };
+    const response = await findId(data);
     if (response.status !== 200) {
       FailAlert(`${response.data.message}`);
       return;
@@ -96,11 +114,11 @@ const FindId = () => {
                 <h2 style={{ color: "white", marginTop: "20px" }}>
                   {state.userName} | {state.dateOfBirth}로 검색된 아이디입니다.
                 </h2>
-                <div>
+                <FindIdListWrapper>
                   {state.idList.map((item) => (
-                    <div>{item}</div>
+                    <FindIdListItemWrapper>{item}</FindIdListItemWrapper>
                   ))}
-                </div>
+                </FindIdListWrapper>
               </>
             ) : (
               <h2 style={{ color: "white", marginTop: "20px" }}>
