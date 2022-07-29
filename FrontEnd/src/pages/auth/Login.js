@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { useDispatch } from "react-redux";
+<<<<<<< HEAD
 import { Link, useNavigate } from "react-router-dom";
 import { logIn } from "../../store/actions/user";
 import {Wrapper, RoundedWrapper} from "../../components/styled/Wrapper"
@@ -80,6 +81,27 @@ export const LoginButton = styled.button`
     font-size: 14px;
   }
 `;
+=======
+import { useNavigate } from "react-router-dom";
+import { getUserProfile } from "../../store/actions/user";
+import {
+  Wrapper,
+  RoundedWrapper,
+  BaseFlexColWrapper,
+  InputWrapper,
+} from "../../components/styled/Wrapper";
+import { BaseForm } from "../../components/common/Forms/Form";
+import styled from "styled-components";
+import { BackButton } from "../../components/common/buttons/BackButton";
+import { FailAlert, SuccessAlert } from "../../utils/sweetAlert";
+import { client } from "../../utils/client";
+import { AuthInput } from "../../components/common/inputs/AuthInput";
+import { AuthButton } from "../../components/common/buttons/AuthButton";
+import { SocialButton } from "../../components/common/buttons/SocialButton";
+import { BaseLink } from "../../components/Link/BaseLink";
+import { AUTH_CONSTANT } from "../../constants/AuthConstant";
+import { login } from "../../api/AuthAPI";
+>>>>>>> FE
 
 const LinkWrapper = styled.div`
   display: flex;
@@ -87,6 +109,7 @@ const LinkWrapper = styled.div`
   margin: 14px 14px 20px 14px;
   justify-content: space-between;
   align-items: center;
+<<<<<<< HEAD
   @media screen and (max-width : 500px){
     width: 200px;
     height: 42px;
@@ -99,6 +122,19 @@ const LinkWrapper = styled.div`
     }   
   }
  
+=======
+  @media screen and (max-width: 500px) {
+    width: 200px;
+    height: 42px;
+    & a {
+      font-size: 14px;
+      font-weight: 100;
+    }
+    & span {
+      font-size: 14px;
+    }
+  }
+>>>>>>> FE
 `;
 
 const SocialWrapper = styled.div`
@@ -107,6 +143,7 @@ const SocialWrapper = styled.div`
   justify-content: space-between;
   width: 120px;
   align-items: center;
+<<<<<<< HEAD
   @media screen and (max-width : 500px){
     margin-top: 20px;
   }
@@ -132,6 +169,12 @@ const KaKaoSocialButton = styled(SocialButton)`
 const GoogleSocialButton = styled(SocialButton)`
   background-color: white;
 `;
+=======
+  @media screen and (max-width: 500px) {
+    margin-top: 20px;
+  }
+`;
+>>>>>>> FE
 
 const Login = () => {
   const [state, setState] = useState({
@@ -148,9 +191,17 @@ const Login = () => {
     setState({ ...state, [e.target.name]: e.target.value });
   };
 
+<<<<<<< HEAD
   const onHandleSubmit = (event) => {
     event.preventDefault();
     if (state.userId.length === 0) {
+=======
+  const onHandleSubmit = async (event) => {
+    event.preventDefault();
+    // 로딩스피너띄우고
+    if (state.userId.length === 0) {
+      FailAlert("ID 또는 PW가 일치하지 않습니다");
+>>>>>>> FE
       userIdInput.current.focus();
       return;
     }
@@ -160,6 +211,7 @@ const Login = () => {
     }
 
     const data = {
+<<<<<<< HEAD
       userId: state.userId,
       password: state.password,
     };
@@ -179,22 +231,64 @@ const Login = () => {
               <InputWrapper>
                 <i className="fas fa-envelope"></i>
                 <LoginInput
+=======
+      userName: state.userId,
+      userPw: state.password,
+    };
+
+    const response = await login(data);
+    if (response.status === 400) {
+      FailAlert(response.data.message);
+      return;
+    }
+    const accessToken = response.headers["authorization"];
+    sessionStorage.setItem("ACCESS_TOKEN", accessToken);
+
+    // 로딩스피너끄고
+    dispatch(getUserProfile());
+    SuccessAlert("로그인되었습니다", navigate);
+  };
+  return (
+    <>
+      <BackButton />
+      <Wrapper>
+        <RoundedWrapper
+          width={"450"}
+          height={"700"}
+          mWidth={"300"}
+          mHeight={"460"}
+        >
+          <BaseFlexColWrapper>
+            <BaseForm onSubmit={onHandleSubmit}>
+              <InputWrapper>
+                <i className="fas fa-envelope"></i>
+                <AuthInput
+>>>>>>> FE
                   value={state.userId}
                   ref={userIdInput}
                   name="userId"
                   onChange={onHandleInput}
                   placeholder="Email ID"
+<<<<<<< HEAD
+=======
+                  autoComplete="off"
+>>>>>>> FE
                 />
               </InputWrapper>
               <InputWrapper>
                 <i className="fas fa-lock"></i>
+<<<<<<< HEAD
                 <LoginInput
+=======
+                <AuthInput
+>>>>>>> FE
                   type="password"
                   value={state.password}
                   ref={passwordInput}
                   name="password"
                   onChange={onHandleInput}
                   placeholder="Password"
+<<<<<<< HEAD
                 />
               </InputWrapper>
               <LoginButton type="submit">로그인</LoginButton>
@@ -215,6 +309,29 @@ const Login = () => {
               <GoogleSocialButton src="assets/google_icon.png" name="google" onClick={socialLogin}/>
             </SocialWrapper>
           </LoginFormWrapper>
+=======
+                  autoComplete="off"
+                />
+              </InputWrapper>
+              <AuthButton type="submit">로그인</AuthButton>
+            </BaseForm>
+            <LinkWrapper>
+              {AUTH_CONSTANT.map((item, idx) => (
+                <BaseLink key={idx} to={item.link} color={"cornflowerblue"}>
+                  {item.linkName}
+                </BaseLink>
+              ))}
+            </LinkWrapper>
+            <SocialWrapper>
+              <a href="">
+                <SocialButton src="assets/kakao_icon.png" color="yellow" />
+              </a>
+              <a href="http://localhost:8080/oauth2/authorization/google">
+                <SocialButton src="assets/google_icon.png" color="white" />
+              </a>
+            </SocialWrapper>
+          </BaseFlexColWrapper>
+>>>>>>> FE
         </RoundedWrapper>
       </Wrapper>
     </>

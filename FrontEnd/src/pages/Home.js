@@ -1,5 +1,14 @@
 import styled, { keyframes } from "styled-components";
-import Header from "../components/Header";
+import Header from "../components/layout/Header";
+import Footer from "../components/layout/Footer";
+import HomeSlide from "../components/mainpage/HomeSlide";
+import TopButton from "../components/common/buttons/TopButton";
+import { BaseFlexWrapper } from "../components/styled/Wrapper";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { tokenCheck } from "../utils/tokenCheck";
+import { getUserProfile } from "../store/actions/user";
+
 const neon_text_color = "#5904de";
 const neon_border_color = "#08f";
 const NeonSignAnimation = keyframes`
@@ -30,7 +39,7 @@ const NeonSignAnimation = keyframes`
 `;
 
 const NeonSignTitle = styled.h1`
-  font-size: 6rem;
+  font-size: 5rem;
   font-weight: 200;
   font-style: italic;
   color: #fff;
@@ -40,24 +49,58 @@ const NeonSignTitle = styled.h1`
   text-transform: uppercase;
   font-family: "Monoton";
   animation: ${NeonSignAnimation} 1.5s infinite alternate;
+  @media screen and (max-width: 960px) {
+    font-size: 4rem;
+    padding: 4rem 5rem 4.5rem;
+  }
+  @media screen and (max-width: 720px) {
+    font-size: 3rem;
+    padding: 3rem 4rem 3.5rem;
+  }
+  @media screen and (max-width: 580px) {
+    font-size: 2rem;
+    padding: 3rem 4rem 3rem;
+  }
 `;
 
-const Wrapper = styled.section`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: #000;
-  height: 90vh;
+const ContentWrapper = styled(BaseFlexWrapper)`
+  background: ${(props) => props.background};
+  height: ${(props) => props.height};
   width: 100vw;
 `;
+
+const Mainimage = styled.div`
+  width: 800px;
+  height: 308px;
+  top: ${(props) => props.top};
+  background: #bdcff2;
+  margin-bottom: 15vh;
+`;
+
 const Home = () => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (tokenCheck()) {
+      dispatch(getUserProfile());
+    }
+  });
   return (
-    <div>
+    <>
       <Header />
-      <Wrapper>
+      <ContentWrapper background={"#000"} height={"100vh"}>
         <NeonSignTitle>OPEN DRINKUS</NeonSignTitle>
-      </Wrapper>
-    </div>
+      </ContentWrapper>
+      <ContentWrapper background={"#FFF"} height={"190vh"}>
+        <center>
+          <Mainimage top={"130vh"}></Mainimage>
+          <Mainimage top={"180vh"}></Mainimage>
+          <Mainimage top={"230vh"}></Mainimage>
+        </center>
+      </ContentWrapper>
+      <HomeSlide />
+      <Footer />
+      <TopButton />
+    </>
   );
 };
 

@@ -5,11 +5,11 @@ const initialState = {
 
 const userReducer = (prevState = initialState, action) => {
   switch (action.type) {
-    case "LOG_IN_SUCCESS":
+    case "SET_USER_PROFILE":
       return {
         ...prevState,
         isLogin: true,
-        data: { ...action.data, nickName: "꼬부기" },
+        data: { ...action.data },
       };
     case "LOG_OUT":
       return {
