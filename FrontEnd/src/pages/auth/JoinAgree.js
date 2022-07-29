@@ -59,7 +59,7 @@ const Button = styled.button`
   font-size: 20px;
   color: #fff;
   background-color: #131317;
-  cursor: pointer;
+  /* cursor: pointer; */
 `;
 
 const OverTwenty = styled.button`
