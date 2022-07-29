@@ -1,7 +1,6 @@
 package com.ssafy.drinkus.dailyboard.query;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.ssafy.drinkus.dailyboard.DailyBoard;
 import com.ssafy.drinkus.dailyboard.QDailyBoard;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -13,7 +12,7 @@ public class DailyBoardQueryRepository {
 
     // 원글에 대한 답글 모두 삭제
     public void deleteAllReplies(Long boardId){
-        QDailyBoard qDailyBoard = new QDailyBoard("dailyBoard");
+        QDailyBoard qDailyBoard = QDailyBoard.dailyBoard;
 
         queryFactory
                 .delete(qDailyBoard)

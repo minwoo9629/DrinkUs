@@ -3,6 +3,7 @@ package com.ssafy.drinkus.dailyboard.controller;
 import com.ssafy.drinkus.config.LoginUser;
 import com.ssafy.drinkus.dailyboard.request.DailyBoardCreateRequest;
 import com.ssafy.drinkus.dailyboard.request.DailyBoardUpdateRequest;
+import com.ssafy.drinkus.dailyboard.response.MyBoardResponse;
 import com.ssafy.drinkus.dailyboard.service.DailyBoardService;
 import com.ssafy.drinkus.user.domain.User;
 import lombok.Data;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/daily")
@@ -24,6 +26,13 @@ public class DailyBoardController {
 //        public ResponseEntity<Void> find
 
         // 댓글 조회
+
+        // 내가 쓴 글 조회
+        @GetMapping("/my")
+        public ResponseEntity<List<MyBoardResponse>> findMyUserName(@LoginUser User user) {
+                List<MyBoardResponse> body = dailyBoardService.findByCreaterId(user.getUserId());
+                return ResponseEntity.ok().body(body);
+        }
 
         // 글 작성
         @PostMapping

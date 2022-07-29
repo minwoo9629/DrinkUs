@@ -7,6 +7,7 @@ import com.ssafy.drinkus.dailyboard.DailyBoardRepository;
 import com.ssafy.drinkus.dailyboard.query.DailyBoardQueryRepository;
 import com.ssafy.drinkus.dailyboard.request.DailyBoardCreateRequest;
 import com.ssafy.drinkus.dailyboard.request.DailyBoardUpdateRequest;
+import com.ssafy.drinkus.dailyboard.response.MyBoardResponse;
 import com.ssafy.drinkus.user.domain.User;
 import com.ssafy.drinkus.user.domain.type.UserRole;
 import com.ssafy.drinkus.user.service.UserService;
@@ -14,6 +15,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -77,8 +82,21 @@ public class DailyBoardService {
         if (dailyBoard.getParentId() == null) {
             // 부모 Id가 없음 = 원게시물
             dailyBoardRepository.delete(dailyBoard); // 글 삭제 시 글에 대한 답글들도 모두 삭제
-        } 
+        }
 
         dailyBoardQueryRepository.deleteAllReplies(dailyBoard.getBoardId()); // 해당 게시물 삭제
+    }
+
+    public List<MyBoardResponse> findByCreaterId(Long userId) {
+        User user = userService.findById(userId);
+
+        List<DailyBoard> findDailyBoards = dailyBoardRepository.findByCreaterId(user.getUserId());
+        List<MyBoardResponse> myBoard = new ArrayList<>();
+
+        for (DailyBoard dailyBoard : findDailyBoards) {
+            myBoard.add(MyBoardResponse.from(dailyBoard));
+        }
+
+        return myBoard;
     }
 }
