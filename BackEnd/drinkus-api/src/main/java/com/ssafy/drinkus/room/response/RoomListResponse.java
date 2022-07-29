@@ -1,7 +1,7 @@
 package com.ssafy.drinkus.room.response;
 
 import com.querydsl.core.annotations.QueryProjection;
-import com.ssafy.drinkus.room.Room;
+import com.ssafy.drinkus.room.domain.Room;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,15 +20,6 @@ public class RoomListResponse {
     private Integer peopleLimit;
 
     private LocalDateTime createdDate;
-
-    @QueryProjection
-    public RoomListResponse(Room room){
-       this.roomId = room.getRoomId();
-       this.roomName = room.getRoomName();
-       this.placeTheme = room.getPlaceTheme();
-       this.peopleLimit = room.getPeopleLimit();
-       this.createdDate = room.getCreatedDate();
-    }
 
     public static RoomListResponse from(Room room){
         RoomListResponse roomListResponse = new RoomListResponse();

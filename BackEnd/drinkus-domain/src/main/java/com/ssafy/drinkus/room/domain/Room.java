@@ -1,8 +1,8 @@
-package com.ssafy.drinkus.room;
+package com.ssafy.drinkus.room.domain;
 
 import com.ssafy.drinkus.common.BaseEntity;
 import com.ssafy.drinkus.common.type.YN;
-import com.ssafy.drinkus.interest.Category;
+import com.ssafy.drinkus.interest.domain.Category;
 import com.ssafy.drinkus.user.domain.User;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -69,7 +70,7 @@ public class Room extends BaseEntity {
 
     //방 생성하기
     public static Room createRoom(String roomName, User roomAdminId, String roomPw, String placeTheme, Integer peopleLimit,
-                                  YN ages20, YN ages30, YN ages40, YN ages50, YN ages60, YN ages70, Long category) {
+                                  YN ages20, YN ages30, YN ages40, YN ages50, YN ages60, YN ages70,Category category) {
         Room room = new Room();
         room.roomName = roomName;
         room.roomAdminId = roomAdminId;
@@ -82,12 +83,12 @@ public class Room extends BaseEntity {
         room.ages50 = ages50;
         room.ages60 = ages60;
         room.ages70 = ages70;
-        room.category.getCategoryId() = category;
+        room.category = category;
         return room;
     }
 
     //방 수정하기 (제목, 나이, 관심사, 인원, 비밀번호)
-    public void updateRoom(String roomName, String roomPw, Integer peopleLimit,  YN ages20, YN ages30, YN ages40,YN ages50, YN ages60, YN ages70, Category category) {
+    public void updateRoom(String roomName, String roomPw, Integer peopleLimit, YN ages20, YN ages30, YN ages40, YN ages50, YN ages60, YN ages70, Category category) {
         this.roomName = roomName;
         this.roomPw = roomPw;
         this.peopleLimit = peopleLimit;

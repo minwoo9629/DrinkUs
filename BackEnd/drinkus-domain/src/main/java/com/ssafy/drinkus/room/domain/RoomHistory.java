@@ -1,4 +1,4 @@
-package com.ssafy.drinkus.room;
+package com.ssafy.drinkus.room.domain;
 
 import com.ssafy.drinkus.common.BaseEntity;
 import com.ssafy.drinkus.user.domain.User;

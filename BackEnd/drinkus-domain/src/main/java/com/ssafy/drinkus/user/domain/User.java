@@ -2,8 +2,8 @@ package com.ssafy.drinkus.user.domain;
 
 import com.ssafy.drinkus.common.BaseEntity;
 import com.ssafy.drinkus.common.type.YN;
-import com.ssafy.drinkus.room.Room;
-import com.ssafy.drinkus.room.RoomHistory;
+import com.ssafy.drinkus.room.domain.Room;
+import com.ssafy.drinkus.room.domain.RoomHistory;
 import com.ssafy.drinkus.user.domain.type.UserProvider;
 import com.ssafy.drinkus.user.domain.type.UserRole;
 import lombok.AccessLevel;
@@ -69,10 +69,13 @@ public class User extends BaseEntity {
     private Integer userBeer;
 
     @OneToMany(mappedBy = "user")
-    private List<RoomHistory> roomHistories = new ArrayList<>();
+    private List<RoomHistory> roomHistoryList = new ArrayList<>();
 
     @OneToMany(mappedBy = "roomAdminId")
-    private List<Room> room = new ArrayList<>();
+    private List<Room> roomList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user_interest_id")
+    private List<UserInterest> userInterestList = new ArrayList<>();
 
     private void defaultUserSettings() {
         userPopularity = 0;

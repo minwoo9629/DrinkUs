@@ -22,7 +22,6 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends GenericFilter {
 
     private final  JwtUtil jwtUtil;
-    private  UserRepository userRepository;
     private final CustomUserDetailsService customUserDetailsService;
 
     @Override

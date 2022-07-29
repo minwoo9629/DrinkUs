@@ -1,14 +1,12 @@
 package com.ssafy.drinkus.room.request;
 
 import com.ssafy.drinkus.common.type.YN;
-import com.ssafy.drinkus.interest.Category;
+import com.ssafy.drinkus.interest.response.CategoryResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -17,12 +15,8 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RoomUpdateRequest {
-    //방번호
-    @NotNull(message = "방번호는 필수 값입니다.")
-    private Long roomId;
-
     //방이름
-    @NotNull(message = "이름은 필수 값입니다.")
+    @NotBlank(message = "이름은 필수 값입니다.")
     private String roomName;
 
     //방장
@@ -59,9 +53,5 @@ public class RoomUpdateRequest {
     private YN ages70;
 
     //관심사
-    private Category categoryFirst;
-
-    private Category categorySecond;
-
-    private Category categoryThird;
+    private CategoryResponse category;
 }

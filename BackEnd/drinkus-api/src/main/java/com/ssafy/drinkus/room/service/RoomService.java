@@ -1,9 +1,10 @@
 package com.ssafy.drinkus.room.service;
 
-import com.ssafy.drinkus.common.DuplicateException;
 import com.ssafy.drinkus.common.NotFoundException;
-import com.ssafy.drinkus.room.Room;
-import com.ssafy.drinkus.room.RoomRepository;
+import com.ssafy.drinkus.interest.domain.Category;
+import com.ssafy.drinkus.interest.domain.CategoryRepository;
+import com.ssafy.drinkus.room.domain.Room;
+import com.ssafy.drinkus.room.domain.RoomRepository;
 import com.ssafy.drinkus.room.query.RoomQueryRepository;
 import com.ssafy.drinkus.room.request.RoomCreateRequest;
 import com.ssafy.drinkus.room.request.RoomSearchRequest;
@@ -13,11 +14,14 @@ import com.ssafy.drinkus.room.response.RoomListResponse;
 import com.ssafy.drinkus.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.List;
 
-import static com.ssafy.drinkus.common.NotFoundException.ROOM_NOT_FOUND;
+import java.util.Optional;
+
+import static com.ssafy.drinkus.common.NotFoundException.CATEGORY_NOT_FOUND;
 
 @Slf4j
 @Service
@@ -26,6 +30,7 @@ import static com.ssafy.drinkus.common.NotFoundException.ROOM_NOT_FOUND;
 public class RoomService {
     private final RoomRepository roomRepository;
     private final RoomQueryRepository roomQueryRepository;
+    private final CategoryRepository categoryRepository;
 
     //화상방 상세 조회
     public RoomInfoResponse findByRoomId(Long roomId){
@@ -36,20 +41,23 @@ public class RoomService {
     }
 
     //화상방 리스트 전체 조회
-//    public List<RoomListResponse> findBySearchRequest(RoomSearchRequest request){
-//        List<RoomListResponse> roomSearchList = roomQueryRepository.findBySearchCondition(
-//                request.getSearchKeyword(),
-//                request.getSameAge(),
-//                request.getSortOrder(),
-//                request.getCategoryFirst(),
-//                request.getCategorySecond(),
-//                request.getCategoryThird()
-//        );
-//        return roomSearchList;
-//    }
+    public Page<RoomListResponse> findBySearchRequest(User user, RoomSearchRequest request, Pageable pageable){
+        Page<Room> findRoomList = roomQueryRepository.findBySearchCondition(
+                request.getSearchKeyword(),
+                request.getSameAge(),
+                request.getSortOrder(),
+                request.getCategory().getCategoryId(),
+                pageable,
+                user);
+
+        return findRoomList.map(room -> RoomListResponse.from(room));
+    }
 
     //화상방 생성
+    @Transactional
     public void createRoom(RoomCreateRequest request){
+        Category findCategory = categoryRepository.findById(request.getCategory().getCategoryId())
+                .orElseThrow(() -> new NotFoundException(CATEGORY_NOT_FOUND));
         Room room = Room.createRoom(
                 request.getRoomName(),
                 request.getRoomAdminId(),
@@ -62,16 +70,20 @@ public class RoomService {
                 request.getAges50(),
                 request.getAges60(),
                 request.getAges70(),
-                request.getCategoryFirst(),
-                request.getCategorySecond(),
-                request.getCategoryThird());
+                findCategory
+        );
         roomRepository.save(room);
     }
 
+
     //화상방 수정
-    public void updateRoom(RoomUpdateRequest request){
-        Room findroom = roomRepository.findByRoomId(request.getRoomId())
+    @Transactional
+    public void updateRoom(Long roomId, RoomUpdateRequest request){
+        Room findroom = roomRepository.findByRoomId(roomId)
                 .orElseThrow(() -> new NotFoundException(NotFoundException.ROOM_NOT_FOUND));
+
+        Category findCategory = categoryRepository.findById(request.getCategory().getCategoryId())
+                .orElseThrow(() -> new NotFoundException(CATEGORY_NOT_FOUND));
 
         findroom.updateRoom(
                 request.getRoomName(),
@@ -83,15 +95,17 @@ public class RoomService {
                 request.getAges50(),
                 request.getAges60(),
                 request.getAges70(),
-                request.getCategoryFirst(),
-                request.getCategorySecond(),
-                request.getCategoryThird()
+                findCategory
         );
     }
 
+    @Transactional
     //화상방 삭제
-    public void updateRoomActive(Long roomId){
+    public void deleteRoom(Long roomId){
+        Room findroom = roomRepository.findByRoomId(roomId)
+                .orElseThrow(() -> new NotFoundException(NotFoundException.ROOM_NOT_FOUND));
 
+        roomRepository.deleteById(roomId);
     }
 
 }

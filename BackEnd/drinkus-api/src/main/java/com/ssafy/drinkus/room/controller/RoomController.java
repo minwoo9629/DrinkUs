@@ -1,12 +1,18 @@
 package com.ssafy.drinkus.room.controller;
 
+import com.ssafy.drinkus.config.LoginUser;
 import com.ssafy.drinkus.room.request.RoomCreateRequest;
 import com.ssafy.drinkus.room.request.RoomSearchRequest;
 import com.ssafy.drinkus.room.request.RoomUpdateRequest;
 import com.ssafy.drinkus.room.response.RoomInfoResponse;
 import com.ssafy.drinkus.room.response.RoomListResponse;
 import com.ssafy.drinkus.room.service.RoomService;
+import com.ssafy.drinkus.user.domain.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,14 +30,18 @@ public class RoomController {
     @GetMapping("/{room_id}")
     public ResponseEntity<RoomInfoResponse> findByRoomId(@PathVariable Long roomId){
         RoomInfoResponse body = roomService.findByRoomId(roomId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(body);
     }
 
+    // localhost:8080/members?page=0&size=3&sort=createdDate,asc
     //화상방 리스트 전체 조회
+    //페이징
     @GetMapping
-    public ResponseEntity<List<RoomListResponse>> findBySearchRequest(@Valid RoomSearchRequest request){
-        List<RoomListResponse> body = roomService.findBySearchRequest(request);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Page<RoomListResponse>> findBySearchRequest(@LoginUser User user,
+                                                                      @Valid RoomSearchRequest request,
+                                                                      @PageableDefault Pageable pageable){
+        Page<RoomListResponse> body = roomService.findBySearchRequest(user, request, pageable);
+        return ResponseEntity.ok().body(body);
     }
 
     //화상방 생성
@@ -42,16 +52,16 @@ public class RoomController {
     }
 
     //화상방 수정
-    @PutMapping
-    public ResponseEntity<Void> updateRoom(@RequestBody @Valid RoomUpdateRequest request) {
-        roomService.updateRoom(request);
+    @PutMapping("/{room_id}")
+    public ResponseEntity<Void> updateRoom(@PathVariable Long roomId, @RequestBody @Valid RoomUpdateRequest request) {
+        roomService.updateRoom(roomId, request);
         return ResponseEntity.ok().build();
     }
 
-    //화상방 삭제 -> 비활성화
-    @PutMapping("/disable/{room_Id}")
-    public ResponseEntity<Void> updateRoomActive(@PathVariable Long roomId){
-        roomService.updateRoomActive(roomId);
+    //화상방 삭제
+    @PutMapping("/{room_Id}")
+    public ResponseEntity<Void> deleteRoom(@PathVariable Long roomId){
+        roomService.deleteRoom(roomId);
         return ResponseEntity.ok().build();
     }
 }

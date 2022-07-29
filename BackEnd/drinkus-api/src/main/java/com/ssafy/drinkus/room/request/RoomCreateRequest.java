@@ -1,14 +1,11 @@
 package com.ssafy.drinkus.room.request;
 
 import com.ssafy.drinkus.common.type.YN;
-import com.ssafy.drinkus.interest.Category;
+import com.ssafy.drinkus.interest.response.CategoryResponse;
 import com.ssafy.drinkus.user.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -55,9 +52,5 @@ public class RoomCreateRequest {
     private YN ages70;
 
     //관심사
-    private Category categoryFirst;
-
-    private Category categorySecond;
-
-    private Category categoryThird;
+    private CategoryResponse category;
 }
