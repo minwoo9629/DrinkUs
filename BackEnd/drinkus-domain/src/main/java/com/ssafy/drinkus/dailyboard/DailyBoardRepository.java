@@ -9,4 +9,6 @@ public interface DailyBoardRepository extends JpaRepository<DailyBoard,Long> {
 
     // 글 번호로 글 찾기
     Optional<DailyBoard> findByBoardId(Long boardId);
+
+
 }

@@ -4,6 +4,7 @@ import com.ssafy.drinkus.common.AuthenticationException;
 import com.ssafy.drinkus.common.NotFoundException;
 import com.ssafy.drinkus.dailyboard.DailyBoard;
 import com.ssafy.drinkus.dailyboard.DailyBoardRepository;
+import com.ssafy.drinkus.dailyboard.query.DailyBoardQueryRepository;
 import com.ssafy.drinkus.dailyboard.request.DailyBoardCreateRequest;
 import com.ssafy.drinkus.dailyboard.request.DailyBoardUpdateRequest;
 import com.ssafy.drinkus.user.domain.User;
@@ -22,6 +23,7 @@ public class DailyBoardService {
 
     private final DailyBoardRepository dailyBoardRepository;
     private final UserService userService;
+    private final DailyBoardQueryRepository dailyBoardQueryRepository;
 
     // 원글 조회
 
@@ -70,7 +72,8 @@ public class DailyBoardService {
             throw new AuthenticationException("본인이 쓴 글만 삭제 할 수 있습니다.");
         }
 
-        dailyBoardRepository.delete(dailyBoard);
+        dailyBoardRepository.delete(dailyBoard); // 글 삭제 시 글에 대한 답글들도 모두 삭제
+        dailyBoardQueryRepository.deleteAllReplies(dailyBoard.getBoardId());
     }
 
     // 댓글 조회
