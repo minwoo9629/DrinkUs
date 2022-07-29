@@ -4,16 +4,16 @@ export const BaseFlexWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-`
+`;
 
 export const BaseFlexColWrapper = styled(BaseFlexWrapper)`
   flex-direction: column;
-`
+`;
 
 export const Wrapper = styled(BaseFlexWrapper)`
   background-color: ${({ color }) => color};
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
   align-items: ${({ alignItems }) => alignItems};
 `;
 
