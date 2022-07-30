@@ -3,7 +3,7 @@ import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
 import HomeSlide from "../components/mainpage/HomeSlide";
 import TopButton from "../components/common/buttons/TopButton";
-import { BaseFlexWrapper } from "../components/styled/Wrapper";
+import { BaseFlexWrapper, BaseFlexColWrapper } from "../components/styled/Wrapper";
 
 const neon_text_color = "#5904de";
 const neon_border_color = "#08f";
@@ -65,13 +65,14 @@ const ContentWrapper = styled(BaseFlexWrapper)`
   width: 100vw;
 `;
 
-const Mainimage = styled.div`
-  width: 800px;
-  height: 308px;
-  top: ${(props) => props.top};
-  background: #bdcff2;
-  margin-bottom: 15vh;
-`;
+const Letter = styled.p`
+  font-size: ${(props) => props.size};
+  font-weight: ${(props) => props.weight};
+  // font-family: "맑은고딕","Malgun Gothic",serif;
+  // font-family: "Black Han Sans";
+  // font-family: "돋움",Dotum,"돋움체",DotumChe;
+  font-family: 'EarlyFontDiary';
+`
 
 const Home = () => {
   return (
@@ -80,13 +81,44 @@ const Home = () => {
       <ContentWrapper background={"#000"} height={"100vh"}>
         <NeonSignTitle>OPEN DRINKUS</NeonSignTitle>
       </ContentWrapper>
-      <ContentWrapper background={"#FFF"} height={"190vh"}>
-        <center>
-          <Mainimage top={"130vh"}></Mainimage>
-          <Mainimage top={"180vh"}></Mainimage>
-          <Mainimage top={"230vh"}></Mainimage>
-        </center>
+      <ContentWrapper height={"20vh"}/>
+      <ContentWrapper background={"#FFF"} height={"70vh"}>
+        <img src={process.env.PUBLIC_URL + '/assets/room.png'} width="30%" height="55%"/>
+        <BaseFlexColWrapper>
+          <Letter size={"2rem"} weight={"bold"}>
+            화상 채팅방
+          </Letter>
+          <Letter size={"1.3rem"}>
+            화상 채팅방을 통해 새로운 사람을 만날 수 있어요<br/>
+            우리끼리만 만나고 싶다면 비밀번호를 설정할 수 있어요
+          </Letter>
+        </BaseFlexColWrapper>
       </ContentWrapper>
+      <ContentWrapper background={"#FFF"} height={"70vh"}>
+        <img src={process.env.PUBLIC_URL + '/assets/community.png'} width="30%" height="55%"/>
+        <BaseFlexColWrapper>
+          <Letter size={"2rem"} weight={"bold"}>
+            커뮤니티
+          </Letter>
+          <Letter size={"1.3rem"}>
+            술약속을 잡을 수 있는 월간 커뮤니티와<br/>
+            자유롭게 대화할 수 있는 일간 커뮤니티가 있어요
+          </Letter>
+        </BaseFlexColWrapper>
+      </ContentWrapper>
+      <ContentWrapper background={"#FFF"} height={"70vh"}>
+        <img src={process.env.PUBLIC_URL + '/assets/filter.png'} width="30%" height="55%"/>
+        <BaseFlexColWrapper>
+          <Letter size={"2rem"} weight={"bold"}>
+            관심사
+          </Letter>
+          <Letter size={"1.3rem"}>
+            내 관심사를 설정하고, 다른 사람의 관심사를 볼 수 있어요<br/>
+            관심있는 방을 필터로 찾을 수 있어요
+          </Letter>
+        </BaseFlexColWrapper>
+      </ContentWrapper>
+      <ContentWrapper height={"20vh"}/>
       <HomeSlide />
       <Footer />
       <TopButton />
