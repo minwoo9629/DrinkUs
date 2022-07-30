@@ -6,113 +6,113 @@ const HomeSlide = () => {
       <div className="slide-track">
         <div className="slide">
           <img
-            src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/557257/1.png"
-            height="100"
-            width="250"
+            src={process.env.PUBLIC_URL + '/assets/wtd.png'}
+            height="200"
+            width="500"
             alt=""
           />
         </div>
         <div className="slide">
           <img
-            src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/557257/2.png"
-            height="100"
-            width="250"
+            src={process.env.PUBLIC_URL + '/assets/kkk.png'}
+            height="200"
+            width="500"
             alt=""
           />
         </div>
         <div className="slide">
           <img
-            src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/557257/3.png"
-            height="100"
-            width="250"
+            src={process.env.PUBLIC_URL + '/assets/kmj.png'}
+            height="200"
+            width="500"
             alt=""
           />
         </div>
         <div className="slide">
           <img
-            src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/557257/4.png"
-            height="100"
-            width="250"
+            src={process.env.PUBLIC_URL + '/assets/syj.png'}
+            height="200"
+            width="500"
             alt=""
           />
         </div>
         <div className="slide">
           <img
-            src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/557257/5.png"
-            height="100"
-            width="250"
+            src={process.env.PUBLIC_URL + '/assets/lmw.png'}
+            height="200"
+            width="500"
             alt=""
           />
         </div>
         <div className="slide">
           <img
-            src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/557257/6.png"
-            height="100"
-            width="250"
+            src={process.env.PUBLIC_URL + '/assets/jmk.png'}
+            height="200"
+            width="500"
             alt=""
           />
         </div>
         <div className="slide">
           <img
-            src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/557257/7.png"
-            height="100"
-            width="250"
+            src={process.env.PUBLIC_URL + '/assets/hdb.png'}
+            height="200"
+            width="500"
             alt=""
           />
         </div>
         <div className="slide">
           <img
-            src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/557257/1.png"
-            height="100"
-            width="250"
+            src={process.env.PUBLIC_URL + '/assets/wtd.png'}
+            height="200"
+            width="500"
             alt=""
           />
         </div>
         <div className="slide">
           <img
-            src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/557257/2.png"
-            height="100"
-            width="250"
+            src={process.env.PUBLIC_URL + '/assets/kkk.png'}
+            height="200"
+            width="500"
             alt=""
           />
         </div>
         <div className="slide">
           <img
-            src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/557257/3.png"
-            height="100"
-            width="250"
+            src={process.env.PUBLIC_URL + '/assets/kmj.png'}
+            height="200"
+            width="500"
             alt=""
           />
         </div>
         <div className="slide">
           <img
-            src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/557257/4.png"
-            height="100"
-            width="250"
+            src={process.env.PUBLIC_URL + '/assets/syj.png'}
+            height="200"
+            width="500"
             alt=""
           />
         </div>
         <div className="slide">
           <img
-            src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/557257/5.png"
-            height="100"
-            width="250"
+            src={process.env.PUBLIC_URL + '/assets/lmw.png'}
+            height="200"
+            width="500"
             alt=""
           />
         </div>
         <div className="slide">
           <img
-            src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/557257/6.png"
-            height="100"
-            width="250"
+            src={process.env.PUBLIC_URL + '/assets/jmk.png'}
+            height="200"
+            width="500"
             alt=""
           />
         </div>
         <div className="slide">
           <img
-            src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/557257/7.png"
-            height="100"
-            width="250"
+            src={process.env.PUBLIC_URL + '/assets/hdb.png'}
+            height="200"
+            width="500"
             alt=""
           />
         </div>
