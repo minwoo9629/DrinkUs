@@ -1,5 +1,6 @@
 package com.ssafy.drinkus.dailyboard;
 
+import com.ssafy.drinkus.common.BaseEntity;
 import com.ssafy.drinkus.user.domain.User;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -12,7 +13,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
-public class DailyBoard {
+public class DailyBoard extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "board_id")

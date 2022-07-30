@@ -12,7 +12,7 @@ public interface DailyBoardRepository extends JpaRepository<DailyBoard,Long> {
     Optional<DailyBoard> findByBoardId(Long boardId);
 
     // 작성자로 글 찾기
-    List<DailyBoard> findByCreaterId(Long createrId);
+    List<DailyBoard> findByCreater(User creater);
 
-
+    List<DailyBoard> findByParentIdIsNull();
 }

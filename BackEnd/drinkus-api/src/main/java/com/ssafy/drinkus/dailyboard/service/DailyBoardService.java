@@ -1,25 +1,24 @@
 package com.ssafy.drinkus.dailyboard.service;
 
-import com.ssafy.drinkus.common.AuthenticationException;
-import com.ssafy.drinkus.common.InvalidException;
-import com.ssafy.drinkus.common.NotFoundException;
+import com.ssafy.drinkus.common.*;
 import com.ssafy.drinkus.dailyboard.DailyBoard;
 import com.ssafy.drinkus.dailyboard.DailyBoardRepository;
 import com.ssafy.drinkus.dailyboard.query.DailyBoardQueryRepository;
 import com.ssafy.drinkus.dailyboard.request.DailyBoardCreateRequest;
 import com.ssafy.drinkus.dailyboard.request.DailyBoardUpdateRequest;
+import com.ssafy.drinkus.dailyboard.response.DailyBoardResponse;
 import com.ssafy.drinkus.dailyboard.response.MyBoardResponse;
 import com.ssafy.drinkus.user.domain.User;
 import com.ssafy.drinkus.user.domain.type.UserRole;
 import com.ssafy.drinkus.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -31,9 +30,48 @@ public class DailyBoardService {
     private final UserService userService;
     private final DailyBoardQueryRepository dailyBoardQueryRepository;
 
-    // 원글 조회
+    // 총 데일리 게시판 페이지 개수 반환
+    public Long getTotalDailyBoardCount(){
+        long totalCount = dailyBoardQueryRepository.getDailyBoardCount();
+        if(totalCount == 0){
+            throw new NotExistException("게시물이 존재하지 않습니다.");
+        }
+        return totalCount;
+    }
+
+    // 데일리 게시판 원본글 조회
+    public List<DailyBoardResponse> findAll(Pageable page) {
+        List<DailyBoard> results = dailyBoardRepository.findByParentIdIsNull();
+        List<DailyBoardResponse> response = new ArrayList<>();
+
+        for(DailyBoard dailyBoard : results){
+            response.add(new DailyBoardResponse(dailyBoard.getBoardId(), dailyBoard.getCreater().getUserId(), dailyBoard.getCreatedDate(), dailyBoard.getModifiedDate(), dailyBoard.getBoardContent()));
+        }
+
+        return  response;
+    }
 
     // 댓글 조회
+
+
+    // 내가 쓴 글 페이지 반환
+    public Long getTotalMyBoardCount(Long userId){
+        long totalCount = dailyBoardQueryRepository.getMyBoardCount(userId);
+        if(totalCount == 0){
+            throw new NotExistException("게시물이 존재하지 않습니다.");
+        }
+        return totalCount;
+    }
+
+    // 내가 쓴 글 조회
+    public List<MyBoardResponse> findByCreaterId(Long userId, Long page) {
+        long totalCount = getTotalDailyBoardCount();
+        if (page != 1 && ((totalCount - 1) / 10) + 1 < page) {
+            throw new OverflowException("페이지 범위를 초과하였습니다.");
+        }
+
+        return dailyBoardQueryRepository.findMyBoardByPages(userId, page);
+    }
 
     // 원글 작성
     @Transactional
@@ -95,16 +133,5 @@ public class DailyBoardService {
         dailyBoardQueryRepository.deleteAllReplies(dailyBoard.getBoardId()); // 해당 게시물 삭제
     }
 
-    public List<MyBoardResponse> findByCreaterId(Long userId) {
-        User user = userService.findById(userId);
 
-        List<DailyBoard> findDailyBoards = dailyBoardRepository.findByCreaterId(user.getUserId());
-        List<MyBoardResponse> myBoard = new ArrayList<>();
-
-        for (DailyBoard dailyBoard : findDailyBoards) {
-            myBoard.add(MyBoardResponse.from(dailyBoard));
-        }
-
-        return myBoard;
-    }
 }
