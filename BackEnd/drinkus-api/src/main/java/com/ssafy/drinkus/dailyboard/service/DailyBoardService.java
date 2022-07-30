@@ -1,6 +1,7 @@
 package com.ssafy.drinkus.dailyboard.service;
 
 import com.ssafy.drinkus.common.*;
+import com.ssafy.drinkus.common.type.YN;
 import com.ssafy.drinkus.dailyboard.DailyBoard;
 import com.ssafy.drinkus.dailyboard.DailyBoardRepository;
 import com.ssafy.drinkus.dailyboard.request.DailyBoardCreateRequest;
@@ -12,9 +13,11 @@ import com.ssafy.drinkus.user.domain.type.UserRole;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -138,5 +141,11 @@ public class DailyBoardService {
         dailyBoardRepository.delete(dailyBoard); // 해당 게시물 삭제
     }
 
+    // 매일 6시에 글 전체 삭제
+    @Scheduled(cron = "0 0 6 * * *")
+    @Transactional
+    public void deleteAll(){
+        dailyBoardRepository.deleteAll();
+    }
 
 }

@@ -29,5 +29,8 @@ public interface DailyBoardRepository extends JpaRepository<DailyBoard,Long> {
 
     // 내가 쓴 글 조회
     List<DailyBoard> findByCreater(User creater, Pageable page);
+    
+    // 전체 글 삭제
+    void deleteAll();
 
 }
