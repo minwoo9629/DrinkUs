@@ -24,53 +24,51 @@ public class DailyBoardController {
     private final DailyBoardService dailyBoardService;
 
     // 원글 조회
-//    @GetMapping
-//    public ResponseEntity<List<DailyBoardResponse>> findByPages(@RequestParam(value = "page", required = false, defaultValue = "1") Long page) {
-//        List<DailyBoardResponse> body = dailyBoardService.findByPages(page);
-//        return ResponseEntity.ok().body(body);
-//    }
-
-
     @GetMapping
-    public ResponseEntity<List<DailyBoardResponse>> findByPages(@PageableDefault(size = 10) Pageable page) {
-        List<DailyBoardResponse> body = dailyBoardService.findAll(page);
+    public ResponseEntity<List<DailyBoardResponse>> findByParentIdIsNull(@PageableDefault(size = 10) Pageable page) {
+        List<DailyBoardResponse> body = dailyBoardService.findByParentIdIsNull(page);
         return ResponseEntity.ok().body(body);
     }
 
     // 댓글 조회
+    @GetMapping("/comment/{parent_id}")
+    public ResponseEntity<List<DailyBoardResponse>> findByParentId( @PathVariable("parent_id") Long parentId) {
+        List<DailyBoardResponse> body = dailyBoardService.findByParentId(parentId);
+        return ResponseEntity.ok().body(body);
+    }
 
     // 내가 쓴 글 조회
     @GetMapping("/my")
-    public ResponseEntity<List<MyBoardResponse>> findMyUserName(@LoginUser User user, @RequestParam(value = "page", required = false, defaultValue = "1") Long page) {
-        List<MyBoardResponse> body = dailyBoardService.findByCreaterId(user.getUserId(), page);
+    public ResponseEntity<List<MyBoardResponse>> findByCreater(@LoginUser User user, @PageableDefault(size = 10) Pageable page) {
+        List<MyBoardResponse> body = dailyBoardService.findByCreater(user, page);
         return ResponseEntity.ok().body(body);
     }
 
     // 글 작성
     @PostMapping
     public ResponseEntity<Void> createDailyBoard(@LoginUser User user, @RequestBody @Valid DailyBoardCreateRequest request) {
-        dailyBoardService.createDailyBoard(user.getUserId(), request);
+        dailyBoardService.createDailyBoard(user, request);
         return ResponseEntity.ok().build();
     }
 
     // 댓글 작성
     @PostMapping("/comment/{parent_id}")
     public ResponseEntity<Void> createComment(@LoginUser User user, @RequestBody @Valid DailyBoardCreateRequest request, @PathVariable("parent_id") Long parentId) {
-        dailyBoardService.createComment(user.getUserId(), request, parentId);
+        dailyBoardService.createComment(user, request, parentId);
         return ResponseEntity.ok().build();
     }
 
     // 글 수정
     @PutMapping("/{board_id}")
     public ResponseEntity<Void> updateDailyBoard(@LoginUser User user, @RequestBody @Valid DailyBoardUpdateRequest request, @PathVariable("board_id") Long boardId) {
-        dailyBoardService.updateDailyBoard(user.getUserId(), request, boardId);
+        dailyBoardService.updateDailyBoard(user, request, boardId);
         return ResponseEntity.ok().build();
     }
 
     // 글 삭제
     @DeleteMapping("/{board_id}")
     public ResponseEntity<Void> deleteDailyBoard(@LoginUser User user, @PathVariable("board_id") Long boardId) {
-        dailyBoardService.deleteDailyBoard(user.getUserId(), boardId);
+        dailyBoardService.deleteDailyBoard(user, boardId);
         return ResponseEntity.ok().build();
     }
 }

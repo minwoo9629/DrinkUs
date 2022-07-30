@@ -3,14 +3,12 @@ package com.ssafy.drinkus.dailyboard.service;
 import com.ssafy.drinkus.common.*;
 import com.ssafy.drinkus.dailyboard.DailyBoard;
 import com.ssafy.drinkus.dailyboard.DailyBoardRepository;
-import com.ssafy.drinkus.dailyboard.query.DailyBoardQueryRepository;
 import com.ssafy.drinkus.dailyboard.request.DailyBoardCreateRequest;
 import com.ssafy.drinkus.dailyboard.request.DailyBoardUpdateRequest;
 import com.ssafy.drinkus.dailyboard.response.DailyBoardResponse;
 import com.ssafy.drinkus.dailyboard.response.MyBoardResponse;
 import com.ssafy.drinkus.user.domain.User;
 import com.ssafy.drinkus.user.domain.type.UserRole;
-import com.ssafy.drinkus.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -27,65 +25,80 @@ import java.util.List;
 public class DailyBoardService {
 
     private final DailyBoardRepository dailyBoardRepository;
-    private final UserService userService;
-    private final DailyBoardQueryRepository dailyBoardQueryRepository;
 
     // 총 데일리 게시판 페이지 개수 반환
-    public Long getTotalDailyBoardCount(){
-        long totalCount = dailyBoardQueryRepository.getDailyBoardCount();
-        if(totalCount == 0){
+    public Long countByParentIdIsNull() {
+        long totalCount = dailyBoardRepository.countByParentIdIsNull();
+        if (totalCount == 0) {
             throw new NotExistException("게시물이 존재하지 않습니다.");
         }
         return totalCount;
     }
 
-    // 데일리 게시판 원본글 조회
-    public List<DailyBoardResponse> findAll(Pageable page) {
-        List<DailyBoard> results = dailyBoardRepository.findByParentIdIsNull();
-        List<DailyBoardResponse> response = new ArrayList<>();
+    // 데일리 게시판 원글 조회
+    public List<DailyBoardResponse> findByParentIdIsNull(Pageable page) {
+        List<DailyBoard> results = dailyBoardRepository.findByParentIdIsNull(page);
+        if (results.size() == 0) {
+            throw new NotExistException("해당 페이지에 게시물이 존재하지 않습니다.");
+        }
 
-        for(DailyBoard dailyBoard : results){
+        List<DailyBoardResponse> response = new ArrayList<>();
+        for (DailyBoard dailyBoard : results) {
             response.add(new DailyBoardResponse(dailyBoard.getBoardId(), dailyBoard.getCreater().getUserId(), dailyBoard.getCreatedDate(), dailyBoard.getModifiedDate(), dailyBoard.getBoardContent()));
         }
 
-        return  response;
+        return response;
     }
 
     // 댓글 조회
+    public List<DailyBoardResponse> findByParentId(Long parentId) {
+        List<DailyBoard> results = dailyBoardRepository.findByParentId(parentId);
+        if (results.size() == 0) {
+            throw new NotExistException("해당 게시물에 댓글이 존재하지 않습니다.");
+        }
 
+        List<DailyBoardResponse> response = new ArrayList<>();
+        for (DailyBoard dailyBoard : results) {
+            response.add(new DailyBoardResponse(dailyBoard.getBoardId(), dailyBoard.getCreater().getUserId(), dailyBoard.getCreatedDate(), dailyBoard.getModifiedDate(), dailyBoard.getBoardContent()));
+        }
 
-    // 내가 쓴 글 페이지 반환
-    public Long getTotalMyBoardCount(Long userId){
-        long totalCount = dailyBoardQueryRepository.getMyBoardCount(userId);
-        if(totalCount == 0){
+        return response;
+    }
+
+    // 내가 쓴 글 총 페이지 개수 반환
+    public Long countByCreater(User user) {
+        long totalCount = dailyBoardRepository.countByCreater(user);
+        if (totalCount == 0) {
             throw new NotExistException("게시물이 존재하지 않습니다.");
         }
         return totalCount;
     }
 
     // 내가 쓴 글 조회
-    public List<MyBoardResponse> findByCreaterId(Long userId, Long page) {
-        long totalCount = getTotalDailyBoardCount();
-        if (page != 1 && ((totalCount - 1) / 10) + 1 < page) {
-            throw new OverflowException("페이지 범위를 초과하였습니다.");
+    public List<MyBoardResponse> findByCreater(User user, Pageable page) {
+        List<DailyBoard> results = dailyBoardRepository.findByCreater(user, page);
+        if (results.size() == 0) {
+            throw new NotExistException("해당 페이지에 게시물이 존재하지 않습니다.");
         }
 
-        return dailyBoardQueryRepository.findMyBoardByPages(userId, page);
+        List<MyBoardResponse> response = new ArrayList<>();
+        for (DailyBoard dailyBoard : results) {
+            response.add(new MyBoardResponse(dailyBoard.getBoardId(), dailyBoard.getBoardContent()));
+        }
+
+        return response;
     }
 
     // 원글 작성
     @Transactional
-    public void createDailyBoard(Long userId, DailyBoardCreateRequest request) {
-        User user = userService.findById(userId);
+    public void createDailyBoard(User user, DailyBoardCreateRequest request) {
         DailyBoard dailyBoard = DailyBoard.createDailyBoard(user, user, request.getBoardContent());
         dailyBoardRepository.save(dailyBoard);
     }
 
     // 댓글 작성
     @Transactional
-    public void createComment(Long userId, DailyBoardCreateRequest request, Long parentId) {
-        User user = userService.findById(userId);
-
+    public void createComment(User user, DailyBoardCreateRequest request, Long parentId) {
         DailyBoard parentBoard = dailyBoardRepository.findByBoardId(parentId)
                 .orElseThrow(() -> new NotFoundException(NotFoundException.BOARD_DAILY_NOT_FOUND));
         if (parentBoard.getParentId() != null) {
@@ -98,9 +111,7 @@ public class DailyBoardService {
 
     // 글 수정
     @Transactional
-    public void updateDailyBoard(Long userId, DailyBoardUpdateRequest request, Long boardId) {
-        User user = userService.findById(userId);
-
+    public void updateDailyBoard(User user, DailyBoardUpdateRequest request, Long boardId) {
         DailyBoard dailyBoard = dailyBoardRepository.findByBoardId(boardId)
                 .orElseThrow(() -> new NotFoundException(NotFoundException.BOARD_DAILY_NOT_FOUND));
 
@@ -114,9 +125,7 @@ public class DailyBoardService {
 
     // 글 삭제
     @Transactional
-    public void deleteDailyBoard(Long userId, Long boardId) {
-        User user = userService.findById(userId);
-
+    public void deleteDailyBoard(User user, Long boardId) {
         DailyBoard dailyBoard = dailyBoardRepository.findByBoardId(boardId)
                 .orElseThrow(() -> new NotFoundException(NotFoundException.BOARD_DAILY_NOT_FOUND));
 
@@ -125,12 +134,8 @@ public class DailyBoardService {
             throw new AuthenticationException("본인이 쓴 글만 삭제 할 수 있습니다.");
         }
 
-        if (dailyBoard.getParentId() == null) {
-            // 부모 Id가 없음 = 원게시물
-            dailyBoardRepository.delete(dailyBoard); // 글 삭제 시 글에 대한 답글들도 모두 삭제
-        }
-
-        dailyBoardQueryRepository.deleteAllReplies(dailyBoard.getBoardId()); // 해당 게시물 삭제
+        dailyBoardRepository.deleteByParentId(dailyBoard.getBoardId()); // 글 삭제 시 글에 대한 답글들도 모두 삭제
+        dailyBoardRepository.delete(dailyBoard); // 해당 게시물 삭제
     }
 
 
