@@ -24,7 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
-import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -43,7 +42,7 @@ public class UserService {
     private final EmailService emailService;
 
     @Transactional
-    public void createUser(UserCreateRequest request) throws IOException {
+    public void createUser(UserCreateRequest request) {
         if (userRepository.existsByUserName(request.getUserName())) {
             throw new DuplicateException("이미 가입된 회원입니다.");
         }

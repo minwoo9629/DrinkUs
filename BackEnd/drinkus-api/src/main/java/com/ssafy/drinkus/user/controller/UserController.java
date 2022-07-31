@@ -3,7 +3,6 @@ package com.ssafy.drinkus.user.controller;
 import com.ssafy.drinkus.config.LoginUser;
 import com.ssafy.drinkus.email.request.UserNameAuthRequest;
 import com.ssafy.drinkus.email.request.UserNameCheckRequest;
-import com.ssafy.drinkus.auth.request.TokenRequest;
 import com.ssafy.drinkus.auth.response.TokenResponse;
 import com.ssafy.drinkus.user.domain.User;
 import com.ssafy.drinkus.user.request.*;

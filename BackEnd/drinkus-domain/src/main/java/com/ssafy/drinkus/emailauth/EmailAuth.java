@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class EmailAuth {
-
     private static final long EMAIL_TOKEN_EXPIRE_TIME = 5L;
 
     @Id
