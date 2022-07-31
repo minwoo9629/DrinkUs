@@ -1,13 +1,13 @@
-package com.ssafy.drinkus.email.service;
+package com.ssafy.drinkus.config.email.service;
 
 import com.ssafy.drinkus.common.DuplicateException;
 import com.ssafy.drinkus.common.EmailAuthTokenNotFoundException;
-import com.ssafy.drinkus.email.dto.EmailDto;
-import com.ssafy.drinkus.email.handler.EmailHandler;
-import com.ssafy.drinkus.email.request.UserNameAuthRequest;
-import com.ssafy.drinkus.email.request.UserNameCheckRequest;
-import com.ssafy.drinkus.email_auth.EmailAuth;
-import com.ssafy.drinkus.email_auth.EmailAuthRepository;
+import com.ssafy.drinkus.config.email.handler.EmailHandler;
+import com.ssafy.drinkus.config.email.request.UserNameAuthRequest;
+import com.ssafy.drinkus.config.email.request.UserNameCheckRequest;
+import com.ssafy.drinkus.config.email.dto.EmailDto;
+import com.ssafy.drinkus.emailauth.EmailAuth;
+import com.ssafy.drinkus.emailauth.EmailAuthRepository;
 import com.ssafy.drinkus.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

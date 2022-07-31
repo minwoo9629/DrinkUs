@@ -5,8 +5,8 @@ import com.ssafy.drinkus.common.MailSendFailException;
 import com.ssafy.drinkus.common.NotFoundException;
 import com.ssafy.drinkus.common.NotMatchException;
 import com.ssafy.drinkus.common.type.YN;
-import com.ssafy.drinkus.email.dto.EmailDto;
-import com.ssafy.drinkus.email.handler.EmailHandler;
+import com.ssafy.drinkus.config.email.dto.EmailDto;
+import com.ssafy.drinkus.config.email.handler.EmailHandler;
 import com.ssafy.drinkus.security.util.JwtUtil;
 import com.ssafy.drinkus.user.domain.User;
 import com.ssafy.drinkus.user.domain.UserRepository;
@@ -105,8 +105,8 @@ public class UserService {
     }
 
     //아이디 찾기
-    public void findByUserName(String userName) {
-        if (userRepository.existsByUserName(userName)) {
+    public void findByUserName(UserDuplicateCheckIdRequest request) {
+        if (userRepository.existsByUserName(request.getUserName())) {
             throw new DuplicateException("이미 가입된 회원입니다.");
         }
     }

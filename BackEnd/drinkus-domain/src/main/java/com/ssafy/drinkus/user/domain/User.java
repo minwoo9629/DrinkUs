@@ -2,7 +2,8 @@ package com.ssafy.drinkus.user.domain;
 
 import com.ssafy.drinkus.common.BaseEntity;
 import com.ssafy.drinkus.common.type.YN;
-import com.ssafy.drinkus.room.RoomHistory;
+import com.ssafy.drinkus.room.domain.Room;
+import com.ssafy.drinkus.room.domain.RoomHistory;
 import com.ssafy.drinkus.user.domain.type.UserProvider;
 import com.ssafy.drinkus.user.domain.type.UserRole;
 import lombok.AccessLevel;
@@ -11,6 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +61,8 @@ public class User extends BaseEntity {
 
     private String userProviderId;
 
+    private String userGrade;
+
     private Long userPoint;
 
     private LocalDateTime userStopDate; // 정지기한 -> 추가기능
@@ -68,7 +72,13 @@ public class User extends BaseEntity {
     private Integer userBeer;
 
     @OneToMany(mappedBy = "user")
-    private List<RoomHistory> roomHistories = new ArrayList<>();
+    private List<RoomHistory> roomHistoryList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<Room> roomList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<UserInterest> userInterestList = new ArrayList<>();
 
     private void defaultUserSettings() {
         userPopularity = 0;
