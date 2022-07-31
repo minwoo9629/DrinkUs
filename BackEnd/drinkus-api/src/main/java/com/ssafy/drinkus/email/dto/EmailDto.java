@@ -1,4 +1,4 @@
-package com.ssafy.drinkus.config.email.dto;
+package com.ssafy.drinkus.email.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

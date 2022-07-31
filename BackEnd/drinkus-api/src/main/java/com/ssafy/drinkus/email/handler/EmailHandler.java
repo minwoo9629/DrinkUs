@@ -1,4 +1,4 @@
-package com.ssafy.drinkus.config.email.handler;
+package com.ssafy.drinkus.email.handler;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
