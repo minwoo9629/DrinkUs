@@ -3,13 +3,14 @@ package com.ssafy.drinkus.user.controller;
 import com.ssafy.drinkus.config.LoginUser;
 import com.ssafy.drinkus.email.request.UserNameAuthRequest;
 import com.ssafy.drinkus.email.request.UserNameCheckRequest;
+import com.ssafy.drinkus.security.request.TokenRequest;
+import com.ssafy.drinkus.security.response.TokenResponse;
 import com.ssafy.drinkus.user.domain.User;
 import com.ssafy.drinkus.user.request.*;
 import com.ssafy.drinkus.user.response.UserMyInfoResponse;
 import com.ssafy.drinkus.user.response.UserProfileResponse;
 import com.ssafy.drinkus.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,8 +36,20 @@ public class UserController {
     //로그인
     @PostMapping("/login")
     public ResponseEntity<Void> loginUser(@RequestBody @Valid UserLoginRequest request) {
-        String accessToken = userService.loginUser(request);
-        return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, accessToken).build();
+        TokenResponse token = userService.loginUser(request);
+        String accessToken = token.getAccessToken();
+        String refreshToken = token.getRefreshToken();
+        return ResponseEntity.ok()
+                .header("AccessToken", accessToken)
+                .header("RefreshToken", refreshToken)
+                .build();
+    }
+
+    // 리프레시 토큰 재발급
+    @PostMapping("/refreshToken")
+    public ResponseEntity<TokenResponse> reissueRefreshToken(@RequestBody @Valid TokenRequest request){
+        TokenResponse token = userService.reissue(request);
+        return ResponseEntity.ok().body(token);
     }
 
     //회원수정
