@@ -57,15 +57,26 @@ const Profile = () => {
 
   // 인기도 수정
   const onPopularityEdit = (e) => {
+    e.preventDefault();
     const name = e.target.name;
     if (name === "plus") {
       setState({...state, userPopularity: state.userPopularity + 1});
     } else if (name === "minus") {
       setState({...state, userPopularity:state.userPopularity - 1});
     }
-  }
+    // 인기도 수정 api 요청
+    axios
+      .patch("http://localhost:8080/users/popularity", {        
+      })
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
 
-  // axios 요청
+  // 유저 정보 axios 요청
   axios
     .get("http://localhost:8080/users/profile/{user_no}", {
       // userId: 1,
