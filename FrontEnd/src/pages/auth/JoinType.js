@@ -1,4 +1,4 @@
-import Header from "../../components/Header";
+import Header from "../../components/layout/Header";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
