@@ -68,10 +68,7 @@ const ContentWrapper = styled(BaseFlexWrapper)`
 const Letter = styled.p`
   font-size: ${(props) => props.size};
   font-weight: ${(props) => props.weight};
-  // font-family: "맑은고딕","Malgun Gothic",serif;
-  // font-family: "Black Han Sans";
-  // font-family: "돋움",Dotum,"돋움체",DotumChe;
-  font-family: 'EarlyFontDiary';
+  font-family: "맑은고딕","Malgun Gothic",serif;
 `
 
 const Home = () => {
