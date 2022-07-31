@@ -30,26 +30,19 @@ public class RoomUpdateRequest {
 
     // 인원
     @NotNull(message = "참가 최대인원은 필수 값입니다.")
-    @Size(min = 1, max = 8)
     private Integer peopleLimit;
 
     // 연령대
-    @Pattern(regexp = "^[YN]$")
     private YN ages20;
 
-    @Pattern(regexp = "^[YN]$")
     private YN ages30;
 
-    @Pattern(regexp = "^[YN]$")
     private YN ages40;
 
-    @Pattern(regexp = "^[YN]$")
     private YN ages50;
 
-    @Pattern(regexp = "^[YN]$")
     private YN ages60;
 
-    @Pattern(regexp = "^[YN]$")
     private YN ages70;
 
     //관심사

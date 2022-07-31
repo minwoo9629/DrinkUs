@@ -28,7 +28,7 @@ public class RoomController {
 
     //화상방 상세조회
     @GetMapping("/{room_id}")
-    public ResponseEntity<RoomInfoResponse> findByRoomId(@PathVariable Long roomId){
+    public ResponseEntity<RoomInfoResponse> findByRoomId(@PathVariable("room_id") Long roomId){
         RoomInfoResponse body = roomService.findByRoomId(roomId);
         return ResponseEntity.ok().body(body);
     }
@@ -46,22 +46,24 @@ public class RoomController {
 
     //화상방 생성
     @PostMapping
-    public ResponseEntity<Void> createRoom(@RequestBody @Valid RoomCreateRequest request){
-        roomService.createRoom(request);
+    public ResponseEntity<Void> createRoom(@LoginUser User user, @RequestBody @Valid RoomCreateRequest request){
+        roomService.createRoom(user, request);
         return ResponseEntity.ok().build();
     }
 
     //화상방 수정
     @PutMapping("/{room_id}")
-    public ResponseEntity<Void> updateRoom(@PathVariable Long roomId, @RequestBody @Valid RoomUpdateRequest request) {
-        roomService.updateRoom(roomId, request);
+    public ResponseEntity<Void> updateRoom(@LoginUser User user,
+                                           @PathVariable("room_id") Long roomId,
+                                           @RequestBody @Valid RoomUpdateRequest request) {
+        roomService.updateRoom(user, roomId, request);
         return ResponseEntity.ok().build();
     }
 
     //화상방 삭제
-    @PutMapping("/{room_Id}")
-    public ResponseEntity<Void> deleteRoom(@PathVariable Long roomId){
-        roomService.deleteRoom(roomId);
+    @DeleteMapping("/{room_id}")
+    public ResponseEntity<Void> deleteRoom(@LoginUser User user, @PathVariable("room_id") Long roomId){
+        roomService.deleteRoom(user, roomId);
         return ResponseEntity.ok().build();
     }
 }

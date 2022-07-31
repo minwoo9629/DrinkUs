@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +61,8 @@ public class User extends BaseEntity {
 
     private String userProviderId;
 
+    private String userGrade;
+
     private Long userPoint;
 
     private LocalDateTime userStopDate; // 정지기한 -> 추가기능
@@ -71,10 +74,10 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user")
     private List<RoomHistory> roomHistoryList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "roomAdminId")
+    @OneToMany(mappedBy = "user")
     private List<Room> roomList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user_interest_id")
+    @OneToMany(mappedBy = "user")
     private List<UserInterest> userInterestList = new ArrayList<>();
 
     private void defaultUserSettings() {
@@ -141,5 +144,10 @@ public class User extends BaseEntity {
     //인기도 수정
     public void updatePopularity(Integer popularNum){
         this.userPopularity += popularNum;
+    }
+
+    public int getUserAge(User user){
+        String userBirth = user.getUserBirthday().substring(0,4);
+        return LocalDate.now().getYear() - Integer.parseInt(userBirth) + 1;
     }
 }

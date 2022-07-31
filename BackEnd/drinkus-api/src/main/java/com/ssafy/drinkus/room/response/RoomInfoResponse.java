@@ -4,6 +4,8 @@ import com.ssafy.drinkus.common.type.YN;
 import com.ssafy.drinkus.interest.response.CategoryResponse;
 import com.ssafy.drinkus.room.domain.Room;
 import com.ssafy.drinkus.user.domain.User;
+import com.ssafy.drinkus.user.response.UserMyInfoResponse;
+import com.ssafy.drinkus.user.response.UserProfileResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,7 +17,7 @@ import java.time.LocalDateTime;
 public class RoomInfoResponse {
     private Long roomId;
     private String roomName;
-    private User roomAdminId;
+    private UserMyInfoResponse user;
     private String roomPw;
     private String placeTheme;
     private Integer peopleLimit;
@@ -34,7 +36,7 @@ public class RoomInfoResponse {
         RoomInfoResponse roomInfoResponse = new RoomInfoResponse();
         roomInfoResponse.roomId = room.getRoomId();
         roomInfoResponse.roomName = room.getRoomName();
-        roomInfoResponse.roomAdminId = room.getRoomAdminId();
+        roomInfoResponse.user = UserMyInfoResponse.from(room.getUser());
         roomInfoResponse.roomPw = room.getRoomPw();
         roomInfoResponse.placeTheme = room.getPlaceTheme();
         roomInfoResponse.createdDate = room.getCreatedDate();

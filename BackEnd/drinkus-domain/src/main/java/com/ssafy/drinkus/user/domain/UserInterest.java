@@ -1,6 +1,5 @@
 package com.ssafy.drinkus.user.domain;
 
-import com.ssafy.drinkus.interest.domain.Category;
 import com.ssafy.drinkus.interest.domain.Interest;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -8,8 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -18,15 +15,15 @@ import java.util.List;
 public class UserInterest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user interest_id")
+    @Column(name = "user_interest_id")
     private Long userInterestId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "interest_id")
-    private Interest interestId;
+    private Interest interest;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private User userId;
+    private User user;
 
 }

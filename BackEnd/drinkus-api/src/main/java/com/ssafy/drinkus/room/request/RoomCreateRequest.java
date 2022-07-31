@@ -6,16 +6,15 @@ import com.ssafy.drinkus.user.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+
+import javax.validation.constraints.*;
 
 @Data // Getter, Setter, RequiredArgsConstructor, ToString, EqualsAndHashCode, Value
 @NoArgsConstructor
 @AllArgsConstructor
 public class RoomCreateRequest {
     // 방이름
-    @NotNull(message = "이름은 필수 값입니다.")
+    @NotBlank(message = "이름은 필수 값입니다.")
     private String roomName;
 
     // 방장
@@ -29,26 +28,31 @@ public class RoomCreateRequest {
 
     // 인원
     @NotNull(message = "참가 최대인원은 필수 값입니다.")
-    @Size(min = 1, max = 8)
     private Integer peopleLimit;
 
     // 연령대
-    @Pattern(regexp = "^[YN]$")
+//    @NotBlank(message = "연령대는 필수 값입니다.")
+//    @Pattern(regexp = "[YN]", message = "Y또는 N만 가능합니다.")
     private YN ages20;
 
-    @Pattern(regexp = "^[YN]$")
+//    @NotBlank(message = "연령대는 필수 값입니다.")
+//    @Pattern(regexp = "[YN]", message = "Y또는 N만 가능합니다.")
     private YN ages30;
 
-    @Pattern(regexp = "^[YN]$")
+//    @NotBlank(message = "연령대는 필수 값입니다.")
+//    @Pattern(regexp = "[YN]", message = "Y또는 N만 가능합니다.")
     private YN ages40;
 
-    @Pattern(regexp = "^[YN]$")
+//    @NotBlank(message = "연령대는 필수 값입니다.")
+//    @Pattern(regexp = "[YN]", message = "Y또는 N만 가능합니다.")
     private YN ages50;
 
-    @Pattern(regexp = "^[YN]$")
+//    @NotBlank(message = "연령대는 필수 값입니다.")
+//    @Pattern(regexp = "[YN]", message = "Y또는 N만 가능합니다.")
     private YN ages60;
 
-    @Pattern(regexp = "^[YN]$")
+//    @NotBlank(message = "연령대는 필수 값입니다.")
+//    @Pattern(regexp = "[YN]", message = "Y또는 N만 가능합니다.")
     private YN ages70;
 
     //관심사

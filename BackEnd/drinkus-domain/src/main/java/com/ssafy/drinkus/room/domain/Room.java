@@ -4,10 +4,7 @@ import com.ssafy.drinkus.common.BaseEntity;
 import com.ssafy.drinkus.common.type.YN;
 import com.ssafy.drinkus.interest.domain.Category;
 import com.ssafy.drinkus.user.domain.User;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -28,8 +25,8 @@ public class Room extends BaseEntity {
 
     //방장
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "room_admin_id")
-    private User roomAdminId;
+    @JoinColumn(name = "user_admin_id")
+    private User user;
 
     private String roomPw;
 
@@ -39,6 +36,7 @@ public class Room extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "ages_20")
+
     private YN ages20;
 
     @Enumerated(EnumType.STRING)
@@ -68,12 +66,21 @@ public class Room extends BaseEntity {
     @OneToMany(mappedBy = "room")
     private List<RoomHistory> roomHistories = new ArrayList<>();
 
+    private void defaultRoomSettings() {
+        ages20 = YN.N;
+        ages30 = YN.N;
+        ages40 = YN.N;
+        ages50 = YN.N;
+        ages60 = YN.N;
+        ages70 = YN.N;
+    }
+
     //방 생성하기
-    public static Room createRoom(String roomName, User roomAdminId, String roomPw, String placeTheme, Integer peopleLimit,
+    public static Room createRoom(String roomName, User user, String roomPw, String placeTheme, Integer peopleLimit,
                                   YN ages20, YN ages30, YN ages40, YN ages50, YN ages60, YN ages70,Category category) {
         Room room = new Room();
         room.roomName = roomName;
-        room.roomAdminId = roomAdminId;
+        room.user = user;
         room.roomPw = roomPw;
         room.placeTheme = placeTheme;
         room.peopleLimit = peopleLimit;
