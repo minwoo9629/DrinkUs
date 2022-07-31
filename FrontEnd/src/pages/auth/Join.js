@@ -255,7 +255,9 @@ const Join = () => {
       .post("http://localhost:8080/users/join/id", {
         userName: state.userName,
       })
-      .then(function (response) {})
+      .then(function (response) {
+        alert("중복 확인 검사 통과")
+      })
       .catch(function (error) {
         console.log(error);
       });
