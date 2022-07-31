@@ -105,7 +105,7 @@ public class UserController {
     }
 
     // 회원 탈퇴 (회원 삭제)
-    @PutMapping("")
+    @DeleteMapping("")
     public ResponseEntity<Void> deleteUser(@LoginUser Long userId) {
         userService.deleteUser(userId);
         return ResponseEntity.ok().build();
