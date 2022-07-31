@@ -46,6 +46,14 @@ public class UserService {
     private final JavaMailSender mailSender;
 
 
+    // 회원 id로 회원 찾기
+    public User findById(Long userId){
+        User findUser = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
+
+        return findUser;
+    }
+
     @Transactional
     public void createUser(UserCreateRequest request) {
         if (userRepository.existsByUserName(request.getUserName())) {

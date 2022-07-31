@@ -145,9 +145,4 @@ public class User extends BaseEntity {
     public void updatePopularity(Integer popularNum){
         this.userPopularity += popularNum;
     }
-
-    public int getUserAge(User user){
-        String userBirth = user.getUserBirthday().substring(0,4);
-        return LocalDate.now().getYear() - Integer.parseInt(userBirth) + 1;
-    }
 }

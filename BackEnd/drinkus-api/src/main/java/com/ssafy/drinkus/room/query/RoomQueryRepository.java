@@ -24,7 +24,6 @@ import static com.ssafy.drinkus.room.domain.QRoom.room;
 @RequiredArgsConstructor
 public class RoomQueryRepository {
     private final JPAQueryFactory queryFactory;
-    private final User user;
 
     //페이징
     public Page<Room> findBySearchCondition(String searchKeyword, Boolean sameAge, Integer sortOrder,
@@ -54,7 +53,7 @@ public class RoomQueryRepository {
 
     private BooleanExpression sameAgeFirstEq(Boolean sameAge, User user) {
         // 나이의 알고리즘을 계산하여 또래 범위 알기
-        int sameAgeFirst = user.getUserAge(user) % 10;
+        int sameAgeFirst = getUserAge(user) % 10;
 
         switch (sameAgeFirst) {
             case 2:
@@ -76,7 +75,7 @@ public class RoomQueryRepository {
 
     private BooleanExpression sameAgeSecondEq(Boolean sameAge, User user) {
         // 나이의 알고리즘을 계산하여 또래 범위 알기
-        Integer sameAgeSecond = user.getUserAge(user) % 10 + ((user.getUserAge(user) / 10 >= 5) ? 1 : -1);
+        Integer sameAgeSecond = getUserAge(user) % 10 + ((getUserAge(user) / 10 >= 5) ? 1 : -1);
 
         switch (sameAgeSecond) {
             case 1:
@@ -103,6 +102,10 @@ public class RoomQueryRepository {
 
     private OrderSpecifier orderByEq(Integer sortOrder){
         return (sortOrder == 1) ? room.createdDate.asc() : room.createdDate.desc(); 
+    }
+    public int getUserAge(User user){
+        String userBirth = user.getUserBirthday().substring(0,4);
+        return LocalDate.now().getYear() - Integer.parseInt(userBirth) + 1;
     }
 
 }
