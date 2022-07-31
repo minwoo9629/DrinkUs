@@ -1,18 +1,23 @@
 package com.ssafy.drinkus.user.controller;
 
 import com.ssafy.drinkus.config.LoginUser;
+import com.ssafy.drinkus.email.request.UserNameAuthRequest;
+import com.ssafy.drinkus.email.request.UserNameCheckRequest;
+import com.ssafy.drinkus.auth.request.TokenRequest;
+import com.ssafy.drinkus.auth.response.TokenResponse;
 import com.ssafy.drinkus.user.domain.User;
 import com.ssafy.drinkus.user.request.*;
 import com.ssafy.drinkus.user.response.UserMyInfoResponse;
 import com.ssafy.drinkus.user.response.UserProfileResponse;
 import com.ssafy.drinkus.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -24,7 +29,7 @@ public class UserController {
 
     //회원가입
     @PostMapping("/join")
-    public ResponseEntity<Void> createUser(@RequestBody @Valid UserCreateRequest request) {
+    public ResponseEntity<Void> createUser(@RequestBody @Valid UserCreateRequest request) throws IOException {
         userService.createUser(request);
         return ResponseEntity.ok().build();
     }
@@ -32,8 +37,13 @@ public class UserController {
     //로그인
     @PostMapping("/login")
     public ResponseEntity<Void> loginUser(@RequestBody @Valid UserLoginRequest request) {
-        String accessToken = userService.loginUser(request);
-        return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, accessToken).build();
+        TokenResponse token = userService.loginUser(request);
+        String accessToken = token.getAccessToken();
+        String refreshToken = token.getRefreshToken();
+        return ResponseEntity.ok()
+                .header("AccessToken", accessToken)
+                .header("RefreshToken", refreshToken)
+                .build();
     }
 
     //회원수정
@@ -59,6 +69,13 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
+    // 닉네임 중복 검사
+    @GetMapping("/nickname")
+    public ResponseEntity<Void> findByUserNickname(@RequestBody @Valid UserDuplicateCheckNicknameRequest request){
+        userService.findByUserNickname(request.getUserNickname());
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
     // 인기도 수정
     @PatchMapping("/popularity")
     public ResponseEntity<Void> updatePopularity(@LoginUser Long userId, @RequestBody UserPopularityRequest request) {
@@ -80,10 +97,10 @@ public class UserController {
         return ResponseEntity.ok().body(body);
     }
 
-    // 회원 탈퇴 (삭제 대기)
-    @PutMapping("/disable")
-    public ResponseEntity<Void> disableUser(@LoginUser Long userId) {
-        userService.disableUser(userId);
+    // 회원 탈퇴 (회원 삭제)
+    @PutMapping("/delete")
+    public ResponseEntity<Void> deleteUser(@LoginUser Long userId) {
+        userService.deleteUser(userId);
         return ResponseEntity.ok().build();
     }
 
@@ -98,6 +115,20 @@ public class UserController {
     @PostMapping("/pw")
     public ResponseEntity<Void> findMyPw(@RequestBody @Valid UserFindMyPwRequest request) {
         userService.resetPw(request);
+        return ResponseEntity.ok().build();
+    }
+
+    // 회원가입 이메일 인증 발송
+    @PostMapping("/sendConfirmEmail")
+    public ResponseEntity<Void> sendUserNameCheckEmail(@RequestBody @Valid UserNameCheckRequest request) throws MessagingException {
+        userService.sendEmailAuthEmail(request);
+        return ResponseEntity.ok().build();
+    }
+
+    // 이메일 토큰 인증 확인
+    @PatchMapping("/confirmToken")
+    public ResponseEntity<Void> confirmUserNameCheck(@RequestBody @Valid UserNameAuthRequest request){
+        userService.confirmUserName(request);
         return ResponseEntity.ok().build();
     }
 }
