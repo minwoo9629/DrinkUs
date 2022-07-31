@@ -3,12 +3,12 @@ package com.ssafy.drinkus.user.service;
 import com.ssafy.drinkus.common.*;
 import com.ssafy.drinkus.common.type.TokenType;
 import com.ssafy.drinkus.common.type.YN;
+import com.ssafy.drinkus.auth.Auth;
+import com.ssafy.drinkus.auth.AuthRepository;
 import com.ssafy.drinkus.email.request.UserNameAuthRequest;
 import com.ssafy.drinkus.email.request.UserNameCheckRequest;
 import com.ssafy.drinkus.email.service.EmailService;
-import com.ssafy.drinkus.email_auth.EmailAuth;
-import com.ssafy.drinkus.auth.Auth;
-import com.ssafy.drinkus.auth.AuthRepository;
+import com.ssafy.drinkus.emailauth.EmailAuth;
 import com.ssafy.drinkus.security.request.TokenRequest;
 import com.ssafy.drinkus.security.response.TokenResponse;
 import com.ssafy.drinkus.security.util.JwtUtil;
@@ -55,6 +55,14 @@ public class UserService {
     private final JwtUtil jwtUtil;
     private final EmailService emailService;
 
+
+    // 회원 id로 회원 찾기
+    public User findById(Long userId){
+        User findUser = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
+
+        return findUser;
+    }
 
     @Transactional
     public void createUser(UserCreateRequest request) {
@@ -153,8 +161,8 @@ public class UserService {
     }
 
     //아이디 찾기
-    public void findByUserName(String userName) {
-        if (userRepository.existsByUserName(userName)) {
+    public void findByUserName(UserDuplicateCheckIdRequest request) {
+        if (userRepository.existsByUserName(request.getUserName())) {
             throw new DuplicateException("이미 가입된 회원입니다.");
         }
     }

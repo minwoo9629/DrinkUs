@@ -70,8 +70,8 @@ public class UserController {
 
     // 아이디 중복 검사
     @PostMapping("/join/id")
-    public ResponseEntity<Void> findByUserId(@RequestPart String userName) {
-        userService.findByUserName(userName);
+    public ResponseEntity<Void> findByUserId(@RequestBody @Valid UserDuplicateCheckIdRequest request) {
+        userService.findByUserName(request);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
@@ -98,8 +98,8 @@ public class UserController {
 
     // 내정보 조회
     @GetMapping("")
-    public ResponseEntity<UserMyInfoResponse> findUserMyInfo(@LoginUser User User) {
-        UserMyInfoResponse body = userService.findUserMyInfo(User.getUserId());
+    public ResponseEntity<UserMyInfoResponse> findUserMyInfo(@LoginUser User user) {
+        UserMyInfoResponse body = userService.findUserMyInfo(user.getUserId());
         return ResponseEntity.ok().body(body);
     }
 

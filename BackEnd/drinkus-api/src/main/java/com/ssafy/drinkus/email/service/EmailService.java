@@ -1,14 +1,11 @@
 package com.ssafy.drinkus.email.service;
 
-import com.ssafy.drinkus.common.DuplicateException;
 import com.ssafy.drinkus.common.EmailAuthTokenNotFoundException;
-import com.ssafy.drinkus.email.dto.EmailDto;
 import com.ssafy.drinkus.email.handler.EmailHandler;
 import com.ssafy.drinkus.email.request.UserNameAuthRequest;
-import com.ssafy.drinkus.email.request.UserNameCheckRequest;
-import com.ssafy.drinkus.email_auth.EmailAuth;
-import com.ssafy.drinkus.email_auth.EmailAuthRepository;
-import com.ssafy.drinkus.user.domain.UserRepository;
+import com.ssafy.drinkus.email.dto.EmailDto;
+import com.ssafy.drinkus.emailauth.EmailAuth;
+import com.ssafy.drinkus.emailauth.EmailAuthRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,11 +13,9 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @EnableAsync
 @Slf4j
