@@ -1,4 +1,4 @@
-package com.ssafy.drinkus.config.email.request;
+package com.ssafy.drinkus.email.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

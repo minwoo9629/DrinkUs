@@ -1,8 +1,8 @@
-package com.ssafy.drinkus.config.email.controller;
+package com.ssafy.drinkus.email.controller;
 
-import com.ssafy.drinkus.config.email.request.UserNameAuthRequest;
-import com.ssafy.drinkus.config.email.request.UserNameCheckRequest;
-import com.ssafy.drinkus.config.email.service.EmailService;
+import com.ssafy.drinkus.email.request.UserNameAuthRequest;
+import com.ssafy.drinkus.email.request.UserNameCheckRequest;
+import com.ssafy.drinkus.email.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
