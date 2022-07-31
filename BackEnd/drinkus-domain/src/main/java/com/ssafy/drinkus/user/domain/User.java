@@ -1,6 +1,7 @@
 package com.ssafy.drinkus.user.domain;
 
 import com.ssafy.drinkus.common.BaseEntity;
+import com.ssafy.drinkus.common.NicknameFailException;
 import com.ssafy.drinkus.common.type.YN;
 import com.ssafy.drinkus.room.domain.Room;
 import com.ssafy.drinkus.room.domain.RoomHistory;
@@ -12,7 +13,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import org.json.JSONObject;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -81,9 +87,13 @@ public class User extends BaseEntity {
     private List<UserInterest> userInterestList = new ArrayList<>();
 
     private void defaultUserSettings() {
+        try{
+            userNickname = makeRandomNickname();
+        }catch (IOException e){
+            throw new NicknameFailException(NicknameFailException.MAKE_FAIL);
+        }
         userPopularity = 0;
         userPopularityLimit = 5;
-        userNickname = String.valueOf(Math.random());
         userDeleted = YN.N;
         userPoint = 0L;
         userSoju = 0;
@@ -95,14 +105,13 @@ public class User extends BaseEntity {
     public static User createUser(String userName, String userPw, String userFullname, String userBirthday, String userEmail) {
         User user = new User();
         user.defaultUserSettings();
-        user.userRole = UserRole.ROLE_USER;
-        user.userProvider = UserProvider.local;
-
         user.userName = userName;
-        user.userEmail = userEmail;
         user.userPw = userPw;
         user.userFullname = userFullname;
         user.userBirthday = userBirthday;
+        user.userEmail = userEmail;
+        user.userRole = UserRole.ROLE_USER;
+        user.userProvider = UserProvider.local;
         return user;
     }
 
@@ -112,7 +121,6 @@ public class User extends BaseEntity {
         user.defaultUserSettings();
         user.userRole = UserRole.ROLE_SOCIAL;
         user.userPw = null;
-
         user.userProvider = userProvider;
         user.userProviderId = userProviderId;
         user.userName = userName;
@@ -135,14 +143,38 @@ public class User extends BaseEntity {
         this.userPw = userPw;
     }
 
-    // 회원 비활성화
-    public void disableUser() {
-        this.userDeleted = YN.Y;
-        this.userDeleteDate = LocalDateTime.now();
-    }
-
     //인기도 수정
     public void updatePopularity(Integer popularNum){
         this.userPopularity += popularNum;
+    }
+
+    // 닉네임 랜덤 생성
+    public static String makeRandomNickname() throws IOException {
+        URL url = new URL("https://nickname.hwanmoo.kr/?format=json&count=1&max_length=12");
+
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("GET");
+        conn.setRequestProperty("Content-type", "application/json");
+        conn.setConnectTimeout(5000);
+        conn.setReadTimeout(3000);
+
+        BufferedReader rd;
+        if(conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+            rd = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+        } else {
+            rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+        }
+
+        StringBuilder sb = new StringBuilder();
+        String line;
+        while ((line = rd.readLine()) != null) {
+            sb.append(line);
+        }
+
+        rd.close();
+        conn.disconnect();
+        String word = (String) new JSONObject(sb.toString())
+                .getJSONArray("words").get(0);
+        return word;
     }
 }

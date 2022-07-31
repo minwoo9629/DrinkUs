@@ -5,6 +5,9 @@ import com.ssafy.drinkus.security.service.LoginUserDetails;
 import com.ssafy.drinkus.security.util.JwtUtil;
 import com.ssafy.drinkus.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,7 +24,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends GenericFilter {
 
-    private final  JwtUtil jwtUtil;
+    private final JwtUtil jwtUtil;
     private final CustomUserDetailsService customUserDetailsService;
 
     @Override
@@ -29,7 +32,7 @@ public class JwtAuthenticationFilter extends GenericFilter {
         String jwtToken = extractToken((HttpServletRequest) request);
 
         if (StringUtils.hasText(jwtToken) && jwtUtil.isValidToken(jwtToken)) {
-            //authService에서 회원정보를 받음
+            // authService에서 회원정보를 받음
             UserDetails userDetails = customUserDetailsService.loadUserByUsername(jwtUtil.getSubject(jwtToken));
             LoginUserDetails loginUserDetails = (LoginUserDetails) userDetails;
 
@@ -45,7 +48,6 @@ public class JwtAuthenticationFilter extends GenericFilter {
     // TOKEN 추출
     private String extractToken(HttpServletRequest request) {
         String bearerToken = request.getHeader(HttpHeaders.AUTHORIZATION);
-
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }

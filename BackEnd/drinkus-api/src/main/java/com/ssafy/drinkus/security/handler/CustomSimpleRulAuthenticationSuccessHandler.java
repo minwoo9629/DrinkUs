@@ -1,5 +1,6 @@
 package com.ssafy.drinkus.security.handler;
 
+import com.ssafy.drinkus.common.type.TokenType;
 import com.ssafy.drinkus.security.service.UserPrincipal;
 import com.ssafy.drinkus.security.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,7 @@ public class CustomSimpleRulAuthenticationSuccessHandler extends SimpleUrlAuthen
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
-        String token = jwtUtil.createToken(userPrincipal.getUserId());
+        String token = jwtUtil.createToken(userPrincipal.getUserId(), TokenType.ACCESS_TOKEN);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         response.addHeader("Authorization", token);
 
