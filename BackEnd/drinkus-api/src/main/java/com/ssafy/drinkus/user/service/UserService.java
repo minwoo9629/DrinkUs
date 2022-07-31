@@ -30,7 +30,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
@@ -55,17 +54,8 @@ public class UserService {
     private final JwtUtil jwtUtil;
     private final EmailService emailService;
 
-
-    // 회원 id로 회원 찾기
-    public User findById(Long userId){
-        User findUser = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
-
-        return findUser;
-    }
-
     @Transactional
-    public void createUser(UserCreateRequest request) {
+    public void createUser(UserCreateRequest request) throws IOException {
         if (userRepository.existsByUserName(request.getUserName())) {
             throw new DuplicateException("이미 가입된 회원입니다.");
         }
@@ -197,12 +187,10 @@ public class UserService {
         return UserMyInfoResponse.from(user);
     }
 
-    // 회원 탈퇴 (삭제 대기)
+    // 회원 삭제
     @Transactional
-    public void disableUser(Long userId){
-        User findUser = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
-        findUser.disableUser();
+    public void deleteUser(Long userId){
+        userRepository.deleteById(userId);
     }
 
     // 아이디 찾기
@@ -280,71 +268,10 @@ public class UserService {
         return sb.toString();
     }
 
-    // 닉네임 랜덤 생성
-    public String makeRandomNickname() throws IOException {
-        URL url = new URL("https://nickname.hwanmoo.kr/?format=json&count=1&max_length=10&whitespace=_");
-
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("GET");
-        conn.setRequestProperty("Content-type", "application/json");
-        conn.setConnectTimeout(5000);
-        conn.setReadTimeout(3000);
-
-        BufferedReader rd;
-        if(conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
-            rd = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
-        } else {
-            rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
-        }
-
-        StringBuilder sb = new StringBuilder();
-        String line;
-        while ((line = rd.readLine()) != null) {
-            sb.append(line);
-        }
-
-        rd.close();
-        conn.disconnect();
-
-        return null;
-    }
-
-    // 회원 삭제 스케줄 task
-    @Scheduled(cron = "0 0 6 * * *") // 매일 6시 정각
-    @Transactional
-    public void deleteUser(){
-        List<User> userList = userRepository.findAll();
-
-        for(User user : userList){
-            LocalDateTime disableDate = user.getUserDeleteDate();
-            LocalDateTime todayDate = LocalDateTime.now();
-            if(user.getUserDeleted() == YN.Y && todayDate.isAfter(disableDate.plusDays(WAITING_DAYS))){
-                userRepository.delete(user);
-            }
-        }
-    }
-
     // 인기도 제한 초기화 스케줄 task
     @Scheduled(cron = "0 0 6 * * *") // 매일 6시 정각
     @Transactional
     public void resetPopularityLimit(){
         userRepository.resetUserPopularityLimit(POPULARITY_LIMIT);
-    }
-
-    public UserMyInfoResponse test(User user){
-        UserMyInfoResponse response = new UserMyInfoResponse(
-                user.getUserName(),
-                user.getUserNickname(),
-                user.getUserPopularity(),
-                user.getUserBirthday(),
-                user.getUserIntroduce(),
-                user.getUserImg(),
-                user.getUserRole(),
-                user.getUserPoint(),
-                user.getUserSoju(),
-                user.getUserBeer()
-        );
-
-        return response;
     }
 }

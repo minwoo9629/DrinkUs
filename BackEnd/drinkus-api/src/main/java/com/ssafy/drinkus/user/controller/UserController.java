@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -28,7 +29,7 @@ public class UserController {
 
     //회원가입
     @PostMapping("/join")
-    public ResponseEntity<Void> createUser(@RequestBody @Valid UserCreateRequest request) {
+    public ResponseEntity<Void> createUser(@RequestBody @Valid UserCreateRequest request) throws IOException {
         userService.createUser(request);
         return ResponseEntity.ok().build();
     }
@@ -103,10 +104,10 @@ public class UserController {
         return ResponseEntity.ok().body(body);
     }
 
-    // 회원 탈퇴 (삭제 대기)
-    @PutMapping("/disable")
-    public ResponseEntity<Void> disableUser(@LoginUser Long userId) {
-        userService.disableUser(userId);
+    // 회원 탈퇴 (회원 삭제)
+    @PutMapping("/delete")
+    public ResponseEntity<Void> deleteUser(@LoginUser Long userId) {
+        userService.deleteUser(userId);
         return ResponseEntity.ok().build();
     }
 
