@@ -75,8 +75,8 @@ public class UserController {
 
     // 내정보 조회
     @GetMapping("")
-    public ResponseEntity<UserMyInfoResponse> findUserMyInfo(@LoginUser User User) {
-        UserMyInfoResponse body = userService.findUserMyInfo(User.getUserId());
+    public ResponseEntity<UserMyInfoResponse> findUserMyInfo(@LoginUser User user) {
+        UserMyInfoResponse body = userService.findUserMyInfo(user.getUserId());
         return ResponseEntity.ok().body(body);
     }
 
