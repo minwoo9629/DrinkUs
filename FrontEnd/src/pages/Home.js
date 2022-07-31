@@ -4,6 +4,10 @@ import Footer from "../components/layout/Footer";
 import HomeSlide from "../components/mainpage/HomeSlide";
 import TopButton from "../components/common/buttons/TopButton";
 import { BaseFlexWrapper, BaseFlexColWrapper } from "../components/styled/Wrapper";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { tokenCheck } from "../utils/tokenCheck";
+import { getUserProfile } from "../store/actions/user";
 
 const neon_text_color = "#5904de";
 const neon_border_color = "#08f";
@@ -72,6 +76,12 @@ const Letter = styled.p`
 `
 
 const Home = () => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (tokenCheck()) {
+      dispatch(getUserProfile());
+    }
+  });
   return (
     <>
       <Header />

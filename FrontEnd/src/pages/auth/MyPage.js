@@ -12,6 +12,7 @@ import MySchedule from "./mypage/MySchedule";
 const EditWrapper = styled.div`
   width: 100%;
   max-width: 1200px;
+  min-height: 830px;
   margin: 100px 80px;
   background-color: white;
   border: 1px solid #6f92bf;
@@ -63,11 +64,11 @@ const MyPage = () => {
     },
   ]);
   const getStatus = (id) => ({
-    editProfile: <EditProfile key={id} />,
-    editPassword: <EditPassword key={id} />,
-    myArticle: <MyArticle key={id} />,
-    mySchedule: <MySchedule key={id} />,
-    editInterest: <EditInterest key={id} />,
+    editProfile: <EditProfile />,
+    editPassword: <EditPassword />,
+    myArticle: <MyArticle />,
+    mySchedule: <MySchedule />,
+    editInterest: <EditInterest />,
   });
   const onActiveChange = (tabId) => {
     setTabState((prevState) =>
@@ -81,7 +82,7 @@ const MyPage = () => {
 
   return (
     <>
-      <Header />
+      <Header position="static" />
       <Wrapper color={"#eaf2ff"} alignItems="none">
         <EditWrapper>
           <TabWrapper>
@@ -92,8 +93,12 @@ const MyPage = () => {
           </TabWrapper>
           <EditorWrapper>
             {tabState &&
-              tabState.map((item) =>
-                item.isActive ? <>{getStatus(item.id)[item.status]}</> : <></>
+              tabState.map((item, idx) =>
+                item.isActive ? (
+                  <div key={idx}>{getStatus(item.id)[item.status]}</div>
+                ) : (
+                  <></>
+                )
               )}
           </EditorWrapper>
         </EditWrapper>

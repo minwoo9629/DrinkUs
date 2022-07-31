@@ -4,8 +4,8 @@ import { getProfile } from "../../api/AuthAPI";
 // async action creator
 const getUserProfile = () => {
   // async action
-  return (dispatch, getState) => {
-    const response = getProfile();
+  return async (dispatch, getState) => {
+    const response = await getProfile();
     dispatch(setUserProfile(response.data));
   };
 };
