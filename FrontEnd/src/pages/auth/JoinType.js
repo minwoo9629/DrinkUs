@@ -46,7 +46,6 @@ const Button = styled.button`
 // }
 
 const JoinType = () => {
-
   return (
     <div>
       <Header />
@@ -57,17 +56,32 @@ const JoinType = () => {
             <Link to="/join">
               <Button>로컬 회원가입</Button>
             </Link>
-              {/* <Button name="kakao" onClick={socialLogin}>카카오로 시작하기</Button> */}
-              <Button onClick={() => window.open(`http://localhost:8080/oauth2/authorization/kakao?redirect_uri=http://localhost:3000/`)}>카카오로 시작하기</Button>
-              {/* <Button name="google" onClick={socialLogin}>구글로 시작하기</Button> */}
-              <Button onClick={() => window.open(`http://localhost:8080/oauth2/authorization/google?redirect_uri=http://localhost:3000/`)}>구글로 시작하기</Button>
-              {/* <Button name="naver" onClick={socialLogin}>네이버로 시작하기</Button> */}
+            {/* <Button name="kakao" onClick={socialLogin}>카카오로 시작하기</Button> */}
+            <Button
+              onClick={() =>
+                window.open(
+                  `http://localhost:8080/oauth2/authorization/kakao?redirect_uri=http://localhost:3000/`
+                )
+              }
+            >
+              카카오로 시작하기
+            </Button>
+            {/* <Button name="google" onClick={socialLogin}>구글로 시작하기</Button> */}
+            <Button
+              onClick={() =>
+                window.open(
+                  `http://localhost:8080/oauth2/authorization/google?redirect_uri=http://localhost:3000/`
+                )
+              }
+            >
+              구글로 시작하기
+            </Button>
+            {/* <Button name="naver" onClick={socialLogin}>네이버로 시작하기</Button> */}
           </JoinForm>
         </NeonLoginWrapper>
       </Wrapper>
-
     </div>
-  )
-}
+  );
+};
 
 export default JoinType;

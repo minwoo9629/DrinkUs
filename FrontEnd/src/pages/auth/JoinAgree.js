@@ -3,7 +3,6 @@ import Header from "../../components/Header";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
-
 // 체크박스 포커스 주기
 const Wrapper = styled.div`
   background-color: black;
@@ -31,10 +30,10 @@ const AgreeForm = styled.div`
 `;
 
 const AgreeWrapper = styled.div`
-display: flex;
-justify-content: center;
-flex-direction: column;
-align-items: center;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 `;
 
 const AgreeContent = styled.div`
@@ -80,27 +79,24 @@ const JoinAgree = ({ history }) => {
   const isAllChecked = checkedButtons.length === 3;
   const disabled = !isAllChecked;
 
-
   const changeHandler = (checked, id) => {
     if (checked) {
       setCheckedButtons([...checkedButtons, id]);
     } else {
-      setCheckedButtons(checkedButtons.filter(button => button !== id));
+      setCheckedButtons(checkedButtons.filter((button) => button !== id));
     }
   };
 
   // pdf 파일 불러오자
   // const pdfviewer = document.getElementById('container').ej2_instances[0];
 
-
   return (
     <div>
-      <Header/>
+      <Header />
       <Wrapper>
         <NeonLoginWrapper>
           <AgreeForm> 이용약관 동의 </AgreeForm>
           <AgreeWrapper>
-
             <AgreeContent>
               {/* <Button
                 onClick={() => pdfviewer.load('test.pdf', null)}
@@ -110,62 +106,61 @@ const JoinAgree = ({ history }) => {
                 <input
                   type="checkbox"
                   id="check"
-                  onChange={e => {
-                    changeHandler(e.currentTarget.checked, 'check');
+                  onChange={(e) => {
+                    changeHandler(e.currentTarget.checked, "check");
                   }}
-                  checked={checkedButtons.includes('check') ? true : false}
-                  ></input>
-                  <label id="check" htmlFor="check"></label>
+                  checked={checkedButtons.includes("check") ? true : false}
+                ></input>
+                <label id="check" htmlFor="check"></label>
               </Button>
               <Button
-                // onClick={() => window.open('https://admitted-evening-312.notion.site/3-Drinkus-97e5baba6ee845ed8ed6a9148c7f6901', '_blank')}
+              // onClick={() => window.open('https://admitted-evening-312.notion.site/3-Drinkus-97e5baba6ee845ed8ed6a9148c7f6901', '_blank')}
               >
                 <u>이용약관</u>
-              <input
-                type="checkbox"
-                id="check2"
-                onChange={e => {
-                  changeHandler(e.currentTarget.checked, 'check2');
-                }}
-                checked={checkedButtons.includes('check2') ? true : false}
+                <input
+                  type="checkbox"
+                  id="check2"
+                  onChange={(e) => {
+                    changeHandler(e.currentTarget.checked, "check2");
+                  }}
+                  checked={checkedButtons.includes("check2") ? true : false}
                 ></input>
                 <label id="check2" htmlFor="check2"></label>
               </Button>
-              <OverTwenty
-              >
-                20세 이상입니다
-              </OverTwenty>
+              <OverTwenty>20세 이상입니다</OverTwenty>
               <input
                 type="checkbox"
                 id="check3"
-                onChange={e => {
-                  changeHandler(e.currentTarget.checked, 'check3');
+                onChange={(e) => {
+                  changeHandler(e.currentTarget.checked, "check3");
                 }}
-                checked={checkedButtons.includes('check3') ? true : false}
-                ></input>
-                <label id="check3" htmlFor="check3"></label>
+                checked={checkedButtons.includes("check3") ? true : false}
+              ></input>
+              <label id="check3" htmlFor="check3"></label>
             </AgreeContent>
           </AgreeWrapper>
-            <ButtonWrapper>
-                <Link to="/">
-                  <Button>MAIN</Button>
-                </Link>
-                <Link to="/join/type">
-                  <Button
-                    disabled={disabled}
-                    onClick={() => history.push('/join/type')}
-                    style={
-                      disabled
-                        ? { backgroundColor: '#131317' }
-                        : { backgroundColor: '#605D9F' }
-                    }
-                  >NEXT</Button>
-                </Link>
-            </ButtonWrapper>
+          <ButtonWrapper>
+            <Link to="/">
+              <Button>MAIN</Button>
+            </Link>
+            <Link to="/join/type">
+              <Button
+                disabled={disabled}
+                onClick={() => history.push("/join/type")}
+                style={
+                  disabled
+                    ? { backgroundColor: "#131317" }
+                    : { backgroundColor: "#605D9F" }
+                }
+              >
+                NEXT
+              </Button>
+            </Link>
+          </ButtonWrapper>
         </NeonLoginWrapper>
       </Wrapper>
     </div>
-  )
+  );
 };
 
 export default JoinAgree;
