@@ -8,7 +8,7 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
       #update -> 삭제안하고싶을때 #none -> 배포시에(운영환경)
     properties:
       hibernate:
