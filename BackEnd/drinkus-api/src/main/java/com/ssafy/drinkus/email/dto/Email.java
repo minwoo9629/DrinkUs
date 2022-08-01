@@ -8,15 +8,11 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-public class EmailDto {
+public class Email {
     private String fromAddress;
     private List<String> toAddressList;
     private String title;
     private String content;
-
-    public void initToAddressList(){
-        this.toAddressList = new ArrayList<>();
-    }
 
     public void addToAddress(String toAddress){
         if(this.toAddressList == null){
