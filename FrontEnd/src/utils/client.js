@@ -25,6 +25,26 @@ axios.defaults.baseURL = BASE_URL;
 //   },
 // });
 
+
+export const client = axios.create({
+  withCredentials: false,
+  responseType: "json",
+
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+client.interceptors.request.use(function (config) {
+  const accessToken = sessionStorage.getItem("ACCESS_TOKEN");
+  const refreshToken = sessionStorage.getItem("REFRESH_TOKEN");
+  if (accessToken) {
+    config.headers["Authorization"] = `Bearer ${accessToken}`;
+    config.headers["refreshtoken"] = refreshToken;
+  }
+  return config;
+});
+
 // const client = axios.create({
 //   // 요청을 보내는 baseURL을 http://localhost:8080/ 으로 설정
 //   baseURL: BASE_URL,
@@ -85,20 +105,3 @@ axios.defaults.baseURL = BASE_URL;
 //     return Promise.reject(error);
 //   }
 // );
-
-export const client = axios.create({
-  withCredentials: false,
-  responseType: "json",
-
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
-
-client.interceptors.request.use(function (config) {
-  const accessToken = sessionStorage.getItem("ACCESS_TOKEN");
-  if (accessToken) {
-    config.headers["Authorization"] = `Bearer ${accessToken}`;
-  }
-  return config;
-});
