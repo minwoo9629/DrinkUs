@@ -55,17 +55,17 @@ public class UserController {
 
     //회원수정
     @PutMapping
-    public ResponseEntity<Void> updateUser(@LoginUser Long userId,
+    public ResponseEntity<Void> updateUser(@LoginUser User user,
                                            @RequestBody @Valid UserUpdateRequest request) {
-        userService.updateUser(userId, request);
+        userService.updateUser(user.getUserId(), request);
         return ResponseEntity.ok().build();
     }
 
     // 비밀번호 수정
     @PatchMapping("/pw")
-    public ResponseEntity<Void> updatePassword(@LoginUser Long userId,
+    public ResponseEntity<Void> updatePassword(@LoginUser User user,
                                                @RequestBody @Valid UserUpdatePasswordRequest request) {
-        userService.updatePassword(userId, request);
+        userService.updatePassword(user.getUserId(), request);
         return ResponseEntity.ok().build();
     }
 
@@ -85,8 +85,8 @@ public class UserController {
 
     // 인기도 수정
     @PatchMapping("/popularity")
-    public ResponseEntity<Void> updatePopularity(@LoginUser Long userId, @RequestBody UserPopularityRequest request) {
-        userService.updatePopularity(userId, request.getPopularNum());
+    public ResponseEntity<Void> updatePopularity(@LoginUser User user, @RequestBody UserPopularityRequest request) {
+        userService.updatePopularity(user.getUserId(), request.getPopularNum());
         return ResponseEntity.ok().build();
     }
 
@@ -106,8 +106,8 @@ public class UserController {
 
     // 회원 탈퇴 (회원 삭제)
     @DeleteMapping("")
-    public ResponseEntity<Void> deleteUser(@LoginUser Long userId) {
-        userService.deleteUser(userId);
+    public ResponseEntity<Void> deleteUser(@LoginUser User user) {
+        userService.deleteUser(user.getUserId());
         return ResponseEntity.ok().build();
     }
 
