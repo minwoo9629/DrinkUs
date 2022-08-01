@@ -28,12 +28,13 @@ public class DailyBoardQueryRepository {
 
     // 페이지별로 원본글을 반환한다.
     public List<DailyBoardResponse> findDailyBoardByPages(long page) {
+        final int PAGING = 10;
         List<DailyBoard> result =
                 queryFactory
                         .selectFrom(qDailyBoard)
                         .where(qDailyBoard.parentId.isNull()) // 부모 Id가 없는 것이 원본 글
-                        .offset((page - 1) * 10)
-                        .limit(10)
+                        .offset((page - 1) * PAGING)
+                        .limit(PAGING)
                         .fetch();
 
         List<DailyBoardResponse> dailyBoardResponses = new ArrayList<>();
