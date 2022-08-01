@@ -40,6 +40,7 @@ logging:
 #        format_sql: true
 #    open-in-view: false
 #
+#
 #logging:
 #  level:
 #    org.hibernate.SQL: debug
