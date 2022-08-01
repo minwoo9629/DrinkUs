@@ -2,13 +2,13 @@ package com.ssafy.drinkus.user.service;
 
 import com.ssafy.drinkus.common.*;
 import com.ssafy.drinkus.common.type.TokenType;
-import com.ssafy.drinkus.auth.Auth;
-import com.ssafy.drinkus.auth.AuthRepository;
 import com.ssafy.drinkus.email.request.UserNameAuthRequest;
 import com.ssafy.drinkus.email.request.UserNameCheckRequest;
 import com.ssafy.drinkus.email.service.EmailService;
-import com.ssafy.drinkus.emailauth.EmailAuth;
 import com.ssafy.drinkus.auth.response.TokenResponse;
+import com.ssafy.drinkus.auth.domain.Auth;
+import com.ssafy.drinkus.auth.domain.AuthRepository;
+import com.ssafy.drinkus.emailauth.domain.EmailAuth;
 import com.ssafy.drinkus.security.util.JwtUtil;
 import com.ssafy.drinkus.user.domain.User;
 import com.ssafy.drinkus.user.domain.UserRepository;
@@ -33,6 +33,7 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class UserService {
+
     final int POPULARITY_LIMIT = 5;
 
     private final UserRepository userRepository;
@@ -62,7 +63,7 @@ public class UserService {
         authRepository.deleteByUserId(findUser.getUserId());
 
         // AccessToken, RefreshToken 발급
-        String accesstoken = jwtUtil.createToken(findUser.getUserId(), TokenType.ACCESS_TOKEN);
+        String accessToken = jwtUtil.createToken(findUser.getUserId(), TokenType.ACCESS_TOKEN);
         String refreshToken = jwtUtil.createToken(findUser.getUserId(), TokenType.REFRESH_TOKEN);
 
         // RefreshToken 저장
@@ -71,7 +72,7 @@ public class UserService {
                 .refreshToken(refreshToken)
                 .build();
         authRepository.save(auth);
-        return new TokenResponse(accesstoken, refreshToken);
+        return new TokenResponse(accessToken, refreshToken);
     }
 
     //회원수정
