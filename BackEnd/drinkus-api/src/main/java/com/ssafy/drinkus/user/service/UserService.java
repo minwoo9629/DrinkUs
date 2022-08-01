@@ -2,13 +2,12 @@ package com.ssafy.drinkus.user.service;
 
 import com.ssafy.drinkus.common.*;
 import com.ssafy.drinkus.common.type.TokenType;
-import com.ssafy.drinkus.common.type.YN;
-import com.ssafy.drinkus.auth.Auth;
-import com.ssafy.drinkus.auth.AuthRepository;
+import com.ssafy.drinkus.auth.domain.Auth;
+import com.ssafy.drinkus.auth.domain.AuthRepository;
 import com.ssafy.drinkus.email.request.UserNameAuthRequest;
 import com.ssafy.drinkus.email.request.UserNameCheckRequest;
 import com.ssafy.drinkus.email.service.EmailService;
-import com.ssafy.drinkus.emailauth.EmailAuth;
+import com.ssafy.drinkus.emailauth.domain.EmailAuth;
 import com.ssafy.drinkus.security.request.TokenRequest;
 import com.ssafy.drinkus.security.response.TokenResponse;
 import com.ssafy.drinkus.security.util.JwtUtil;
@@ -26,13 +25,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.security.SecureRandom;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -45,7 +39,6 @@ import java.util.UUID;
 public class UserService {
 
     final int PASSWORD_SIZE = 15;
-    final int WAITING_DAYS = 7;
     final int POPULARITY_LIMIT = 5;
 
     private final UserRepository userRepository;
@@ -76,7 +69,7 @@ public class UserService {
         authRepository.deleteByUserId(findUser.getUserId());
 
         // AccessToken, RefreshToken 발급
-        String accesstoken = jwtUtil.createToken(findUser.getUserId(), TokenType.ACCESS_TOKEN);
+        String accessToken = jwtUtil.createToken(findUser.getUserId(), TokenType.ACCESS_TOKEN);
         String refreshToken = jwtUtil.createToken(findUser.getUserId(), TokenType.REFRESH_TOKEN);
 
         // RefreshToken 저장
@@ -85,7 +78,7 @@ public class UserService {
                 .refreshToken(refreshToken)
                 .build();
         authRepository.save(auth);
-        return new TokenResponse(accesstoken, refreshToken);
+        return new TokenResponse(accessToken, refreshToken);
     }
 
     @Transactional

@@ -32,7 +32,7 @@ public class StompHandler implements ChannelInterceptor {
     }
 
     private String extractToken(StompHeaderAccessor accessor) {
-        String bearerToken = accessor.getFirstNativeHeader(HttpHeaders.AUTHORIZATION);
+        String bearerToken = accessor.getFirstNativeHeader("AccessToken");
 
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
