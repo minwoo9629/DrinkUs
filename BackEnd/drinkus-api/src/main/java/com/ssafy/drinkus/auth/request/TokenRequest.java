@@ -1,12 +1,11 @@
-package com.ssafy.drinkus.security.response;
+package com.ssafy.drinkus.auth.request;
 
 import lombok.*;
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TokenResponse {
+public class TokenRequest {
     private String accessToken;
     private String refreshToken;
 }
