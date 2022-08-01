@@ -1,7 +1,7 @@
 package com.ssafy.drinkus.auth.service;
 
-import com.ssafy.drinkus.auth.Auth;
-import com.ssafy.drinkus.auth.AuthRepository;
+import com.ssafy.drinkus.auth.domain.Auth;
+import com.ssafy.drinkus.auth.domain.AuthRepository;
 import com.ssafy.drinkus.auth.request.TokenRequest;
 import com.ssafy.drinkus.auth.response.TokenResponse;
 import com.ssafy.drinkus.common.NotFoundException;
