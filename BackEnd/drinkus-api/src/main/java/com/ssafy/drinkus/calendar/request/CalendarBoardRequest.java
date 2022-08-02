@@ -5,22 +5,25 @@ import com.ssafy.drinkus.common.type.YN;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import javax.validation.constraints.NotBlank;
+import org.hibernate.validator.constraints.Range;
+
+import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CalendarBoardCreateRequest {
+public class CalendarBoardRequest {
 
-    @NotBlank(message = "제목을 입력해주세요.")
-    String calendarTitle;
+    @NotBlank(message = "내용을 입력해주세요.")
+    @Size(max = 200)
+    String calendarContent;
 
-    String calendarDescription;
-
+    @Future
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMddHHmm")
     LocalDateTime calendarDatetime;
 
+    @Range(min = 2, max = 8)
     Integer peopleLimit;
 
     String place;
