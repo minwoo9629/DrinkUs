@@ -5,7 +5,14 @@ spring:
       - domain
       - external
       - oauth
+  
+  ## Pageable 페이징 1부터
+  data:
+    web:
+      pageable:
+        one-indexed-parameters: true
 
+  ## OAuth2 설정
   security:
     oauth2:
       client:
@@ -74,7 +81,15 @@ spring:
       mail.smtp.socketFactory:fallback: true
 
 token:
-  expiration_time: 86400000
+  ##### 실제 서비스 시 사용할 만료 시간 ###############
+#  expiration_time: 7200000 # 2시간
+#  refresh_token_expiration_time: 604800000 # 7일
+  ################################################
+
+  ##### 토큰 테스트를 위한 임시 만료 시간 ##############
+  expiration_time: 120000 # 2분
+  refresh_token_expiration_time: 600000 # 5분
+  ################################################
   secret: secret
 
 

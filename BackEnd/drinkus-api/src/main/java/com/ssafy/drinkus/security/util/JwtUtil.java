@@ -1,16 +1,14 @@
 package com.ssafy.drinkus.security.util;
 
-import com.ssafy.drinkus.security.service.UserPrincipal;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import com.ssafy.drinkus.common.type.TokenType;
+import com.ssafy.drinkus.security.service.CustomUserDetailsService;
+import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Date;
 
 /**
@@ -24,25 +22,30 @@ public class JwtUtil {
     private String secretKey;
 
     @Value("${token.expiration_time}")
-    private long expirationTime;
+    private long accessTokenExpirationTime;
+
+    @Value("${token.refresh_token_expiration_time}")
+    private long refreshTokenExpirationTime;
+    private final CustomUserDetailsService customUserDetailsService;
 
     // 원래 UserId로 받던 부분을 로그인 시 전달되는 authentication으로 처리
-    public String createToken(Authentication authentication) {
-        UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
+    public String createToken(Long userId, TokenType tokenType) {
+        long expirationTime = (tokenType == TokenType.ACCESS_TOKEN) ? accessTokenExpirationTime : refreshTokenExpirationTime;
+        Date now = new Date();
 
-        LocalDateTime localDateTime = LocalDateTime.now();
-        long sec = expirationTime / 1000;
-        localDateTime = localDateTime.plusSeconds(sec);
-        ZoneId defaultZoneId = ZoneId.systemDefault();
-        Date expireDate = Date.from(localDateTime.atZone(defaultZoneId).toInstant());
+        return Jwts.builder()
+                .setSubject(String.valueOf(userId))
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + expirationTime))
+                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .compact();
+    }
 
-        String token = Jwts.builder()
-                .setSubject(Long.toString(principal.getUserId()))
-                .setIssuedAt(new Date())
-                .setExpiration(expireDate)
-                .signWith(SignatureAlgorithm.HS256, secretKey).compact();
-
-        return token;
+    public Authentication getAuthentication(String token){
+        // Jwt에서 claims 호출
+        Claims claims = getClaims(token);
+        UserDetails userDetails = customUserDetailsService.loadUserByUsername(claims.getSubject()); // UserDetails? UserPrincipal?
+        return new UsernamePasswordAuthenticationToken(userDetails, "",userDetails.getAuthorities());
     }
 
     public String getSubject(String jwtToken) {
@@ -59,12 +62,13 @@ public class JwtUtil {
     }
 
     public Claims getClaims(String token) {
-        Claims claims = Jwts.parser()
-                .setSigningKey(secretKey)
-                .parseClaimsJws(token)
-                .getBody();
-
-        return claims;
+        try{
+            return Jwts.parser()
+                    .setSigningKey(secretKey)
+                    .parseClaimsJws(token)
+                    .getBody();
+        }catch (ExpiredJwtException e){
+            return e.getClaims();
+        }
     }
-
 }
