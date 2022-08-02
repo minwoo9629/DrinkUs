@@ -1,4 +1,4 @@
-package com.ssafy.drinkus.dailyboard;
+package com.ssafy.drinkus.dailyboard.domain;
 
 import com.ssafy.drinkus.user.domain.User;
 import org.springframework.data.domain.Pageable;

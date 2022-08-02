@@ -1,9 +1,8 @@
 package com.ssafy.drinkus.dailyboard.service;
 
 import com.ssafy.drinkus.common.*;
-import com.ssafy.drinkus.common.type.YN;
-import com.ssafy.drinkus.dailyboard.DailyBoard;
-import com.ssafy.drinkus.dailyboard.DailyBoardRepository;
+import com.ssafy.drinkus.dailyboard.domain.DailyBoard;
+import com.ssafy.drinkus.dailyboard.domain.DailyBoardRepository;
 import com.ssafy.drinkus.dailyboard.request.DailyBoardCreateRequest;
 import com.ssafy.drinkus.dailyboard.request.DailyBoardUpdateRequest;
 import com.ssafy.drinkus.dailyboard.response.DailyBoardResponse;
@@ -87,7 +86,7 @@ public class DailyBoardService {
 
         List<MyBoardResponse> response = new ArrayList<>();
         for (DailyBoard dailyBoard : results) {
-            response.add(new MyBoardResponse(dailyBoard.getBoardId(), dailyBoard.getBoardContent()));
+            response.add(new MyBoardResponse(dailyBoard.getBoardId(), dailyBoard.getBoardContent(), dailyBoard.getParentId() == null ? "원글" : "답글"));
         }
 
         return new PageImpl<>(response, page, countByCreater(user));
@@ -145,7 +144,7 @@ public class DailyBoardService {
     // 매일 6시에 글 전체 삭제
     @Scheduled(cron = "0 0 6 * * *")
     @Transactional
-    public void deleteAll(){
+    public void deleteAll() {
         dailyBoardRepository.deleteAll();
     }
 

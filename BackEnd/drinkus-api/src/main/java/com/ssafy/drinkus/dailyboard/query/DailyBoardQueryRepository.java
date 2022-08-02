@@ -1,8 +1,8 @@
 package com.ssafy.drinkus.dailyboard.query;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.ssafy.drinkus.dailyboard.DailyBoard;
-import com.ssafy.drinkus.dailyboard.QDailyBoard;
+import com.ssafy.drinkus.dailyboard.domain.DailyBoard;
+import com.ssafy.drinkus.dailyboard.domain.QDailyBoard;
 import com.ssafy.drinkus.dailyboard.response.DailyBoardResponse;
 import com.ssafy.drinkus.dailyboard.response.MyBoardResponse;
 import lombok.RequiredArgsConstructor;
@@ -66,7 +66,7 @@ public class DailyBoardQueryRepository {
 
         List<MyBoardResponse> myBoardResponses = new ArrayList<>();
         for (DailyBoard dailyBoard : result) {
-            myBoardResponses.add(new MyBoardResponse(dailyBoard.getBoardId(), dailyBoard.getBoardContent()));
+            myBoardResponses.add(new MyBoardResponse(dailyBoard.getBoardId(), dailyBoard.getBoardContent(), dailyBoard.getParentId() == null ? "원글" : "답글"));
         }
 
         return myBoardResponses;
