@@ -38,7 +38,7 @@ public class RoomController {
     //페이징
     @GetMapping
     public ResponseEntity<Page<RoomListResponse>> findBySearchRequest(@LoginUser User user,
-                                                                      @Valid RoomSearchRequest request,
+                                                                      @RequestBody @Valid RoomSearchRequest request,
                                                                       @PageableDefault Pageable pageable){
         Page<RoomListResponse> body = roomService.findBySearchRequest(user, request, pageable);
         return ResponseEntity.ok().body(body);
@@ -66,4 +66,11 @@ public class RoomController {
         roomService.deleteRoom(user, roomId);
         return ResponseEntity.ok().build();
     }
+
+    //화상방 참가
+
+    //화상방 퇴장
+
+    //화상방 강퇴
+
 }

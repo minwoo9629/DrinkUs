@@ -26,4 +26,12 @@ public class UserInterest {
     @JoinColumn(name = "user_id")
     private User user;
 
+    //관심사 추가
+    public static UserInterest createUserInterest(Interest interest, User user){
+        UserInterest userInterest = new UserInterest();
+        userInterest.interest = interest;
+        userInterest.user = user;
+        return userInterest;
+    }
+
 }

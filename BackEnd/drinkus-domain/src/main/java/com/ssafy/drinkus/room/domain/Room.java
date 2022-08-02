@@ -66,45 +66,35 @@ public class Room extends BaseEntity {
     @OneToMany(mappedBy = "room")
     private List<RoomHistory> roomHistories = new ArrayList<>();
 
-    private void defaultRoomSettings() {
-        ages20 = YN.N;
-        ages30 = YN.N;
-        ages40 = YN.N;
-        ages50 = YN.N;
-        ages60 = YN.N;
-        ages70 = YN.N;
+    private static void setAges(Room room, YN[] ages) {
+        room.ages20 = ages[0];
+        room.ages30 = ages[1];
+        room.ages40 = ages[2];
+        room.ages50 = ages[3];
+        room.ages60 = ages[4];
+        room.ages70 = ages[5];
     }
 
     //방 생성하기
     public static Room createRoom(String roomName, User user, String roomPw, String placeTheme, Integer peopleLimit,
-                                  YN ages20, YN ages30, YN ages40, YN ages50, YN ages60, YN ages70,Category category) {
+                                  YN[] ages, Category category) {
         Room room = new Room();
         room.roomName = roomName;
         room.user = user;
         room.roomPw = roomPw;
         room.placeTheme = placeTheme;
         room.peopleLimit = peopleLimit;
-        room.ages20 = ages20;
-        room.ages30 = ages30;
-        room.ages40 = ages40;
-        room.ages50 = ages50;
-        room.ages60 = ages60;
-        room.ages70 = ages70;
+        setAges(room, ages);
         room.category = category;
         return room;
     }
 
     //방 수정하기 (제목, 나이, 관심사, 인원, 비밀번호)
-    public void updateRoom(String roomName, String roomPw, Integer peopleLimit, YN ages20, YN ages30, YN ages40, YN ages50, YN ages60, YN ages70, Category category) {
+    public void updateRoom(String roomName, String roomPw, Integer peopleLimit, YN[] ages, Category category) {
         this.roomName = roomName;
         this.roomPw = roomPw;
         this.peopleLimit = peopleLimit;
-        this.ages20 = ages20;
-        this.ages30 = ages30;
-        this.ages40 = ages40;
-        this.ages50 = ages50;
-        this.ages60 = ages60;
-        this.ages70 = ages70;
+        setAges(this, ages);
         this.category = category;
     }
 

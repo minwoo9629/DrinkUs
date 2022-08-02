@@ -33,17 +33,7 @@ public class RoomUpdateRequest {
     private Integer peopleLimit;
 
     // 연령대
-    private YN ages20;
-
-    private YN ages30;
-
-    private YN ages40;
-
-    private YN ages50;
-
-    private YN ages60;
-
-    private YN ages70;
+    private YN[] ages;
 
     //관심사
     private CategoryResponse category;
