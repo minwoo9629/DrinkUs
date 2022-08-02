@@ -36,7 +36,6 @@ public class Room extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "ages_20")
-
     private YN ages20;
 
     @Enumerated(EnumType.STRING)
