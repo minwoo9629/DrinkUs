@@ -149,6 +149,11 @@ public class User extends BaseEntity {
         this.userPopularity += popularNum;
     }
 
+    //인기도 제한횟수 수정
+    public void updatePopularityLimit(){
+        this.userPopularityLimit -= 1;
+    }
+
     // 닉네임 랜덤 생성
     public static String makeRandomNickname() throws IOException {
         URL url = new URL("https://nickname.hwanmoo.kr/?format=json&count=1&max_length=12");
@@ -178,4 +183,5 @@ public class User extends BaseEntity {
                 .getJSONArray("words").get(0);
         return word;
     }
+
 }

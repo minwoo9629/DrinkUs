@@ -1,5 +1,6 @@
 package com.ssafy.drinkus.user.service;
 
+import com.ssafy.drinkus.auth.request.TokenRequest;
 import com.ssafy.drinkus.common.*;
 import com.ssafy.drinkus.common.type.TokenType;
 import com.ssafy.drinkus.email.request.UserNameAuthRequest;
@@ -9,16 +10,23 @@ import com.ssafy.drinkus.auth.response.TokenResponse;
 import com.ssafy.drinkus.auth.domain.Auth;
 import com.ssafy.drinkus.auth.domain.AuthRepository;
 import com.ssafy.drinkus.emailauth.domain.EmailAuth;
+import com.ssafy.drinkus.interest.domain.Interest;
+import com.ssafy.drinkus.interest.domain.InterestRepository;
+import com.ssafy.drinkus.interest.response.InterestResponse;
 import com.ssafy.drinkus.security.util.JwtUtil;
 import com.ssafy.drinkus.user.domain.User;
+import com.ssafy.drinkus.user.domain.UserInterest;
+import com.ssafy.drinkus.user.domain.UserInterestRepository;
 import com.ssafy.drinkus.user.domain.UserRepository;
 import com.ssafy.drinkus.user.request.*;
+import com.ssafy.drinkus.user.response.UserInterestResponse;
 import com.ssafy.drinkus.user.response.UserMyInfoResponse;
 import com.ssafy.drinkus.user.response.UserProfileResponse;
 import com.ssafy.drinkus.util.StringUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +46,8 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final AuthRepository authRepository;
+    private final UserInterestRepository userInterestRepository;
+    private final InterestRepository interestRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final EmailService emailService;
@@ -74,6 +84,39 @@ public class UserService {
         authRepository.save(auth);
         return new TokenResponse(accessToken, refreshToken);
     }
+
+    @Transactional
+    public TokenResponse reissue(TokenRequest request){
+        // 만료된 refresh token 에러
+        if(!jwtUtil.isValidToken(request.getRefreshToken())){
+            throw new RefreshTokenException("리프레시 토큰이 만료되었습니다.");
+        }
+
+        // AccessToken에서 user pk 가져오기
+        String accessToken = request.getAccessToken();
+        Authentication authentication = jwtUtil.getAuthentication(accessToken);
+
+        // user pk로 유저 검색 / repository에 저장된 RefreshToken이 없음
+        User findUser = userRepository.findByUserName(authentication.getName())
+                .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
+        Auth auth = authRepository.findByUserId(findUser.getUserId())
+                .orElseThrow(() -> new RefreshTokenException("리프레시 토큰이 없습니다."));
+
+        // 리프레시 토큰 불일치 에러
+        if(!auth.getRefreshToken().equals(request.getRefreshToken()))
+            throw new RefreshTokenException("리프레시 토큰이 일치하지 않습니다.");
+
+        // AccessToken, RefreshToken 재발급, 리프레시 토큰 저장
+        TokenResponse newCreatedToken = new TokenResponse(
+                jwtUtil.createToken(findUser.getUserId(), TokenType.ACCESS_TOKEN),
+                jwtUtil.createToken(findUser.getUserId(), TokenType.REFRESH_TOKEN)
+        );
+        Auth updateAuth = auth.updateRefreshToken(newCreatedToken.getRefreshToken());
+        authRepository.save(updateAuth);
+
+        return newCreatedToken;
+    }
+
 
     //회원수정
     @Transactional
@@ -121,13 +164,22 @@ public class UserService {
 
     //인기도 수정
     @Transactional
-    public void updatePopularity(Long userId, Integer popularNum) {
-        // 회원번호 회원을 조회 -> 인기도를 get한다.
+    public void updatePopularity(User user, Long userId, Integer popularNum) {
+        // 회원의 인기도 제한 횟수 확인
+        if(user.getUserPopularityLimit() <= 0){
+            throw new NotExistException(NotExistException.POPULARITY_NOT_EXIST);
+        }
+        // 타인의 회원번호로 타인의 정보 가져오기
         User findUser = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
 
         // 인기도의 수정 값만 바꿔준다
         findUser.updatePopularity(popularNum);
+
+        // 회원의 인기도 횟수 줄이기
+        User findUserLimit  = userRepository.findById(user.getUserId())
+                .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
+        findUserLimit.updatePopularityLimit();
     }
 
     // 회원 프로필 조회
@@ -196,6 +248,25 @@ public class UserService {
         emailService.confirmEmailAuth(request);
     }
 
+    //회원의 관심사 조회
+    public List<UserInterestResponse> findByUserId(Long userId){
+        List<UserInterest> userInterests = userInterestRepository.findByUser(userId);
+        return userInterests.stream()
+                .map(UserInterestResponse::from)
+                .collect(Collectors.toList());
+    }
+
+    //회원의 관심사 생성
+    @Transactional
+    public void createUserInterest(User user, InterestResponse interestResponse){
+        Interest findInterest = interestRepository.findById(interestResponse.getInterestId())
+                .orElseThrow(() -> new NotFoundException(NotFoundException.INTEREST_NOT_FOUND));
+
+        UserInterest findUserInterest = userInterestRepository.findByUserAndInterest(user, findInterest)
+                .orElseThrow(() -> new DuplicateException("이미 추가한 관심사 입니다."));
+
+        UserInterest.createUserInterest(user, findInterest);
+    }
 
     // 인기도 제한 초기화 스케줄 task
     @Scheduled(cron = "0 0 6 * * *") // 매일 6시 정각

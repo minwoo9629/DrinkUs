@@ -27,7 +27,7 @@ public class UserInterest {
     private User user;
 
     //관심사 추가
-    public static UserInterest createUserInterest(Interest interest, User user){
+    public static UserInterest createUserInterest(User user, Interest interest){
         UserInterest userInterest = new UserInterest();
         userInterest.interest = interest;
         userInterest.user = user;

@@ -1,8 +1,8 @@
 package com.ssafy.drinkus.dailyboard.query;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.ssafy.drinkus.dailyboard.DailyBoard;
-import com.ssafy.drinkus.dailyboard.QDailyBoard;
+import com.ssafy.drinkus.dailyboard.domain.DailyBoard;
+import com.ssafy.drinkus.dailyboard.domain.QDailyBoard;
 import com.ssafy.drinkus.dailyboard.response.DailyBoardResponse;
 import com.ssafy.drinkus.dailyboard.response.MyBoardResponse;
 import lombok.RequiredArgsConstructor;
@@ -28,12 +28,13 @@ public class DailyBoardQueryRepository {
 
     // 페이지별로 원본글을 반환한다.
     public List<DailyBoardResponse> findDailyBoardByPages(long page) {
+        final int PAGING = 10;
         List<DailyBoard> result =
                 queryFactory
                         .selectFrom(qDailyBoard)
                         .where(qDailyBoard.parentId.isNull()) // 부모 Id가 없는 것이 원본 글
-                        .offset((page - 1) * 10)
-                        .limit(10)
+                        .offset((page - 1) * PAGING)
+                        .limit(PAGING)
                         .fetch();
 
         List<DailyBoardResponse> dailyBoardResponses = new ArrayList<>();
@@ -65,7 +66,7 @@ public class DailyBoardQueryRepository {
 
         List<MyBoardResponse> myBoardResponses = new ArrayList<>();
         for (DailyBoard dailyBoard : result) {
-            myBoardResponses.add(new MyBoardResponse(dailyBoard.getBoardId(), dailyBoard.getBoardContent()));
+            myBoardResponses.add(new MyBoardResponse(dailyBoard.getBoardId(), dailyBoard.getBoardContent(), dailyBoard.getParentId() == null ? "원글" : "답글"));
         }
 
         return myBoardResponses;

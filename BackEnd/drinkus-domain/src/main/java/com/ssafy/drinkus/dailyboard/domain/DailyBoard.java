@@ -1,4 +1,4 @@
-package com.ssafy.drinkus.dailyboard;
+package com.ssafy.drinkus.dailyboard.domain;
 
 import com.ssafy.drinkus.common.BaseEntity;
 import com.ssafy.drinkus.user.domain.User;
@@ -19,11 +19,11 @@ public class DailyBoard extends BaseEntity {
     @Column(name = "board_id")
     private Long boardId; // 글 번호
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "creater_id")
     private User creater; // 작성자
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "modifier_id")
     private User modifier; // 수정자
 
@@ -54,7 +54,7 @@ public class DailyBoard extends BaseEntity {
         return dailyBoard;
     }
 
-    public void updateDailyBoard(User modifier, String boardContent){
+    public void updateDailyBoard(User modifier, String boardContent) {
         this.modifier = modifier;
         this.boardContent = boardContent;
     }
