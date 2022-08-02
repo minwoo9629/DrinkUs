@@ -12,12 +12,13 @@ import com.ssafy.drinkus.user.domain.User;
 import com.ssafy.drinkus.user.domain.type.UserRole;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,7 +79,7 @@ public class DailyBoardService {
     }
 
     // 내가 쓴 글 조회
-    public List<MyBoardResponse> findByCreater(User user, Pageable page) {
+    public Page<MyBoardResponse> findByCreater(User user, Pageable page) {
         List<DailyBoard> results = dailyBoardRepository.findByCreater(user, page);
         if (results.size() == 0) {
             throw new NotExistException("해당 페이지에 게시물이 존재하지 않습니다.");
@@ -89,7 +90,7 @@ public class DailyBoardService {
             response.add(new MyBoardResponse(dailyBoard.getBoardId(), dailyBoard.getBoardContent()));
         }
 
-        return response;
+        return new PageImpl<>(response, page, countByCreater(user));
     }
 
     // 원글 작성
