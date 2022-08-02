@@ -1,5 +1,5 @@
 import axios from "axios";
-const BASE_URL = "http://localhost:8080/";
+const BASE_URL = "http://i7b306.p.ssafy.io/";
 axios.defaults.baseURL = BASE_URL;
 
 export const client = axios.create({
