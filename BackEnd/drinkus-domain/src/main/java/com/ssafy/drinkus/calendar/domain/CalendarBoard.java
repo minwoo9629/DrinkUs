@@ -30,9 +30,7 @@ public class CalendarBoard extends BaseEntity {
     @JoinColumn(name = "modifier_id")
     private User modifier; // 수정자
 
-    private String calendarTitle; // 제목
-
-    private String calendarDescription; // 설명
+    private String calendarContent; // 내용
 
     private LocalDateTime calendarDatetime; // 예약일자
 
@@ -75,13 +73,12 @@ public class CalendarBoard extends BaseEntity {
     }
 
     // 일정 생성하기
-    public static CalendarBoard createCalendarBoard(User creater, String calendarTitle, String calendarDescription, LocalDateTime calendarDatetime,
+    public static CalendarBoard createCalendarBoard(User creater, String calendarContent, LocalDateTime calendarDatetime,
                                                     Integer peopleLimit, String place, YN[] ages) {
         CalendarBoard calendarBoard = new CalendarBoard();
         calendarBoard.creater = creater;
         calendarBoard.modifier = creater;
-        calendarBoard.calendarTitle = calendarTitle;
-        calendarBoard.calendarDescription = calendarDescription;
+        calendarBoard.calendarContent = calendarContent;
         calendarBoard.calendarDatetime = calendarDatetime;
         calendarBoard.peopleLimit = peopleLimit;
         calendarBoard.place = place;
@@ -89,12 +86,11 @@ public class CalendarBoard extends BaseEntity {
         return calendarBoard;
     }
 
-    // 일정 수정하기 (수정자, 제목, 설명, 예약일자, 인원 수, 나이대, 장소)
-    public void updateRoom(User modifier, String calendarTitle, String calendarDescription, LocalDateTime calendarDatetime,
-                           Integer peopleLimit, YN[] ages) {
+    // 일정 수정하기 (수정자, 내용, 예약일자, 인원 수, 나이대, 장소)
+    public void updateCalendarBoard(User modifier, String calendarContent, LocalDateTime calendarDatetime,
+                           Integer peopleLimit, String place, YN[] ages) {
         this.modifier = modifier;
-        this.calendarTitle = calendarTitle;
-        this.calendarDescription = calendarDescription;
+        this.calendarContent = calendarContent;
         this.calendarDatetime = calendarDatetime;
         this.peopleLimit = peopleLimit;
         this.place = place;
