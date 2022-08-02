@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CategoryResponse {
-    private Long categoryId;
+    private Long categoryId = null;
 
     private String categoryName;
 

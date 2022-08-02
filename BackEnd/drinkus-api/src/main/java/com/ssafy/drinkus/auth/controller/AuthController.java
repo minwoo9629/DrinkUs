@@ -5,27 +5,27 @@ import com.ssafy.drinkus.auth.response.TokenResponse;
 import com.ssafy.drinkus.auth.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 
 @RestController
-@RequestMapping("auth")
+@RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
 
     private final AuthService authService;
 
     // 리프레시 토큰 재발급
-    @PostMapping("/refreshToken")
-    public ResponseEntity<TokenResponse> reissueRefreshToken(@RequestBody @Valid TokenRequest request){
+    @GetMapping("/refreshToken")
+    public ResponseEntity<TokenResponse> reissueRefreshToken(
+            @RequestHeader(value="Authorization") String accessToken,
+            @RequestHeader(value = "RefreshToken") String refreshToken){
+        TokenRequest request = new TokenRequest(accessToken.substring(7), refreshToken);
         TokenResponse token = authService.reissue(request);
-        return ResponseEntity.ok().body(token);
+        return ResponseEntity.ok()
+                .header("AccessToken", token.getAccessToken())
+                .header("RefreshToken", token.getRefreshToken())
+                .build();
     }
-
 
 }

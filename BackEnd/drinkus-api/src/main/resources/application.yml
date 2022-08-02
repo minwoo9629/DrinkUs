@@ -87,8 +87,8 @@ token:
   ################################################
 
   ##### 토큰 테스트를 위한 임시 만료 시간 ##############
-  expiration_time: 300000 # 5분
-  refresh_token_expiration_time: 900000 # 15분
+  expiration_time: 7200000 # 2분
+  refresh_token_expiration_time: 604800000 # 5분
   ################################################
   secret: secret
 
