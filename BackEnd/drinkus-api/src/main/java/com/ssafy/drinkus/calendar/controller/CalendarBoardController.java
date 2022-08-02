@@ -1,10 +1,15 @@
 package com.ssafy.drinkus.calendar.controller;
 
 import com.ssafy.drinkus.calendar.request.CalendarBoardRequest;
+import com.ssafy.drinkus.calendar.response.CalendarResponse;
+import com.ssafy.drinkus.calendar.response.MyCalendarResponse;
 import com.ssafy.drinkus.calendar.service.CalendarBoardService;
 import com.ssafy.drinkus.config.LoginUser;
 import com.ssafy.drinkus.user.domain.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +29,26 @@ public class CalendarBoardController {
         return ResponseEntity.ok().body(body);
     }
 
+    // 일별 일정 조회
+    @GetMapping("/daily")
+    public ResponseEntity<Page<CalendarResponse>> findByCalendarDatetime(@LoginUser User user, @RequestParam Integer year, @RequestParam Integer month, @RequestParam Integer day, @PageableDefault Pageable page){
+        Page<CalendarResponse> body = calendarBoardService.findByCalendarDatetime(user, year, month, day, page);
+        return ResponseEntity.ok().body(body);
+    }
+
+    // 일정 상세 조회
+    @GetMapping("/{calendar_id}")
+    public ResponseEntity<CalendarResponse> findByCalendarId(@LoginUser User user, @PathVariable("calendar_id") Long calendarId) {
+        CalendarResponse body = calendarBoardService.findByCalendarId(user, calendarId);
+        return ResponseEntity.ok().body(body);
+    }
+
+    // 내 일정 조회
+    @GetMapping("/my")
+    public ResponseEntity<Page<MyCalendarResponse>> findByUser(@LoginUser User user, @PageableDefault Pageable page) {
+        Page<MyCalendarResponse> body = calendarBoardService.findByUser(user, page);
+        return ResponseEntity.ok().body(body);
+    }
 
     // 일정 생성
     @PostMapping

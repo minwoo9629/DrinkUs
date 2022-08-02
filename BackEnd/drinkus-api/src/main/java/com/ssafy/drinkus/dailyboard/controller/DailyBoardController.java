@@ -26,7 +26,7 @@ public class DailyBoardController {
 
     // 원글 조회
     @GetMapping
-    public ResponseEntity<Page<DailyBoardResponse>> findByParentIdIsNull(@PageableDefault(size = 10) Pageable page) {
+    public ResponseEntity<Page<DailyBoardResponse>> findByParentIdIsNull(@PageableDefault Pageable page) {
         Page<DailyBoardResponse> body = dailyBoardService.findByParentIdIsNull(page);
         return ResponseEntity.ok().body(body);
     }
@@ -40,7 +40,7 @@ public class DailyBoardController {
 
     // 내가 쓴 글 조회
     @GetMapping("/my")
-    public ResponseEntity<Page<MyBoardResponse>> findByCreater(@LoginUser User user, @PageableDefault(size = 10) Pageable page) {
+    public ResponseEntity<Page<MyBoardResponse>> findByCreater(@LoginUser User user, @PageableDefault Pageable page) {
         Page<MyBoardResponse> body = dailyBoardService.findByCreater(user, page);
         return ResponseEntity.ok().body(body);
     }

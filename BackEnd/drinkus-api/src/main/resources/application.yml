@@ -5,12 +5,12 @@ spring:
       - domain
       - external
       - oauth
-  
+
   ## Pageable 페이징 1부터
-  data:
-    web:
-      pageable:
-        one-indexed-parameters: true
+#  data:
+#    web:
+#      pageable:
+#        one-indexed-parameters: true
 
   ## OAuth2 설정
   security:
