@@ -26,8 +26,8 @@ public class DailyBoardController {
 
     // 원글 조회
     @GetMapping
-    public ResponseEntity<List<DailyBoardResponse>> findByParentIdIsNull(@PageableDefault(size = 10) Pageable page) {
-        List<DailyBoardResponse> body = dailyBoardService.findByParentIdIsNull(page);
+    public ResponseEntity<Page<DailyBoardResponse>> findByParentIdIsNull(@PageableDefault(size = 10) Pageable page) {
+        Page<DailyBoardResponse> body = dailyBoardService.findByParentIdIsNull(page);
         return ResponseEntity.ok().body(body);
     }
 
