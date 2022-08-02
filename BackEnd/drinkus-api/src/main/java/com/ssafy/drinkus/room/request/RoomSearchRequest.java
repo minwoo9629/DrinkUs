@@ -18,7 +18,6 @@ public class RoomSearchRequest {
     private Boolean sameAge;
 
     // 오래된순, 최신순
-    @NotNull
     private Integer sortOrder;
 
     //관심사

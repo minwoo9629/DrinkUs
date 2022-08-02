@@ -1,12 +1,13 @@
 package com.ssafy.drinkus.user.controller;
 
-import com.ssafy.drinkus.auth.request.TokenRequest;
 import com.ssafy.drinkus.config.LoginUser;
 import com.ssafy.drinkus.email.request.UserNameAuthRequest;
 import com.ssafy.drinkus.email.request.UserNameCheckRequest;
 import com.ssafy.drinkus.auth.response.TokenResponse;
+import com.ssafy.drinkus.interest.response.InterestResponse;
 import com.ssafy.drinkus.user.domain.User;
 import com.ssafy.drinkus.user.request.*;
+import com.ssafy.drinkus.user.response.UserInterestResponse;
 import com.ssafy.drinkus.user.response.UserMyInfoResponse;
 import com.ssafy.drinkus.user.response.UserProfileResponse;
 import com.ssafy.drinkus.user.service.UserService;
@@ -46,19 +47,6 @@ public class UserController {
                 .build();
     }
 
-    // 리프레시 토큰 재발급
-    @GetMapping("/refreshToken")
-    public ResponseEntity<TokenResponse> reissueRefreshToken(
-            @RequestHeader(value="Authorization") String accessToken,
-            @RequestHeader(value = "RefreshToken") String refreshToken){
-        TokenRequest request = new TokenRequest(accessToken.substring(7), refreshToken);
-        TokenResponse token = userService.reissue(request);
-        return ResponseEntity.ok()
-                .header("AccessToken", token.getAccessToken())
-                .header("RefreshToken", token.getRefreshToken())
-                .build();
-    }
-
     //회원수정
     @PutMapping
     public ResponseEntity<Void> updateUser(@LoginUser User user,
@@ -89,10 +77,12 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    // 인기도 수정
-    @PatchMapping("/popularity")
-    public ResponseEntity<Void> updatePopularity(@LoginUser User user, @RequestBody UserPopularityRequest request) {
-        userService.updatePopularity(user.getUserId(), request.getPopularNum());
+    // 인기도 수정 : 회원이 타인의 인기도를 수정 -> 회원은 인기도 횟수를 줄이고, 타인의 id를 받아서 인기도를 수정함
+    @PatchMapping("/popularity/{user_id}")
+    public ResponseEntity<Void> updatePopularity(@LoginUser User user,
+                                                 @PathVariable("user_id") Long userId,
+                                                 @RequestBody UserPopularityRequest request) {
+        userService.updatePopularity(user, userId, request.getPopularNum());
         return ResponseEntity.ok().build();
     }
 
@@ -142,6 +132,20 @@ public class UserController {
     @PatchMapping("/confirmToken")
     public ResponseEntity<Void> confirmUserNameCheck(@RequestBody @Valid UserNameAuthRequest request){
         userService.confirmUserName(request);
+        return ResponseEntity.ok().build();
+    }
+
+    //회원의 관심사 조회
+    @GetMapping("/interest")
+    public ResponseEntity<List<UserInterestResponse>> findByUserId(@LoginUser User user) {
+        List<UserInterestResponse> body = userService.findByUserId(user.getUserId());
+        return ResponseEntity.ok().body(body);
+    }
+
+    //회원의 관심사 생성(추가)
+    @PostMapping("/{interest_id}")
+    public ResponseEntity<Void> createUserInterest(@LoginUser User user, @RequestBody @Valid InterestResponse interestResponse){
+        userService.createUserInterest(user, interestResponse);
         return ResponseEntity.ok().build();
     }
 }
