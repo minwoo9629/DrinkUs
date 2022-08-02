@@ -98,6 +98,7 @@ public class User extends BaseEntity {
         userPoint = 0L;
         userSoju = 0;
         userBeer = 0;
+
     }
 
     // 로컬 회원가입
