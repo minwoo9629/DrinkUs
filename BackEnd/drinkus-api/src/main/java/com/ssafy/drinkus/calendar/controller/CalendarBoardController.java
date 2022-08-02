@@ -17,6 +17,14 @@ public class CalendarBoardController {
 
     private final CalendarBoardService calendarBoardService;
 
+    // 월별 일정 조회
+    @GetMapping("/month")
+    public ResponseEntity<Boolean[]> getMonthlySchedule(@RequestParam Integer year, @RequestParam Integer month) {
+        Boolean[] body = calendarBoardService.getMonthlySchedule(year, month);
+        return ResponseEntity.ok().body(body);
+    }
+
+
     // 일정 생성
     @PostMapping
     public ResponseEntity<Void> createCalendarBoard(@LoginUser User user, @RequestBody @Valid CalendarBoardRequest request) {

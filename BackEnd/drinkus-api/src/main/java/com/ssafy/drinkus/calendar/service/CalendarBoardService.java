@@ -4,6 +4,7 @@ import com.ssafy.drinkus.calendar.domain.CalendarBoard;
 import com.ssafy.drinkus.calendar.domain.CalendarBoardRepository;
 import com.ssafy.drinkus.calendar.domain.UserCalendar;
 import com.ssafy.drinkus.calendar.domain.UserCalendarRepository;
+import com.ssafy.drinkus.calendar.query.CalendarBoardQueryRepository;
 import com.ssafy.drinkus.calendar.request.CalendarBoardRequest;
 import com.ssafy.drinkus.common.AuthenticationException;
 import com.ssafy.drinkus.common.InvalidException;
@@ -15,6 +16,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Slf4j
 @Service
 @Transactional(readOnly = true)
@@ -23,6 +27,8 @@ public class CalendarBoardService {
 
     private final CalendarBoardRepository calendarBoardRepository;
     private final UserCalendarRepository userCalendarRepository;
+
+    private final CalendarBoardQueryRepository calendarBoardQueryRepository;
 
     // 일정 생성
     @Transactional
@@ -74,7 +80,7 @@ public class CalendarBoardService {
             throw new InvalidException("이미 참가한 일정입니다.");
         }
 
-        if(userCalendarRepository.countByCalendarBoard(calendarBoard) >= calendarBoard.getPeopleLimit()){
+        if (userCalendarRepository.countByCalendarBoard(calendarBoard) >= calendarBoard.getPeopleLimit()) {
             // 인원수 초과하면 안됨
             throw new InvalidException("참가 인원수를 초과하였습니다.");
         }
@@ -96,4 +102,19 @@ public class CalendarBoardService {
         userCalendarRepository.deleteById(userCalendarId);
     }
 
+    public Boolean[] getMonthlySchedule(Integer year, Integer month) {
+        LocalDateTime start =  LocalDateTime.of(year, month, 1, 0, 0);
+        int endDay = month == 2 ? ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0 ? 29 : 28) : (month % 2 + month / 8) % 2 == 0 ? 30 : 31;
+        LocalDateTime end =  LocalDateTime.of(year, month, endDay, 23, 59);
+
+        Boolean[] response = new Boolean[endDay + 1];
+
+        List<LocalDateTime> monthlySchedules = calendarBoardQueryRepository.getMonthlySchedule(start, end);
+
+        for(LocalDateTime localDateTime : monthlySchedules){
+            response[localDateTime.getDayOfMonth()] = true;
+        }
+
+        return response;
+    }
 }
