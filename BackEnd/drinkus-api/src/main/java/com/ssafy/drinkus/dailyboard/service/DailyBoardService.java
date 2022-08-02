@@ -102,7 +102,7 @@ public class DailyBoardService {
     // 댓글 작성
     @Transactional
     public void createComment(User user, DailyBoardCreateRequest request, Long parentId) {
-        DailyBoard parentBoard = dailyBoardRepository.findByBoardId(parentId)
+        DailyBoard parentBoard = dailyBoardRepository.findById(parentId)
                 .orElseThrow(() -> new NotFoundException(NotFoundException.BOARD_DAILY_NOT_FOUND));
         if (parentBoard.getParentId() != null) {
             throw new InvalidException("답글에는 답글을 작성할 수 없습니다.");
@@ -115,10 +115,10 @@ public class DailyBoardService {
     // 글 수정
     @Transactional
     public void updateDailyBoard(User user, DailyBoardUpdateRequest request, Long boardId) {
-        DailyBoard dailyBoard = dailyBoardRepository.findByBoardId(boardId)
+        DailyBoard dailyBoard = dailyBoardRepository.findById(boardId)
                 .orElseThrow(() -> new NotFoundException(NotFoundException.BOARD_DAILY_NOT_FOUND));
 
-        if (user.getUserRole() != UserRole.ROLE_ADMIN && !user.equals(dailyBoard.getCreater())) {
+        if (user.getUserRole() != UserRole.ROLE_ADMIN && user.getUserId() != dailyBoard.getCreater().getUserId()) {
             // 원글 작성자이거나 관리자 권한일 때만 수정 가능
             throw new AuthenticationException("본인이 쓴 글만 수정 할 수 있습니다.");
         }
@@ -129,10 +129,10 @@ public class DailyBoardService {
     // 글 삭제
     @Transactional
     public void deleteDailyBoard(User user, Long boardId) {
-        DailyBoard dailyBoard = dailyBoardRepository.findByBoardId(boardId)
+        DailyBoard dailyBoard = dailyBoardRepository.findById(boardId)
                 .orElseThrow(() -> new NotFoundException(NotFoundException.BOARD_DAILY_NOT_FOUND));
 
-        if (user.getUserRole() != UserRole.ROLE_ADMIN && !user.equals(dailyBoard.getCreater())) {
+        if (user.getUserRole() != UserRole.ROLE_ADMIN && user.getUserId() != dailyBoard.getCreater().getUserId()) {
             // 원글 작성자이거나 관리자 권한일 때만 삭제 가능
             throw new AuthenticationException("본인이 쓴 글만 삭제 할 수 있습니다.");
         }

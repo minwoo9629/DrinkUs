@@ -9,9 +9,6 @@ import java.util.Optional;
 
 public interface DailyBoardRepository extends JpaRepository<DailyBoard,Long> {
 
-    // 글 번호로 글 찾기
-    Optional<DailyBoard> findByBoardId(Long boardId);
-
     // 원글 찾기
     List<DailyBoard> findByParentIdIsNull(Pageable page);
 
