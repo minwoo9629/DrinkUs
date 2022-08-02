@@ -40,7 +40,7 @@ public class DailyBoardService {
     }
 
     // 데일리 게시판 원글 조회
-    public List<DailyBoardResponse> findByParentIdIsNull(Pageable page) {
+    public Page<DailyBoardResponse> findByParentIdIsNull(Pageable page) {
         List<DailyBoard> results = dailyBoardRepository.findByParentIdIsNull(page);
         if (results.size() == 0) {
             throw new NotExistException("해당 페이지에 게시물이 존재하지 않습니다.");
@@ -51,7 +51,7 @@ public class DailyBoardService {
             response.add(new DailyBoardResponse(dailyBoard.getBoardId(), dailyBoard.getCreater().getUserId(), dailyBoard.getCreatedDate(), dailyBoard.getModifiedDate(), dailyBoard.getBoardContent()));
         }
 
-        return response;
+        return new PageImpl<>(response, page, countByParentIdIsNull());
     }
 
     // 댓글 조회
