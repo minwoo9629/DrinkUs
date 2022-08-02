@@ -70,7 +70,6 @@ public class EmailService {
     }
 
     public String makeUserNameCheckMessage(String authToken){
-        System.out.println("*** makeUserNameCheckMessage ***");
         StringBuilder content = new StringBuilder();
         content.append("<div class='container' align='left'>");
         content.append("    <div>안녕하세요, DrinkUs입니다. 이메일 인증번호를 입력해주세요.</div><div>");

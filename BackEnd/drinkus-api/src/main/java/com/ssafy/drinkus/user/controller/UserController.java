@@ -1,5 +1,6 @@
 package com.ssafy.drinkus.user.controller;
 
+import com.ssafy.drinkus.auth.request.TokenRequest;
 import com.ssafy.drinkus.config.LoginUser;
 import com.ssafy.drinkus.email.request.UserNameAuthRequest;
 import com.ssafy.drinkus.email.request.UserNameCheckRequest;
@@ -42,6 +43,19 @@ public class UserController {
         return ResponseEntity.ok()
                 .header("AccessToken", accessToken)
                 .header("RefreshToken", refreshToken)
+                .build();
+    }
+
+    // 리프레시 토큰 재발급
+    @GetMapping("/refreshToken")
+    public ResponseEntity<TokenResponse> reissueRefreshToken(
+            @RequestHeader(value="Authorization") String accessToken,
+            @RequestHeader(value = "RefreshToken") String refreshToken){
+        TokenRequest request = new TokenRequest(accessToken.substring(7), refreshToken);
+        TokenResponse token = userService.reissue(request);
+        return ResponseEntity.ok()
+                .header("AccessToken", token.getAccessToken())
+                .header("RefreshToken", token.getRefreshToken())
                 .build();
     }
 
