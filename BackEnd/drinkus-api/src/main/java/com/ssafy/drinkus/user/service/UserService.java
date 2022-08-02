@@ -1,5 +1,6 @@
 package com.ssafy.drinkus.user.service;
 
+import com.ssafy.drinkus.auth.request.TokenRequest;
 import com.ssafy.drinkus.common.*;
 import com.ssafy.drinkus.common.type.TokenType;
 import com.ssafy.drinkus.email.request.UserNameAuthRequest;
@@ -19,6 +20,7 @@ import com.ssafy.drinkus.util.StringUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -74,6 +76,39 @@ public class UserService {
         authRepository.save(auth);
         return new TokenResponse(accessToken, refreshToken);
     }
+
+    @Transactional
+    public TokenResponse reissue(TokenRequest request){
+        // 만료된 refresh token 에러
+        if(!jwtUtil.isValidToken(request.getRefreshToken())){
+            throw new RefreshTokenException("리프레시 토큰이 만료되었습니다.");
+        }
+
+        // AccessToken에서 user pk 가져오기
+        String accessToken = request.getAccessToken();
+        Authentication authentication = jwtUtil.getAuthentication(accessToken);
+
+        // user pk로 유저 검색 / repository에 저장된 RefreshToken이 없음
+        User findUser = userRepository.findByUserName(authentication.getName())
+                .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
+        Auth auth = authRepository.findByUserId(findUser.getUserId())
+                .orElseThrow(() -> new RefreshTokenException("리프레시 토큰이 없습니다."));
+
+        // 리프레시 토큰 불일치 에러
+        if(!auth.getRefreshToken().equals(request.getRefreshToken()))
+            throw new RefreshTokenException("리프레시 토큰이 일치하지 않습니다.");
+
+        // AccessToken, RefreshToken 재발급, 리프레시 토큰 저장
+        TokenResponse newCreatedToken = new TokenResponse(
+                jwtUtil.createToken(findUser.getUserId(), TokenType.ACCESS_TOKEN),
+                jwtUtil.createToken(findUser.getUserId(), TokenType.REFRESH_TOKEN)
+        );
+        Auth updateAuth = auth.updateRefreshToken(newCreatedToken.getRefreshToken());
+        authRepository.save(updateAuth);
+
+        return newCreatedToken;
+    }
+
 
     //회원수정
     @Transactional
