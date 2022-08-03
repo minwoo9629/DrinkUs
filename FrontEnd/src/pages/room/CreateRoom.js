@@ -100,6 +100,7 @@ const CreateRoom = () => {
   return (
     <>
       <Header/>
+<<<<<<< HEAD
       <Wrapper>
         <LetterColorChange>
           방 생성 페이지입니다.
@@ -219,6 +220,13 @@ const CreateRoom = () => {
           </div>
           </LetterColorChange>
       </Wrapper>
+=======
+      <div>
+        방 생성 페이지입니다.
+        POST 요청을 보내서 방을 만들어야 해.
+        테스트용 코드
+      </div>
+>>>>>>> 27c67acc8d7f969b6b18bce591ad5a9d3b1c269a
     </>
   );
 };
