@@ -29,4 +29,9 @@ const getProfile = async () => {
   return result;
 };
 
-export { login, findId, findPassword, getProfile };
+const changePassword = async (data) =>{
+    const result = await client.patch("/users/pw", data).then((response)=> response);
+    return result
+}
+
+export { login, findId, findPassword, getProfile, changePassword };
