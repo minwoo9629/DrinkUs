@@ -18,7 +18,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/daily")
+@RequestMapping("/api/daily")
 @RequiredArgsConstructor
 public class DailyBoardController {
 
