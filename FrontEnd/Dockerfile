@@ -10,12 +10,12 @@ RUN npm install react-scripts@5.0.1 -g --silent
 
 # 소스를 작업폴더로 복사하고 빌드
 COPY . /usr/src/app
-# RUN npm run build
+RUN npm run build
 
 
 # CMD ["npm","run","start"]
 
-FROM nginx:1.
+FROM nginx:1
 # # nginx의 기본 설정을 삭제하고 앱에서 설정한 파일을 복사
 # # RUN rm -rf /etc/nginx/conf.d
 # # COPY ./nginx.conf /etc/nginx/conf.d
