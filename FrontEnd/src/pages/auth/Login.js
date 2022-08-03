@@ -88,8 +88,10 @@ const Login = () => {
       FailAlert(response.data.message);
       return;
     }
-    const accessToken = response.headers["authorization"];
+    const accessToken = response.headers["accesstoken"];
+    const refreshToken = response.headers["refreshtoken"];
     sessionStorage.setItem("ACCESS_TOKEN", accessToken);
+    sessionStorage.setItem("REFRESH_TOKEN", refreshToken);
 
     // 로딩스피너끄고
     dispatch(getUserProfile());

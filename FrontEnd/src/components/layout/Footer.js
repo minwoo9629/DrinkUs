@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 const FooterWrapper = styled.section`
-  height: 300px;
+  height: 100px;
   width: 100%;
   margin-top: auto;
   background-color: aliceblue;
@@ -10,7 +10,6 @@ const FooterWrapper = styled.section`
 const Footer = () => {
   return (
     <FooterWrapper>
-      <h1>Footer</h1>
     </FooterWrapper>
   )
 }

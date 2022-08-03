@@ -12,6 +12,11 @@ import JoinAgree from "./pages/auth/JoinAgree"
 import JoinType from "./pages/auth/JoinType";
 import Profile from "./pages/auth/Profile";
 import Reports from "./pages/Reports";
+import SocialLogin from "./pages/auth/SocialLogin";
+import MyPage from "./pages/auth/MyPage";
+import DrinkLive from "./pages/room/DrinkLive"
+import CreateRoom from "./pages/room/CreateRoom";
+import Rooms from "./pages/room/Rooms";
 function App() {
   return (
     <Provider store={store}>
@@ -28,6 +33,11 @@ function App() {
             <Route path="/join/type" element={<JoinType />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/reports" element={<Reports />} />
+            <Route path="/oauth2/redirect" element={<SocialLogin />} />
+            <Route path="/user/edit" element={<MyPage />} />
+            <Route path="/live" element={<DrinkLive />} />
+            <Route path="/createroom" element={<CreateRoom />} />
+            <Route path="/rooms" element={<Rooms />} />
           </Routes>
         </div>
       </BrowserRouter>
