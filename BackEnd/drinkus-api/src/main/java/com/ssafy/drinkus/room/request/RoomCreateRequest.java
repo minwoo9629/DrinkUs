@@ -18,7 +18,7 @@ public class RoomCreateRequest {
     private String roomName;
 
     // 방장
-    private User roomAdminId;
+    private Long roomAdminId;
 
     // 비밀번호
     private String roomPw;
@@ -34,5 +34,5 @@ public class RoomCreateRequest {
     private YN[] ages;
 
     //관심사
-    private CategoryResponse category;
+    private Long categoryId;
 }

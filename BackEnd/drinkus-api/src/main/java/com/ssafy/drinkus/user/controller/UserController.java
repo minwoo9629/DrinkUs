@@ -148,4 +148,12 @@ public class UserController {
         userService.createUserInterest(user, interestResponse);
         return ResponseEntity.ok().build();
     }
+
+    //로그아웃
+    //쿠키세션 정보 삭제
+
+    //친구 리스트 정보 조회 -> 친구 정보를 불 접속 여부
+    //
+
+    // 클라잉언트 - 소켓- 백엔드
 }

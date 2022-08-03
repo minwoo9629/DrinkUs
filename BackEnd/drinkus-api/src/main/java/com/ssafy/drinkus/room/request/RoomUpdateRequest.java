@@ -20,7 +20,7 @@ public class RoomUpdateRequest {
     private String roomName;
 
     //방장
-    private String roomAdminId;
+    private Long roomAdminId;
 
     // 비밀번호
     private String roomPw;

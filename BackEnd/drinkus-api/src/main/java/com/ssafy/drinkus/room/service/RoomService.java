@@ -67,7 +67,7 @@ public class RoomService {
     public void createRoom(User user, RoomCreateRequest request){
         User findUser = userRepository.findById(user.getUserId())
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
-        Category findCategory = categoryRepository.findById(request.getCategory().getCategoryId())
+        Category findCategory = categoryRepository.findById(request.getCategoryId())
                 .orElseThrow(() -> new NotFoundException(CATEGORY_NOT_FOUND));
         Room room = Room.createRoom(
                 request.getRoomName(),

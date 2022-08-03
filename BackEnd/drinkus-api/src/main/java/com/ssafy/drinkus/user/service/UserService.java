@@ -219,7 +219,8 @@ public class UserService {
     public List<UserInterestResponse> findByUserId(Long userId){
         List<UserInterest> userInterests = userInterestRepository.findByUser(userId);
         return userInterests.stream()
-                .map(UserInterestResponse::from)
+                .map(userInterest -> UserInterestResponse.from(userInterest))
+//                .map(UserInterestResponse::from)
                 .collect(Collectors.toList());
     }
 
@@ -241,4 +242,10 @@ public class UserService {
     public void resetPopularityLimit() {
         userRepository.resetUserPopularityLimit(POPULARITY_LIMIT);
     }
+
+    //친구 리스트 조회
+    // 접속 여부도 판단
+
+    //소켓?
+
 }
