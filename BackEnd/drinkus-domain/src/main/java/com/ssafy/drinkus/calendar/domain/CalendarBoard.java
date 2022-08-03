@@ -3,6 +3,7 @@ package com.ssafy.drinkus.calendar.domain;
 
 import com.ssafy.drinkus.common.BaseEntity;
 import com.ssafy.drinkus.common.type.YN;
+import com.ssafy.drinkus.room.domain.RoomHistory;
 import com.ssafy.drinkus.user.domain.User;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -11,6 +12,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -62,6 +65,10 @@ public class CalendarBoard extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "ages_70")
     private YN ages70;
+
+
+    @OneToMany(mappedBy = "calendarBoard")
+    private List<User> userList = new ArrayList<>();
 
     public YN[] getAges(){
         YN[] ages = new YN[6];
