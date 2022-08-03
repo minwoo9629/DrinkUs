@@ -8,6 +8,7 @@ import com.ssafy.drinkus.room.response.RoomInfoResponse;
 import com.ssafy.drinkus.room.response.RoomListResponse;
 import com.ssafy.drinkus.room.service.RoomService;
 import com.ssafy.drinkus.user.domain.User;
+import io.openvidu.java.client.OpenVidu;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
 @RequestMapping("/rooms")
@@ -25,6 +28,18 @@ import java.util.List;
 public class RoomController {
 
     private final RoomService roomService;
+
+    // 오픈비두 객체 SDK
+    private OpenVidu openVidu;
+
+    // 방 관리
+    private Map<String, Integer> mapSessions = new ConcurrentHashMap<>();
+
+    // 오픈비두 서버 관련 변수
+    private String OPENVIDU_URL;
+    private String SECRET;
+
+    ///////////////////////////////////////////////////////
 
     //화상방 상세조회
     @GetMapping("/{room_id}")
