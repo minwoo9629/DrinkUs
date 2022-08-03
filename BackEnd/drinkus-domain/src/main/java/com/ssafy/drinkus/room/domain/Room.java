@@ -15,6 +15,7 @@ import java.util.Optional;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
+@Builder
 public class Room extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -96,7 +97,4 @@ public class Room extends BaseEntity {
         setAges(this, ages);
         this.category = category;
     }
-
-    // 방 삭제하기
-
 }
