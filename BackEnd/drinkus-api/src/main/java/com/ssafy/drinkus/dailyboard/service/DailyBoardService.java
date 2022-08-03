@@ -47,7 +47,7 @@ public class DailyBoardService {
 
         List<DailyBoardResponse> response = new ArrayList<>();
         for (DailyBoard dailyBoard : results) {
-            response.add(new DailyBoardResponse(dailyBoard.getBoardId(), dailyBoard.getCreater().getUserId(), dailyBoard.getCreatedDate(), dailyBoard.getModifiedDate(), dailyBoard.getBoardContent()));
+            response.add(DailyBoardResponse.from(dailyBoard));
         }
 
         return new PageImpl<>(response, page, countByParentIdIsNull());
@@ -62,7 +62,7 @@ public class DailyBoardService {
 
         List<DailyBoardResponse> response = new ArrayList<>();
         for (DailyBoard dailyBoard : results) {
-            response.add(new DailyBoardResponse(dailyBoard.getBoardId(), dailyBoard.getCreater().getUserId(), dailyBoard.getCreatedDate(), dailyBoard.getModifiedDate(), dailyBoard.getBoardContent()));
+            response.add(DailyBoardResponse.from(dailyBoard));
         }
 
         return response;
@@ -86,7 +86,7 @@ public class DailyBoardService {
 
         List<MyBoardResponse> response = new ArrayList<>();
         for (DailyBoard dailyBoard : results) {
-            response.add(new MyBoardResponse(dailyBoard.getBoardId(), dailyBoard.getBoardContent(), dailyBoard.getParentId() == null ? "원글" : "답글"));
+            response.add(MyBoardResponse.from(dailyBoard));
         }
 
         return new PageImpl<>(response, page, countByCreater(user));

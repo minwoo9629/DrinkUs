@@ -63,6 +63,17 @@ public class CalendarBoard extends BaseEntity {
     @Column(name = "ages_70")
     private YN ages70;
 
+    public YN[] getAges(){
+        YN[] ages = new YN[6];
+        ages[0] = this.ages20;
+        ages[1] = this.ages30;
+        ages[2] = this.ages40;
+        ages[3] = this.ages50;
+        ages[4] = this.ages60;
+        ages[5] = this.ages70;
+        return ages;
+    }
+
     private static void setAges(CalendarBoard calendarBoard, YN[] ages) {
         calendarBoard.ages20 = ages[0];
         calendarBoard.ages30 = ages[1];
