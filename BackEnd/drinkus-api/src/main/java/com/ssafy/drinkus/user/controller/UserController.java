@@ -71,7 +71,7 @@ public class UserController {
     }
 
     // 닉네임 중복 검사
-    @GetMapping("/nickname")
+    @PostMapping("/nickname")
     public ResponseEntity<Void> findByUserNickname(@RequestBody @Valid UserDuplicateCheckNicknameRequest request){
         userService.findByUserNickname(request.getUserNickname());
         return ResponseEntity.status(HttpStatus.OK).build();
