@@ -17,6 +17,7 @@ import MyPage from "./pages/auth/MyPage";
 import DrinkLive from "./pages/room/DrinkLive"
 import CreateRoom from "./pages/room/CreateRoom";
 import Rooms from "./pages/room/Rooms";
+import Daily from "./pages/Daily";
 function App() {
   return (
     <Provider store={store}>
@@ -38,6 +39,7 @@ function App() {
             <Route path="/live" element={<DrinkLive />} />
             <Route path="/createroom" element={<CreateRoom />} />
             <Route path="/rooms" element={<Rooms />} />
+            <Route path="/daily" element={<Daily />} />
           </Routes>
         </div>
       </BrowserRouter>
