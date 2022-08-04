@@ -8,8 +8,11 @@ import com.ssafy.drinkus.room.response.RoomInfoResponse;
 import com.ssafy.drinkus.room.response.RoomListResponse;
 import com.ssafy.drinkus.room.service.RoomService;
 import com.ssafy.drinkus.user.domain.User;
+import com.ssafy.drinkus.util.StringUtil;
 import io.openvidu.java.client.OpenVidu;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -41,10 +44,35 @@ public class RoomController {
 
     ///////////////////////////////////////////////////////
 
+    // RoomController 접근 시마다 오픈비두 서버 관련 변수르 얻어옴
+    @Autowired
+    public RoomController(RoomService roomService, @Value("${openvidu.secret}")String secret, @Value("${openvidu.url}")String openviduUrl){
+        this.roomService = roomService;
+        this.SECRET = secret;
+        this.OPENVIDU_URL = openviduUrl;
+        this.openVidu = new OpenVidu(OPENVIDU_URL, SECRET);
+    }
+
+    //화상방 생성
+    @PostMapping("")
+    public ResponseEntity<Void> createRoom(@LoginUser User user, @RequestBody @Valid RoomCreateRequest request){
+
+        // DB 저장
+        roomService.createRoom(user, request);
+
+        // 방 이름 (세션에서의 고유키 역할)
+        String roomName = request.getRoomName();
+
+        // 방 관리 map에 저장
+        this.mapSessions.put(roomName, 1); // 방고유키, 인원
+        return ResponseEntity.ok().build();
+    }
+
     //화상방 상세조회
     @GetMapping("/{room_id}")
     public ResponseEntity<RoomInfoResponse> findByRoomId(@PathVariable("room_id") Long roomId){
         RoomInfoResponse body = roomService.findByRoomId(roomId);
+
         return ResponseEntity.ok().body(body);
     }
 
@@ -59,12 +87,7 @@ public class RoomController {
         return ResponseEntity.ok().body(body);
     }
 
-    //화상방 생성
-    @PostMapping
-    public ResponseEntity<Void> createRoom(@LoginUser User user, @RequestBody @Valid RoomCreateRequest request){
-        roomService.createRoom(user, request);
-        return ResponseEntity.ok().build();
-    }
+
 
     //화상방 수정
     @PutMapping("/{room_id}")

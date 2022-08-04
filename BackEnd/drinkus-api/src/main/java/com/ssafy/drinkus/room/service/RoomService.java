@@ -2,6 +2,7 @@ package com.ssafy.drinkus.room.service;
 
 import com.ssafy.drinkus.common.NotFoundException;
 import com.ssafy.drinkus.common.NotMatchException;
+import com.ssafy.drinkus.common.RoomNameExistsException;
 import com.ssafy.drinkus.interest.domain.Category;
 import com.ssafy.drinkus.interest.domain.CategoryRepository;
 import com.ssafy.drinkus.room.domain.Room;
@@ -20,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,6 +42,8 @@ public class RoomService {
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
     private final RoomHistoryRepository roomHistoryRepository;
+
+    private final BCryptPasswordEncoder passwordEncoder;
 
     //화상방 상세 조회
     public RoomInfoResponse findByRoomId(Long roomId){
@@ -65,6 +69,11 @@ public class RoomService {
     //화상방 생성
     @Transactional
     public void createRoom(User user, RoomCreateRequest request){
+        // 방 이름 중복 검사
+        if (roomRepository.existsByName(request.getRoomName())){
+            throw new RoomNameExistsException(RoomNameExistsException.ROOM_NAME_EXISTS);
+        }
+
         User findUser = userRepository.findById(user.getUserId())
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
         Category findCategory = categoryRepository.findById(request.getCategory().getCategoryId())
@@ -72,7 +81,7 @@ public class RoomService {
         Room room = Room.createRoom(
                 request.getRoomName(),
                 findUser,
-                request.getRoomPw(),
+                passwordEncoder.encode(request.getRoomPw()),
                 request.getPlaceTheme(),
                 request.getPeopleLimit(),
                 request.getAges(),
