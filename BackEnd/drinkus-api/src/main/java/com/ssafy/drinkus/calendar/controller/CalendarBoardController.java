@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/calendar")
+@RequestMapping("/api/calendar")
 @RequiredArgsConstructor
 public class CalendarBoardController {
 
