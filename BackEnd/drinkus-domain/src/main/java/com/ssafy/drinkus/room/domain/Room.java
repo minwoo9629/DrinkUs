@@ -3,14 +3,13 @@ package com.ssafy.drinkus.room.domain;
 import com.ssafy.drinkus.common.BaseEntity;
 import com.ssafy.drinkus.common.type.YN;
 import com.ssafy.drinkus.friend.domain.Friend;
-import com.ssafy.drinkus.interest.domain.Category;
+import com.ssafy.drinkus.category.domain.Category;
 import com.ssafy.drinkus.user.domain.User;
 import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

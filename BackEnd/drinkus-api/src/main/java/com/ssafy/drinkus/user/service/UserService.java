@@ -1,6 +1,5 @@
 package com.ssafy.drinkus.user.service;
 
-import com.ssafy.drinkus.auth.request.TokenRequest;
 import com.ssafy.drinkus.common.*;
 import com.ssafy.drinkus.common.type.TokenType;
 import com.ssafy.drinkus.email.request.UserNameAuthRequest;
@@ -10,23 +9,16 @@ import com.ssafy.drinkus.auth.response.TokenResponse;
 import com.ssafy.drinkus.auth.domain.Auth;
 import com.ssafy.drinkus.auth.domain.AuthRepository;
 import com.ssafy.drinkus.emailauth.domain.EmailAuth;
-import com.ssafy.drinkus.interest.domain.Interest;
-import com.ssafy.drinkus.interest.domain.InterestRepository;
-import com.ssafy.drinkus.interest.response.InterestResponse;
 import com.ssafy.drinkus.security.util.JwtUtil;
 import com.ssafy.drinkus.user.domain.User;
-import com.ssafy.drinkus.user.domain.UserInterest;
-import com.ssafy.drinkus.user.domain.UserInterestRepository;
 import com.ssafy.drinkus.user.domain.UserRepository;
 import com.ssafy.drinkus.user.request.*;
-import com.ssafy.drinkus.user.response.UserInterestResponse;
 import com.ssafy.drinkus.user.response.UserMyInfoResponse;
 import com.ssafy.drinkus.user.response.UserProfileResponse;
 import com.ssafy.drinkus.util.StringUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,8 +38,6 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final AuthRepository authRepository;
-    private final UserInterestRepository userInterestRepository;
-    private final InterestRepository interestRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final EmailService emailService;
@@ -91,7 +81,7 @@ public class UserService {
         User findUser = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
 
-        findUser.updateUser(request.getUserNickname(), request.getUserIntroduce(), request.getUserSoju(), request.getUserBeer(), request.getUserImg());
+        findUser.updateUser(request.getUserNickname(), request.getUserIntroduce(), request.getUserSoju(), request.getUserBeer(), request.getUserImg(), request.getUserBirthday());
     }
 
     //비밀번호 수정
@@ -215,26 +205,6 @@ public class UserService {
         emailService.confirmEmailAuth(request);
     }
 
-    //회원의 관심사 조회
-    public List<UserInterestResponse> findByUserId(Long userId){
-        List<UserInterest> userInterests = userInterestRepository.findByUser(userId);
-        return userInterests.stream()
-                .map(userInterest -> UserInterestResponse.from(userInterest))
-//                .map(UserInterestResponse::from)
-                .collect(Collectors.toList());
-    }
-
-    //회원의 관심사 생성
-    @Transactional
-    public void createUserInterest(User user, InterestResponse interestResponse){
-        Interest findInterest = interestRepository.findById(interestResponse.getInterestId())
-                .orElseThrow(() -> new NotFoundException(NotFoundException.INTEREST_NOT_FOUND));
-
-        UserInterest findUserInterest = userInterestRepository.findByUserAndInterest(user, findInterest)
-                .orElseThrow(() -> new DuplicateException("이미 추가한 관심사 입니다."));
-
-        UserInterest.createUserInterest(user, findInterest);
-    }
 
     // 인기도 제한 초기화 스케줄 task
     @Scheduled(cron = "0 0 6 * * *") // 매일 6시 정각

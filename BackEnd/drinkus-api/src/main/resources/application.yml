@@ -79,7 +79,6 @@ spring:
       mail.smtp.ssl.enable: false
       mail.smtp.ssl.trust: smtp.gmail.com
       mail.smtp.socketFactory:fallback: true
-
 token:
   ##### 실제 서비스 시 사용할 만료 시간 ###############
 #  expiration_time: 7200000 # 2시간
