@@ -15,7 +15,7 @@ RUN npm install react-scripts@5.0.1 -g
 COPY . /usr/src/app
 RUN npm run build
 
-COPY --from=builder /usr/src/app/build /usr/share/nginx/html
+COPY /usr/src/app/build /usr/share/nginx/html
 
 CMD ["npm","run","start"]
 
