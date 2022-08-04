@@ -54,13 +54,13 @@ const CreateRoom = () => {
 
   const onRoomInfoInput = (e) => {
     setRoomInfo({ ...roomInfo, [e.target.name]: e.target.value });
-    console.log(roomInfo)
   };
 
   const onRoomInfoSubmit = (e) => {
     e.preventDefault();
     client
-      .post("https://i7b306.p.ssafy.io/api/rooms", {
+      // .post("https://i7b306.p.ssafy.io/api/rooms", {
+      .post("http://localhost:8080/api/rooms", {
         roomName:roomInfo.roomname,
         roomAdminId:null,
         roomPw:roomInfo.roompw,
@@ -85,7 +85,6 @@ const CreateRoom = () => {
     newageCheckedItems[id] = (isChecked? 'Y':'N');
     setAgeCheckedItems([...newageCheckedItems]);
   }
-  // console.log(ageCheckedItems)
 
   const [CheckedAges, setIsCheckedAges] = useState(false);
   
@@ -93,7 +92,6 @@ const CreateRoom = () => {
   const onAgeCheckbox = ({target}) => {
     setIsCheckedAges(!CheckedAges);
     onCheckedAgeItemHandler(target.id, target.checked)
-    // console.log(ageCheckedItems)
   };
 
   // 카테고리
@@ -103,7 +101,6 @@ const CreateRoom = () => {
 
   const onMakeCategory = (e) => {
     setMakeCategory({...makecategory, [e.target.name]: {categoryId:e.target.value}});
-    console.log(makecategory)
   }
 
 
@@ -153,14 +150,13 @@ const CreateRoom = () => {
               관심사 선택
               <SelectBox 
                 type="selectbox"
-                value={roomInfo.category}
                 name="category" 
                 onChange={onMakeCategory}>
-                <option>1</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-                <option>5</option>
+                <option value="1">스포츠</option>
+                <option value="2">음악</option>
+                <option value="3">게임/오락</option>
+                <option value="4">문화</option>
+                <option value="5">기타</option>
               </SelectBox>
             </div>
             <div>
@@ -178,7 +174,6 @@ const CreateRoom = () => {
                 <CheckBoxForm
                   type="checkbox"
                   id = "1"
-                  value={CheckedAges.roomage}
                   name="roomage"
                   onChange={onAgeCheckbox}
                 />
@@ -186,7 +181,6 @@ const CreateRoom = () => {
                 <CheckBoxForm
                   type="checkbox"
                   id = "2"
-                  value={CheckedAges.roomage}
                   name="roomage"
                   onChange={onAgeCheckbox}
                 />
@@ -194,7 +188,6 @@ const CreateRoom = () => {
                 <CheckBoxForm
                   type="checkbox"
                   id = "3"
-                  value={CheckedAges.roomage}
                   name="roomage"
                   onChange={onAgeCheckbox}
                 />
@@ -202,7 +195,6 @@ const CreateRoom = () => {
                 <CheckBoxForm
                   type="checkbox"
                   id = "4"
-                  value={CheckedAges.roomage}
                   name="roomage"
                   onChange={onAgeCheckbox}
                 />
@@ -210,7 +202,6 @@ const CreateRoom = () => {
                 <CheckBoxForm
                   type="checkbox"
                   id = "5"
-                  value={CheckedAges.roomage}
                   name="roomage"
                   onChange={onAgeCheckbox}
                 />
