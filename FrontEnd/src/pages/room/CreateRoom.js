@@ -50,7 +50,6 @@ const CreateRoom = () => {
     peoplelimit: '',
     placetheme: '',
     roompw: '',
-    category: '',
   });
 
   const onRoomInfoInput = (e) => {
@@ -61,13 +60,14 @@ const CreateRoom = () => {
   const onRoomInfoSubmit = (e) => {
     e.preventDefault();
     client
-      .post("https://i7b306.p.ssafy.io/rooms", {
-        roomName: roomInfo.roomname,
-        roomPw: roomInfo.roompw,
-        placeTheme: roomInfo.placetheme,
-        PeopleLimit: roomInfo.peoplelimit,
-        ages: CheckedAges.roomage,
-        category: roomInfo.category
+      .post("https://i7b306.p.ssafy.io/api/rooms", {
+        roomName:roomInfo.roomname,
+        roomAdminId:null,
+        roomPw:roomInfo.roompw,
+        placeTheme:roomInfo.placetheme,
+        peopleLimit:roomInfo.peoplelimit,
+        ages:ageCheckedItems,
+        category:makecategory.category
       })
       .then(function (response) {
         console.log(response.data.message);
@@ -78,7 +78,7 @@ const CreateRoom = () => {
   };
 
   // Age 관련 체크 로직
-  const [ageCheckedItems, setAgeCheckedItems] = useState(['N','N','N','N','N']);
+  const [ageCheckedItems, setAgeCheckedItems] = useState(['N','N','N','N','N','N']);
 
   const onCheckedAgeItemHandler = (id, isChecked) => {
     const newageCheckedItems = [...ageCheckedItems];
@@ -96,11 +96,20 @@ const CreateRoom = () => {
     // console.log(ageCheckedItems)
   };
 
+  // 카테고리
+  const [makecategory, setMakeCategory] = useState({
+    category: ''
+  })
+
+  const onMakeCategory = (e) => {
+    setMakeCategory({...makecategory, [e.target.name]: {categoryId:e.target.value}});
+    console.log(makecategory)
+  }
+
 
   return (
     <>
       <Header/>
-<<<<<<< HEAD
       <Wrapper>
         <LetterColorChange>
           방 생성 페이지입니다.
@@ -146,12 +155,12 @@ const CreateRoom = () => {
                 type="selectbox"
                 value={roomInfo.category}
                 name="category" 
-                onChange={onRoomInfoInput}>
-                <option>스포츠</option>
-                <option>음악</option>
-                <option>게임/오락</option>
-                <option>문화</option>
-                <option>기타</option>
+                onChange={onMakeCategory}>
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
               </SelectBox>
             </div>
             <div>
@@ -220,13 +229,6 @@ const CreateRoom = () => {
           </div>
           </LetterColorChange>
       </Wrapper>
-=======
-      <div>
-        방 생성 페이지입니다.
-        POST 요청을 보내서 방을 만들어야 해.
-        테스트용 코드
-      </div>
->>>>>>> 27c67acc8d7f969b6b18bce591ad5a9d3b1c269a
     </>
   );
 };
