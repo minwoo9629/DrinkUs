@@ -52,6 +52,24 @@ public class JwtUtil {
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken).getBody().getSubject();
     }
 
+    public Long getUserId(String token) {
+        String userId = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token)
+                .getBody().getSubject();
+        return Long.valueOf(userId);
+    }
+
+    public String getRole(String token){
+        Claims body = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token)
+                .getBody();
+        return body.get("ROLE", String.class);
+    }
+
+    public String getNickName(String token){
+        Claims body = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token)
+                .getBody();
+        return body.get("userNickname", String.class);
+    }
+
     public boolean isValidToken(String jwtToken) {
         try {
             Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken);

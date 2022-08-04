@@ -1,4 +1,4 @@
-package com.ssafy.drinkus.interest.domain;
+package com.ssafy.drinkus.category.domain;
 
 import com.ssafy.drinkus.room.domain.Room;
 import lombok.AccessLevel;
@@ -26,5 +26,5 @@ public class Category {
     private List<Room> roomList = new ArrayList<>();
 
     @OneToMany(mappedBy = "category")
-    private List<Interest> interestList = new ArrayList<>();
+    private List<SubCategory> subCategoryList = new ArrayList<>();
 }

@@ -1,7 +1,6 @@
-package com.ssafy.drinkus.interest.domain;
+package com.ssafy.drinkus.category.domain;
 
-import com.ssafy.drinkus.user.domain.User;
-import com.ssafy.drinkus.user.domain.UserInterest;
+import com.ssafy.drinkus.user.domain.UserSubCategory;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,18 +14,18 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
-public class Interest {
+public class SubCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "interest_id")
-    private Long interestId;
+    @Column(name = "subcategory_id")
+    private Long SubCategoryId;
 
-    private String interestName;
+    private String SubCategoryName;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @OneToMany(mappedBy = "interest")
-    private List<UserInterest> userInterestList = new ArrayList<>();
+    @OneToMany(mappedBy = "subCategory")
+    private List<UserSubCategory> userSubCategoryList = new ArrayList<>();
 }
