@@ -15,11 +15,11 @@ RUN npm run build
 
 CMD ["npm","run","start"]
 
-# FROM nginx:1.18
+FROM nginx:1.18
 # # # nginx의 기본 설정을 삭제하고 앱에서 설정한 파일을 복사
 # # # RUN rm -rf /etc/nginx/conf.d
-# # # COPY ./nginx.conf /etc/nginx/conf.d
-# # # COPY /test.conf /etc/nginx/sites-available/test.conf
+COPY ./nginx.conf /etc/nginx/conf.d
+# COPY /test.conf /etc/nginx/sites-available/test.conf
 
 # # # nginx 의 default.conf 를 삭제
 # # # RUN rm /etc/nginx/conf.d/default.conf
@@ -28,9 +28,9 @@ CMD ["npm","run","start"]
 # # # COPY ./nginx.conf /etc/nginx/conf.d
 
 # # # 위에서 생성한 앱의 빌드산출물을 nginx의 샘플 앱이 사용하던 폴더로 이동
-# COPY --from=builder /usr/src/app/build /usr/share/nginx/html
+COPY --from=builder /usr/src/app/build /usr/share/nginx/html
 
 # # # 80포트 오픈하고 nginx 실행
-# EXPOSE 3000
+EXPOSE 80
 # # # 로컬에 있는 default.conf 파일을 도커 /etc/nginx/conf.d/defalut.conf로 복사
-# CMD ["nginx", "-g", "daemon off;"]
+CMD ["nginx", "-g", "daemon off;"]
