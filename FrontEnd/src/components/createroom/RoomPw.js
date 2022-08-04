@@ -10,7 +10,7 @@ const RoomPw = () => {
   return (
     <div>
       비밀번호
-      <InputForm/>
+      <InputForm type="text" name="roompw"/>
     </div>
   )
 };

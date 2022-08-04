@@ -13,7 +13,7 @@ const Category = () => {
   return (
     <div>
       관심사 선택
-      <SelectBox>
+      <SelectBox name="category">
         <option>스포츠</option>
         <option>음악</option>
         <option>게임/오락</option>

@@ -13,7 +13,7 @@ const PeopleTheme = () => {
   return (
     <div>
       장소 선택
-      <SelectBox>
+      <SelectBox name="peopletheme">
         <option>야구장</option>
         <option>펍</option>
         <option>편의점</option>

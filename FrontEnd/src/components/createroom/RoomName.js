@@ -10,7 +10,7 @@ const RoomName = () => {
   return (
     <div>
       방 이름
-      <InputForm rules={[{ required: true, message: '방 이름을 입력하세요.'}]}></InputForm>
+      <InputForm type="text" rules={[{ required: true, message: '방 이름을 입력하세요.'}]} name="roomname"></InputForm>
     </div>
   );
 };
