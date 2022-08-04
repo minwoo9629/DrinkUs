@@ -40,4 +40,4 @@ CMD ["npm","run","start"]
 # # # 80포트 오픈하고 nginx 실행
 # EXPOSE 80
 # # # 로컬에 있는 default.conf 파일을 도커 /etc/nginx/conf.d/defalut.conf로 복사
-CMD ["nginx", "-g", "daemon off;"]
+# CMD ["nginx", "-g", "daemon off;"]
