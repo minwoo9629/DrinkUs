@@ -20,5 +20,5 @@ public class UserUpdateRequest {
 
     private String userImg;
 
-
+    private String userBirthday;
 }

@@ -3,8 +3,8 @@ package com.ssafy.drinkus.room.service;
 import com.ssafy.drinkus.common.NotFoundException;
 import com.ssafy.drinkus.common.NotMatchException;
 import com.ssafy.drinkus.common.RoomNameExistsException;
-import com.ssafy.drinkus.interest.domain.Category;
-import com.ssafy.drinkus.interest.domain.CategoryRepository;
+import com.ssafy.drinkus.category.domain.Category;
+import com.ssafy.drinkus.category.domain.CategoryRepository;
 import com.ssafy.drinkus.room.domain.Room;
 import com.ssafy.drinkus.room.domain.RoomHistory;
 import com.ssafy.drinkus.room.domain.RoomHistoryRepository;
@@ -24,9 +24,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Objects;
-import java.util.Optional;
 
 import static com.ssafy.drinkus.common.NotFoundException.CATEGORY_NOT_FOUND;
 import static com.ssafy.drinkus.common.NotFoundException.USER_NOT_FOUND;
@@ -76,7 +73,7 @@ public class RoomService {
 
         User findUser = userRepository.findById(user.getUserId())
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
-        Category findCategory = categoryRepository.findById(request.getCategory().getCategoryId())
+        Category findCategory = categoryRepository.findById(request.getCategoryId())
                 .orElseThrow(() -> new NotFoundException(CATEGORY_NOT_FOUND));
         Room room = Room.createRoom(
                 request.getRoomName(),

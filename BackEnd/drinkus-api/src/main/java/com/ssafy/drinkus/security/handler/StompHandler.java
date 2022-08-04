@@ -39,4 +39,9 @@ public class StompHandler implements ChannelInterceptor {
         }
         return null;
     }
+
+    public String getRoomId(String destination) {
+        int lastIndex = destination.lastIndexOf("/");
+        return destination.substring(lastIndex + 1);
+    }
 }

@@ -4,10 +4,8 @@ import com.ssafy.drinkus.config.LoginUser;
 import com.ssafy.drinkus.email.request.UserNameAuthRequest;
 import com.ssafy.drinkus.email.request.UserNameCheckRequest;
 import com.ssafy.drinkus.auth.response.TokenResponse;
-import com.ssafy.drinkus.interest.response.InterestResponse;
 import com.ssafy.drinkus.user.domain.User;
 import com.ssafy.drinkus.user.request.*;
-import com.ssafy.drinkus.user.response.UserInterestResponse;
 import com.ssafy.drinkus.user.response.UserMyInfoResponse;
 import com.ssafy.drinkus.user.response.UserProfileResponse;
 import com.ssafy.drinkus.user.service.UserService;
@@ -135,17 +133,11 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    //회원의 관심사 조회
-    @GetMapping("/interest")
-    public ResponseEntity<List<UserInterestResponse>> findByUserId(@LoginUser User user) {
-        List<UserInterestResponse> body = userService.findByUserId(user.getUserId());
-        return ResponseEntity.ok().body(body);
-    }
+    //로그아웃
+    //쿠키세션 정보 삭제
 
-    //회원의 관심사 생성(추가)
-    @PostMapping("/{interest_id}")
-    public ResponseEntity<Void> createUserInterest(@LoginUser User user, @RequestBody @Valid InterestResponse interestResponse){
-        userService.createUserInterest(user, interestResponse);
-        return ResponseEntity.ok().build();
-    }
+    //친구 리스트 정보 조회 -> 친구 정보를 불 접속 여부
+    //
+
+    // 클라잉언트 - 소켓- 백엔드
 }

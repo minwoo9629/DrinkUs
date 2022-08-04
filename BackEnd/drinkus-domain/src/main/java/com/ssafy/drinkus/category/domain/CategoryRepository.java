@@ -1,4 +1,4 @@
-package com.ssafy.drinkus.interest.domain;
+package com.ssafy.drinkus.category.domain;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

@@ -1,6 +1,7 @@
-package com.ssafy.drinkus.interest.response;
+package com.ssafy.drinkus.category.response;
 
-import com.ssafy.drinkus.interest.domain.Category;
+import com.ssafy.drinkus.category.domain.Category;
+import com.ssafy.drinkus.category.domain.SubCategory;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,9 @@ public class CategoryResponse {
     private String categoryName;
 
     public static CategoryResponse from(Category category) {
-        return new CategoryResponse(category.getCategoryId(), category.getCategoryName());
+        return new CategoryResponse(
+                category.getCategoryId(),
+                category.getCategoryName()
+        );
     }
 }
