@@ -15,7 +15,7 @@ RUN npm install react-scripts@5.0.1 -g
 COPY . /usr/src/app
 RUN npm run build
 
-CMD ["npm","run","start"]
+# CMD ["npm","run","start"]
 
 FROM nginx:1.18
 COPY ./test.conf /etc/nginx/sites-available/test.conf
