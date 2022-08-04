@@ -1,8 +1,6 @@
 package com.ssafy.drinkus.room.request;
 
 import com.ssafy.drinkus.common.type.YN;
-import com.ssafy.drinkus.interest.response.CategoryResponse;
-import com.ssafy.drinkus.user.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,9 +14,6 @@ public class RoomCreateRequest {
     // 방이름
     @NotBlank(message = "이름은 필수 값입니다.")
     private String roomName;
-
-    // 방장
-    private User roomAdminId;
 
     // 비밀번호
     private String roomPw;
@@ -34,5 +29,5 @@ public class RoomCreateRequest {
     private YN[] ages;
 
     //관심사
-    private CategoryResponse category;
+    private Long categoryId;
 }

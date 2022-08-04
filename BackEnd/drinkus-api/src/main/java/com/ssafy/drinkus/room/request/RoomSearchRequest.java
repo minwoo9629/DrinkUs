@@ -1,11 +1,10 @@
 package com.ssafy.drinkus.room.request;
 
-import com.ssafy.drinkus.interest.response.CategoryResponse;
+import com.ssafy.drinkus.category.response.CategoryListResponse;
+import com.ssafy.drinkus.category.response.CategoryResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.validation.constraints.NotNull;
 
 @Data
 @NoArgsConstructor

@@ -1,8 +1,6 @@
 package com.ssafy.drinkus.room.domain;
 
 import com.ssafy.drinkus.common.BaseEntity;
-import com.ssafy.drinkus.common.type.YN;
-import com.ssafy.drinkus.interest.domain.Category;
 import com.ssafy.drinkus.user.domain.User;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
