@@ -13,12 +13,12 @@ COPY . /usr/src/app
 RUN npm run build
 
 
-CMD ["npm","run","start"]
+# CMD ["npm","run","start"]
 
 FROM nginx:1.18
 # # # nginx의 기본 설정을 삭제하고 앱에서 설정한 파일을 복사
 # # # RUN rm -rf /etc/nginx/conf.d
-COPY ./nginx.conf /etc/nginx/conf.d
+COPY ../nginx/default.conf /etc/nginx/conf.d
 # COPY /test.conf /etc/nginx/sites-available/test.conf
 
 # # # nginx 의 default.conf 를 삭제
