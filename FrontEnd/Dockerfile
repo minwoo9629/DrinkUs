@@ -15,8 +15,6 @@ RUN npm install react-scripts@5.0.1 -g
 COPY . /usr/src/app
 RUN npm run build
 
-COPY /usr/src/app/build /usr/share/nginx/html
-
 CMD ["npm","run","start"]
 
 # FROM nginx:1.18
@@ -34,6 +32,7 @@ CMD ["npm","run","start"]
 
 # # # host pc 의 nginx.conf 를 아래 경로에 복사
 # # # COPY ./nginx.conf /etc/nginx/conf.d
+# COPY --from=builder /usr/src/app/build /usr/share/nginx/html
 
 # # # 위에서 생성한 앱의 빌드산출물을 nginx의 샘플 앱이 사용하던 폴더로 이동
 
