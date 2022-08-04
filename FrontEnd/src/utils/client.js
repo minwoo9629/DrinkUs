@@ -1,5 +1,5 @@
 import axios from "axios";
-const BASE_URL = "https://i7b306.p.ssafy.io/";
+const BASE_URL = "https://i7b306.p.ssafy.io/api/";
 axios.defaults.baseURL = BASE_URL;
 
 export const client = axios.create({

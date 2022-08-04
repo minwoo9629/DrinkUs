@@ -29,9 +29,26 @@ const getProfile = async () => {
   return result;
 };
 
-const changePassword = async (data) =>{
-    const result = await client.patch("/users/pw", data).then((response)=> response);
-    return result
-}
+const changePassword = async (data) => {
+  const result = await client
+    .patch("/users/pw", data)
+    .then((response) => response);
+  return result;
+};
 
-export { login, findId, findPassword, getProfile, changePassword };
+const nickNameDuplicateCheck = async (data) => {
+  const result = await client
+    .post("/users/nickname", data)
+    .then((response) => response)
+    .catch((error) => error.response);
+  return result;
+};
+
+export {
+  login,
+  findId,
+  findPassword,
+  getProfile,
+  changePassword,
+  nickNameDuplicateCheck,
+};
