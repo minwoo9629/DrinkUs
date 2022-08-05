@@ -11,6 +11,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.json.JSONObject;
 
 import javax.persistence.*;
 import java.io.BufferedReader;
@@ -18,7 +19,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import org.json.JSONObject;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -84,7 +84,7 @@ public class User extends BaseEntity {
 <span class="nc" id="L84">    private List&lt;Room&gt; roomList = new ArrayList&lt;&gt;();</span>
 
 <span class="nc" id="L86">    @OneToMany(mappedBy = &quot;user&quot;)</span>
-<span class="nc" id="L87">    private List&lt;UserInterest&gt; userInterestList = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L87">    private List&lt;UserSubCategory&gt; userSubCategoryList = new ArrayList&lt;&gt;();</span>
 
     private void defaultUserSettings() {
         try{
@@ -131,57 +131,58 @@ public class User extends BaseEntity {
 
     // 회원수정
     // 닉네임 주량 자기소개
-    public void updateUser(String userNickname, String userIntroduce, Integer userSoju, Integer userBeer, String userImg) {
+    public void updateUser(String userNickname, String userIntroduce, Integer userSoju, Integer userBeer, String userImg, String userBirthday) {
 <span class="nc" id="L135">        this.userNickname = userNickname;</span>
 <span class="nc" id="L136">        this.userIntroduce = userIntroduce;</span>
 <span class="nc" id="L137">        this.userSoju = userSoju;</span>
 <span class="nc" id="L138">        this.userBeer = userBeer;</span>
 <span class="nc" id="L139">        this.userImg = userImg;</span>
-<span class="nc" id="L140">    }</span>
+<span class="nc" id="L140">        this.userBirthday = userBirthday;</span>
+<span class="nc" id="L141">    }</span>
 
     //비밀번호 수정
     public void updateUserPassword(String userPw) {
-<span class="nc" id="L144">        this.userPw = userPw;</span>
-<span class="nc" id="L145">    }</span>
+<span class="nc" id="L145">        this.userPw = userPw;</span>
+<span class="nc" id="L146">    }</span>
 
     //인기도 수정
     public void updatePopularity(Integer popularNum){
-<span class="nc" id="L149">        this.userPopularity += popularNum;</span>
-<span class="nc" id="L150">    }</span>
+<span class="nc" id="L150">        this.userPopularity += popularNum;</span>
+<span class="nc" id="L151">    }</span>
 
     //인기도 제한횟수 수정
     public void updatePopularityLimit(){
-<span class="nc" id="L154">        this.userPopularityLimit -= 1;</span>
-<span class="nc" id="L155">    }</span>
+<span class="nc" id="L155">        this.userPopularityLimit -= 1;</span>
+<span class="nc" id="L156">    }</span>
 
     // 닉네임 랜덤 생성
     public static String makeRandomNickname() throws IOException {
-<span class="nc" id="L159">        URL url = new URL(&quot;https://nickname.hwanmoo.kr/?format=json&amp;count=1&amp;max_length=12&quot;);</span>
+<span class="nc" id="L160">        URL url = new URL(&quot;https://nickname.hwanmoo.kr/?format=json&amp;count=1&amp;max_length=12&quot;);</span>
 
-<span class="nc" id="L161">        HttpURLConnection conn = (HttpURLConnection) url.openConnection();</span>
-<span class="nc" id="L162">        conn.setRequestMethod(&quot;GET&quot;);</span>
-<span class="nc" id="L163">        conn.setRequestProperty(&quot;Content-type&quot;, &quot;application/json&quot;);</span>
-<span class="nc" id="L164">        conn.setConnectTimeout(5000);</span>
-<span class="nc" id="L165">        conn.setReadTimeout(3000);</span>
+<span class="nc" id="L162">        HttpURLConnection conn = (HttpURLConnection) url.openConnection();</span>
+<span class="nc" id="L163">        conn.setRequestMethod(&quot;GET&quot;);</span>
+<span class="nc" id="L164">        conn.setRequestProperty(&quot;Content-type&quot;, &quot;application/json&quot;);</span>
+<span class="nc" id="L165">        conn.setConnectTimeout(5000);</span>
+<span class="nc" id="L166">        conn.setReadTimeout(3000);</span>
 
         BufferedReader rd;
-<span class="nc bnc" id="L168" title="All 2 branches missed.">        if(conn.getResponseCode() == HttpURLConnection.HTTP_OK) {</span>
-<span class="nc" id="L169">            rd = new BufferedReader(new InputStreamReader(conn.getInputStream(), &quot;UTF-8&quot;));</span>
+<span class="nc bnc" id="L169" title="All 2 branches missed.">        if(conn.getResponseCode() == HttpURLConnection.HTTP_OK) {</span>
+<span class="nc" id="L170">            rd = new BufferedReader(new InputStreamReader(conn.getInputStream(), &quot;UTF-8&quot;));</span>
         } else {
-<span class="nc" id="L171">            rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));</span>
+<span class="nc" id="L172">            rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));</span>
         }
 
-<span class="nc" id="L174">        StringBuilder sb = new StringBuilder();</span>
+<span class="nc" id="L175">        StringBuilder sb = new StringBuilder();</span>
         String line;
-<span class="nc bnc" id="L176" title="All 2 branches missed.">        while ((line = rd.readLine()) != null) {</span>
-<span class="nc" id="L177">            sb.append(line);</span>
+<span class="nc bnc" id="L177" title="All 2 branches missed.">        while ((line = rd.readLine()) != null) {</span>
+<span class="nc" id="L178">            sb.append(line);</span>
         }
 
-<span class="nc" id="L180">        rd.close();</span>
-<span class="nc" id="L181">        conn.disconnect();</span>
-<span class="nc" id="L182">        String word = (String) new JSONObject(sb.toString())</span>
-<span class="nc" id="L183">                .getJSONArray(&quot;words&quot;).get(0);</span>
-<span class="nc" id="L184">        return word;</span>
+<span class="nc" id="L181">        rd.close();</span>
+<span class="nc" id="L182">        conn.disconnect();</span>
+<span class="nc" id="L183">        String word = (String) new JSONObject(sb.toString())</span>
+<span class="nc" id="L184">                .getJSONArray(&quot;words&quot;).get(0);</span>
+<span class="nc" id="L185">        return word;</span>
     }
 
 }

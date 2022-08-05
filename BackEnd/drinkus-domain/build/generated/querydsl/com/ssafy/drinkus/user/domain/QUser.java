@@ -50,8 +50,6 @@ public class QUser extends EntityPathBase<User> {
 
     public final StringPath userImg = createString("userImg");
 
-    public final ListPath<UserInterest, QUserInterest> userInterestList = this.<UserInterest, QUserInterest>createList("userInterestList", UserInterest.class, QUserInterest.class, PathInits.DIRECT2);
-
     public final StringPath userIntroduce = createString("userIntroduce");
 
     public final StringPath userName = createString("userName");
@@ -75,6 +73,8 @@ public class QUser extends EntityPathBase<User> {
     public final NumberPath<Integer> userSoju = createNumber("userSoju", Integer.class);
 
     public final DateTimePath<java.time.LocalDateTime> userStopDate = createDateTime("userStopDate", java.time.LocalDateTime.class);
+
+    public final ListPath<UserSubCategory, QUserSubCategory> userSubCategoryList = this.<UserSubCategory, QUserSubCategory>createList("userSubCategoryList", UserSubCategory.class, QUserSubCategory.class, PathInits.DIRECT2);
 
     public QUser(String variable) {
         super(User.class, forVariable(variable));

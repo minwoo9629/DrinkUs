@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Room.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">drinkus-domain</a> &gt; <a href="index.source.html" class="el_package">com.ssafy.drinkus.room.domain</a> &gt; <span class="el_source">Room.java</span></div><h1>Room.java</h1><pre class="source lang-java linenums">package com.ssafy.drinkus.room.domain;
 
+import com.ssafy.drinkus.category.domain.Category;
 import com.ssafy.drinkus.common.BaseEntity;
 import com.ssafy.drinkus.common.type.YN;
-import com.ssafy.drinkus.interest.domain.Category;
+import com.ssafy.drinkus.friend.domain.Friend;
 import com.ssafy.drinkus.user.domain.User;
 import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Entity
 <span class="nc" id="L15">@NoArgsConstructor(access = AccessLevel.PROTECTED)</span>
@@ -65,39 +65,42 @@ public class Room extends BaseEntity {
 <span class="nc" id="L65">    @OneToMany(mappedBy = &quot;room&quot;)</span>
 <span class="nc" id="L66">    private List&lt;RoomHistory&gt; roomHistories = new ArrayList&lt;&gt;();</span>
 
+<span class="nc" id="L68">    @OneToMany(mappedBy = &quot;fromUser&quot;)</span>
+<span class="nc" id="L69">    private List&lt;Friend&gt; fromFriends = new ArrayList&lt;&gt;();</span>
+
+<span class="nc" id="L71">    @OneToMany(mappedBy = &quot;toUser&quot;)</span>
+<span class="nc" id="L72">    private List&lt;Friend&gt; toFriends = new ArrayList&lt;&gt;();</span>
+
     private static void setAges(Room room, YN[] ages) {
-<span class="nc" id="L69">        room.ages20 = ages[0];</span>
-<span class="nc" id="L70">        room.ages30 = ages[1];</span>
-<span class="nc" id="L71">        room.ages40 = ages[2];</span>
-<span class="nc" id="L72">        room.ages50 = ages[3];</span>
-<span class="nc" id="L73">        room.ages60 = ages[4];</span>
-<span class="nc" id="L74">        room.ages70 = ages[5];</span>
-<span class="nc" id="L75">    }</span>
+<span class="nc" id="L75">        room.ages20 = ages[0];</span>
+<span class="nc" id="L76">        room.ages30 = ages[1];</span>
+<span class="nc" id="L77">        room.ages40 = ages[2];</span>
+<span class="nc" id="L78">        room.ages50 = ages[3];</span>
+<span class="nc" id="L79">        room.ages60 = ages[4];</span>
+<span class="nc" id="L80">        room.ages70 = ages[5];</span>
+<span class="nc" id="L81">    }</span>
 
     //방 생성하기
     public static Room createRoom(String roomName, User user, String roomPw, String placeTheme, Integer peopleLimit,
                                   YN[] ages, Category category) {
-<span class="nc" id="L80">        Room room = new Room();</span>
-<span class="nc" id="L81">        room.roomName = roomName;</span>
-<span class="nc" id="L82">        room.user = user;</span>
-<span class="nc" id="L83">        room.roomPw = roomPw;</span>
-<span class="nc" id="L84">        room.placeTheme = placeTheme;</span>
-<span class="nc" id="L85">        room.peopleLimit = peopleLimit;</span>
-<span class="nc" id="L86">        setAges(room, ages);</span>
-<span class="nc" id="L87">        room.category = category;</span>
-<span class="nc" id="L88">        return room;</span>
+<span class="nc" id="L86">        Room room = new Room();</span>
+<span class="nc" id="L87">        room.roomName = roomName;</span>
+<span class="nc" id="L88">        room.user = user;</span>
+<span class="nc" id="L89">        room.roomPw = roomPw;</span>
+<span class="nc" id="L90">        room.placeTheme = placeTheme;</span>
+<span class="nc" id="L91">        room.peopleLimit = peopleLimit;</span>
+<span class="nc" id="L92">        setAges(room, ages);</span>
+<span class="nc" id="L93">        room.category = category;</span>
+<span class="nc" id="L94">        return room;</span>
     }
 
     //방 수정하기 (제목, 나이, 관심사, 인원, 비밀번호)
     public void updateRoom(String roomName, String roomPw, Integer peopleLimit, YN[] ages, Category category) {
-<span class="nc" id="L93">        this.roomName = roomName;</span>
-<span class="nc" id="L94">        this.roomPw = roomPw;</span>
-<span class="nc" id="L95">        this.peopleLimit = peopleLimit;</span>
-<span class="nc" id="L96">        setAges(this, ages);</span>
-<span class="nc" id="L97">        this.category = category;</span>
-<span class="nc" id="L98">    }</span>
-
-    // 방 삭제하기
-
+<span class="nc" id="L99">        this.roomName = roomName;</span>
+<span class="nc" id="L100">        this.roomPw = roomPw;</span>
+<span class="nc" id="L101">        this.peopleLimit = peopleLimit;</span>
+<span class="nc" id="L102">        setAges(this, ages);</span>
+<span class="nc" id="L103">        this.category = category;</span>
+<span class="nc" id="L104">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

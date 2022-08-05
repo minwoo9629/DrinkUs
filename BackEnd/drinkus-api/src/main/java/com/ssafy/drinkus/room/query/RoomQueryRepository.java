@@ -6,7 +6,6 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.drinkus.room.domain.Room;
 import com.ssafy.drinkus.user.domain.User;
-import com.ssafy.drinkus.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -26,8 +25,9 @@ public class RoomQueryRepository {
     private final JPAQueryFactory queryFactory;
 
     //페이징
-    public Page<Room> findBySearchCondition(String searchKeyword, Boolean sameAge, Integer sortOrder,
+    public Page<Room> findBySearchCondition(String searchKeyword, Boolean sameAge, int sortOrder,
                                             Long categoryId, Pageable pageable, User user) {
+
         //페이징
         QueryResults<Room> result = queryFactory
                 .selectFrom(room)
@@ -53,7 +53,8 @@ public class RoomQueryRepository {
 
     private BooleanExpression sameAgeFirstEq(Boolean sameAge, User user) {
         // 나이의 알고리즘을 계산하여 또래 범위 알기
-        int sameAgeFirst = getUserAge(user) % 10;
+        int sameAgeFirst = getUserAge(user) / 10;
+        System.out.println("sameAgeFirst "+sameAgeFirst);
 
         switch (sameAgeFirst) {
             case 2:
@@ -75,7 +76,8 @@ public class RoomQueryRepository {
 
     private BooleanExpression sameAgeSecondEq(Boolean sameAge, User user) {
         // 나이의 알고리즘을 계산하여 또래 범위 알기
-        Integer sameAgeSecond = getUserAge(user) % 10 + ((getUserAge(user) / 10 >= 5) ? 1 : -1);
+        Integer sameAgeSecond = getUserAge(user) / 10 + ((getUserAge(user) % 10 >= 5) ? 1 : -1);
+        System.out.println("sameAgeSecond "+sameAgeSecond);
 
         switch (sameAgeSecond) {
             case 1:
@@ -105,6 +107,8 @@ public class RoomQueryRepository {
     }
     public int getUserAge(User user){
         String userBirth = user.getUserBirthday().substring(0,4);
+        System.out.println("userBirth "+userBirth);
+        System.out.println(LocalDate.now().getYear() - Integer.parseInt(userBirth) + 1);
         return LocalDate.now().getYear() - Integer.parseInt(userBirth) + 1;
     }
 

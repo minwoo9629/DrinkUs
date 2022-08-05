@@ -2,7 +2,6 @@ package com.ssafy.drinkus.security.handler;
 
 import com.ssafy.drinkus.security.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.stomp.StompCommand;
@@ -32,11 +31,16 @@ public class StompHandler implements ChannelInterceptor {
     }
 
     private String extractToken(StompHeaderAccessor accessor) {
-        String bearerToken = accessor.getFirstNativeHeader(HttpHeaders.AUTHORIZATION);
+        String bearerToken = accessor.getFirstNativeHeader("AccessToken");
 
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }
         return null;
+    }
+
+    public String getRoomId(String destination) {
+        int lastIndex = destination.lastIndexOf("/");
+        return destination.substring(lastIndex + 1);
     }
 }

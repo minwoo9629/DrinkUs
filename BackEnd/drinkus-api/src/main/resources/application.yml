@@ -6,6 +6,7 @@ spring:
       - external
       - oauth
 
+  ## OAuth2 설정
   security:
     oauth2:
       client:
@@ -56,14 +57,14 @@ spring:
       max-file-size: 10MB
       max-request-size: 100MB
 
+  ## SMTP 설정
   mail:
     host: smtp.gmail.com
     port: 465
     username: wolfmob9612@gmail.com
     password: ingjpyytdhsojlxg
     protocol: smtps
-    # 전송 위한 prop, ssl의 신뢰 및 권한 등 사용허가
-    properties:
+    properties: # 전송 위한 prop, ssl의 신뢰 및 권한 등 사용허가
       mail.smtp.auth: true
       mail.smtp.enable: true
       mail.smtp.timeout: 5000
@@ -72,6 +73,10 @@ spring:
       mail.smtp.ssl.enable: false
       mail.smtp.ssl.trust: smtp.gmail.com
       mail.smtp.socketFactory:fallback: true
+
+## Openvidu server 설정
+#openvidu.url: https://i7b306.p.ssafy.io:8443/
+#openvidu.secret: DRINKUS
 
 token:
   expiration_time: 7200000 # 2시간

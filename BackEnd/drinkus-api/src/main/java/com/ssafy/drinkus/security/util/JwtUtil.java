@@ -2,13 +2,17 @@ package com.ssafy.drinkus.security.util;
 
 import com.ssafy.drinkus.common.type.TokenType;
 import com.ssafy.drinkus.security.service.CustomUserDetailsService;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+
 import java.util.Date;
 
 /**
@@ -50,6 +54,24 @@ public class JwtUtil {
 
     public String getSubject(String jwtToken) {
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken).getBody().getSubject();
+    }
+
+    public Long getUserId(String token) {
+        String userId = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token)
+                .getBody().getSubject();
+        return Long.valueOf(userId);
+    }
+
+    public String getRole(String token){
+        Claims body = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token)
+                .getBody();
+        return body.get("ROLE", String.class);
+    }
+
+    public String getNickName(String token){
+        Claims body = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token)
+                .getBody();
+        return body.get("userNickname", String.class);
     }
 
     public boolean isValidToken(String jwtToken) {
