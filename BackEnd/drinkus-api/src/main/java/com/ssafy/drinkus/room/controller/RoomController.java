@@ -75,12 +75,14 @@ public class RoomController {
     @PostMapping("/join")
     public ResponseEntity<Void> joinRoom(@LoginUser User user, @RequestBody RoomJoinRequest joinRoomRequest){
         System.out.println("## Join Room Controller");
+        return null;
     }
 
     //화상방 퇴장
     @PatchMapping("/exit")
     public ResponseEntity<Void> exitRoom(@LoginUser User user, @RequestBody RoomExitRequest exitRoomRequest){
         System.out.println("## Exit Room Controller");
+        return null;
     }
 
     //화상방 강퇴
