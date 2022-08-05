@@ -1,14 +1,13 @@
 package com.ssafy.drinkus.room.response;
 
+import com.ssafy.drinkus.category.response.CategoryResponse;
 import com.ssafy.drinkus.common.type.YN;
-import com.ssafy.drinkus.interest.response.CategoryResponse;
 import com.ssafy.drinkus.room.domain.Room;
-import com.ssafy.drinkus.user.domain.User;
 import com.ssafy.drinkus.user.response.UserMyInfoResponse;
-import com.ssafy.drinkus.user.response.UserProfileResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
 
 @Data

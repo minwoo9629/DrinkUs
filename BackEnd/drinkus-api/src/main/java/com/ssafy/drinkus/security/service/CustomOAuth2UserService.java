@@ -1,10 +1,10 @@
 package com.ssafy.drinkus.security.service;
 
 import com.ssafy.drinkus.common.NotFoundException;
-import com.ssafy.drinkus.user.domain.User;
-import com.ssafy.drinkus.user.domain.UserRepository;
 import com.ssafy.drinkus.security.oauth.OAuth2UserInfo;
 import com.ssafy.drinkus.security.oauth.OAuth2UserInfoFactory;
+import com.ssafy.drinkus.user.domain.User;
+import com.ssafy.drinkus.user.domain.UserRepository;
 import com.ssafy.drinkus.user.domain.type.UserProvider;
 import io.micrometer.core.instrument.util.StringUtils;
 import lombok.RequiredArgsConstructor;

@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class UserMyInfoResponse {
 
     private String userName;
+    private String userFullname;
     private String userNickname;
     private Integer userPopularity;
     private String userBirthday;
@@ -23,7 +24,7 @@ public class UserMyInfoResponse {
     private Integer userBeer;
 
     public static UserMyInfoResponse from(User user){
-        return new UserMyInfoResponse(user.getUserName(), user.getUserNickname(), user.getUserPopularity(), user.getUserBirthday(),
+        return new UserMyInfoResponse(user.getUserName(), user.getUserFullname(), user.getUserNickname(), user.getUserPopularity(), user.getUserBirthday(),
                 user.getUserIntroduce(), user.getUserImg(), user.getUserRole(), user.getUserPoint(), user.getUserSoju(), user.getUserBeer());
     }
 }
