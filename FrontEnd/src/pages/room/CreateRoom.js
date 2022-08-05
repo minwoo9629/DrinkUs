@@ -1,13 +1,8 @@
 import Header from "../../components/layout/Header";
 import { Wrapper } from "../../components/styled/Wrapper";
 import styled from "styled-components";
-import Category from "../../components/createroom/Category";
-import FetchProfile from "../../components/createroom/FetchProfile";
-import PeopleLimit from "../../components/createroom/PeopleLimit";
-import PlaceTheme from "../../components/createroom/PlaceTheme";
-import RoomAge from "../../components/createroom/RoomAge";
-import RoomName from "../../components/createroom/RoomName";
-import RoomPw from "../../components/createroom/RoomPw";
+import FetchProfile from "../../components/room/FetchProfile";
+import { SuccessAlert } from "../../utils/sweetAlert";
 import { useState } from "react";
 import { client } from "../../utils/client"
 
@@ -58,9 +53,18 @@ const CreateRoom = () => {
 
   const onRoomInfoSubmit = (e) => {
     e.preventDefault();
+    // 이름 유효 체크
+    if (roomInfo.roomname.length === 0) {
+      alert("방 이름을 입력해 주세요.");
+    }
+
+    // 인원 유효 체크
+    if (roomInfo.peoplelimit.length === 0) {
+      alert("최대인원을 입력해 주세요.")
+    }
+
     client
-      // .post("https://i7b306.p.ssafy.io/api/rooms", {
-      .post("http://localhost:8080/api/rooms", {
+      .post("rooms", {
         roomName:roomInfo.roomname,
         roomAdminId:null,
         roomPw:roomInfo.roompw,
@@ -71,6 +75,7 @@ const CreateRoom = () => {
       })
       .then(function (response) {
         console.log(response.data.message);
+        // SuccessAlert("방이 만들어졌습니다.")
       })
       .catch(function (error) {
         console.log(error);
@@ -119,8 +124,9 @@ const CreateRoom = () => {
               type="text"
               value={roomInfo.roomname}
               name="roomname"
-              rules={[{ required: true, message: '방 이름을 입력하세요.'}]} 
-              onChange={onRoomInfoInput} 
+              placeholder="방 이름을 입력하세요."
+              onChange={onRoomInfoInput}
+              required
               />
             </div>
             <div>
@@ -130,6 +136,7 @@ const CreateRoom = () => {
                 value={roomInfo.placetheme}
                 name="placetheme" 
                 onChange={onRoomInfoInput}>
+                <option>술집</option>
                 <option>야구장</option>
                 <option>펍</option>
                 <option>편의점</option>
@@ -142,8 +149,9 @@ const CreateRoom = () => {
                 type="integer"
                 value={roomInfo.peoplelimit}
                 name="peoplelimit"
-                rules={[{ required: true, message: '최대인원을 입력하세요.'}]}
+                placeholder="최대인원을 입력하세요."
                 onChange={onRoomInfoInput}
+                required
               />
             </div>
             <div>
@@ -152,6 +160,7 @@ const CreateRoom = () => {
                 type="selectbox"
                 name="category" 
                 onChange={onMakeCategory}>
+                <option value="null">관심사 없음</option>
                 <option value="1">스포츠</option>
                 <option value="2">음악</option>
                 <option value="3">게임/오락</option>
@@ -212,11 +221,16 @@ const CreateRoom = () => {
               <InputForm 
                 type="integer" 
                 value={roomInfo.roompw}
-                name="roompw" 
+                name="roompw"
+                placeholder="비밀번호를 입력하면 비밀방으로 설정됩니다."
                 onChange={onRoomInfoInput}
               />
             </div>
-            <CreateButton onClick={onRoomInfoSubmit}>생성하기</CreateButton>
+            <CreateButton 
+              onClick={onRoomInfoSubmit}
+            >
+              생성하기
+            </CreateButton>
           </div>
           </LetterColorChange>
       </Wrapper>
