@@ -1,8 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import Header from "../../components/layout/Header";
 import styled from "styled-components";
-import axios from "axios";
+import { client } from "../../utils/client";
 
 const Wrapper = styled.div`
   background-color: #eaf2ff;
@@ -11,6 +10,7 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
 `;
 
 const ProfileWrapper = styled.div`
@@ -39,6 +39,15 @@ const EditButton = styled.button`
   cursor: pointer;
 `
 
+const IntroduceWrapper = styled.div`
+  background-color: white;
+  width: 40vw;
+  height: 10vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+
 const ReportsButton = styled.button`
   width: 100px;
   height: 40px;
@@ -52,21 +61,32 @@ const ReportsButton = styled.button`
 
 const Profile = () => {
   const [state, setState] = useState({
-    userPopularity: 0,
-  })
+    userNickname: "",
+    userPopularity: "",  // 인기도
+    popularityNumber: 0,  // 인기도 수정 횟수
+    userImg: "",
+    userIntroduce: "",
+    userSoju: "",
+    userBeer: "",
+  });
+  // 인기도 수정 횟수 5회 제한 + 5회 넘을 시 alert 창
+  const popularityDisabled = state.popularityNumber === 5;
+
 
   // 인기도 수정
   const onPopularityEdit = (e) => {
-    e.preventDefault();
     const name = e.target.name;
     if (name === "plus") {
-      setState({...state, userPopularity: state.userPopularity + 1});
+      setState({...state, userPopularity: state.userPopularity + 1, popularityNumber: state.popularityNumber + 1});
     } else if (name === "minus") {
-      setState({...state, userPopularity:state.userPopularity - 1});
+      setState({...state, userPopularity:state.userPopularity - 1, popularityNumber: state.popularityNumber + 1});
     }
     // 인기도 수정 api 요청
-    axios
-      .patch("http://localhost:8080/users/popularity", {        
+    client
+      .patch(`/users/popularity`, {
+         params: {
+          user_id: "6",
+        }  
       })
       .then(function (response) {
         console.log(response);
@@ -74,40 +94,71 @@ const Profile = () => {
       .catch(function (error) {
         console.log(error);
       });
-  };
+    };
 
-  // 유저 정보 axios 요청
-  axios
-    .get("http://localhost:8080/users/profile/{user_no}", {
-      // userId: 1,
+
+  // 유저 정보 요청 --> 무한렌더링... setState 쪽 문제인데, 해결방법을 아직 모름,,,
+  client
+    .get(`/users/profile/6`, {
+      //  params: {
+      //   user_no: "6",
+      // }
     })
-    .then(function (response) {
-        console.log(response)
+    .then((response) => {
+      console.log(response);
+      console.log(response.data, []);
+      // setState({...state,
+      //   userNickname: response.data.userNickname,
+      //   userPopularity: response.data.userPopularity,
+      //   userImg: response.data.userImg,
+      //   userIntroduce: response.data.userIntroduce,
+      //   userSoju: response.data.userSoju,
+      //   userBeer: response.data.userBeer
+      // }, [])
     })
-    .catch(function(error) {
+    .catch(function (error) {
       console.log(error);
-    });
+    }, []);
 
-  return(
+  return (
   <div>
-    <Header/>
       <Wrapper>
+          닉네임: {state.userNickname}
         <ProfileWrapper>
-          <ProfileImg></ProfileImg>
+          <ProfileImg>{state.userImg}</ProfileImg>
             인기도: {state.userPopularity}°
             <EditButton
               onClick={onPopularityEdit}
               name="plus"
-            > +
-            </EditButton>
+              disabled={popularityDisabled}
+            > + </EditButton>
             <EditButton
               onClick={onPopularityEdit}
               name="minus"
+              disabled={popularityDisabled}
             > - </EditButton>
+        </ProfileWrapper>
+        <ProfileWrapper>
               관심사
-              <Link to="/reports">
-                <ReportsButton>유저 신고</ReportsButton>
-              </Link>
+        </ProfileWrapper>
+        <IntroduceWrapper>
+          관심사 data값에 없음
+        </IntroduceWrapper>
+        <ProfileWrapper>
+          자기 소개
+        </ProfileWrapper>
+        <IntroduceWrapper>
+          {state.userIntroduce}
+        </IntroduceWrapper>
+        <ProfileWrapper>
+          주량
+        </ProfileWrapper>
+        소주: {state.userSoju} 잔<hr/>
+        맥주: {state.userBeer} 잔
+        <ProfileWrapper>
+          <Link to="/reports">
+            <ReportsButton>유저 신고</ReportsButton>
+          </Link>
         </ProfileWrapper>
       </Wrapper>
   </div>
