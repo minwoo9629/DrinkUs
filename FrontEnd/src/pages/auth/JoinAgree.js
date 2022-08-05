@@ -2,75 +2,67 @@ import { useState } from "react";
 import Header from "../../components/layout/Header";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { Wrapper, RoundedWrapper, BaseFlexColWrapper } from "../../components/styled/Wrapper";
+import { BackButton } from "../../components/common/buttons/BackButton";
 
 // 체크박스 포커스 주기
-const Wrapper = styled.div`
-  background-color: black;
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const NeonLoginWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  border-radius: 40px;
-  height: 700px;
-  background-color: #131317;
-  width: 450px;
-`;
 
 const AgreeForm = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-`;
+`
+// const AgreeTitle = styled.div`
+//   justify-content: space-between;
+//   align-items: center;
+//   margin-left: auto;
+//   margin-right: auto;
+//   text-align: center;
+//   width: 380px;
+//   height: 64px;
+//   background-color: #131317;
+//   margin: 14px;
+//   color: white;
+//   display: flex;
+//   font-size: 32px;
+// `
 
 const AgreeWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const AgreeContent = styled.div`
   justify-content: space-between;
-  width: 320px;
+  width: 380px;
   height: 64px;
-  border-radius: 36px;
   background-color: #131317;
   margin: 14px;
   position: relative;
-`;
+  color: white;
+  display: flex;
+  font-size: 20px;
+`
 
 const ButtonWrapper = styled.div`
   margin-top: 30px;
   display: flex;
-  justify-content: space-between;
-  width: 120px;
+  justify-content: center;
+  width: 380px;
+  align-items: center;
 `;
 
 const Button = styled.button`
   display: flex;
-  font-size: 20px;
   color: #fff;
   background-color: #131317;
-  /* cursor: pointer; */
+  width: 13px;
+  height: 13px;
 `;
 
-const OverTwenty = styled.button`
-  font-size: 1rem;
-  font-weight: 200;
+const LinkWrapper = styled.div`
+  display: flex;
   color: #fff;
-  padding: 1rem 1.2rem 1.1rem;
-  border: 0.4rem solid #131317;
-  border-radius: 2rem;
-  text-transform: uppercase;
   background-color: #131317;
-`;
+  font-size: 20px;
+  margin: 40px;
+`
 
 const JoinAgree = ({ history }) => {
   const [checkedButtons, setCheckedButtons] = useState([]);
@@ -87,79 +79,79 @@ const JoinAgree = ({ history }) => {
     }
   };
 
-  // pdf 파일 불러오자
-  // const pdfviewer = document.getElementById('container').ej2_instances[0];
-
   return (
-    <div>
-      <Header />
+    <>
+      <BackButton/>
+      {/* <AgreeTitle>동의 페이지</AgreeTitle> */}
       <Wrapper>
-        <NeonLoginWrapper>
-          <AgreeForm> 이용약관 동의 </AgreeForm>
-          <AgreeWrapper>
-            <AgreeContent>
-              {/* <Button
-                onClick={() => pdfviewer.load('test.pdf', null)}
-              > */}
-              <Button>
-                <u>개인정보수집</u>
+        <RoundedWrapper
+          width={"450"}
+          height={"700"}
+          mWidth={"300"}
+          mHeight={"460"}
+        >
+          <BaseFlexColWrapper>
+            <AgreeForm>
+              <AgreeWrapper>
+                <u onClick={() => window.open("../assets/개인정보수집.txt")}>개인정보수집</u>
+                  <Button>
+                    <input
+                      type="checkbox"
+                      id="check"
+                      onChange={(e) => {
+                        changeHandler(e.currentTarget.checked, "check");
+                      }}
+                      checked={checkedButtons.includes("check") ? true : false}
+                    ></input>
+                  </Button>
+              </AgreeWrapper>
+              <AgreeWrapper>
+                <u onClick={() => window.open("../assets/이용약관동의.txt")}>이용약관동의</u>
+                <Button>
+                  <input
+                    type="checkbox"
+                    id="check2"
+                    onChange={(e) => {
+                      changeHandler(e.currentTarget.checked, "check2");
+                    }}
+                    checked={checkedButtons.includes("check2") ? true : false}
+                  ></input>
+              </Button>
+              </AgreeWrapper>
+              <AgreeWrapper>
+                20세 이상입니다.
+                <Button>
                 <input
-                  type="checkbox"
-                  id="check"
-                  onChange={(e) => {
-                    changeHandler(e.currentTarget.checked, "check");
-                  }}
-                  checked={checkedButtons.includes("check") ? true : false}
-                ></input>
-                <label id="check" htmlFor="check"></label>
-              </Button>
-              <Button
-              // onClick={() => window.open('https://admitted-evening-312.notion.site/3-Drinkus-97e5baba6ee845ed8ed6a9148c7f6901', '_blank')}
-              >
-                <u>이용약관</u>
-                <input
-                  type="checkbox"
-                  id="check2"
-                  onChange={(e) => {
-                    changeHandler(e.currentTarget.checked, "check2");
-                  }}
-                  checked={checkedButtons.includes("check2") ? true : false}
-                ></input>
-                <label id="check2" htmlFor="check2"></label>
-              </Button>
-              <OverTwenty>20세 이상입니다</OverTwenty>
-              <input
-                type="checkbox"
-                id="check3"
-                onChange={(e) => {
-                  changeHandler(e.currentTarget.checked, "check3");
-                }}
-                checked={checkedButtons.includes("check3") ? true : false}
-              ></input>
-              <label id="check3" htmlFor="check3"></label>
-            </AgreeContent>
-          </AgreeWrapper>
-          <ButtonWrapper>
-            <Link to="/">
-              <Button>MAIN</Button>
-            </Link>
-            <Link to="/join/type">
-              <Button
-                disabled={disabled}
-                onClick={() => history.push("/join/type")}
-                style={
-                  disabled
-                    ? { backgroundColor: "#131317" }
-                    : { backgroundColor: "#605D9F" }
-                }
-              >
-                NEXT
-              </Button>
-            </Link>
-          </ButtonWrapper>
-        </NeonLoginWrapper>
+                    type="checkbox"
+                    id="check3"
+                    onChange={(e) => {
+                      changeHandler(e.currentTarget.checked, "check3");
+                    }}
+                    checked={checkedButtons.includes("check3") ? true : false}
+                  ></input>
+                </Button>
+              </AgreeWrapper>
+            </AgreeForm>
+            <ButtonWrapper>
+              <Link to="/">
+                <LinkWrapper>MAIN</LinkWrapper>
+              </Link>
+              <Link to="/join/type">
+                <LinkWrapper
+                  disabled={disabled}
+                  onClick={() => history.push("/join/type")}
+                  style={
+                    disabled
+                      ? { backgroundColor: "#131317" }
+                      : { backgroundColor: "#605D9F" }
+                  }
+                >NEXT</LinkWrapper>
+              </Link>
+            </ButtonWrapper>
+          </BaseFlexColWrapper>
+        </RoundedWrapper>
       </Wrapper>
-    </div>
+    </>
   );
 };
 

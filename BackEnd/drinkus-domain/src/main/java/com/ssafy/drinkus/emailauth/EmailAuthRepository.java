@@ -1,4 +1,4 @@
-package com.ssafy.drinkus.email_auth;
+package com.ssafy.drinkus.emailauth;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

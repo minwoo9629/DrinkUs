@@ -23,7 +23,6 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     //회원정보를 불러오고 회원정보를 받아서 반환
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
-        System.out.println("CustomUserDetailsService.loadUserByUsername");
         System.out.println(userId);
         User findUser = userRepository.findById(Long.valueOf(userId))
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
