@@ -12,6 +12,12 @@ import MyPage from "./pages/auth/MyPage";
 import DrinkLive from "./pages/room/DrinkLive"
 import CreateRoom from "./pages/room/CreateRoom";
 import Rooms from "./pages/room/Rooms";
+import JoinAgree from './pages/auth/JoinAgree'
+import JoinType from './pages/auth/JoinType'
+import RoomDetail from './pages/room/RoomDetail'
+import Calendar from "./pages/calendarcommunity/Calendar";
+// import CalendarList from "./pages/calendarcommunity/CalendarList";
+import CreateCalendar from "./pages/calendarcommunity/CreateCalendar";
 function App() {
   return (
     <Provider store={store}>
@@ -20,6 +26,8 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/join/agree" element={<JoinAgree />} />
+            <Route path="/join/type" element={<JoinType />} />
             <Route path="/join" element={<Join />} />
             <Route path="/findId" element={<FindId />} />
             <Route path="/findPassword" element={<FindPassword />} />
@@ -28,6 +36,10 @@ function App() {
             <Route path="/live" element={<DrinkLive />} />
             <Route path="/createroom" element={<CreateRoom />} />
             <Route path="/rooms" element={<Rooms />} />
+            <Route path="/rooms/1" element={<RoomDetail />} />
+            <Route path="/calendar" element={<Calendar />} />
+            {/* <Route path="/calendar/list" element={<CalendarList />} /> */}
+            <Route path="/calendar/create" element={<CreateCalendar />} />
           </Routes>
         </div>
       </BrowserRouter>

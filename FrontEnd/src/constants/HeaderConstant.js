@@ -1,7 +1,7 @@
 export const BASIC_MENU = [
   { link: "/", menuName: "DrinkUs" },
   { link: "/live", menuName: "술Live" },
-  { link: "/community", menuName: "커뮤니티" },
+  { link: "/calendar", menuName: "커뮤니티" },
 ];
 
 export const LOGINED_MENU = [
@@ -11,5 +11,5 @@ export const LOGINED_MENU = [
 
 export const UNLOGINED_MENU = [
   { link: "/login", menuName: "로그인" },
-  { link: "/join", menuName: "회원가입" },
+  { link: "/join/agree", menuName: "회원가입" },
 ];
