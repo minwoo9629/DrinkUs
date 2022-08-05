@@ -56,7 +56,7 @@ public class RoomService {
                 pageable,
                 user);
 
-        return findRoomList.map(room -> RoomListResponse.from(room));
+        return findRoomList.map(RoomListResponse::from);
     }
 
     //화상방 생성
@@ -89,7 +89,7 @@ public class RoomService {
         Room findroom = roomRepository.findById(roomId)
                 .orElseThrow(() -> new NotFoundException(NotFoundException.ROOM_NOT_FOUND));
 
-        Category findCategory = categoryRepository.findById(request.getCategory().getCategoryId())
+        Category findCategory = categoryRepository.findById(request.getCategoryId())
                 .orElseThrow(() -> new NotFoundException(CATEGORY_NOT_FOUND));
 
         if(!user.getUserId().equals(findroom.getUser().getUserId())){

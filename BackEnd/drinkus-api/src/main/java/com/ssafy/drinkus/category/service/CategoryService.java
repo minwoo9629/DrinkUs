@@ -41,7 +41,7 @@ public class CategoryService {
 
     //회원이 추가한 관심사 조회
 //    public List<CategoryListResponse> findByMyUserId(User user) {
-//        List<UserSubCategory> interestList = userInterestRepository.findByUser(user.getUserId())
+//        List<UserSubCategory> interestList = userInterestRepository.findByMyUserId(user.getUserId())
 //        return interestList.stream()
 //                .map(CategoryListResponse::from)
 //                .collect(Collectors.toList());
