@@ -27,7 +27,7 @@ public class RoomQueryRepository {
     private final JPAQueryFactory queryFactory;
 
     //페이징
-    public Page<Room> findBySearchCondition(String searchKeyword, Boolean sameAge, Integer sortOrder,
+    public Page<Room> findBySearchCondition(String searchKeyword, Boolean sameAge, int sortOrder,
                                             Long categoryId, Pageable pageable, User user) {
 
         //페이징
