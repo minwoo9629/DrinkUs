@@ -54,7 +54,6 @@ function App() {
               <Route path="/daily" element={<Daily />} />
               <Route path="/rooms/1" element={<RoomDetail />} />
               <Route path="/calendar" element={<Calendar />} />
-              {/* <Route path="/calendar/list" element={<CalendarList />} /> */}
               <Route path="/calendar/create" element={<CreateCalendar />} />
               <Route path="/user" element={<MyPage />}>
                 <Route index element={<EditProfile />} />
