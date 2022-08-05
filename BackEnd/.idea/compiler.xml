@@ -7,13 +7,13 @@
         <processorPath useClasspath="false">
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.24/13a394eed5c4f9efb2a6d956e2086f1d81e857d9/lombok-1.18.24.jar" />
         </processorPath>
-        <module name="drinkus.drinkus-domain.test" />
+        <module name="com.ssafy.drinkus.drinkus-domain.test" />
         <module name="drinkus.drinkus-common.main" />
         <module name="drinkus.drinkus-api.main" />
+        <module name="com.ssafy.drinkus.drinkus-external.test" />
         <module name="drinkus.drinkus-external.main" />
-        <module name="drinkus.drinkus-api.test" />
-        <module name="drinkus.drinkus-external.test" />
-        <module name="drinkus.drinkus-common.test" />
+        <module name="com.ssafy.drinkus.drinkus-api.test" />
+        <module name="com.ssafy.drinkus.drinkus-common.test" />
         <module name="drinkus.drinkus-domain.main" />
       </profile>
     </annotationProcessing>

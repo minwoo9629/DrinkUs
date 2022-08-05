@@ -19,7 +19,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static com.ssafy.drinkus.common.type.YN.Y;
-//import static com.ssafy.drinkus.room.domain.QRoom.room;
+import static com.ssafy.drinkus.room.domain.QRoom.room;
 
 @Repository
 @RequiredArgsConstructor
