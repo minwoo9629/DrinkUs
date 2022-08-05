@@ -12,7 +12,7 @@ const Box = styled.div`
 
 const onRoomDetail = async () => {
   const result = await client
-    .get("https://i7b306.p.ssafy.io/api/rooms/1")
+    .get("rooms/1")
     .then((response)=> response);
     return result
 }
@@ -22,14 +22,14 @@ const RoomDetail = () => {
 
   const [data, setData] = useState({});
 
-  const changeFunc = async () => {
+  const dataRefineFunc = async () => {
     const result = await onRoomDetail()
     setData(result.data);
     // return data
   }
 
   useEffect(()=>{
-    changeFunc();
+    dataRefineFunc();
   },[])
 
   return (
