@@ -5,10 +5,7 @@ import com.ssafy.drinkus.common.BaseEntity;
 import com.ssafy.drinkus.common.type.YN;
 import com.ssafy.drinkus.friend.domain.Friend;
 import com.ssafy.drinkus.user.domain.User;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -18,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
+@Builder
 public class Room extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -105,7 +103,4 @@ public class Room extends BaseEntity {
         setAges(this, ages);
         this.category = category;
     }
-
-    // 방 삭제하기
-
 }
