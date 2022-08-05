@@ -1,12 +1,16 @@
 package com.ssafy.drinkus.user.service;
 
-import com.ssafy.drinkus.common.DuplicateException;
-import com.ssafy.drinkus.common.MailSendFailException;
-import com.ssafy.drinkus.common.NotFoundException;
-import com.ssafy.drinkus.common.NotMatchException;
+import com.ssafy.drinkus.common.*;
+import com.ssafy.drinkus.common.type.TokenType;
 import com.ssafy.drinkus.common.type.YN;
-import com.ssafy.drinkus.email.dto.EmailDto;
-import com.ssafy.drinkus.email.handler.EmailHandler;
+import com.ssafy.drinkus.auth.Auth;
+import com.ssafy.drinkus.auth.AuthRepository;
+import com.ssafy.drinkus.email.request.UserNameAuthRequest;
+import com.ssafy.drinkus.email.request.UserNameCheckRequest;
+import com.ssafy.drinkus.email.service.EmailService;
+import com.ssafy.drinkus.emailauth.EmailAuth;
+import com.ssafy.drinkus.security.request.TokenRequest;
+import com.ssafy.drinkus.security.response.TokenResponse;
 import com.ssafy.drinkus.security.util.JwtUtil;
 import com.ssafy.drinkus.user.domain.User;
 import com.ssafy.drinkus.user.domain.UserRepository;
@@ -15,39 +19,43 @@ import com.ssafy.drinkus.user.response.UserMyInfoResponse;
 import com.ssafy.drinkus.user.response.UserProfileResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class UserService {
-    @Value("${spring.mail.username}")
-    private String sender;
+
     final int PASSWORD_SIZE = 15;
     final int WAITING_DAYS = 7;
     final int POPULARITY_LIMIT = 5;
 
     private final UserRepository userRepository;
+    private final AuthRepository authRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
-    private final JavaMailSender mailSender;
-
+    private final EmailService emailService;
 
     @Transactional
-    public void createUser(UserCreateRequest request) {
+    public void createUser(UserCreateRequest request) throws IOException {
         if (userRepository.existsByUserName(request.getUserName())) {
             throw new DuplicateException("이미 가입된 회원입니다.");
         }
@@ -55,15 +63,61 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public String loginUser(UserLoginRequest request) {
+    @Transactional
+    public TokenResponse loginUser(UserLoginRequest request) {
         User findUser = userRepository.findByUserName(request.getUserName())
                 .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
+
         if (!passwordEncoder.matches(request.getUserPw(), findUser.getUserPw())) {
-            // 예외 던짐 -> 캐치하는곳 필요
             throw new NotMatchException("회원의 비밀번호가 일치하지 않습니다.");
         }
 
-        return jwtUtil.createToken(findUser.getUserId());
+        // 이전에 존재하던 RefreshToken들 모두 삭제
+        authRepository.deleteByUserId(findUser.getUserId());
+
+        // AccessToken, RefreshToken 발급
+        String accesstoken = jwtUtil.createToken(findUser.getUserId(), TokenType.ACCESS_TOKEN);
+        String refreshToken = jwtUtil.createToken(findUser.getUserId(), TokenType.REFRESH_TOKEN);
+
+        // RefreshToken 저장
+        Auth auth = Auth.builder()
+                .userId(findUser.getUserId())
+                .refreshToken(refreshToken)
+                .build();
+        authRepository.save(auth);
+        return new TokenResponse(accesstoken, refreshToken);
+    }
+
+    @Transactional
+    public TokenResponse reissue(TokenRequest request){
+        // 만료된 refresh token 에러
+        if(!jwtUtil.isValidToken(request.getRefreshToken())){
+            throw new RefreshTokenException("리프레시 토큰이 만료되었습니다.");
+        }
+
+        // AccessToken에서 user pk 가져오기
+        String accessToken = request.getAccessToken();
+        Authentication authentication = jwtUtil.getAuthentication(accessToken);
+
+        // user pk로 유저 검색 / repository에 저장된 RefreshToken이 없음
+        User findUser = userRepository.findByUserName(authentication.getName())
+                .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
+        Auth auth = authRepository.findByUserId(findUser.getUserId())
+                .orElseThrow(() -> new RefreshTokenException("리프레시 토큰이 없습니다."));
+
+        // 리프레시 토큰 불일치 에러
+        if(!auth.getRefreshToken().equals(request.getRefreshToken()))
+            throw new RefreshTokenException("리프레시 토큰이 일치하지 않습니다.");
+
+        // AccessToken, RefreshToken 재발급, 리프레시 토큰 저장
+        TokenResponse newCreatedToken = new TokenResponse(
+                jwtUtil.createToken(findUser.getUserId(), TokenType.ACCESS_TOKEN),
+                jwtUtil.createToken(findUser.getUserId(), TokenType.REFRESH_TOKEN)
+        );
+        Auth updateAuth = auth.updateRefreshToken(newCreatedToken.getRefreshToken());
+        authRepository.save(updateAuth);
+
+        return newCreatedToken;
     }
 
     //회원수정
@@ -97,9 +151,16 @@ public class UserService {
     }
 
     //아이디 찾기
-    public void findByUserName(String userName) {
-        if (userRepository.existsByUserName(userName)) {
+    public void findByUserName(UserDuplicateCheckIdRequest request) {
+        if (userRepository.existsByUserName(request.getUserName())) {
             throw new DuplicateException("이미 가입된 회원입니다.");
+        }
+    }
+
+    // 닉네임 중복 검사
+    public void findByUserNickname(String userNickname){
+        if(userRepository.existsByUserNickname(userNickname)){
+            throw new DuplicateException("이미 존재하는 닉네임입니다.");
         }
     }
 
@@ -114,7 +175,6 @@ public class UserService {
         findUser.updatePopularity(popularNum);
     }
 
-
     // 회원 프로필 조회
     public UserProfileResponse findUserProfile(Long userId){
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
@@ -127,12 +187,10 @@ public class UserService {
         return UserMyInfoResponse.from(user);
     }
 
-    // 회원 탈퇴 (삭제 대기)
+    // 회원 삭제
     @Transactional
-    public void disableUser(Long userId){
-        User findUser = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
-        findUser.disableUser();
+    public void deleteUser(Long userId){
+        userRepository.deleteById(userId);
     }
 
     // 아이디 찾기
@@ -164,10 +222,32 @@ public class UserService {
 
         // 이메일 발송
         try {
-            sendMail(request.getUserName(), password);
+            emailService.sendResetPwEmail(request.getUserName(), password);
         } catch (MessagingException e) {
             throw new MailSendFailException(MailSendFailException.MAIL_SEND_FAIL);
         }
+    }
+
+    // 회원가입 이메일 인증 토큰 생성 및 발송
+    @Transactional
+    public void sendEmailAuthEmail(UserNameCheckRequest request) {
+        if (userRepository.existsByUserName(request.getUserName())){
+            throw new DuplicateException("이미 가입된 회원입니다.");
+        }
+
+        EmailAuth emailAuth = EmailAuth.createEmailAuth(request.getUserName(), UUID.randomUUID().toString());
+        emailService.saveEmailAuth(emailAuth);
+        try{
+            emailService.sendUserNameCheckEmail(emailAuth.getUserName(), emailAuth.getAuthToken());
+        }catch (MessagingException e){
+            throw new MailSendFailException(MailSendFailException.MAIL_SEND_FAIL);
+        }
+    }
+
+    // 회원가입 이메일 인증 토큰 확인
+    @Transactional
+    public void confirmUserName(UserNameAuthRequest request){
+        emailService.confirmEmailAuth(request);
     }
 
     // 비밀번호 랜덤 재생성
@@ -188,65 +268,10 @@ public class UserService {
         return sb.toString();
     }
 
-    public void sendMail(String receiver, String password) throws MailSendFailException, MessagingException {
-        // 이메일 발송 정보 설정
-        EmailDto mailDto = new EmailDto();
-        mailDto.setFromAddress(sender);
-        mailDto.setTitle("[DrinkUs] 비밀번호 재설정 안내입니다.");
-        StringBuilder content = new StringBuilder();
-        content.append("<div class='container' align='left'>");
-        content.append("    <div>안녕하세요, DrinkUs입니다.</div>");
-        content.append("    <div>고객님의 비밀번호를 재설정하여 다음과 같이 알려드립니다.</div><br>");
-        content.append("    <div>비밀번호 : <strong style='background-color: yellow;'>" + password +  "</strong></div><br>");
-        content.append("    <div>안내된 비밀번호로 로그인 후 비밀번호 재설정 바랍니다.</div>");
-        content.append("</div>");
-        mailDto.setContent(content.toString());
-        mailDto.addToAddress(receiver);
-
-        // 메일 발송
-        EmailHandler emailHandler = new EmailHandler(mailSender);
-        emailHandler.setFrom(mailDto.getFromAddress());
-        emailHandler.setTo(mailDto.getToAddressList());
-        emailHandler.setSubject(mailDto.getTitle());
-        emailHandler.setText(mailDto.getContent(), true);
-        emailHandler.send();
-    }
-
-    // 회원 삭제 스케줄 task
-    @Scheduled(cron = "0 0 6 * * *") // 매일 6시 정각
-    @Transactional
-    public void deleteUser(){
-        List<User> userList = userRepository.findAll();
-
-        for(User user : userList){
-            LocalDateTime disableDate = user.getUserDeleteDate();
-            LocalDateTime todayDate = LocalDateTime.now();
-            if(user.getUserDeleted() == YN.Y && todayDate.isAfter(disableDate.plusDays(WAITING_DAYS))){
-                userRepository.delete(user);
-            }
-        }
-    }
-
     // 인기도 제한 초기화 스케줄 task
     @Scheduled(cron = "0 0 6 * * *") // 매일 6시 정각
     @Transactional
     public void resetPopularityLimit(){
         userRepository.resetUserPopularityLimit(POPULARITY_LIMIT);
-    }
-
-    public UserMyInfoResponse test(User user){
-        UserMyInfoResponse response = new UserMyInfoResponse(
-                user.getUserName(),
-                user.getUserNickname(),
-                user.getUserPopularity(),
-                user.getUserBirthday(),
-                user.getUserIntroduce(),
-                user.getUserImg(),
-                user.getUserPoint(),
-                user.getUserSoju(),
-                user.getUserBeer()
-        );
-
-        return response;
     }
 }

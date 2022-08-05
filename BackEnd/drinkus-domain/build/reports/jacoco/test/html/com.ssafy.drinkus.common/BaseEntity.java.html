@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BaseEntity.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">drinkus-domain</a> &gt; <a href="index.source.html" class="el_package">com.ssafy.drinkus.common</a> &gt; <span class="el_source">BaseEntity.java</span></div><h1>BaseEntity.java</h1><pre class="source lang-java linenums">package com.ssafy.drinkus.common;
+
+import lombok.Getter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import javax.persistence.EntityListeners;
+import javax.persistence.MappedSuperclass;
+import java.time.LocalDateTime;
+
+@MappedSuperclass // 상위클래스 상속받는 annotation (extends)
+@EntityListeners(AuditingEntityListener.class) //now()가 가능하게끔 하는 annotation
+@Getter
+//모든 엔티티에 적용할 수 있는 엔티티 (생성일자, 수정일자)
+//  -&gt; 추상클래스
+<span class="nc" id="L17">public abstract class BaseEntity {</span>
+
+    @CreatedDate
+<span class="nc" id="L20">    private LocalDateTime createdDate;</span>
+
+    @LastModifiedDate
+<span class="nc" id="L23">    private LocalDateTime modifiedDate;</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
