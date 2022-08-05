@@ -73,4 +73,5 @@ public class RoomController {
 
     //화상방 강퇴
 
+
 }
