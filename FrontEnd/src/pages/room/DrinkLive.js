@@ -26,6 +26,7 @@ const DrinkLive = () => {
 
   const navigate = useNavigate();
   
+  
   return (
   <>
     <Header/>
