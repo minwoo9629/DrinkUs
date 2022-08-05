@@ -1,6 +1,6 @@
 package com.ssafy.drinkus.dailyboard.response;
 
-import com.ssafy.drinkus.dailyboard.DailyBoard;
+import com.ssafy.drinkus.dailyboard.domain.DailyBoard;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,12 +10,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MyBoardResponse {
     // 글 번호
-    Long boardId;
+    Long articleId;
 
     // 글 내용
-    String boardContent;
+    String articleContent;
+
+    // 원글
+    String type;
 
     public static MyBoardResponse from (DailyBoard dailyBoard){
-        return new MyBoardResponse(dailyBoard.getBoardId(), dailyBoard.getBoardContent());
+        return new MyBoardResponse(dailyBoard.getBoardId(), dailyBoard.getBoardContent(), dailyBoard.getParentId() == null ? "원글" : "답글");
     }
 }
