@@ -19,8 +19,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+//http://i7b306.p.ssafy.io/api/
 @RestController
-@RequestMapping("/rooms")
+@RequestMapping("/api/rooms")
 @RequiredArgsConstructor
 public class RoomController {
 
@@ -66,4 +67,12 @@ public class RoomController {
         roomService.deleteRoom(user, roomId);
         return ResponseEntity.ok().build();
     }
+
+    //화상방 참가
+
+    //화상방 퇴장
+
+    //화상방 강퇴
+
+
 }
