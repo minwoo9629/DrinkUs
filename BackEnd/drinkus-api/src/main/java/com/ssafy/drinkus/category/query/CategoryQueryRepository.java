@@ -1,13 +1,8 @@
 package com.ssafy.drinkus.category.query;
 
-import com.querydsl.core.QueryResults;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.ssafy.drinkus.category.domain.Category;
-import com.ssafy.drinkus.category.domain.QSubCategory;
 import com.ssafy.drinkus.category.domain.SubCategory;
-import com.ssafy.drinkus.category.response.CategoryListResponse;
 import com.ssafy.drinkus.category.response.SubCategoryResponse;
-import com.ssafy.drinkus.user.domain.UserSubCategory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -33,7 +28,6 @@ public class CategoryQueryRepository {
         return results.stream()
                 .map(SubCategoryResponse::from)
                 .collect(Collectors.toList());
-
     }
 
 

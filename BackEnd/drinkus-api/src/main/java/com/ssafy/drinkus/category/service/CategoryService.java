@@ -6,7 +6,6 @@ import com.ssafy.drinkus.category.domain.CategoryRepository;
 import com.ssafy.drinkus.category.domain.SubCategory;
 import com.ssafy.drinkus.category.domain.SubCategoryRepository;
 import com.ssafy.drinkus.category.query.CategoryQueryRepository;
-import com.ssafy.drinkus.category.response.CategoryListResponse;
 import com.ssafy.drinkus.category.response.CategoryResponse;
 import com.ssafy.drinkus.category.response.SubCategoryResponse;
 import com.ssafy.drinkus.common.DuplicateException;
@@ -41,7 +40,7 @@ public class CategoryService {
 
     //회원이 추가한 관심사 조회
 //    public List<CategoryListResponse> findByMyUserId(User user) {
-//        List<UserSubCategory> interestList = userInterestRepository.findByUser(user.getUserId())
+//        List<UserSubCategory> interestList = userInterestRepository.findByMyUserId(user.getUserId())
 //        return interestList.stream()
 //                .map(CategoryListResponse::from)
 //                .collect(Collectors.toList());

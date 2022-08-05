@@ -1,6 +1,9 @@
 package com.ssafy.drinkus.dailyboard.service;
 
-import com.ssafy.drinkus.common.*;
+import com.ssafy.drinkus.common.AuthenticationException;
+import com.ssafy.drinkus.common.InvalidException;
+import com.ssafy.drinkus.common.NotExistException;
+import com.ssafy.drinkus.common.NotFoundException;
 import com.ssafy.drinkus.dailyboard.domain.DailyBoard;
 import com.ssafy.drinkus.dailyboard.domain.DailyBoardRepository;
 import com.ssafy.drinkus.dailyboard.request.DailyBoardCreateRequest;

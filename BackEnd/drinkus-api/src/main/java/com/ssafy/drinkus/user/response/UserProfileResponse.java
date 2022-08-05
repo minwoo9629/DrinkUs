@@ -1,7 +1,9 @@
 package com.ssafy.drinkus.user.response;
 
 import com.ssafy.drinkus.user.domain.User;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor

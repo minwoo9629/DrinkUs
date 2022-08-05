@@ -2,7 +2,6 @@ package com.ssafy.drinkus.security.handler;
 
 import com.ssafy.drinkus.security.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.stomp.StompCommand;

@@ -1,13 +1,13 @@
 package com.ssafy.drinkus.user.service;
 
+import com.ssafy.drinkus.auth.domain.Auth;
+import com.ssafy.drinkus.auth.domain.AuthRepository;
+import com.ssafy.drinkus.auth.response.TokenResponse;
 import com.ssafy.drinkus.common.*;
 import com.ssafy.drinkus.common.type.TokenType;
 import com.ssafy.drinkus.email.request.UserNameAuthRequest;
 import com.ssafy.drinkus.email.request.UserNameCheckRequest;
 import com.ssafy.drinkus.email.service.EmailService;
-import com.ssafy.drinkus.auth.response.TokenResponse;
-import com.ssafy.drinkus.auth.domain.Auth;
-import com.ssafy.drinkus.auth.domain.AuthRepository;
 import com.ssafy.drinkus.emailauth.domain.EmailAuth;
 import com.ssafy.drinkus.security.util.JwtUtil;
 import com.ssafy.drinkus.user.domain.User;

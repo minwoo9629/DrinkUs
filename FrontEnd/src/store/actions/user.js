@@ -1,48 +1,20 @@
-import axios from "axios";
-import {
-  LOG_IN_REQUEST,
-  LOG_IN_SUCCESS,
-  LOG_IN_FAILURE,
-  LOG_OUT,
-} from "../types/user";
+import { SET_USER_PROFILE, LOG_OUT } from "../types/user";
+import { getProfile } from "../../api/AuthAPI";
 
 // async action creator
-const logIn = (data) => {
+const getUserProfile = () => {
   // async action
-  return (dispatch, getState) => {
-    // dispatch(logInRequest(data));
-    axios
-      .get("https://jsonplaceholder.typicode.com/users/1")
-      .then((response) => {
-        // 토큰받고
-        // 프로필 요청
-        if (response.status === 200) {
-          dispatch(logInSuccess(data));
-        }
-      })
-      .catch((e) => dispatch(logInFailure(e)));
+  return async (dispatch, getState) => {
+    const response = await getProfile();
+    dispatch(setUserProfile(response.data));
   };
 };
 
 // sync action creator
 
-const logInRequest = (data) => {
+const setUserProfile = (data) => {
   return {
-    type: LOG_IN_REQUEST,
-    data,
-  };
-};
-
-const logInSuccess = (data) => {
-  return {
-    type: LOG_IN_SUCCESS,
-    data,
-  };
-};
-
-const logInFailure = (data) => {
-  return {
-    type: LOG_IN_FAILURE,
+    type: SET_USER_PROFILE,
     data,
   };
 };
@@ -53,4 +25,4 @@ const logOut = () => {
   };
 };
 
-export { logIn, logInRequest, logInSuccess, logInFailure, logOut };
+export { getUserProfile, setUserProfile, logOut };

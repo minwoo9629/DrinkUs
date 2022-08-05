@@ -2,8 +2,8 @@ package com.ssafy.drinkus.dailyboard.controller;
 
 import com.ssafy.drinkus.config.LoginUser;
 import com.ssafy.drinkus.dailyboard.request.DailyBoardCreateRequest;
-import com.ssafy.drinkus.dailyboard.response.DailyBoardResponse;
 import com.ssafy.drinkus.dailyboard.request.DailyBoardUpdateRequest;
+import com.ssafy.drinkus.dailyboard.response.DailyBoardResponse;
 import com.ssafy.drinkus.dailyboard.response.MyBoardResponse;
 import com.ssafy.drinkus.dailyboard.service.DailyBoardService;
 import com.ssafy.drinkus.user.domain.User;

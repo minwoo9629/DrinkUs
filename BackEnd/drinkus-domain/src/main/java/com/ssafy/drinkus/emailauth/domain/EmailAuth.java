@@ -1,7 +1,10 @@
 package com.ssafy.drinkus.emailauth.domain;
 
 import com.ssafy.drinkus.common.type.YN;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

@@ -1,19 +1,11 @@
 package com.ssafy.drinkus.chat.controller;
 
-import com.ssafy.drinkus.chat.request.ChatRequest;
-import com.ssafy.drinkus.chat.response.MessageResponse;
 import com.ssafy.drinkus.chat.service.ChatService;
 import com.ssafy.drinkus.security.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.handler.annotation.Header;
-import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/chats")

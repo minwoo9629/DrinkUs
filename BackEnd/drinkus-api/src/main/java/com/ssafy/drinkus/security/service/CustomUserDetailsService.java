@@ -1,16 +1,18 @@
 package com.ssafy.drinkus.security.service;
 
+import com.ssafy.drinkus.common.NotFoundException;
 import com.ssafy.drinkus.user.domain.User;
 import com.ssafy.drinkus.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import com.ssafy.drinkus.common.NotFoundException;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import static com.ssafy.drinkus.common.NotFoundException.USER_NOT_FOUND;
 
 

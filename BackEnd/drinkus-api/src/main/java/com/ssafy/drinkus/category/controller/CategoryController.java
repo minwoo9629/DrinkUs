@@ -1,7 +1,6 @@
 package com.ssafy.drinkus.category.controller;
 
 
-import com.ssafy.drinkus.category.response.CategoryListResponse;
 import com.ssafy.drinkus.category.response.CategoryResponse;
 import com.ssafy.drinkus.category.response.SubCategoryResponse;
 import com.ssafy.drinkus.category.service.CategoryService;
