@@ -52,7 +52,7 @@ public class RoomService {
                 request.getSearchKeyword(),
                 request.getSameAge(),
                 request.getSortOrder(),
-                request.getCategory(),
+                request.getCategoryId(),
                 pageable,
                 user);
 
