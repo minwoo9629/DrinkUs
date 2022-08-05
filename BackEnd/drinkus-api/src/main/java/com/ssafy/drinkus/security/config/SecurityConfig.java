@@ -63,9 +63,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/ws-stomp/**", "/api/port", "/actuator/health").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/users/refreshToken").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/users/join", "/api/users/login", "/api/users/join/id", "/api/users/id", "/api/users/pw", "/api/users/sendConfirmEmail").permitAll()
-                .antMatchers(HttpMethod.PATCH, "/api/users/confirmToken").permitAll()
+                .antMatchers(HttpMethod.POST, "/users/join", "/users/login", "/users/join/id", "/users/id", "/users/pw", "/users/sendConfirmEmail", "/users/refreshToken").permitAll()
+                .antMatchers(HttpMethod.PATCH, "/users/confirmToken").permitAll()
                 .anyRequest().hasAnyRole("USER", "ADMIN", "SOCIAL")
                 .and()
                 .exceptionHandling()
@@ -95,9 +94,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         configuration.addAllowedHeader("*"); // 모든 헤더에 응답 허용
         configuration.addAllowedMethod("*"); // 모든 POST,GEt 등등 응답 허용
         configuration.setAllowCredentials(true); // 서버가 응답할 때 json을 js에서 처리할 수 있도록 설정
-        //configuration.addExposedHeader("Authorization");
-        configuration.addExposedHeader("AccessToken");
-        configuration.addExposedHeader("RefreshToken");
+        configuration.addExposedHeader("Authorization");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

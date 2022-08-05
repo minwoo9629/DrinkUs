@@ -7,8 +7,30 @@ import static org.junit.jupiter.api.Assertions.*;
 class DailyBoardControllerTest {
 
     @Test
-    void asd(){
-
+    void findByParentIdIsNull() {
     }
 
+    @Test
+    void findByParentId() {
+    }
+
+    @Test
+    void findByCreater() {
+    }
+
+    @Test
+    void createDailyBoard() {
+    }
+
+    @Test
+    void createComment() {
+    }
+
+    @Test
+    void updateDailyBoard() {
+    }
+
+    @Test
+    void deleteDailyBoard() {
+    }
 }

@@ -26,14 +26,12 @@ public class CustomSimpleRulAuthenticationSuccessHandler extends SimpleUrlAuthen
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
-        String accessToken = jwtUtil.createToken(userPrincipal.getUserId(), TokenType.ACCESS_TOKEN);
-        String refreshToken = jwtUtil.createToken(userPrincipal.getUserId(), TokenType.REFRESH_TOKEN);
+        String token = jwtUtil.createToken(userPrincipal.getUserId(), TokenType.ACCESS_TOKEN);
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        response.addHeader("AccessToken", accessToken);
-        response.addHeader("RefreshToken", refreshToken);
+        response.addHeader("Authorization", token);
 
         String target = UriComponentsBuilder.fromUriString(AUTHENTICATION_REDIRECT_URI)
-                .queryParam("token", accessToken)
+                .queryParam("token", token)
                 .build().toString();
 
         getRedirectStrategy().sendRedirect(request, response, target);

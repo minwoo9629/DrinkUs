@@ -8,7 +8,6 @@ import com.ssafy.drinkus.dailyboard.response.MyBoardResponse;
 import com.ssafy.drinkus.dailyboard.service.DailyBoardService;
 import com.ssafy.drinkus.user.domain.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +17,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/daily")
+@RequestMapping("/daily")
 @RequiredArgsConstructor
 public class DailyBoardController {
 
@@ -26,8 +25,8 @@ public class DailyBoardController {
 
     // 원글 조회
     @GetMapping
-    public ResponseEntity<Page<DailyBoardResponse>> findByParentIdIsNull(@PageableDefault Pageable page) {
-        Page<DailyBoardResponse> body = dailyBoardService.findByParentIdIsNull(page);
+    public ResponseEntity<List<DailyBoardResponse>> findByParentIdIsNull(@PageableDefault(size = 10) Pageable page) {
+        List<DailyBoardResponse> body = dailyBoardService.findByParentIdIsNull(page);
         return ResponseEntity.ok().body(body);
     }
 
@@ -40,8 +39,8 @@ public class DailyBoardController {
 
     // 내가 쓴 글 조회
     @GetMapping("/my")
-    public ResponseEntity<Page<MyBoardResponse>> findByCreater(@LoginUser User user, @PageableDefault Pageable page) {
-        Page<MyBoardResponse> body = dailyBoardService.findByCreater(user, page);
+    public ResponseEntity<List<MyBoardResponse>> findByCreater(@LoginUser User user, @PageableDefault(size = 10) Pageable page) {
+        List<MyBoardResponse> body = dailyBoardService.findByCreater(user, page);
         return ResponseEntity.ok().body(body);
     }
 

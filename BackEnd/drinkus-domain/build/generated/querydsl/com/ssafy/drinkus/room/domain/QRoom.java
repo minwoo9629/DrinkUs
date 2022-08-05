@@ -36,12 +36,10 @@ public class QRoom extends EntityPathBase<Room> {
 
     public final EnumPath<com.ssafy.drinkus.common.type.YN> ages70 = createEnum("ages70", com.ssafy.drinkus.common.type.YN.class);
 
-    public final com.ssafy.drinkus.category.domain.QCategory category;
+    public final com.ssafy.drinkus.interest.domain.QCategory category;
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdDate = _super.createdDate;
-
-    public final ListPath<com.ssafy.drinkus.friend.domain.Friend, com.ssafy.drinkus.friend.domain.QFriend> fromFriends = this.<com.ssafy.drinkus.friend.domain.Friend, com.ssafy.drinkus.friend.domain.QFriend>createList("fromFriends", com.ssafy.drinkus.friend.domain.Friend.class, com.ssafy.drinkus.friend.domain.QFriend.class, PathInits.DIRECT2);
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modifiedDate = _super.modifiedDate;
@@ -57,8 +55,6 @@ public class QRoom extends EntityPathBase<Room> {
     public final StringPath roomName = createString("roomName");
 
     public final StringPath roomPw = createString("roomPw");
-
-    public final ListPath<com.ssafy.drinkus.friend.domain.Friend, com.ssafy.drinkus.friend.domain.QFriend> toFriends = this.<com.ssafy.drinkus.friend.domain.Friend, com.ssafy.drinkus.friend.domain.QFriend>createList("toFriends", com.ssafy.drinkus.friend.domain.Friend.class, com.ssafy.drinkus.friend.domain.QFriend.class, PathInits.DIRECT2);
 
     public final com.ssafy.drinkus.user.domain.QUser user;
 
@@ -80,7 +76,7 @@ public class QRoom extends EntityPathBase<Room> {
 
     public QRoom(Class<? extends Room> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.category = inits.isInitialized("category") ? new com.ssafy.drinkus.category.domain.QCategory(forProperty("category")) : null;
+        this.category = inits.isInitialized("category") ? new com.ssafy.drinkus.interest.domain.QCategory(forProperty("category")) : null;
         this.user = inits.isInitialized("user") ? new com.ssafy.drinkus.user.domain.QUser(forProperty("user")) : null;
     }
 
