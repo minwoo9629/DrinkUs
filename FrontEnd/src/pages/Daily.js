@@ -1,5 +1,3 @@
-import axios from "axios";
-import { string } from "i/lib/util";
 import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { BaseFlexColWrapper } from "../components/styled/Wrapper";
@@ -70,7 +68,6 @@ const DailyCommentInput = styled.input`
   margin: 4px;
   position: relative;
 `
-  /* display: ${({ isComment }) => !isComment && 'none'}; */
 
 // 글쓰기 버튼
 const DailyArticlePostButton = styled.button`
@@ -93,7 +90,7 @@ const DailyBoardEditButton = styled.button`
   border: 1px white;
 `
 
-// 답글 달기 버튼
+// 댓글 달기 버튼
 const DailyCommentPostButton = styled.button`
   padding: 12px 24px;
   border-radius: 3px;
@@ -133,107 +130,69 @@ const DailyBoardComment = styled.div`
 const Daily = () => {
   // 상태 저장
   const [state, setState] = useState({
+    // 받아온 정보
+    boardId: "",
+    createrId: "",
+    boardContent: "",
+    // 보낼 정보
     boardArticle: "",
     boardComment: "",
+    // 댓글 창 여닫을 때 필요한 값
     isComment: false,
   })
-
-  const onHandleComment = (e) => {
-    // setState(isComment => !isComment)
-    setState({...state, boardArticle: "1"})
-    setState({...state, boardComment: "1"})
-    setState({...state, isComment: true})
-    console.log("댓글창 나오세요")
-    console.log(state.boardArticle)
-  }
   
+
   // 입력
   const onHandleInput = (e) => {
     setState({ ...state, [e.target.name]: e.target.value });
   };
 
-  // // 글 전체 조회
-  // const getArticle = () => {
-  //   client
-  //     .get("https://i7b306.p.ssafy.io/daily?page={page}", {
-  //     })
-  //     .then(function (response) {
-  //       console.log(response);
-  //     })
-  //     .catch(function (error) {
-  //       console.log(error);
-  //     });
-  // }
-
-// JSONPlaceholder 글 가져오기
+  // 글 전체 조회
+    // client
+    //   .get(`/daily`, {
+    //     params: {
+    //       page: "",
+    //     }
+    //   })
+    //   .then(function (response) {
+    //     console.log(response);
+    //     console.log(response.request.response)
+    //     // setState({...state,
+    //     //   boardContent: response.data.boardContent,
+    //     //   createrId: response.data.createrid
+    //     // })
+    //   })
+    //   .catch(function (error) {
+    //     console.log(error);
+    //   });
+    //   console.log(this.response)
   
-  // const constructor(props) {
-  //   super(props);
-  //   setState({ ...state,
-  //     articleContent: articleContent,
-  //     commentContent: commentContent
-  //   });
-  //   }
-  // }
-
-  // const fetchArticle (props) {
-  //   fetch('https://jsonplaceholder.typicode.com/posts')
-  //   .then(res => res.json())
-  //   .then((userId) => {
-  //     setState(articleContent)
-  //   })
-  //   .then((title) => {
-  //     setState(commentContent)
-  //   })
-  //   .catch((error) => {
-  //     console.log(error);
-  //   })
-  // }
-
-  // const useFetchArticle = (e) => {
-  //   const [content, setContent] = useState({
-  //     userId: "",
-  //     title: "",
-  //   })
-
-  //   useEffect(() => {
-  //     window
-  //       .fetch('https://jsonplaceholder.typicode.com/posts')
-  //       .then((res) => res.json())
-  //       .then((userId) => {
-  //         setContent(userId);
-  //       })
-  //       .then((title) => {
-  //         setContent(title);
-  //       })
-  //       .catch((error) => {
-  //         console.log(error);
-  //       });
-  //     });
-    
-    // const contentsList = content.map((content) => (
-    //   <div key={content.id} id={content.id}>
-    //     <h4>{content.title}</h4>
-    //   </div>
-    // ))
-    // }
-
-  // Json fetch 버튼 만듭시당~!
-  const FetchButton = styled.button`
-    padding: 12px 24px;
-    border-radius: 3px;
-    background-color: #bdcff2;
-    color: white;
-    font-size: 16px;
-    margin: 4px;
-    border: 1px #eaf1ff;
-  `
-
-  // 글 추가
+  useEffect(() => {
+    client
+      .get(`/daily`, {
+        params: {
+          page: "",
+        }
+      })
+      .then(function (response) {
+        console.log(response);
+        console.log(response.request.response)
+        // setState({...state,
+        //   boardContent: response.data.boardContent,
+        //   createrId: response.data.createrid
+        // })
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, [])
+      
+      
+  // 글 작성
   const onArticleSubmit = (e) => {
     e.preventDefault();
     client
-      .post("https://i7b306.p.ssafy.io/daily", {
+    .post(`/daily`, {
         boardContent: state.boardArticle,
       })
       .then(function (response) {
@@ -242,43 +201,53 @@ const Daily = () => {
       .catch(function (error) {
         console.log(error);
       });
-  };
-
+    };
+    
   // 글 수정
   const onArticleEdit = (e) => {
     e.preventDefault();
     client
-      .put("https://i7b306.p.ssafy.io/daily/{board_id}", {
-        boardContent: state.boardArticle,
-      })
-      .then(function (response) {
-        console.log(response);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    .put(`/daily/{board_id}`, {
+      boardContent: state.boardArticle,
+    })
+    .then(function (response) {
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
   };
-
+    
   // 글 삭제
   const onArticleDelete = (e) => {
     e.preventDefault();
     client
-      .delete("https://i7b306.p.ssafy.io/daily/{board_id}", {
-        boardContent: state.boardArticle,
-      })
-      .then(function (response) {
-        console.log(response);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    .delete(`/daily/{board_id}`, {
+      boardContent: state.boardArticle,
+    })
+    .then(function (response) {
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  }
+    
+
+  // 댓글 창 여닫기
+  const onHandleComment = (e) => {
+    if(!state.isComment){
+      setState({...state, isComment: !state.isComment, boardComment:""})
+    }else{
+      setState({...state, isComment: !state.isComment, boardComment:""})
+    }
   }
 
-  // 댓글 추가
+  // 댓글 작성
   const onCommentSubmit = (e) => {
     e.preventDefault();
     client
-      .post("https://i7b306.p.ssafy.io/daily/comment/{parent_id}", {
+    .post(`/daily/comment/201`, {
         boardContent: state.boardComment,
       })
       .then(function (response) {
@@ -293,7 +262,7 @@ const Daily = () => {
   const onCommentEdit = (e) => {
     e.preventDefault();
     client
-      .put("https://i7b306.p.ssafy.io/daily/{board_id}", {
+      .put(`/daily/201`, {
         boardContent: state.boardComment,
       })
       .then(function (response) {
@@ -308,8 +277,7 @@ const Daily = () => {
   const onCommentDelete = (e) => {
     e.preventDefault();
     client
-      .delete("https://i7b306.p.ssafy.io/daily/{board_id}", {
-        // boardContent: state.boardComment,
+      .delete(`/daily/{board_id}`, {
       })
       .then(function (response) {
         console.log(response);
@@ -328,35 +296,48 @@ const Daily = () => {
               placeholder="글을 작성하세요"
               type="string"
               value={state.boardArticle}
-              name="dailyArticleInput"
+              name="boardArticle"
               onChange={onHandleInput}
             />
             <DailyArticlePostButton onClick={onArticleSubmit}>
               글쓰기
             </DailyArticlePostButton>
           </DailyWrapper>
-          <DailyWrapper>
-            <DailyBoard>
-              <ProfileWrapper>
-                <ProfileImg></ProfileImg>
-              </ProfileWrapper>
-              <DailyContent>ㅎㅇ</DailyContent>
-              <DailyContent>
-                <DailyBoardEditButton onClick={onArticleEdit}>
-                  수정
-                </DailyBoardEditButton>
-                <DailyBoardEditButton onClick={onArticleDelete}>
-                  삭제
-                </DailyBoardEditButton>
-                <DailyBoardEditButton
-                  onClick={onHandleComment}
-                  
-                 >
-                  답글달기
-                </DailyBoardEditButton>
-              </DailyContent>
-            </DailyBoard>
+          <div>
+            <DailyWrapper>
+              <DailyBoard>
+                <ProfileWrapper>
+                  <ProfileImg></ProfileImg>
+                </ProfileWrapper>
+                <DailyContent>{state.boardContent}</DailyContent>
+                <DailyContent>
+                  <DailyBoardEditButton onClick={onArticleEdit}>
+                    수정
+                  </DailyBoardEditButton>
+                  <DailyBoardEditButton onClick={onArticleDelete}>
+                    삭제
+                  </DailyBoardEditButton>
+                  <DailyBoardEditButton
+                    onClick={onHandleComment}
+                  >
+                    {state.isComment === true? "댓글취소": "댓글달기"}
+                  </DailyBoardEditButton>
+                </DailyContent>
+              </DailyBoard>
+            </DailyWrapper>
+            <DailyWrapper style = {{display: state.isComment === false ? "none" : "block"}}>
+            <DailyCommentInput
+                placeholder="댓글칸"
+                type="string"
+                value={state.boardComment}
+                name="boardComment"
+                onChange={onHandleInput}
+              />
+            <DailyCommentPostButton onClick={onCommentSubmit}>
+              댓글 달기
+            </DailyCommentPostButton>
           </DailyWrapper>
+          </div>
           <DailyWrapper>
               <DailyBoardComment>
                 <ProfileWrapper>
@@ -373,33 +354,6 @@ const Daily = () => {
                     </DailyBoardEditButton>
                   </DailyContent>
               </DailyBoardComment>
-          </DailyWrapper>
-          <DailyWrapper>
-            <DailyBoard>
-              <ProfileWrapper>
-                <ProfileImg></ProfileImg>
-              </ProfileWrapper>
-            </DailyBoard>
-          </DailyWrapper>
-          <DailyWrapper>
-            <DailyBoardComment>
-              <ProfileWrapper>
-                <ProfileImg></ProfileImg>
-              </ProfileWrapper>
-            </DailyBoardComment>
-          </DailyWrapper>
-          <DailyWrapper>
-            <DailyCommentInput
-                placeholder="댓글칸"
-                type="string"
-                value={state.boardContent}
-                name="dailyCommnetInput"
-                onChange={onHandleInput}
-                style = {{display: state.isComment === false ? "display": "none"}}
-              />
-            <DailyCommentPostButton onClick={onCommentSubmit}>
-              답글 달기
-            </DailyCommentPostButton>
           </DailyWrapper>
         </BaseFlexColWrapper>
       </Wrapper>
