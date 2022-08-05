@@ -5,9 +5,9 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 ENV PATH /usr/src/app/node_modules/.bin:$PATH
 COPY package.json /usr/src/app/package.json
-RUN npm config set proxy null
-RUN npm config set https-proxy null
-RUN npm config set registry http://registry.npmjs.org/
+# RUN npm config set proxy null
+# RUN npm config set https-proxy null
+# RUN npm config set registry http://registry.npmjs.org/
 RUN npm install
 RUN npm install react-scripts@5.0.1 -g
 
