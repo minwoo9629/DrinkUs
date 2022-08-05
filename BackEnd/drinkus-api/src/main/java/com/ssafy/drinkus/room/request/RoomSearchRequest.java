@@ -5,6 +5,9 @@ import com.ssafy.drinkus.category.response.CategoryResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.boot.context.properties.bind.DefaultValue;
+
+import javax.validation.constraints.NotNull;
 
 @Data
 @NoArgsConstructor
@@ -17,8 +20,8 @@ public class RoomSearchRequest {
     private Boolean sameAge;
 
     // 오래된순, 최신순
-    private Integer sortOrder;
+    private int sortOrder;
 
     //관심사
-    private CategoryResponse category;
+    private Long categoryId;
 }

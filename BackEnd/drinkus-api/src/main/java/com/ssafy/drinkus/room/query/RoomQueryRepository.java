@@ -27,8 +27,8 @@ public class RoomQueryRepository {
     private final JPAQueryFactory queryFactory;
 
     //페이징
-    public Page<Room> findBySearchCondition(String searchKeyword, Boolean sameAge, Integer sortOrder,
-                                            CategoryResponse category, Pageable pageable, User user) {
+    public Page<Room> findBySearchCondition(String searchKeyword, Boolean sameAge, int sortOrder,
+                                            Long categoryId, Pageable pageable, User user) {
 
         //페이징
         QueryResults<Room> result = queryFactory
@@ -37,7 +37,7 @@ public class RoomQueryRepository {
                         searchKeywordEq(searchKeyword),
                         sameAgeFirstEq(sameAge, user),
                         sameAgeSecondEq(sameAge, user),
-                        categoryIdEq(category)
+                        categoryIdEq(categoryId)
                 )
                 .orderBy(orderByEq(sortOrder))
                 .offset(pageable.getOffset())
@@ -100,8 +100,8 @@ public class RoomQueryRepository {
         return null;
     }
 
-    private BooleanExpression categoryIdEq(CategoryResponse category){
-        return (category != null && category.getCategoryId() > 0) ? room.category.categoryId.eq(category.getCategoryId()) : null;
+    private BooleanExpression categoryIdEq(Long categoryId){
+        return (categoryId != null && categoryId > 0) ? room.category.categoryId.eq(categoryId) : null;
     }
 
     private OrderSpecifier orderByEq(Integer sortOrder){

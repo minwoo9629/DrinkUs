@@ -52,20 +52,26 @@ public class RoomService {
                 request.getSearchKeyword(),
                 request.getSameAge(),
                 request.getSortOrder(),
-                request.getCategory(),
+                request.getCategoryId(),
                 pageable,
                 user);
 
-        return findRoomList.map(room -> RoomListResponse.from(room));
+        return findRoomList.map(RoomListResponse::from);
     }
 
     //화상방 생성
     @Transactional
     public void createRoom(User user, RoomCreateRequest request){
+        Category findCategory = null;
         User findUser = userRepository.findById(user.getUserId())
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
-        Category findCategory = categoryRepository.findById(request.getCategoryId())
-                .orElseThrow(() -> new NotFoundException(CATEGORY_NOT_FOUND));
+        if(request.getCategoryId() != null){
+            findCategory = categoryRepository.findById(request.getCategoryId())
+                    .orElseThrow(() -> new NotFoundException(CATEGORY_NOT_FOUND));
+        }
+        else {
+            findCategory = null;
+        }
         Room room = Room.createRoom(
                 request.getRoomName(),
                 findUser,
@@ -86,12 +92,17 @@ public class RoomService {
     //화상방 수정
     @Transactional
     public void updateRoom(User user, Long roomId, RoomUpdateRequest request){
+        Category findCategory = null;
         Room findroom = roomRepository.findById(roomId)
                 .orElseThrow(() -> new NotFoundException(NotFoundException.ROOM_NOT_FOUND));
 
-        Category findCategory = categoryRepository.findById(request.getCategory().getCategoryId())
-                .orElseThrow(() -> new NotFoundException(CATEGORY_NOT_FOUND));
-
+        if(request.getCategoryId() != null){
+            findCategory = categoryRepository.findById(request.getCategoryId())
+                    .orElseThrow(() -> new NotFoundException(CATEGORY_NOT_FOUND));
+        }
+        else {
+            findCategory = null;
+        }
         if(!user.getUserId().equals(findroom.getUser().getUserId())){
             throw new NotMatchException(USER_NOT_MATCH);
         }

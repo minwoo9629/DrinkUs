@@ -35,5 +35,5 @@ public class RoomUpdateRequest {
     private YN[] ages;
 
     //관심사
-    private CategoryResponse category;
+    private Long categoryId;
 }
