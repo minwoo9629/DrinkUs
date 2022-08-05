@@ -33,12 +33,12 @@ public class CategoryController {
 //    }
 //
 //
-//    //타회원의 관심사 조회
-//    @GetMapping("/subcategory/{user_id}")
-//    public ResponseEntity<List<SubCategoryResponse>> findByUserId(@LoginUser User user, @PathVariable("user_id")Long userId) {
-//        List<SubCategoryResponse> body = categoryService.findByUserId(user.getUserId());
-//        return ResponseEntity.ok().body(body);
-//    }
+    //타회원의 관심사 조회
+    @GetMapping("/subcategory/{user_id}")
+    public ResponseEntity<List<SubCategoryResponse>> findByUserId(@LoginUser User user, @PathVariable("user_id")Long userId) {
+        List<SubCategoryResponse> body = categoryService.findByUserId(user.getUserId());
+        return ResponseEntity.ok().body(body);
+    }
 
     //회원의 관심사 생성(추가)
     @PostMapping("/{subcategory_id}")

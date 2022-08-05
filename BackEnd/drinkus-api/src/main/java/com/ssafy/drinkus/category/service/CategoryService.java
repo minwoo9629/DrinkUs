@@ -30,6 +30,8 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final UserSubCategoryRepository userSubCategoryRepository;
     private final SubCategoryRepository subCategoryRepository;
+    private final CategoryQueryRepository categoryQueryRepository;
+
     public List<CategoryResponse> findAllCategory() {
         List<Category> categoryList = categoryRepository.findAll();
         return categoryList.stream()
@@ -47,13 +49,9 @@ public class CategoryService {
 
 
     //타 회원의 관심사 조회
-//    public List<SubCategoryResponse> findByUserId(Long userId){
-//        List<UserSubCategory> userInterests = userInterestRepository.findByUser(userId);
-//        return userInterests.stream()
-//                .map(userInterest -> SubCategoryResponse.from(userInterest))
-////                .map(UserInterestResponse::from)
-//                .collect(Collectors.toList());
-//    }
+    public List<SubCategoryResponse> findByUserId(Long userId){
+        return categoryQueryRepository.findByUserId(userId);
+    }
 
     //회원의 관심사 생성
     @Transactional
