@@ -16,7 +16,7 @@ ext {
 
 dependencies {
     implementation(project(":drinkus-common")) //COMMON모듈에 있는 class들을 사용할 수 있음
-
+    implementation group: 'org.json', name: 'json', version: '20220320' // JSON 파싱
 
     api 'org.springframework.boot:spring-boot-starter-data-jpa'
     api "com.querydsl:querydsl-jpa:${queryDslVersion}"

@@ -1,7 +1,6 @@
-package com.ssafy.drinkus.room;
+package com.ssafy.drinkus.user.domain;
 
-import com.ssafy.drinkus.common.BaseEntity;
-import com.ssafy.drinkus.user.domain.User;
+import com.ssafy.drinkus.interest.domain.Interest;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,18 +12,18 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
-public class RoomHistory extends BaseEntity {
+public class UserInterest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "history_id")
-    private Long historyId;
+    @Column(name = "user_interest_id")
+    private Long userInterestId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "room_id")
-    private Room room;
+    @JoinColumn(name = "interest_id")
+    private Interest interest;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
-    
+
 }

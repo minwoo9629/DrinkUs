@@ -27,6 +27,8 @@ public class EmailController {
     // 이메일 토큰 인증 확인
     @PatchMapping("/confirm")
     public ResponseEntity<Void> confirmUserNameCheck(@RequestBody @Valid UserNameAuthRequest request){
+        System.out.println(request.getUserName());
+        System.out.printf(request.getAuthToken());
         emailService.confirmUserName(request);
         return ResponseEntity.ok().build();
     }

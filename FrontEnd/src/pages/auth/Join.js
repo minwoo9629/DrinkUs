@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Header from "../../components/layout/Header"
-import axios from "axios";
+import { client } from "../../utils/client";
 
 const Wrapper = styled.div`
   background-color: black;
@@ -53,6 +53,19 @@ const InputWrapper = styled.div`
   margin: 14px;
   position: relative;
 `;
+
+const EmailInput = styled.input`
+  position: relative;
+  height: 30px;
+  width: 200px;
+  top: 7px;
+  font-size: 18px;
+  background-color: transparent;
+  outline: none;
+  border: none;
+  margin: 0px;
+  color: white;
+`
 
 const JoinInput = styled.input`
   position: relative;
@@ -200,8 +213,8 @@ const Join = () => {
       alert("생년월일은 필수 입력 항목입니다");
     }
 
-    // 회원가입 axios 요청
-    axios
+    // 회원가입 client 요청
+    client
       .post("http://localhost:8080/users/join", {
         userName: state.userName,
         userPw: state.userPw,
@@ -220,7 +233,7 @@ const Join = () => {
   // 이메일 인증번호 전송
   const onSendEmail = (e) => {
     e.preventDefault();
-    axios
+    client
       .post("http://localhost:8080/email/sendCheckMail", {
         userName: state.userName,
       })
@@ -233,7 +246,7 @@ const Join = () => {
   // 인증번호 확인
   const onConfirmEmail = (e) => {
     e.preventDefault();
-    axios
+    client
       .patch("http://localhost:8080/email/confirm", {
         userName: state.userName,
         authToken: state.authToken,
@@ -251,7 +264,7 @@ const Join = () => {
   // 중복확인 버튼 --> requestBody로 수정되면 확인할 것!!!!!!!!
   const onDoubleCheck = (e) => {
     e.preventDefault();
-    axios
+    client
       .post("http://localhost:8080/users/join/id", {
         userName: state.userName,
       })
@@ -271,7 +284,7 @@ const Join = () => {
             <JoinForm>
               <GuideLine>이메일</GuideLine>
               <InputWrapper>
-                <JoinInput
+                <EmailInput
                   type="email"
                   value={state.userName}
                   name="userName"

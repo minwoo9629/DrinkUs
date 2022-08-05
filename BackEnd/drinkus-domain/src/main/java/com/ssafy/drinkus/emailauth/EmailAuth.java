@@ -1,4 +1,4 @@
-package com.ssafy.drinkus.email_auth;
+package com.ssafy.drinkus.emailauth;
 
 import com.ssafy.drinkus.common.type.YN;
 import lombok.*;
