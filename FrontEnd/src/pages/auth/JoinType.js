@@ -1,3 +1,4 @@
+import Header from "../../components/layout/Header";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { BackButton } from "../../components/common/buttons/BackButton";

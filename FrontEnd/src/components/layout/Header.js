@@ -12,7 +12,6 @@ import { SuccessAlert } from "../../utils/sweetAlert";
 import { BaseFlexWrapper } from "../styled/Wrapper";
 
 const DrinkUsHeader = styled(BaseFlexWrapper)`
-  position: fixed;
   position: ${({ position }) => position};
   padding: 40px 100px;
   background-color: ${(props) => props.color};
@@ -74,7 +73,7 @@ const LogOutButton = styled.button`
   }
 `;
 
-const Header = () => {
+const Header = ({position}) => {
   const [ScrollY, setHeaderColor] = useState(0);
   const [HeaderStatus, setHeaderStatus] = useState(false);
   const dispatch = useDispatch();
@@ -104,6 +103,7 @@ const Header = () => {
     <DrinkUsHeader
       color={HeaderStatus ? "white" : "black"}
       opacity={HeaderStatus ? "0.9" : "0.7"}
+      position={position}
     >
       <HeaderMenu width={100} justify={"space-between"}>
         <HeaderMenuLinkWrapper width={"60"} justify={"space-between"}>
@@ -167,5 +167,5 @@ const Header = () => {
 export default Header;
 
 DrinkUsHeader.defaultProps = {
-  position: "fixed",
+  position: "static",
 };

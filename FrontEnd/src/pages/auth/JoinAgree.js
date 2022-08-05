@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Header from "../../components/layout/Header";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { Wrapper, RoundedWrapper, BaseFlexColWrapper } from "../../components/styled/Wrapper";

@@ -11,15 +11,19 @@ services:
       - "3000:80"
     networks:
       - frontend
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./usr/src/app/build:/usr/share/nginx/html
+
     
-  client:
-    container_name: client
+  Frontend:
+    container_name: Frontend
     build:
-      context: ./client
+      context: ./Frontend
       dockerfile: Dockerfile
     volumes:
-      - "./client/:/app"
-      - "/app/node_modules"
+      - "./Frontend/:/usr/src/app"
+      - "/usr/src/app/node_modules"
     networks:
       - frontend
 
