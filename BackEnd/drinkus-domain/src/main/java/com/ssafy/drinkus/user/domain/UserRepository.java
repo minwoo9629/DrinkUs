@@ -11,6 +11,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Boolean existsByUserName(String userName);
 
+    Boolean existsByUserNickname(String userNickname);
+
     // 인기도 limit 초기화
     @Modifying
     @Query("UPDATE User u SET u.userPopularityLimit = :limit")
