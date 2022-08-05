@@ -11,7 +11,7 @@ import Join from "./pages/auth/Join";
 import JoinAgree from "./pages/auth/JoinAgree"
 import JoinType from "./pages/auth/JoinType";
 import Profile from "./pages/auth/Profile";
-import Reports from "./pages/Reports";
+import Reports from "./pages/auth/Reports";
 import SocialLogin from "./pages/auth/SocialLogin";
 import MyPage from "./pages/auth/MyPage";
 import DrinkLive from "./pages/room/DrinkLive"
