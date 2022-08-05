@@ -11,6 +11,7 @@ import com.ssafy.drinkus.room.domain.RoomHistoryRepository;
 import com.ssafy.drinkus.room.domain.RoomRepository;
 import com.ssafy.drinkus.room.query.RoomQueryRepository;
 import com.ssafy.drinkus.room.request.RoomCreateRequest;
+import com.ssafy.drinkus.room.request.RoomJoinRequest;
 import com.ssafy.drinkus.room.request.RoomSearchRequest;
 import com.ssafy.drinkus.room.request.RoomUpdateRequest;
 import com.ssafy.drinkus.room.response.RoomInfoResponse;
@@ -54,8 +55,7 @@ public class RoomService {
     public Page<RoomListResponse> findBySearchRequest(User user, RoomSearchRequest request, Pageable pageable){
         Page<Room> findRoomList = roomQueryRepository.findBySearchCondition(
                 request.getSearchKeyword(),
-                request.getSameAge(),
-                request.getSortOrder(),
+                request.getSameAge(),j
                 request.getCategory(),
                 pageable,
                 user);
@@ -66,11 +66,6 @@ public class RoomService {
     //화상방 생성
     @Transactional
     public void createRoom(User user, RoomCreateRequest request){
-        // 방 이름 중복 검사
-        if (roomRepository.existsByName(request.getRoomName())){
-            throw new RoomNameExistsException(RoomNameExistsException.ROOM_NAME_EXISTS);
-        }
-
         User findUser = userRepository.findById(user.getUserId())
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
         Category findCategory = categoryRepository.findById(request.getCategoryId())
@@ -126,5 +121,21 @@ public class RoomService {
         RoomHistory findRoomHistory = roomHistoryRepository.findById(findroom.getRoomId())
                 .orElseThrow(() -> new NotFoundException(NotFoundException.ROOM_NOT_FOUND));
         findRoomHistory.updateRoomHistory(findroom, user);
+    }
+
+    @Transactional
+    // 화상방 입장
+    public void joinRoom(User user, RoomJoinRequest request){
+        // 유저 아이디로 유저 정보 얻어온다
+        User findUser = userRepository.findById(user.getUserId())
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
+        // target room 정보 얻어온다
+        Room findroom = roomRepository.findById(request.)
+    }
+
+    @Transactional
+    // 화상방 퇴장
+    public void exitRoom(User user){
+
     }
 }

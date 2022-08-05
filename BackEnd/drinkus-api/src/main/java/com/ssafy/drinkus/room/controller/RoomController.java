@@ -1,9 +1,7 @@
 package com.ssafy.drinkus.room.controller;
 
 import com.ssafy.drinkus.config.LoginUser;
-import com.ssafy.drinkus.room.request.RoomCreateRequest;
-import com.ssafy.drinkus.room.request.RoomSearchRequest;
-import com.ssafy.drinkus.room.request.RoomUpdateRequest;
+import com.ssafy.drinkus.room.request.*;
 import com.ssafy.drinkus.room.response.RoomInfoResponse;
 import com.ssafy.drinkus.room.response.RoomListResponse;
 import com.ssafy.drinkus.room.service.RoomService;
@@ -32,47 +30,10 @@ public class RoomController {
 
     private final RoomService roomService;
 
-    // 오픈비두 객체 SDK
-    private OpenVidu openVidu;
-
-    // 방 관리
-    private Map<String, Integer> mapSessions = new ConcurrentHashMap<>();
-
-    // 오픈비두 서버 관련 변수
-    private String OPENVIDU_URL;
-    private String SECRET;
-
-    ///////////////////////////////////////////////////////
-
-    // RoomController 접근 시마다 오픈비두 서버 관련 변수르 얻어옴
-    @Autowired
-    public RoomController(RoomService roomService, @Value("${openvidu.secret}")String secret, @Value("${openvidu.url}")String openviduUrl){
-        this.roomService = roomService;
-        this.SECRET = secret;
-        this.OPENVIDU_URL = openviduUrl;
-        this.openVidu = new OpenVidu(OPENVIDU_URL, SECRET);
-    }
-
-    //화상방 생성
-    @PostMapping("")
-    public ResponseEntity<Void> createRoom(@LoginUser User user, @RequestBody @Valid RoomCreateRequest request){
-
-        // DB 저장
-        roomService.createRoom(user, request);
-
-        // 방 이름 (세션에서의 고유키 역할)
-        String roomName = request.getRoomName();
-
-        // 방 관리 map에 저장
-        this.mapSessions.put(roomName, 1); // 방고유키, 인원
-        return ResponseEntity.ok().build();
-    }
-
     //화상방 상세조회
     @GetMapping("/{room_id}")
     public ResponseEntity<RoomInfoResponse> findByRoomId(@PathVariable("room_id") Long roomId){
         RoomInfoResponse body = roomService.findByRoomId(roomId);
-
         return ResponseEntity.ok().body(body);
     }
 
@@ -87,7 +48,12 @@ public class RoomController {
         return ResponseEntity.ok().body(body);
     }
 
-
+    //화상방 생성
+    @PostMapping
+    public ResponseEntity<Void> createRoom(@LoginUser User user, @RequestBody @Valid RoomCreateRequest request){
+        roomService.createRoom(user, request);
+        return ResponseEntity.ok().build();
+    }
 
     //화상방 수정
     @PutMapping("/{room_id}")
@@ -106,10 +72,19 @@ public class RoomController {
     }
 
     //화상방 참가
+    @PostMapping("/join")
+    public ResponseEntity<Void> joinRoom(@LoginUser User user, @RequestBody RoomJoinRequest joinRoomRequest){
+        System.out.println("## Join Room Controller");
+    }
 
     //화상방 퇴장
+    @PatchMapping("/exit")
+    public ResponseEntity<Void> exitRoom(@LoginUser User user, @RequestBody RoomExitRequest exitRoomRequest){
+        System.out.println("## Exit Room Controller");
+    }
 
     //화상방 강퇴
+
 
 
 }
