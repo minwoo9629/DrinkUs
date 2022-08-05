@@ -6,6 +6,7 @@ spring:
       - external
       - oauth
 
+  ## OAuth2 설정
   security:
     oauth2:
       client:
