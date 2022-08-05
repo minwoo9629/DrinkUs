@@ -18,3 +18,4 @@ public class LoginUserDetails extends User {
     }
 
 }
+

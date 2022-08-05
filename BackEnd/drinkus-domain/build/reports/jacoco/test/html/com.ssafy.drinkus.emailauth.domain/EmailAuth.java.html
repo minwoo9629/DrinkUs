@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>EmailAuth.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">drinkus-domain</a> &gt; <a href="index.source.html" class="el_package">com.ssafy.drinkus.emailauth.domain</a> &gt; <span class="el_source">EmailAuth.java</span></div><h1>EmailAuth.java</h1><pre class="source lang-java linenums">package com.ssafy.drinkus.emailauth.domain;
+
+import com.ssafy.drinkus.common.type.YN;
+import lombok.*;
+
+import javax.persistence.*;
+import java.time.LocalDateTime;
+
+@Entity
+@Getter
+<span class="nc" id="L11">@NoArgsConstructor(access = AccessLevel.PROTECTED)</span>
+<span class="nc" id="L12">@AllArgsConstructor</span>
+public class EmailAuth {
+    private static final long EMAIL_TOKEN_EXPIRE_TIME = 5L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+<span class="nc" id="L18">    private Long id;</span>
+
+<span class="nc" id="L20">    private String userName; // 인증을 진행할 이메일</span>
+
+<span class="nc" id="L22">    private String authToken; // 토큰</span>
+
+    @Enumerated(EnumType.STRING)
+<span class="nc" id="L25">    private YN expired; // 토큰 만료 여부</span>
+
+<span class="nc" id="L27">    private LocalDateTime expireDate; // 토큰 만료일시</span>
+
+    public static EmailAuth createEmailAuth(String userName, String authToken){
+<span class="nc" id="L30">        EmailAuth emailAuth = new EmailAuth();</span>
+<span class="nc" id="L31">        emailAuth.userName = userName;</span>
+<span class="nc" id="L32">        emailAuth.authToken = authToken;</span>
+<span class="nc" id="L33">        emailAuth.expired = YN.N;</span>
+<span class="nc" id="L34">        emailAuth.expireDate = LocalDateTime.now().plusMinutes(EMAIL_TOKEN_EXPIRE_TIME);</span>
+
+<span class="nc" id="L36">        return emailAuth;</span>
+    }
+
+    // 토큰 사용으로 인한 만료
+    public void useToken(){
+<span class="nc" id="L41">        expired = YN.Y;</span>
+<span class="nc" id="L42">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -1,14 +1,14 @@
 package com.ssafy.drinkus.security.filter;
 
-import com.ssafy.drinkus.security.service.AuthService;
+import com.ssafy.drinkus.security.service.CustomUserDetailsService;
 import com.ssafy.drinkus.security.service.LoginUserDetails;
 import com.ssafy.drinkus.security.util.JwtUtil;
+import com.ssafy.drinkus.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -21,19 +21,17 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends GenericFilter {
 
-    private final JwtUtil jwtUtil;
-    private final AuthService authService;
+    private final  JwtUtil jwtUtil;
+    private  UserRepository userRepository;
+    private final CustomUserDetailsService customUserDetailsService;
 
     @Override
-    public void doFilter(ServletRequest request,
-                         ServletResponse response,
-                         FilterChain chain) throws IOException, ServletException {
-
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         String jwtToken = extractToken((HttpServletRequest) request);
 
         if (StringUtils.hasText(jwtToken) && jwtUtil.isValidToken(jwtToken)) {
             //authService에서 회원정보를 받음
-            UserDetails userDetails = authService.loadUserByUsername(jwtUtil.getSubject(jwtToken));
+            UserDetails userDetails = customUserDetailsService.loadUserByUsername(jwtUtil.getSubject(jwtToken));
             LoginUserDetails loginUserDetails = (LoginUserDetails) userDetails;
 
             // 회원 인증 객체안에 회원정보가 들어있음
