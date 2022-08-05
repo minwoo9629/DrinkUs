@@ -1,9 +1,12 @@
 import { useState } from "react";
-import Header from "../../components/layout/Header";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { Wrapper, RoundedWrapper, BaseFlexColWrapper } from "../../components/styled/Wrapper";
-import { BackButton } from "../../components/common/buttons/BackButton";
+import {
+  Wrapper,
+  RoundedWrapper,
+  BaseFlexColWrapper,
+} from "../../../components/styled/Wrapper";
+import { BackButton } from "../../../components/common/buttons/BackButton";
 
 // 체크박스 포커스 주기
 
@@ -12,7 +15,7 @@ const AgreeForm = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-`
+`;
 // const AgreeTitle = styled.div`
 //   justify-content: space-between;
 //   align-items: center;
@@ -38,7 +41,7 @@ const AgreeWrapper = styled.div`
   color: white;
   display: flex;
   font-size: 20px;
-`
+`;
 
 const ButtonWrapper = styled.div`
   margin-top: 30px;
@@ -62,7 +65,7 @@ const LinkWrapper = styled.div`
   background-color: #131317;
   font-size: 20px;
   margin: 40px;
-`
+`;
 
 const JoinAgree = ({ history }) => {
   const [checkedButtons, setCheckedButtons] = useState([]);
@@ -81,7 +84,7 @@ const JoinAgree = ({ history }) => {
 
   return (
     <>
-      <BackButton/>
+      <BackButton />
       {/* <AgreeTitle>동의 페이지</AgreeTitle> */}
       <Wrapper>
         <RoundedWrapper
@@ -93,20 +96,24 @@ const JoinAgree = ({ history }) => {
           <BaseFlexColWrapper>
             <AgreeForm>
               <AgreeWrapper>
-                <u onClick={() => window.open("../assets/개인정보수집.txt")}>개인정보수집</u>
-                  <Button>
-                    <input
-                      type="checkbox"
-                      id="check"
-                      onChange={(e) => {
-                        changeHandler(e.currentTarget.checked, "check");
-                      }}
-                      checked={checkedButtons.includes("check") ? true : false}
-                    ></input>
-                  </Button>
+                <u onClick={() => window.open("../assets/개인정보수집.txt")}>
+                  개인정보수집
+                </u>
+                <Button>
+                  <input
+                    type="checkbox"
+                    id="check"
+                    onChange={(e) => {
+                      changeHandler(e.currentTarget.checked, "check");
+                    }}
+                    checked={checkedButtons.includes("check") ? true : false}
+                  ></input>
+                </Button>
               </AgreeWrapper>
               <AgreeWrapper>
-                <u onClick={() => window.open("../assets/이용약관동의.txt")}>이용약관동의</u>
+                <u onClick={() => window.open("../assets/이용약관동의.txt")}>
+                  이용약관동의
+                </u>
                 <Button>
                   <input
                     type="checkbox"
@@ -116,12 +123,12 @@ const JoinAgree = ({ history }) => {
                     }}
                     checked={checkedButtons.includes("check2") ? true : false}
                   ></input>
-              </Button>
+                </Button>
               </AgreeWrapper>
               <AgreeWrapper>
                 20세 이상입니다.
                 <Button>
-                <input
+                  <input
                     type="checkbox"
                     id="check3"
                     onChange={(e) => {
@@ -145,7 +152,9 @@ const JoinAgree = ({ history }) => {
                       ? { backgroundColor: "#131317" }
                       : { backgroundColor: "#605D9F" }
                   }
-                >NEXT</LinkWrapper>
+                >
+                  NEXT
+                </LinkWrapper>
               </Link>
             </ButtonWrapper>
           </BaseFlexColWrapper>

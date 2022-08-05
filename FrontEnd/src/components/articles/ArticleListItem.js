@@ -10,7 +10,7 @@ const DeleteButton = styled.div`
   text-align: center;
 `;
 
-const ArticleListItme = ({
+const ArticleListItem = ({
   articleId,
   articleContent,
   type,
@@ -23,6 +23,7 @@ const ArticleListItme = ({
         flexDirection: "row",
         marginBottom: "32px",
         alignItems: "center",
+        height: "20px",
       }}
     >
       <div style={{ width: "20%" }}>{type}</div>
@@ -36,5 +37,5 @@ const ArticleListItme = ({
   );
 };
 
-export default ArticleListItme;
+export default ArticleListItem;
 //
