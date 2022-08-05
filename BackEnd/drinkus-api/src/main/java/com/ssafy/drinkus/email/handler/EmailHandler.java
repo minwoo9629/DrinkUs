@@ -16,7 +16,7 @@ public class EmailHandler {
 
 
     // 생성자
-    public EmailHandler(JavaMailSender jSender) throws MessagingException {
+    public EmailHandler(JavaMailSender jSender) throws MessagingException{
         this.sender = jSender;
         message = jSender.createMimeMessage();
         messageHelper = new MimeMessageHelper(message, true, "UTF-8");

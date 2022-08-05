@@ -1,8 +1,7 @@
 package com.ssafy.drinkus.dailyboard.query;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.ssafy.drinkus.dailyboard.domain.DailyBoard;
-import com.ssafy.drinkus.dailyboard.domain.QDailyBoard;
+import com.ssafy.drinkus.dailyboard.DailyBoard;
 //import com.ssafy.drinkus.dailyboard.QDailyBoard;
 import com.ssafy.drinkus.dailyboard.response.DailyBoardResponse;
 import com.ssafy.drinkus.dailyboard.response.MyBoardResponse;

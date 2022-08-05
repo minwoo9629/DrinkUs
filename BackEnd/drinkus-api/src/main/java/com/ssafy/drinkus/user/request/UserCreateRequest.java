@@ -24,5 +24,6 @@ public class UserCreateRequest {
     @NotBlank(message = "이름은 필수값입니다.")
     private String userFullname;
 
+    @Size(max = 8)
     private String userBirthday;
 }

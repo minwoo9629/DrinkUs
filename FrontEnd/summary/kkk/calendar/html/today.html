@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <link rel="stylesheet" href="../css/main.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dosis:wght@300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=PT+Sans+Narrow&display=swap" rel="stylesheet">
+
+    <title>오늘 과목</title>
+
+    <script>
+        function addSubject() {
+            document.getElementById('addform').showModal();
+        }
+
+        window.onload = function () {
+            const pad = (str) => str >= 10 ? str : '0' + str;
+
+            let today = new Date();
+            let y = today.getFullYear();
+            let m = today.getMonth();
+            let d = today.getDate();
+            document.querySelector('.today').innerText = `${y}.${pad(m + 1)}.${pad(d)}`;
+
+            document.querySelector('.add_btn').addEventListener('click', addSubject, false);
+        }
+    </script>
+
+    <style>
+        .add_btn {
+            position: fixed;
+            bottom: 100px;
+            right: 100px;
+
+            background-color: rgb(255, 128, 166);
+            color: white;
+            border-radius: 100px;
+            padding: 40px;
+
+            border: none;
+            box-shadow: 3px 3px 15px rgba(126, 126, 126, 0.8);
+        }
+
+        .modal {
+            padding: 100px;
+            margin-top: 15%;
+            margin-left: 40%;
+
+            border: none;
+            box-shadow: 3px 3px 15px rgba(126, 126, 126, 0.8);
+        }
+
+        .time {
+            margin-left: 30px;
+        }
+
+        .today {
+            color: rgb(177, 140, 114);
+            margin-left: 20px;
+            font-size: 50px;
+            font-family: 'Dosis', sans-serif;
+        }
+
+        .total_time {
+            color: rgb(213, 183, 161);
+            margin-top: -20px;
+            font-size: 100px;
+            font-family: 'PT Sans Narrow', sans-serif;
+        }
+
+        .table_section {
+            text-align: center;
+        }
+
+        .study_table{
+            width: 100%;
+            border-top: 5px solid rgb(228, 228, 228);
+            border-bottom: 5px solid rgb(228, 228, 228);
+        }
+
+        .study_table td, th{
+            padding: 15px 20px;
+        }
+
+        .study_table tbody td{
+            border-top: 1px solid rgb(228, 228, 228);
+        }
+
+        .study_table tbody:hover {
+            background-color: rgb(239, 239, 239);
+        }
+        
+        main {
+            margin: auto;
+            margin-top: 150px;
+            max-width: 1000px;
+        }
+    </style>
+
+</head>
+
+<body>
+    <header>
+        <nav class="header-nav">
+            <div>
+                <a href="../index.html">
+                    <div class="logo">
+                        <img class="logo_img" src="../img/logo.png" alt="logo">
+                    </div>
+                </a>
+            </div>
+            <div>
+                <span class="nav-menu"><a href="#">로그인</a></span>
+                <span class="nav-menu"><a href="#">로그아웃</a></span>
+                <span class="nav-menu"><a href="#">정보수정</a></span>
+                <span class="nav-menu"><a href="#">회원탈퇴</a></span>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="add_btn">과목추가</div>
+
+        <div class="time">
+            <div class="today"></div>
+            <div class="total_time">00:00:00</div>
+        </div>
+
+        <div class="table_section">
+            <table class="study_table">
+                <thead>
+                    <tr>
+                        <th>과목</th>
+                        <th>공부시간</th>
+                        <th>삭제</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>프론트</td>
+                        <td>00:30:25</td>
+                        <td>삭제</td>
+                    </tr>
+                </tbody>
+                <tfoot>
+
+                </tfoot>
+            </table>
+        </div>
+    </main>
+
+    <dialog id="addform" class="modal">
+        <form method="dialog">
+            <label>과목명:
+                <input type="text">
+            </label>
+            <menu>
+                <button value="cancel">취소</button>
+                <button id="confirmBtn" value="default">확인</button>
+            </menu>
+        </form>
+    </dialog>
+</body>
+
+</html>
