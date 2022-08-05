@@ -5,108 +5,103 @@ import com.ssafy.drinkus.common.BaseEntity;
 import com.ssafy.drinkus.common.type.YN;
 import com.ssafy.drinkus.friend.domain.Friend;
 import com.ssafy.drinkus.user.domain.User;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-<span class="nc" id="L18">@NoArgsConstructor(access = AccessLevel.PROTECTED)</span>
-<span class="nc" id="L19">@AllArgsConstructor</span>
+<span class="nc" id="L15">@NoArgsConstructor(access = AccessLevel.PROTECTED)</span>
+<span class="nc" id="L16">@AllArgsConstructor</span>
 @Getter
+<span class="nc" id="L18">@Builder</span>
 public class Room extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = &quot;room_id&quot;)
-<span class="nc" id="L25">    private Long roomId;</span>
+<span class="nc" id="L23">    private Long roomId;</span>
 
-<span class="nc" id="L27">    private String roomName;</span>
+<span class="nc" id="L25">    private String roomName;</span>
 
     //방장
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = &quot;user_admin_id&quot;)
-<span class="nc" id="L32">    private User user;</span>
+<span class="nc" id="L30">    private User user;</span>
 
-<span class="nc" id="L34">    private String roomPw;</span>
+<span class="nc" id="L32">    private String roomPw;</span>
 
-<span class="nc" id="L36">    private String placeTheme;</span>
+<span class="nc" id="L34">    private String placeTheme;</span>
 
-<span class="nc" id="L38">    private Integer peopleLimit;</span>
+<span class="nc" id="L36">    private Integer peopleLimit;</span>
 
     @Enumerated(EnumType.STRING)
     @Column(name = &quot;ages_20&quot;)
-<span class="nc" id="L42">    private YN ages20;</span>
+<span class="nc" id="L40">    private YN ages20;</span>
 
     @Enumerated(EnumType.STRING)
     @Column(name = &quot;ages_30&quot;)
-<span class="nc" id="L46">    private YN ages30;</span>
+<span class="nc" id="L44">    private YN ages30;</span>
 
     @Enumerated(EnumType.STRING)
     @Column(name = &quot;ages_40&quot;)
-<span class="nc" id="L50">    private YN ages40;</span>
+<span class="nc" id="L48">    private YN ages40;</span>
 
     @Enumerated(EnumType.STRING)
     @Column(name = &quot;ages_50&quot;)
-<span class="nc" id="L54">    private YN ages50;</span>
+<span class="nc" id="L52">    private YN ages50;</span>
 
     @Enumerated(EnumType.STRING)
     @Column(name = &quot;ages_60&quot;)
-<span class="nc" id="L58">    private YN ages60;</span>
+<span class="nc" id="L56">    private YN ages60;</span>
 
     @Enumerated(EnumType.STRING)
     @Column(name = &quot;ages_70&quot;)
-<span class="nc" id="L62">    private YN ages70;</span>
+<span class="nc" id="L60">    private YN ages70;</span>
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = &quot;category_id&quot;)
-<span class="nc" id="L66">    private Category category;</span>
+<span class="nc" id="L64">    private Category category;</span>
 
-<span class="nc" id="L68">    @OneToMany(mappedBy = &quot;room&quot;)</span>
-<span class="nc" id="L69">    private List&lt;RoomHistory&gt; roomHistories = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L66">    @OneToMany(mappedBy = &quot;room&quot;)</span>
+<span class="nc" id="L67">    private List&lt;RoomHistory&gt; roomHistories = new ArrayList&lt;&gt;();</span>
 
-<span class="nc" id="L71">    @OneToMany(mappedBy = &quot;fromUser&quot;)</span>
-<span class="nc" id="L72">    private List&lt;Friend&gt; fromFriends = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L69">    @OneToMany(mappedBy = &quot;fromUser&quot;)</span>
+<span class="nc" id="L70">    private List&lt;Friend&gt; fromFriends = new ArrayList&lt;&gt;();</span>
 
-<span class="nc" id="L74">    @OneToMany(mappedBy = &quot;toUser&quot;)</span>
-<span class="nc" id="L75">    private List&lt;Friend&gt; toFriends = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L72">    @OneToMany(mappedBy = &quot;toUser&quot;)</span>
+<span class="nc" id="L73">    private List&lt;Friend&gt; toFriends = new ArrayList&lt;&gt;();</span>
 
     private static void setAges(Room room, YN[] ages) {
-<span class="nc" id="L78">        room.ages20 = ages[0];</span>
-<span class="nc" id="L79">        room.ages30 = ages[1];</span>
-<span class="nc" id="L80">        room.ages40 = ages[2];</span>
-<span class="nc" id="L81">        room.ages50 = ages[3];</span>
-<span class="nc" id="L82">        room.ages60 = ages[4];</span>
-<span class="nc" id="L83">        room.ages70 = ages[5];</span>
-<span class="nc" id="L84">    }</span>
+<span class="nc" id="L76">        room.ages20 = ages[0];</span>
+<span class="nc" id="L77">        room.ages30 = ages[1];</span>
+<span class="nc" id="L78">        room.ages40 = ages[2];</span>
+<span class="nc" id="L79">        room.ages50 = ages[3];</span>
+<span class="nc" id="L80">        room.ages60 = ages[4];</span>
+<span class="nc" id="L81">        room.ages70 = ages[5];</span>
+<span class="nc" id="L82">    }</span>
 
     //방 생성하기
     public static Room createRoom(String roomName, User user, String roomPw, String placeTheme, Integer peopleLimit,
                                   YN[] ages, Category category) {
-<span class="nc" id="L89">        Room room = new Room();</span>
-<span class="nc" id="L90">        room.roomName = roomName;</span>
-<span class="nc" id="L91">        room.user = user;</span>
-<span class="nc" id="L92">        room.roomPw = roomPw;</span>
-<span class="nc" id="L93">        room.placeTheme = placeTheme;</span>
-<span class="nc" id="L94">        room.peopleLimit = peopleLimit;</span>
-<span class="nc" id="L95">        setAges(room, ages);</span>
-<span class="nc" id="L96">        room.category = category;</span>
-<span class="nc" id="L97">        return room;</span>
+<span class="nc" id="L87">        Room room = new Room();</span>
+<span class="nc" id="L88">        room.roomName = roomName;</span>
+<span class="nc" id="L89">        room.user = user;</span>
+<span class="nc" id="L90">        room.roomPw = roomPw;</span>
+<span class="nc" id="L91">        room.placeTheme = placeTheme;</span>
+<span class="nc" id="L92">        room.peopleLimit = peopleLimit;</span>
+<span class="nc" id="L93">        setAges(room, ages);</span>
+<span class="nc" id="L94">        room.category = category;</span>
+<span class="nc" id="L95">        return room;</span>
     }
 
     //방 수정하기 (제목, 나이, 관심사, 인원, 비밀번호)
     public void updateRoom(String roomName, String roomPw, Integer peopleLimit, YN[] ages, Category category) {
-<span class="nc" id="L102">        this.roomName = roomName;</span>
-<span class="nc" id="L103">        this.roomPw = roomPw;</span>
-<span class="nc" id="L104">        this.peopleLimit = peopleLimit;</span>
-<span class="nc" id="L105">        setAges(this, ages);</span>
-<span class="nc" id="L106">        this.category = category;</span>
-<span class="nc" id="L107">    }</span>
-
-    // 방 삭제하기
-
+<span class="nc" id="L100">        this.roomName = roomName;</span>
+<span class="nc" id="L101">        this.roomPw = roomPw;</span>
+<span class="nc" id="L102">        this.peopleLimit = peopleLimit;</span>
+<span class="nc" id="L103">        setAges(this, ages);</span>
+<span class="nc" id="L104">        this.category = category;</span>
+<span class="nc" id="L105">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
