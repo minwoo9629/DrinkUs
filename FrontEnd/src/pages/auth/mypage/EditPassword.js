@@ -17,9 +17,11 @@ const EditPasswordInputWrapper = styled.div`
   padding: 30px 0px;
   display: flex;
   flex-direction: row;
-  align-items: ${({alginItem})=> alginItem};
+  align-items: ${({ alginItem }) => alginItem};
 `;
-
+EditPasswordInputWrapper.defaultProps = {
+  alginItem: "center",
+};
 const EditPasswordInput = styled.input`
   border: 0.5px solid #bab8b8;
   border-radius: 8px;
@@ -30,12 +32,14 @@ const EditPasswordInput = styled.input`
 `;
 
 const EditPasswordButton = styled.button`
-background-color: #6F92BF;
-padding: 8px;
-border: none;
-cursor: pointer;
-color: white;
-`
+  background-color: #6f92bf;
+  padding: 8px 12px;
+  margin: 24px 0px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  color: white;
+`;
 const EditPassword = () => {
   const [state, setState] = useState({
     previousPassword: "",
@@ -53,20 +57,19 @@ const EditPassword = () => {
   };
 
   const onHandleSubmit = async () => {
-
-    if(state.newPassword !== state.confirmNewPassword){
-      FailAlert("새로운 비밀번호가 일치하지 않습니다.")
-      return
+    if (state.newPassword !== state.confirmNewPassword) {
+      FailAlert("새로운 비밀번호가 일치하지 않습니다.");
+      return;
     }
-    if(state.previousPassword.length === 0){
+    if (state.previousPassword.length === 0) {
       previousPasswordInput.current.focus();
       return;
     }
-    if(state.newPassword.length === 0){
+    if (state.newPassword.length === 0) {
       newPasswordInput.current.focus();
-      return
+      return;
     }
-    if(state.confirmNewPassword.length === 0){
+    if (state.confirmNewPassword.length === 0) {
       confirmNewPasswordInput.current.focus();
       return;
     }
@@ -75,22 +78,25 @@ const EditPassword = () => {
       userBeforePw: state.previousPassword,
       userPw: state.newPassword,
       userCheckPw: state.confirmNewPassword,
-    }
+    };
     const result = await changePassword(data);
-    if(result.status === 200){
-      SuccessAlert("변경된 비밀번호로 재로그인해주세요.")
+    if (result.status === 200) {
+      SuccessAlert("변경된 비밀번호로 재로그인해주세요.");
       dispatch(logOut());
       sessionStorage.removeItem("ACCESS_TOKEN");
-      navigate("/",{replace:true})
-
+      navigate("/", { replace: true });
     }
-  }
+  };
   return (
     <div style={{ padding: "30px" }}>
       <ProfileTitle isEdit={false} />
       <EditPasswordWrapper>
         <EditPasswordInputWrapper>
-          <div style={{ width: "30%", textAlign: "right", alignItems:"center" }}>이전 비밀번호</div>
+          <div
+            style={{ width: "30%", textAlign: "right", alignItems: "center" }}
+          >
+            이전 비밀번호
+          </div>
           <div style={{ marginLeft: "24px" }}>
             <EditPasswordInput
               onChange={onHandleInput}
@@ -102,7 +108,11 @@ const EditPassword = () => {
           </div>
         </EditPasswordInputWrapper>
         <EditPasswordInputWrapper alginItem={"flex-start"}>
-          <div style={{ width: "30%", textAlign: "right", alignItems:"center"}}>새 비밀번호</div>
+          <div
+            style={{ width: "30%", textAlign: "right", alignItems: "center" }}
+          >
+            새 비밀번호
+          </div>
           <div style={{ marginLeft: "24px" }}>
             <EditPasswordInput
               onChange={onHandleInput}
@@ -113,11 +123,18 @@ const EditPassword = () => {
             />
           </div>
         </EditPasswordInputWrapper>
-        <EditPasswordInputWrapper>
-          <div style={{ width: "30%", textAlign: "right", paddingTop: "8px"  }}>
+        <EditPasswordInputWrapper alginItem={"baseline"}>
+          <div style={{ width: "30%", textAlign: "right" }}>
             새 비밀번호 확인
           </div>
-          <div style={{ marginLeft: "24px", display:"flex", flexDirection:"column", alignItems: "flex-start" }}>
+          <div
+            style={{
+              marginLeft: "24px",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-start",
+            }}
+          >
             <EditPasswordInput
               onChange={onHandleInput}
               type="password"
@@ -125,12 +142,25 @@ const EditPassword = () => {
               value={state.confirmNewPassword}
               ref={confirmNewPasswordInput}
             />
-            <div>
-            <EditPasswordButton onClick={onHandleSubmit}>비밀번호 변경</EditPasswordButton>
-            <Link to="/findPassword">비밀번호를 잊으셨나요?</Link>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start",
+              }}
+            >
+              <EditPasswordButton onClick={onHandleSubmit}>
+                비밀번호 변경
+              </EditPasswordButton>
+              <Link
+                style={{ textDecoration: "none", color: "#6f92bf" }}
+                to="/findPassword"
+              >
+                비밀번호를 잊으셨나요?
+              </Link>
             </div>
           </div>
-        </EditPasswordInputWrapper>      
+        </EditPasswordInputWrapper>
       </EditPasswordWrapper>
     </div>
   );

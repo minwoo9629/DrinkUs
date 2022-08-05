@@ -73,7 +73,7 @@ const LogOutButton = styled.button`
   }
 `;
 
-const Header = ({position}) => {
+const Header = ({ position }) => {
   const [ScrollY, setHeaderColor] = useState(0);
   const [HeaderStatus, setHeaderStatus] = useState(false);
   const dispatch = useDispatch();
@@ -124,7 +124,7 @@ const Header = ({position}) => {
           {user.isLogin ? (
             <>
               <HeaderMenuLink
-                to={"/user/edit"}
+                to={"/user"}
                 className={HeaderStatus ? "" : "light"}
               >
                 {user.data.userNickname}님

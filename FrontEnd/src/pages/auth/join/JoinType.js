@@ -1,7 +1,6 @@
-import Header from "../../components/layout/Header";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import { BackButton } from "../../components/common/buttons/BackButton";
+import { BackButton } from "../../../components/common/buttons/BackButton";
 
 // 소셜 로그인 종류 보고 api 문서 페이지에서 url 걸어주기
 const Wrapper = styled.div`
@@ -35,7 +34,7 @@ const JoinWrapper = styled.div`
   height: 60px;
   background-color: #131317;
   width: 400px;
-`
+`;
 
 const Button = styled.button`
   font-size: 1rem;

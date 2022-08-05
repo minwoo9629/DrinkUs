@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import Header from "../../components/layout/Header"
-import { client } from "../../utils/client";
+import Header from "../../../components/layout/Header";
+import { client } from "../../../utils/client";
 
 const Wrapper = styled.div`
   background-color: black;
@@ -65,7 +65,7 @@ const EmailInput = styled.input`
   border: none;
   margin: 0px;
   color: white;
-`
+`;
 
 const JoinInput = styled.input`
   position: relative;
