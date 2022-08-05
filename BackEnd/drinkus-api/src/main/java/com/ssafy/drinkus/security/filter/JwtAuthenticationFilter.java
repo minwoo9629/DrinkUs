@@ -3,7 +3,12 @@ package com.ssafy.drinkus.security.filter;
 import com.ssafy.drinkus.security.service.CustomUserDetailsService;
 import com.ssafy.drinkus.security.service.LoginUserDetails;
 import com.ssafy.drinkus.security.util.JwtUtil;
+import com.ssafy.drinkus.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -42,7 +47,7 @@ public class JwtAuthenticationFilter extends GenericFilter {
 
     // TOKEN 추출
     private String extractToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization"); // Authorization = AccessToken
+        String bearerToken = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }

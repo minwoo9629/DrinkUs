@@ -3,7 +3,8 @@ package com.ssafy.drinkus.user.controller;
 import com.ssafy.drinkus.config.LoginUser;
 import com.ssafy.drinkus.email.request.UserNameAuthRequest;
 import com.ssafy.drinkus.email.request.UserNameCheckRequest;
-import com.ssafy.drinkus.auth.response.TokenResponse;
+import com.ssafy.drinkus.security.request.TokenRequest;
+import com.ssafy.drinkus.security.response.TokenResponse;
 import com.ssafy.drinkus.user.domain.User;
 import com.ssafy.drinkus.user.request.*;
 import com.ssafy.drinkus.user.response.UserMyInfoResponse;
@@ -20,7 +21,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -45,19 +46,26 @@ public class UserController {
                 .build();
     }
 
+    // 리프레시 토큰 재발급
+    @PostMapping("/refreshToken")
+    public ResponseEntity<TokenResponse> reissueRefreshToken(@RequestBody @Valid TokenRequest request){
+        TokenResponse token = userService.reissue(request);
+        return ResponseEntity.ok().body(token);
+    }
+
     //회원수정
     @PutMapping
-    public ResponseEntity<Void> updateUser(@LoginUser User user,
+    public ResponseEntity<Void> updateUser(@LoginUser Long userId,
                                            @RequestBody @Valid UserUpdateRequest request) {
-        userService.updateUser(user.getUserId(), request);
+        userService.updateUser(userId, request);
         return ResponseEntity.ok().build();
     }
 
     // 비밀번호 수정
     @PatchMapping("/pw")
-    public ResponseEntity<Void> updatePassword(@LoginUser User user,
+    public ResponseEntity<Void> updatePassword(@LoginUser Long userId,
                                                @RequestBody @Valid UserUpdatePasswordRequest request) {
-        userService.updatePassword(user.getUserId(), request);
+        userService.updatePassword(userId, request);
         return ResponseEntity.ok().build();
     }
 
@@ -69,18 +77,16 @@ public class UserController {
     }
 
     // 닉네임 중복 검사
-    @PostMapping("/nickname")
+    @GetMapping("/nickname")
     public ResponseEntity<Void> findByUserNickname(@RequestBody @Valid UserDuplicateCheckNicknameRequest request){
         userService.findByUserNickname(request.getUserNickname());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    // 인기도 수정 : 회원이 타인의 인기도를 수정 -> 회원은 인기도 횟수를 줄이고, 타인의 id를 받아서 인기도를 수정함
-    @PatchMapping("/popularity/{user_id}")
-    public ResponseEntity<Void> updatePopularity(@LoginUser User user,
-                                                 @PathVariable("user_id") Long userId,
-                                                 @RequestBody UserPopularityRequest request) {
-        userService.updatePopularity(user, userId, request.getPopularNum());
+    // 인기도 수정
+    @PatchMapping("/popularity")
+    public ResponseEntity<Void> updatePopularity(@LoginUser Long userId, @RequestBody UserPopularityRequest request) {
+        userService.updatePopularity(userId, request.getPopularNum());
         return ResponseEntity.ok().build();
     }
 
@@ -99,9 +105,9 @@ public class UserController {
     }
 
     // 회원 탈퇴 (회원 삭제)
-    @DeleteMapping("")
-    public ResponseEntity<Void> deleteUser(@LoginUser User user) {
-        userService.deleteUser(user.getUserId());
+    @PutMapping("/delete")
+    public ResponseEntity<Void> deleteUser(@LoginUser Long userId) {
+        userService.deleteUser(userId);
         return ResponseEntity.ok().build();
     }
 
@@ -132,12 +138,4 @@ public class UserController {
         userService.confirmUserName(request);
         return ResponseEntity.ok().build();
     }
-
-    //로그아웃
-    //쿠키세션 정보 삭제
-
-    //친구 리스트 정보 조회 -> 친구 정보를 불 접속 여부
-    //
-
-    // 클라이언트 - 소켓- 백엔드
 }

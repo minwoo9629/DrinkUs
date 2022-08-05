@@ -1,14 +1,15 @@
 package com.ssafy.drinkus.room.request;
 
-import com.ssafy.drinkus.category.response.CategoryResponse;
 import com.ssafy.drinkus.common.type.YN;
-import com.ssafy.drinkus.category.response.CategoryListResponse;
+import com.ssafy.drinkus.interest.response.CategoryResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 @Data
 @NoArgsConstructor
@@ -19,7 +20,7 @@ public class RoomUpdateRequest {
     private String roomName;
 
     //방장
-    private Long roomAdminId;
+    private String roomAdminId;
 
     // 비밀번호
     private String roomPw;
@@ -32,8 +33,18 @@ public class RoomUpdateRequest {
     private Integer peopleLimit;
 
     // 연령대
-    private YN[] ages;
+    private YN ages20;
+
+    private YN ages30;
+
+    private YN ages40;
+
+    private YN ages50;
+
+    private YN ages60;
+
+    private YN ages70;
 
     //관심사
-    private Long categoryId;
+    private CategoryResponse category;
 }
