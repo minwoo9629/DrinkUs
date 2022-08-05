@@ -84,7 +84,7 @@ public class User extends BaseEntity {
     private List<Room> roomList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    private List<UserInterest> userInterestList = new ArrayList<>();
+    private List<UserSubCategory> userSubCategoryList = new ArrayList<>();
 
     private void defaultUserSettings() {
         try{
@@ -131,12 +131,13 @@ public class User extends BaseEntity {
 
     // 회원수정
     // 닉네임 주량 자기소개
-    public void updateUser(String userNickname, String userIntroduce, Integer userSoju, Integer userBeer, String userImg) {
+    public void updateUser(String userNickname, String userIntroduce, Integer userSoju, Integer userBeer, String userImg, String userBirthday) {
         this.userNickname = userNickname;
         this.userIntroduce = userIntroduce;
         this.userSoju = userSoju;
         this.userBeer = userBeer;
         this.userImg = userImg;
+        this.userBirthday = userBirthday;
     }
 
     //비밀번호 수정
@@ -147,6 +148,11 @@ public class User extends BaseEntity {
     //인기도 수정
     public void updatePopularity(Integer popularNum){
         this.userPopularity += popularNum;
+    }
+
+    //인기도 제한횟수 수정
+    public void updatePopularityLimit(){
+        this.userPopularityLimit -= 1;
     }
 
     // 닉네임 랜덤 생성
@@ -178,4 +184,5 @@ public class User extends BaseEntity {
                 .getJSONArray("words").get(0);
         return word;
     }
+
 }

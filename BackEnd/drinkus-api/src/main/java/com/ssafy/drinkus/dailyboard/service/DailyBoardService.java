@@ -1,9 +1,8 @@
 package com.ssafy.drinkus.dailyboard.service;
 
 import com.ssafy.drinkus.common.*;
-import com.ssafy.drinkus.common.type.YN;
-import com.ssafy.drinkus.dailyboard.DailyBoard;
-import com.ssafy.drinkus.dailyboard.DailyBoardRepository;
+import com.ssafy.drinkus.dailyboard.domain.DailyBoard;
+import com.ssafy.drinkus.dailyboard.domain.DailyBoardRepository;
 import com.ssafy.drinkus.dailyboard.request.DailyBoardCreateRequest;
 import com.ssafy.drinkus.dailyboard.request.DailyBoardUpdateRequest;
 import com.ssafy.drinkus.dailyboard.response.DailyBoardResponse;
@@ -48,7 +47,7 @@ public class DailyBoardService {
 
         List<DailyBoardResponse> response = new ArrayList<>();
         for (DailyBoard dailyBoard : results) {
-            response.add(new DailyBoardResponse(dailyBoard.getBoardId(), dailyBoard.getCreater().getUserId(), dailyBoard.getCreatedDate(), dailyBoard.getModifiedDate(), dailyBoard.getBoardContent()));
+            response.add(DailyBoardResponse.from(dailyBoard));
         }
 
         return new PageImpl<>(response, page, countByParentIdIsNull());
@@ -63,7 +62,7 @@ public class DailyBoardService {
 
         List<DailyBoardResponse> response = new ArrayList<>();
         for (DailyBoard dailyBoard : results) {
-            response.add(new DailyBoardResponse(dailyBoard.getBoardId(), dailyBoard.getCreater().getUserId(), dailyBoard.getCreatedDate(), dailyBoard.getModifiedDate(), dailyBoard.getBoardContent()));
+            response.add(DailyBoardResponse.from(dailyBoard));
         }
 
         return response;
@@ -87,7 +86,7 @@ public class DailyBoardService {
 
         List<MyBoardResponse> response = new ArrayList<>();
         for (DailyBoard dailyBoard : results) {
-            response.add(new MyBoardResponse(dailyBoard.getBoardId(), dailyBoard.getBoardContent()));
+            response.add(MyBoardResponse.from(dailyBoard));
         }
 
         return new PageImpl<>(response, page, countByCreater(user));
@@ -103,7 +102,7 @@ public class DailyBoardService {
     // 댓글 작성
     @Transactional
     public void createComment(User user, DailyBoardCreateRequest request, Long parentId) {
-        DailyBoard parentBoard = dailyBoardRepository.findByBoardId(parentId)
+        DailyBoard parentBoard = dailyBoardRepository.findById(parentId)
                 .orElseThrow(() -> new NotFoundException(NotFoundException.BOARD_DAILY_NOT_FOUND));
         if (parentBoard.getParentId() != null) {
             throw new InvalidException("답글에는 답글을 작성할 수 없습니다.");
@@ -116,10 +115,10 @@ public class DailyBoardService {
     // 글 수정
     @Transactional
     public void updateDailyBoard(User user, DailyBoardUpdateRequest request, Long boardId) {
-        DailyBoard dailyBoard = dailyBoardRepository.findByBoardId(boardId)
+        DailyBoard dailyBoard = dailyBoardRepository.findById(boardId)
                 .orElseThrow(() -> new NotFoundException(NotFoundException.BOARD_DAILY_NOT_FOUND));
 
-        if (user.getUserRole() != UserRole.ROLE_ADMIN && !user.equals(dailyBoard.getCreater())) {
+        if (user.getUserRole() != UserRole.ROLE_ADMIN && user.getUserId() != dailyBoard.getCreater().getUserId()) {
             // 원글 작성자이거나 관리자 권한일 때만 수정 가능
             throw new AuthenticationException("본인이 쓴 글만 수정 할 수 있습니다.");
         }
@@ -130,10 +129,10 @@ public class DailyBoardService {
     // 글 삭제
     @Transactional
     public void deleteDailyBoard(User user, Long boardId) {
-        DailyBoard dailyBoard = dailyBoardRepository.findByBoardId(boardId)
+        DailyBoard dailyBoard = dailyBoardRepository.findById(boardId)
                 .orElseThrow(() -> new NotFoundException(NotFoundException.BOARD_DAILY_NOT_FOUND));
 
-        if (user.getUserRole() != UserRole.ROLE_ADMIN && !user.equals(dailyBoard.getCreater())) {
+        if (user.getUserRole() != UserRole.ROLE_ADMIN && user.getUserId() != dailyBoard.getCreater().getUserId()) {
             // 원글 작성자이거나 관리자 권한일 때만 삭제 가능
             throw new AuthenticationException("본인이 쓴 글만 삭제 할 수 있습니다.");
         }
@@ -145,7 +144,7 @@ public class DailyBoardService {
     // 매일 6시에 글 전체 삭제
     @Scheduled(cron = "0 0 6 * * *")
     @Transactional
-    public void deleteAll(){
+    public void deleteAll() {
         dailyBoardRepository.deleteAll();
     }
 

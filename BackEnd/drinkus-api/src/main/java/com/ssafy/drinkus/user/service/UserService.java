@@ -81,7 +81,7 @@ public class UserService {
         User findUser = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
 
-        findUser.updateUser(request.getUserNickname(), request.getUserIntroduce(), request.getUserSoju(), request.getUserBeer(), request.getUserImg());
+        findUser.updateUser(request.getUserNickname(), request.getUserIntroduce(), request.getUserSoju(), request.getUserBeer(), request.getUserImg(), request.getUserBirthday());
     }
 
     //비밀번호 수정
@@ -121,13 +121,22 @@ public class UserService {
 
     //인기도 수정
     @Transactional
-    public void updatePopularity(Long userId, Integer popularNum) {
-        // 회원번호 회원을 조회 -> 인기도를 get한다.
+    public void updatePopularity(User user, Long userId, Integer popularNum) {
+        // 회원의 인기도 제한 횟수 확인
+        if(user.getUserPopularityLimit() <= 0){
+            throw new NotExistException(NotExistException.POPULARITY_NOT_EXIST);
+        }
+        // 타인의 회원번호로 타인의 정보 가져오기
         User findUser = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
 
         // 인기도의 수정 값만 바꿔준다
         findUser.updatePopularity(popularNum);
+
+        // 회원의 인기도 횟수 줄이기
+        User findUserLimit  = userRepository.findById(user.getUserId())
+                .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
+        findUserLimit.updatePopularityLimit();
     }
 
     // 회원 프로필 조회
@@ -203,4 +212,10 @@ public class UserService {
     public void resetPopularityLimit() {
         userRepository.resetUserPopularityLimit(POPULARITY_LIMIT);
     }
+
+    //친구 리스트 조회
+    // 접속 여부도 판단
+
+    //소켓?
+
 }
