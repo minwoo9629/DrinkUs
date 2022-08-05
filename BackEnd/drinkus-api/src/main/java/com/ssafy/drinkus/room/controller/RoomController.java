@@ -38,7 +38,7 @@ public class RoomController {
     //페이징
     @GetMapping
     public ResponseEntity<Page<RoomListResponse>> findBySearchRequest(@LoginUser User user,
-                                                                      @RequestParam @Valid RoomSearchRequest request,
+                                                                      @Valid RoomSearchRequest request,
                                                                       @PageableDefault Pageable pageable){
         Page<RoomListResponse> body = roomService.findBySearchRequest(user, request, pageable);
         return ResponseEntity.ok().body(body);
