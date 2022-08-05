@@ -3,7 +3,7 @@ import { GoToButton } from "../../components/common/buttons/GoToButton";
 import { Wrapper } from "../../components/styled/Wrapper";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { client } from "../../utils/client"
 
 
@@ -38,20 +38,76 @@ const SelectBox = styled.select`
  font-size: 16px;
 `
 
-const RoomContent = styled.div`
-  width: 200px;
-  height: 200px;
-  background-color: white;
-  border: 3px solid #BDCFF2;
-`
+// 방 목록용 스타일
+const GlobalStyle = styled.div`
+  body {
+    margin: 0;
+  }
+`;
 
+const Post = styled.div`
+  border: 1px solid black;
+  border-radius: 20px;
+  background: white;
+  box-shadow: 10px 5px 5px #7f8fa6;
+`;
+
+const Title = styled.div`
+  height: 20%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid black;
+  font-weight: 600;
+`;
+
+const Body = styled.div`
+  height: 80%;
+  padding: 11px;
+  border-radius: 20px;
+`;
+
+
+// 기본 방 목록 불러오기
+  const onRoomList = async () => {
+    const result = await client
+    .get(`/rooms`, {
+      params: {
+        page: 1,
+        searchKeyword: "",
+        sameAge: false,
+        sortOrder: 0,
+        categoryId: null 
+      },
+    })
+      .then((response)=>response);
+      return result
+  }
+  
+  
 const Rooms = () => {
 
   const navigate = useNavigate();
 
+  // 기본 방 목록 데이터만 추출하기
+  const [basicData, setBasicData] = useState([]);
+
+  const dataRefineFunc = async () => {
+    const result = await onRoomList()
+    setBasicData([...result.data.content]);
+    return basicData
+  }
+
+  useEffect(()=>{
+    dataRefineFunc();
+  },[])
+
+
+  // 검색 로직
   const [filter, setFilter] = useState({
     searchKeyword: '',
-    sortOrder: ''
+    sortOrder: '',
+    categoryId: ''
   });
 
   const onFilterInput = (e) => {
@@ -62,26 +118,21 @@ const Rooms = () => {
   const onMakeRoomList = (e) => {
     e.preventDefault();
     client
-      // .get("https://i7b306.p.ssafy.io/api/rooms?page=1", {
-        .get("http://localhost:8080/api/rooms?page=1", {
-        searchKeyword: filter.searchKeyword,
-        sameAge: SameAge,
-        sortOrder: filter.sortOrder,
-        category: makecategory.category,
+      .get(`/rooms`, {
+        params: {
+          page: 1,
+          searchKeyword: filter.searchKeyword,
+          sameAge: SameAge,
+          sortOrder: filter.sortOrder,
+          categoryId: filter.categoryId 
+        },
       })
       .then(function (response) {
-        console.log(response.data.message);
+        console.log(response);
       })
-  }
-
-  // 카테고리
-  const [makecategory, setMakeCategory] = useState({
-    category: ''
-  })
-
-  const onMakeCategory = (e) => {
-    setMakeCategory({...makecategory, [e.target.name]: {categoryId:e.target.value}});
-    console.log(makecategory)
+      .catch(function (error) {
+        console.log(error);
+      });
   }
 
   // 체크박스
@@ -89,7 +140,6 @@ const Rooms = () => {
 
   const onSameAgeCheck = ({target}) => {
     target.checked? setSameAge(false):setSameAge(true);
-    console.log(SameAge)
     return SameAge
   }
 
@@ -115,8 +165,9 @@ const Rooms = () => {
           관심사 선택
             <SelectBox 
               type="selectbox"
-              name="category" 
-              onChange={onMakeCategory}>
+              name="categoryId" 
+              onChange={onFilterInput}>
+              <option value="null">관심사 없음</option>
               <option value="1">스포츠</option>
               <option value="2">음악</option>
               <option value="3">게임/오락</option>
@@ -145,9 +196,16 @@ const Rooms = () => {
           <FilterButton onClick={onMakeRoomList}>검색하기</FilterButton>
         </LetterColorChange>
       </Wrapper>
+      {/* 방 목록 */}
       <Wrapper>
-        <RoomContent> 방 내용이 들어갈 거에요 </RoomContent>  
-      </Wrapper>      
+        <GlobalStyle />
+        {basicData.map((room, index) => (
+          <Post key={index}>
+            <Title>{room.roomName}</Title>
+            <Body>{room.placeTheme}</Body>
+          </Post>
+        ))}
+      </Wrapper>
     </>
   );
 };
