@@ -20,5 +20,5 @@ public class RoomSearchRequest {
     private Integer sortOrder;
 
     //관심사
-    private CategoryResponse category;
+    private Long categoryId;
 }
