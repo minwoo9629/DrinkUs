@@ -33,7 +33,6 @@ public class CategoryQueryRepository {
         return results.stream()
                 .map(SubCategoryResponse::from)
                 .collect(Collectors.toList());
-
     }
 
 
