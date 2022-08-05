@@ -2,7 +2,6 @@ import Header from "../../components/layout/Header";
 import { Wrapper } from "../../components/styled/Wrapper";
 import styled from "styled-components";
 import FetchProfile from "../../components/room/FetchProfile";
-import { SuccessAlert } from "../../utils/sweetAlert";
 import { useState } from "react";
 import { client } from "../../utils/client"
 
@@ -45,10 +44,12 @@ const CreateRoom = () => {
     peoplelimit: '',
     placetheme: '',
     roompw: '',
+    categoryId: '',
   });
 
   const onRoomInfoInput = (e) => {
     setRoomInfo({ ...roomInfo, [e.target.name]: e.target.value });
+    console.log(roomInfo)
   };
 
   const onRoomInfoSubmit = (e) => {
@@ -71,11 +72,10 @@ const CreateRoom = () => {
         placeTheme:roomInfo.placetheme,
         peopleLimit:roomInfo.peoplelimit,
         ages:ageCheckedItems,
-        category:makecategory.category
+        categoryId:roomInfo.categoryId
       })
       .then(function (response) {
         console.log(response.data.message);
-        // SuccessAlert("방이 만들어졌습니다.")
       })
       .catch(function (error) {
         console.log(error);
@@ -100,13 +100,13 @@ const CreateRoom = () => {
   };
 
   // 카테고리
-  const [makecategory, setMakeCategory] = useState({
-    category: ''
-  })
+  // const [makecategory, setMakeCategory] = useState({
+  //   category: ''
+  // })
 
-  const onMakeCategory = (e) => {
-    setMakeCategory({...makecategory, [e.target.name]: {categoryId:e.target.value}});
-  }
+  // const onMakeCategory = (e) => {
+  //   setMakeCategory({...makecategory, [e.target.name]: {categoryId:e.target.value}});
+  // }
 
 
   return (
@@ -158,8 +158,8 @@ const CreateRoom = () => {
               관심사 선택
               <SelectBox 
                 type="selectbox"
-                name="category" 
-                onChange={onMakeCategory}>
+                name="categoryId" 
+                onChange={onRoomInfoInput}>
                 <option value="null">관심사 없음</option>
                 <option value="1">스포츠</option>
                 <option value="2">음악</option>

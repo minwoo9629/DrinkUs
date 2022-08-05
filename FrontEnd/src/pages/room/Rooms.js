@@ -77,7 +77,7 @@ const Body = styled.div`
         searchKeyword: "",
         sameAge: false,
         sortOrder: 0,
-        categoryId: null 
+        categoryId: null
       },
     })
       .then((response)=>response);
@@ -124,7 +124,7 @@ const Rooms = () => {
           searchKeyword: filter.searchKeyword,
           sameAge: SameAge,
           sortOrder: filter.sortOrder,
-          categoryId: filter.categoryId 
+          categoryId: filter.categoryId
         },
       })
       .then(function (response) {
@@ -140,6 +140,7 @@ const Rooms = () => {
 
   const onSameAgeCheck = ({target}) => {
     target.checked? setSameAge(false):setSameAge(true);
+    console.log(SameAge)
     return SameAge
   }
 
