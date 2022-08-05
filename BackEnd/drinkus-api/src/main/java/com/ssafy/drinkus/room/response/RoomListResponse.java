@@ -1,10 +1,10 @@
 package com.ssafy.drinkus.room.response;
 
-import com.querydsl.core.annotations.QueryProjection;
 import com.ssafy.drinkus.room.domain.Room;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
 
 @Data
