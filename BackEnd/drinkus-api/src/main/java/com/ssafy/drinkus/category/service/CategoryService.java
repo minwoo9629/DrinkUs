@@ -6,6 +6,7 @@ import com.ssafy.drinkus.category.domain.CategoryRepository;
 import com.ssafy.drinkus.category.domain.SubCategory;
 import com.ssafy.drinkus.category.domain.SubCategoryRepository;
 import com.ssafy.drinkus.category.query.CategoryQueryRepository;
+import com.ssafy.drinkus.category.response.CategoryListResponse;
 import com.ssafy.drinkus.category.response.CategoryResponse;
 import com.ssafy.drinkus.category.response.SubCategoryResponse;
 import com.ssafy.drinkus.common.DuplicateException;
@@ -18,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,17 +41,23 @@ public class CategoryService {
     }
 
     //회원이 추가한 관심사 조회
-//    public List<CategoryListResponse> findByMyUserId(User user) {
-//        List<UserSubCategory> interestList = userInterestRepository.findByMyUserId(user.getUserId())
-//        return interestList.stream()
-//                .map(CategoryListResponse::from)
-//                .collect(Collectors.toList());
-//    }
+    public List<CategoryListResponse> findAllCategoryAndSubCategory(User user) {
+
+        List<Category> categoryList = categoryQueryRepository.findAllCategoryAndSubCategory();
+        List<UserSubCategory> findUserSubCategoryList = userSubCategoryRepository.findByUser(user);
+        System.out.println(findUserSubCategoryList.get(0).getSubCategory().getSubCategoryId());
+        return categoryList.stream()
+                .map(category -> CategoryListResponse.from(category, findUserSubCategoryList))
+                .collect(Collectors.toList());
+    }
 
 
     //타 회원의 관심사 조회
     public List<SubCategoryResponse> findByUserId(Long userId){
-        return categoryQueryRepository.findByUserId(userId);
+        List<SubCategory> subCategoryList = categoryQueryRepository.findByUserId(userId);
+        return subCategoryList.stream()
+                .map(SubCategoryResponse::from)
+                .collect(Collectors.toList());
     }
 
     //회원의 관심사 생성
