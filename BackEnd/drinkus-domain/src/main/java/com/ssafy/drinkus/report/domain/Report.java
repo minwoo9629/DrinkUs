@@ -33,11 +33,11 @@ public class Report extends BaseEntity {
     private String reportReason; // 신고 사유 (텍스트)
 
     @Enumerated(EnumType.STRING)
-    private YN reportCompleted;
+    private YN reportCompleted; // 신고 처리 완료 여부
 
-    private String reportResult;
+    private String reportResult; // 신고 처리 내용
 
-    public static Report createReport(User fromUser, User toUser, String reportType, String reportReason, String reportResult) {
+    public static Report createReport(User fromUser, User toUser, String reportType, String reportReason) {
         Report report = new Report();
         report.fromUser = fromUser;
         report.toUser = toUser;
