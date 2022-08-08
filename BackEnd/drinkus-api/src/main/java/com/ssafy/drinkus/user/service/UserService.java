@@ -56,11 +56,16 @@ public class UserService {
     public TokenResponse loginUser(UserLoginRequest request) {
         User findUser = userRepository.findByUserName(request.getUserName())
                 .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
-        
+
         // 사용자 정지 여부 확인
-        if(LocalDateTime.now().isAfter(findUser.getUserStopDate())){
+        if(findUser.getUserStopDate() != null && LocalDateTime.now().isBefore(findUser.getUserStopDate())){
             throw new LoginBlockException(
-                    "해당 사용자는 다음 기한까지 정지되었습니다.\n" + findUser.getUserStopDate()
+                    "해당 사용자는 다음 기한까지 정지되었습니다.\n" 
+                            + findUser.getUserStopDate().getYear() + "년 "
+                            + findUser.getUserStopDate().getMonthValue() + "월 "
+                            + findUser.getUserStopDate().getDayOfMonth() + "일 "
+                            + findUser.getUserStopDate().getHour() + "시 "
+                            + findUser.getUserStopDate().getMinute() + "분"
             );
         }
 

@@ -2,6 +2,7 @@ package com.ssafy.drinkus.report.service;
 
 import com.ssafy.drinkus.common.AuthenticationException;
 import com.ssafy.drinkus.common.NotFoundException;
+import com.ssafy.drinkus.common.NotProcessedException;
 import com.ssafy.drinkus.common.type.YN;
 import com.ssafy.drinkus.report.domain.Report;
 import com.ssafy.drinkus.report.domain.ReportRepository;
@@ -33,6 +34,12 @@ public class ReportService {
     public void createReport(User fromUser, ReportCreateRequest request){
         User toUser = userRepository.findById(request.getToUserId())
                 .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
+
+        //처리되지 않았는데 재신고를 하는지 확인
+        if(reportRepository.existsByFromUserAndToUser(fromUser.getUserId(), toUser.getUserId())){
+            throw new NotProcessedException(NotProcessedException.NOT_PROCESSED_REPORT);
+        }
+
         Report report = Report.createReport(fromUser, toUser, request.getReportType(), request.getReportReason());
         reportRepository.save(report);
     }
