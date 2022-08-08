@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -55,6 +56,13 @@ public class UserService {
     public TokenResponse loginUser(UserLoginRequest request) {
         User findUser = userRepository.findByUserName(request.getUserName())
                 .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
+        
+        // 사용자 정지 여부 확인
+        if(LocalDateTime.now().isAfter(findUser.getUserStopDate())){
+            throw new LoginBlockException(
+                    "해당 사용자는 다음 기한까지 정지되었습니다.\n" + findUser.getUserStopDate()
+            );
+        }
 
         if (!passwordEncoder.matches(request.getUserPw(), findUser.getUserPw())) {
             throw new NotMatchException(NotMatchException.PW_NOT_MATCH);
