@@ -1,4 +1,4 @@
-package com.ssafy.drinkus.redis.ChatRoom;
+package com.ssafy.drinkus.redis;
 
 
 import lombok.Getter;
