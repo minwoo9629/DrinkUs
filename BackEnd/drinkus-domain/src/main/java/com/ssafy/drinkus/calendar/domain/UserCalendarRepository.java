@@ -3,8 +3,6 @@ package com.ssafy.drinkus.calendar.domain;
 import com.ssafy.drinkus.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Optional;
-
 public interface UserCalendarRepository extends JpaRepository<UserCalendar,Long> {
     
     // 회원 일정 번호로 회원일정 삭제

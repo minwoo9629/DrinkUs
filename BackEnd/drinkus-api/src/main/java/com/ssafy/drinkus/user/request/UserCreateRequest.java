@@ -4,8 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.*;
-import java.time.LocalDate;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 
 @Data // Getter, Setter, RequiredArgsConstructor, ToString, EqualsAndHashCode, Value
 @NoArgsConstructor

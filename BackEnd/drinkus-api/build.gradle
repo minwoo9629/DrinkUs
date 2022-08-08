@@ -16,6 +16,7 @@ dependencies {
     implementation(project(":drinkus-domain"))
     implementation(project(":drinkus-common"))
     implementation(project(":drinkus-external"))
+    implementation(project(":drinkus-redis"))
 
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
     implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
@@ -25,11 +26,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
-    // oauth 위한 의존성
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-    // oauth 위한 의존성 끝
-    // 이메일 발송 위한 의존성
-    implementation('org.springframework.boot:spring-boot-starter-mail:2.7.0')
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client' // oauth 위한 의존성
+    implementation('org.springframework.boot:spring-boot-starter-mail:2.7.0') // 이메일 발송 위한 의존성
+    implementation group: 'io.openvidu', name: 'openvidu-java-client', version: '2.22.0' // Openvidu 의존성
+    implementation 'io.openvidu:openvidu-java-client:2.22.0' // Openvidu 의존성
 
     implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
     implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'

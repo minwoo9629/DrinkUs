@@ -1,24 +1,25 @@
 package com.ssafy.drinkus.room.controller;
 
 import com.ssafy.drinkus.config.LoginUser;
-import com.ssafy.drinkus.room.request.RoomCreateRequest;
-import com.ssafy.drinkus.room.request.RoomSearchRequest;
-import com.ssafy.drinkus.room.request.RoomUpdateRequest;
+import com.ssafy.drinkus.room.request.*;
 import com.ssafy.drinkus.room.response.RoomInfoResponse;
 import com.ssafy.drinkus.room.response.RoomListResponse;
 import com.ssafy.drinkus.room.service.RoomService;
 import com.ssafy.drinkus.user.domain.User;
+import com.ssafy.drinkus.util.StringUtil;
+import io.openvidu.java.client.OpenVidu;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
+//http://i7b306.p.ssafy.io/api/
 @RestController
 @RequestMapping("/api/rooms")
 @RequiredArgsConstructor
@@ -68,9 +69,21 @@ public class RoomController {
     }
 
     //화상방 참가
+    @PostMapping("/join")
+    public ResponseEntity<Void> joinRoom(@LoginUser User user, @RequestBody RoomJoinRequest joinRoomRequest){
+        System.out.println("## Join Room Controller");
+        return null;
+    }
 
     //화상방 퇴장
+    @PatchMapping("/exit")
+    public ResponseEntity<Void> exitRoom(@LoginUser User user, @RequestBody RoomExitRequest exitRoomRequest){
+        System.out.println("## Exit Room Controller");
+        return null;
+    }
 
     //화상방 강퇴
+
+
 
 }

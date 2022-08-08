@@ -26,6 +26,6 @@ public class FriendListResponse {
                 friend.getToUser().getUserId(),
                 friend.getToUser().getUserNickname(),
                 toUserOnline
-                );
+        );
     }
 }

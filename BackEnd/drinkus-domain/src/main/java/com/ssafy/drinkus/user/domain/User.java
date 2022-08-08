@@ -11,6 +11,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.json.JSONObject;
 
 import javax.persistence.*;
 import java.io.BufferedReader;
@@ -18,7 +19,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import org.json.JSONObject;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

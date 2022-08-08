@@ -1,6 +1,8 @@
 package com.ssafy.drinkus.friend.service;
 
-import com.ssafy.drinkus.common.DuplicateException;
+import com.ssafy.drinkus.chat.domain.Chat;
+import com.ssafy.drinkus.chat.domain.ChatRoom;
+import com.ssafy.drinkus.chat.domain.ChatRoomRepository;
 import com.ssafy.drinkus.common.NotFoundException;
 import com.ssafy.drinkus.friend.domain.Friend;
 import com.ssafy.drinkus.friend.domain.FriendRepository;
@@ -22,15 +24,17 @@ import java.util.stream.Collectors;
 public class FriendService {
     private final UserRepository userRepository;
     private final FriendRepository friendRepository;
+    private final ChatRoomRepository chatRoomRepository;
 
-    //친구 추가
+    //친구 수락 -> 친구 추가
     @Transactional
     public void createFriend(User fromUser, Long toUserId){
         User findToUser = userRepository.findById(toUserId)
                 .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
 
-        Friend friend = Friend.createFriend(fromUser, findToUser);
-        friendRepository.save(friend);
+        ChatRoom chatRoom = ChatRoom.createChatRoom(fromUser, findToUser);
+        Friend friend = Friend.createFriend(fromUser, findToUser, chatRoom);
+        friendRepository.save(null);
     }
 
     //Todo 현재 접속여부 만들기

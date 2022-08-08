@@ -1,8 +1,6 @@
 package com.ssafy.drinkus.room.request;
 
-import com.ssafy.drinkus.category.response.CategoryResponse;
 import com.ssafy.drinkus.common.type.YN;
-import com.ssafy.drinkus.category.response.CategoryListResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -35,5 +33,5 @@ public class RoomUpdateRequest {
     private YN[] ages;
 
     //관심사
-    private CategoryResponse category;
+    private Long categoryId;
 }

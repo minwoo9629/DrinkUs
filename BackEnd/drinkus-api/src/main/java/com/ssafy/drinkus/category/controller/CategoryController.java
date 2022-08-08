@@ -25,20 +25,20 @@ public class CategoryController {
         return ResponseEntity.ok(categoryService.findAllCategory());
     }
 
-//    //회원이 추가한 관심사 조회
-//    @GetMapping
-//    public ResponseEntity<List<CategoryListResponse>> findByMyUserId(@LoginUser User user) {
-//        List<CategoryListResponse> body = categoryService.findByMyUserId(user);
-//        return ResponseEntity.ok().body(body);
-//    }
-//
-//
-//    //타회원의 관심사 조회
-//    @GetMapping("/subcategory/{user_id}")
-//    public ResponseEntity<List<SubCategoryResponse>> findByUserId(@LoginUser User user, @PathVariable("user_id")Long userId) {
-//        List<SubCategoryResponse> body = categoryService.findByUserId(user.getUserId());
-//        return ResponseEntity.ok().body(body);
-//    }
+    //회원이 추가한 관심사 조회
+    @GetMapping
+    public ResponseEntity<List<CategoryListResponse>> findAllCategoryAndSubCategory(@LoginUser User user) {
+        List<CategoryListResponse> body = categoryService.findAllCategoryAndSubCategory(user);
+        return ResponseEntity.ok().body(body);
+    }
+
+
+    //타회원의 관심사 조회
+    @GetMapping("/subcategory/{user_id}")
+    public ResponseEntity<List<SubCategoryResponse>> findByUserId(@LoginUser User user, @PathVariable("user_id")Long userId) {
+        List<SubCategoryResponse> body = categoryService.findByUserId(user.getUserId());
+        return ResponseEntity.ok().body(body);
+    }
 
     //회원의 관심사 생성(추가)
     @PostMapping("/{subcategory_id}")

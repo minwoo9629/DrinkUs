@@ -1,9 +1,9 @@
 package com.ssafy.drinkus.email.service;
 
 import com.ssafy.drinkus.common.EmailAuthTokenNotFoundException;
-import com.ssafy.drinkus.email.dto.Email;
 import com.ssafy.drinkus.email.handler.EmailHandler;
 import com.ssafy.drinkus.email.request.UserNameAuthRequest;
+import com.ssafy.drinkus.email.dto.EmailDto;
 import com.ssafy.drinkus.emailauth.domain.EmailAuth;
 import com.ssafy.drinkus.emailauth.domain.EmailAuthRepository;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +41,7 @@ public class EmailService {
     @Async
     public void sendUserNameCheckEmail(String userName, String authToken) throws MessagingException {
         // 이메일 발송 정보 설정
-        Email emailDto = new Email();
+        EmailDto emailDto = new EmailDto();
         emailDto.setFromAddress(sender);
         emailDto.addToAddress(userName);
         emailDto.setTitle("[DrinkUs] 이메일 인증번호입니다.");
@@ -53,7 +53,7 @@ public class EmailService {
     @Async
     public void sendResetPwEmail(String userName, String password) throws MessagingException {
         // 이메일 발송 정보 설정
-        Email emailDto = new Email();
+        EmailDto emailDto = new EmailDto();
         emailDto.setFromAddress(sender);
         emailDto.setTitle("[DrinkUs] 비밀번호 재설정 안내입니다.");
         StringBuilder content = new StringBuilder();
@@ -70,6 +70,7 @@ public class EmailService {
     }
 
     public String makeUserNameCheckMessage(String authToken){
+        System.out.println("*** makeUserNameCheckMessage ***");
         StringBuilder content = new StringBuilder();
         content.append("<div class='container' align='left'>");
         content.append("    <div>안녕하세요, DrinkUs입니다. 이메일 인증번호를 입력해주세요.</div><div>");
@@ -79,7 +80,7 @@ public class EmailService {
         return content.toString();
     }
 
-    public void sendEmail(Email emailDto) throws MessagingException {
+    public void sendEmail(EmailDto emailDto) throws MessagingException {
         EmailHandler emailHandler = new EmailHandler(mailSender);
         emailHandler.setFrom(emailDto.getFromAddress());
         emailHandler.setTo(emailDto.getToAddressList());

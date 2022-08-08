@@ -1,9 +1,9 @@
 package com.ssafy.drinkus.user.controller;
 
+import com.ssafy.drinkus.auth.response.TokenResponse;
 import com.ssafy.drinkus.config.LoginUser;
 import com.ssafy.drinkus.email.request.UserNameAuthRequest;
 import com.ssafy.drinkus.email.request.UserNameCheckRequest;
-import com.ssafy.drinkus.auth.response.TokenResponse;
 import com.ssafy.drinkus.user.domain.User;
 import com.ssafy.drinkus.user.request.*;
 import com.ssafy.drinkus.user.response.UserMyInfoResponse;
@@ -139,5 +139,5 @@ public class UserController {
     //친구 리스트 정보 조회 -> 친구 정보를 불 접속 여부
     //
 
-    // 클라잉언트 - 소켓- 백엔드
+    // 클라이언트 - 소켓- 백엔드
 }
