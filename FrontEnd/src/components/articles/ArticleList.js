@@ -1,5 +1,5 @@
 import React from "react";
-import ArticleListItme from "./ArticleListItme";
+import ArticleListItem from "./ArticleListItem";
 
 const ArticleList = React.memo(({ articleList, onHandleRemoveArticle }) => {
   return (
@@ -8,14 +8,14 @@ const ArticleList = React.memo(({ articleList, onHandleRemoveArticle }) => {
         display: "flex",
         flexDirection: "column",
         padding: "20px 20px",
-        minHeight: "640px",
+        minHeight: "560px",
         margin: "0px 80px",
       }}
     >
       {articleList.length !== 0 ? (
         <>
           {articleList.map((content) => (
-            <ArticleListItme
+            <ArticleListItem
               {...content}
               key={content.articleId}
               onHandleRemoveArticle={onHandleRemoveArticle}
