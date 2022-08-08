@@ -1,6 +1,7 @@
 package com.ssafy.drinkus.category.controller;
 
 
+import com.ssafy.drinkus.category.response.CategoryListResponse;
 import com.ssafy.drinkus.category.response.CategoryResponse;
 import com.ssafy.drinkus.category.response.SubCategoryResponse;
 import com.ssafy.drinkus.category.service.CategoryService;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/categories")
+@RequestMapping("/api/categories")
 @RequiredArgsConstructor
 public class CategoryController {
     private final CategoryService categoryService;
@@ -24,14 +25,14 @@ public class CategoryController {
         return ResponseEntity.ok(categoryService.findAllCategory());
     }
 
-//    //회원이 추가한 관심사 조회
-//    @GetMapping
-//    public ResponseEntity<List<CategoryListResponse>> findByMyUserId(@LoginUser User user) {
-//        List<CategoryListResponse> body = categoryService.findByMyUserId(user);
-//        return ResponseEntity.ok().body(body);
-//    }
-//
-//
+    //회원이 추가한 관심사 조회
+    @GetMapping
+    public ResponseEntity<List<CategoryListResponse>> findAllCategoryAndSubCategory(@LoginUser User user) {
+        List<CategoryListResponse> body = categoryService.findAllCategoryAndSubCategory(user);
+        return ResponseEntity.ok().body(body);
+    }
+
+
     //타회원의 관심사 조회
     @GetMapping("/subcategory/{user_id}")
     public ResponseEntity<List<SubCategoryResponse>> findByUserId(@LoginUser User user, @PathVariable("user_id")Long userId) {

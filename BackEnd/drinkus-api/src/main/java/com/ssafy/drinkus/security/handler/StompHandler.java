@@ -11,6 +11,8 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import java.util.Optional;
+
 @Component
 @RequiredArgsConstructor
 public class StompHandler implements ChannelInterceptor {
@@ -22,10 +24,28 @@ public class StompHandler implements ChannelInterceptor {
 
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
 
+        // 스톰프 연결
         if (StompCommand.CONNECT == accessor.getCommand()) {
             if (!jwtUtil.isValidToken(extractToken(accessor))) {
                 throw new AccessDeniedException("연결 거부");
             }
+            Long userId = jwtUtil.getUserId(extractToken(accessor));
+            String userNickName = jwtUtil.getNickName(extractToken(accessor));
+
+        }
+        // 채팅방 구독
+        else if(StompCommand.SUBSCRIBE == accessor.getCommand()){
+            Long userId = jwtUtil.getUserId(extractToken(accessor));
+
+            String roomId = getRoomId(Optional.ofNullable((String) message.getHeaders().get("simpDestination")).orElse("InvalidRoomId"));
+            String sessionId = (String) message.getHeaders().get("simpSessionId");
+
+        }
+        // 웹소켓 연결 종료
+        else if(StompCommand.DISCONNECT == accessor.getCommand()){
+            String sessionId = (String) message.getHeaders().get("simpSessionId");
+
+            Long userId = jwtUtil.getUserId(extractToken(accessor));
         }
         return message;
     }
