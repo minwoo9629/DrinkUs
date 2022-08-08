@@ -23,7 +23,7 @@ public class Room extends BaseEntity {
 
 <span class="nc" id="L24">    private String roomName;</span>
 
-    //방장
+    //諛⑹옣
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = &quot;user_admin_id&quot;)
 <span class="nc" id="L29">    private User user;</span>
@@ -80,7 +80,7 @@ public class Room extends BaseEntity {
 <span class="nc" id="L80">        room.ages70 = ages[5];</span>
 <span class="nc" id="L81">    }</span>
 
-    //방 생성하기
+    //諛� �깮�꽦�븯湲�
     public static Room createRoom(String roomName, User user, String roomPw, String placeTheme, Integer peopleLimit,
                                   YN[] ages, Category category) {
 <span class="nc" id="L86">        Room room = new Room();</span>
@@ -94,7 +94,7 @@ public class Room extends BaseEntity {
 <span class="nc" id="L94">        return room;</span>
     }
 
-    //방 수정하기 (제목, 나이, 관심사, 인원, 비밀번호)
+    //諛� �닔�젙�븯湲� (�젣紐�, �굹�씠, 愿��떖�궗, �씤�썝, 鍮꾨�踰덊샇)
     public void updateRoom(String roomName, String roomPw, Integer peopleLimit, YN[] ages, Category category) {
 <span class="nc" id="L99">        this.roomName = roomName;</span>
 <span class="nc" id="L100">        this.roomPw = roomPw;</span>

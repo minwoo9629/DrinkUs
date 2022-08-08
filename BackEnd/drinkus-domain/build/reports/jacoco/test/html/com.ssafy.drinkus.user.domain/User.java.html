@@ -24,9 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-<span class="nc" id="L27">@NoArgsConstructor(access = AccessLevel.PROTECTED) // 무분별한 객체 생성에 대해 한번 더 체크할 수 있는 수단</span>
-<span class="nc" id="L28">@AllArgsConstructor // 모든 생성자를 구현하는 annotation</span>
-@Getter // JPA에서 lombok @Setter는 거의 쓰지 않습니다
+<span class="nc" id="L27">@NoArgsConstructor(access = AccessLevel.PROTECTED) // 臾대텇蹂꾪븳 媛앹껜 �깮�꽦�뿉 ���빐 �븳踰� �뜑 泥댄겕�븷 �닔 �엳�뒗 �닔�떒</span>
+<span class="nc" id="L28">@AllArgsConstructor // 紐⑤뱺 �깮�꽦�옄瑜� 援ы쁽�븯�뒗 annotation</span>
+@Getter // JPA�뿉�꽌 lombok @Setter�뒗 嫄곗쓽 �벐吏� �븡�뒿�땲�떎
 public class User extends BaseEntity {
 
     @Id
@@ -57,7 +57,7 @@ public class User extends BaseEntity {
 <span class="nc" id="L57">    private LocalDateTime userDeleteDate;</span>
 
     @Enumerated(EnumType.STRING)
-<span class="nc" id="L60">    private YN userDeleted; // Boolean type을 YN enum으로 사용</span>
+<span class="nc" id="L60">    private YN userDeleted; // Boolean type�쓣 YN enum�쑝濡� �궗�슜</span>
 
     @Enumerated(EnumType.STRING)
 <span class="nc" id="L63">    private UserRole userRole;</span>
@@ -71,7 +71,7 @@ public class User extends BaseEntity {
 
 <span class="nc" id="L72">    private Long userPoint;</span>
 
-<span class="nc" id="L74">    private LocalDateTime userStopDate; // 정지기한 -&gt; 추가기능</span>
+<span class="nc" id="L74">    private LocalDateTime userStopDate; // �젙吏�湲고븳 -&gt; 異붽�湲곕뒫</span>
 
 <span class="nc" id="L76">    private Integer userSoju;</span>
 
@@ -101,8 +101,8 @@ public class User extends BaseEntity {
 
 <span class="nc" id="L102">    }</span>
 
-    // 로컬 회원가입
-    // 이메일 비밀번호 이름 생년월일
+    // 濡쒖뺄 �쉶�썝媛��엯
+    // �씠硫붿씪 鍮꾨�踰덊샇 �씠由� �깮�뀈�썡�씪
     public static User createUser(String userName, String userPw, String userFullname, String userBirthday, String userEmail) {
 <span class="nc" id="L107">        User user = new User();</span>
 <span class="nc" id="L108">        user.defaultUserSettings();</span>
@@ -116,7 +116,7 @@ public class User extends BaseEntity {
 <span class="nc" id="L116">        return user;</span>
     }
 
-    // 소셜 회원가입
+    // �냼�뀥 �쉶�썝媛��엯
     public static User createUser(UserProvider userProvider, String userProviderId, String userName, String userEmail) {
 <span class="nc" id="L121">        User user = new User();</span>
 <span class="nc" id="L122">        user.defaultUserSettings();</span>
@@ -129,8 +129,8 @@ public class User extends BaseEntity {
 <span class="nc" id="L129">        return user;</span>
     }
 
-    // 회원수정
-    // 닉네임 주량 자기소개
+    // �쉶�썝�닔�젙
+    // �땳�꽕�엫 二쇰웾 �옄湲곗냼媛�
     public void updateUser(String userNickname, String userIntroduce, Integer userSoju, Integer userBeer, String userImg, String userBirthday) {
 <span class="nc" id="L135">        this.userNickname = userNickname;</span>
 <span class="nc" id="L136">        this.userIntroduce = userIntroduce;</span>
@@ -140,22 +140,22 @@ public class User extends BaseEntity {
 <span class="nc" id="L140">        this.userBirthday = userBirthday;</span>
 <span class="nc" id="L141">    }</span>
 
-    //비밀번호 수정
+    //鍮꾨�踰덊샇 �닔�젙
     public void updateUserPassword(String userPw) {
 <span class="nc" id="L145">        this.userPw = userPw;</span>
 <span class="nc" id="L146">    }</span>
 
-    //인기도 수정
+    //�씤湲곕룄 �닔�젙
     public void updatePopularity(Integer popularNum){
 <span class="nc" id="L150">        this.userPopularity += popularNum;</span>
 <span class="nc" id="L151">    }</span>
 
-    //인기도 제한횟수 수정
+    //�씤湲곕룄 �젣�븳�슏�닔 �닔�젙
     public void updatePopularityLimit(){
 <span class="nc" id="L155">        this.userPopularityLimit -= 1;</span>
 <span class="nc" id="L156">    }</span>
 
-    // 닉네임 랜덤 생성
+    // �땳�꽕�엫 �옖�뜡 �깮�꽦
     public static String makeRandomNickname() throws IOException {
 <span class="nc" id="L160">        URL url = new URL(&quot;https://nickname.hwanmoo.kr/?format=json&amp;count=1&amp;max_length=12&quot;);</span>
 

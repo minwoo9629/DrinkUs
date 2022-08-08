@@ -11,17 +11,17 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MessageResponse {
+public class ChatResponse {
     private Long userId;
 
-    private String sender;
+    private String userNickname;
 
     private String content;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime createdAt;
 
-    public static MessageResponse from(Chat chat){
-        return new MessageResponse(chat.getUserId(), chat.getSender(), chat.getContent(), LocalDateTime.now());
+    public static ChatResponse from(Chat chat){
+        return new ChatResponse(chat.getUserId(), chat.getUserNickname(), chat.getContent(), LocalDateTime.now());
     }
 }

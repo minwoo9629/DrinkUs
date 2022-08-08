@@ -17,21 +17,21 @@ public class DailyBoard extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = &quot;board_id&quot;)
-<span class="nc" id="L20">    private Long boardId; // 글 번호</span>
+<span class="nc" id="L20">    private Long boardId; // 湲� 踰덊샇</span>
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = &quot;creater_id&quot;)
-<span class="nc" id="L24">    private User creater; // 작성자</span>
+<span class="nc" id="L24">    private User creater; // �옉�꽦�옄</span>
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = &quot;modifier_id&quot;)
-<span class="nc" id="L28">    private User modifier; // 수정자</span>
+<span class="nc" id="L28">    private User modifier; // �닔�젙�옄</span>
 
-<span class="nc" id="L30">    private String boardContent; // 글 내용</span>
+<span class="nc" id="L30">    private String boardContent; // 湲� �궡�슜</span>
 
-<span class="nc" id="L32">    private Long parentId; // 원글 번호</span>
+<span class="nc" id="L32">    private Long parentId; // �썝湲� 踰덊샇</span>
 
-    // 원글
+    // �썝湲�
     public static DailyBoard createDailyBoard(User creater, User modifier, String boardContent) {
 <span class="nc" id="L36">        DailyBoard dailyBoard = new DailyBoard();</span>
 
@@ -42,7 +42,7 @@ public class DailyBoard extends BaseEntity {
 <span class="nc" id="L42">        return dailyBoard;</span>
     }
 
-    // 답글
+    // �떟湲�
     public static DailyBoard createDailyBoard(User creater, User modifier, String boardContent, Long parentId) {
 <span class="nc" id="L47">        DailyBoard dailyBoard = new DailyBoard();</span>
 

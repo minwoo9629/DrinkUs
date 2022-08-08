@@ -27,7 +27,7 @@ public class RoomHistory extends BaseEntity {
     @JoinColumn(name = &quot;user_id&quot;)
 <span class="nc" id="L28">    private User user;</span>
 
-    //방히스토리 생성하기(히스토리 추가)
+    //諛⑺엳�뒪�넗由� �깮�꽦�븯湲�(�엳�뒪�넗由� 異붽�)
     public static RoomHistory createRoomHistory(Room room, User user) {
 <span class="nc" id="L32">        RoomHistory roomHistory = new RoomHistory();</span>
 <span class="nc" id="L33">        roomHistory.room = room;</span>
@@ -35,7 +35,7 @@ public class RoomHistory extends BaseEntity {
 <span class="nc" id="L35">        return roomHistory;</span>
     }
 
-    //방히스토리 수정 -&gt; 회원의 퇴장에 따른 수정
+    //諛⑺엳�뒪�넗由� �닔�젙 -&gt; �쉶�썝�쓽 �눜�옣�뿉 �뵲瑜� �닔�젙
     public void updateRoomHistory(Room room, User user){
 <span class="nc" id="L40">        this.room = room;</span>
 <span class="nc" id="L41">        this.user = user;</span>
