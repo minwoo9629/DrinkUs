@@ -24,19 +24,19 @@ public class CalendarBoard extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = &quot;creater_id&quot;)
-<span class="nc" id="L27">    private User creater; // 등록자</span>
+<span class="nc" id="L27">    private User creater; // �벑濡앹옄</span>
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = &quot;modifier_id&quot;)
-<span class="nc" id="L31">    private User modifier; // 수정자</span>
+<span class="nc" id="L31">    private User modifier; // �닔�젙�옄</span>
 
-<span class="nc" id="L33">    private String calendarContent; // 내용</span>
+<span class="nc" id="L33">    private String calendarContent; // �궡�슜</span>
 
-<span class="nc" id="L35">    private LocalDateTime calendarDatetime; // 예약일자</span>
+<span class="nc" id="L35">    private LocalDateTime calendarDatetime; // �삁�빟�씪�옄</span>
 
-<span class="nc" id="L37">    private Integer peopleLimit; // 인원 수</span>
+<span class="nc" id="L37">    private Integer peopleLimit; // �씤�썝 �닔</span>
 
-<span class="nc" id="L39">    private String place; // 장소</span>
+<span class="nc" id="L39">    private String place; // �옣�냼</span>
 
 
     @Enumerated(EnumType.STRING)
@@ -83,7 +83,7 @@ public class CalendarBoard extends BaseEntity {
 <span class="nc" id="L83">        calendarBoard.ages70 = ages[5];</span>
 <span class="nc" id="L84">    }</span>
 
-    // 일정 생성하기
+    // �씪�젙 �깮�꽦�븯湲�
     public static CalendarBoard createCalendarBoard(User creater, String calendarContent, LocalDateTime calendarDatetime,
                                                     Integer peopleLimit, String place, YN[] ages) {
 <span class="nc" id="L89">        CalendarBoard calendarBoard = new CalendarBoard();</span>
@@ -97,7 +97,7 @@ public class CalendarBoard extends BaseEntity {
 <span class="nc" id="L97">        return calendarBoard;</span>
     }
 
-    // 일정 수정하기 (수정자, 내용, 예약일자, 인원 수, 나이대, 장소)
+    // �씪�젙 �닔�젙�븯湲� (�닔�젙�옄, �궡�슜, �삁�빟�씪�옄, �씤�썝 �닔, �굹�씠��, �옣�냼)
     public void updateCalendarBoard(User modifier, String calendarContent, LocalDateTime calendarDatetime,
                            Integer peopleLimit, String place, YN[] ages) {
 <span class="nc" id="L103">        this.modifier = modifier;</span>

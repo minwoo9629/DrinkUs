@@ -20,11 +20,11 @@ public class UserCalendar {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = &quot;user_id&quot;)
-<span class="nc" id="L23">    private User user; // 해당 회원</span>
+<span class="nc" id="L23">    private User user; // �빐�떦 �쉶�썝</span>
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = &quot;calendar_id&quot;)
-<span class="nc" id="L27">    private CalendarBoard calendarBoard; // 해당 일정</span>
+<span class="nc" id="L27">    private CalendarBoard calendarBoard; // �빐�떦 �씪�젙</span>
 
     public static UserCalendar createUserCalendar(User user, CalendarBoard calendarBoard){
 <span class="nc" id="L30">        UserCalendar userCalendar = new UserCalendar();</span>

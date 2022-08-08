@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserMyInfoResponse {
-
+    private Long userId;
     private String userName;
     private String userFullname;
     private String userNickname;
@@ -24,7 +24,7 @@ public class UserMyInfoResponse {
     private Integer userBeer;
 
     public static UserMyInfoResponse from(User user){
-        return new UserMyInfoResponse(user.getUserName(), user.getUserFullname(), user.getUserNickname(), user.getUserPopularity(), user.getUserBirthday(),
+        return new UserMyInfoResponse(user.getUserId(), user.getUserName(), user.getUserFullname(), user.getUserNickname(), user.getUserPopularity(), user.getUserBirthday(),
                 user.getUserIntroduce(), user.getUserImg(), user.getUserRole(), user.getUserPoint(), user.getUserSoju(), user.getUserBeer());
     }
 }

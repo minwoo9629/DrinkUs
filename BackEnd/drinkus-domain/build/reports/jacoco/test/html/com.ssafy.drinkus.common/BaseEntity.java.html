@@ -9,11 +9,11 @@ import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
 
-@MappedSuperclass // 상위클래스 상속받는 annotation (extends)
-@EntityListeners(AuditingEntityListener.class) //now()가 가능하게끔 하는 annotation
+@MappedSuperclass // �긽�쐞�겢�옒�뒪 �긽�냽諛쏅뒗 annotation (extends)
+@EntityListeners(AuditingEntityListener.class) //now()媛� 媛��뒫�븯寃뚮걫 �븯�뒗 annotation
 @Getter
-//모든 엔티티에 적용할 수 있는 엔티티 (생성일자, 수정일자)
-//  -&gt; 추상클래스
+//紐⑤뱺 �뿏�떚�떚�뿉 �쟻�슜�븷 �닔 �엳�뒗 �뿏�떚�떚 (�깮�꽦�씪�옄, �닔�젙�씪�옄)
+//  -&gt; 異붿긽�겢�옒�뒪
 <span class="nc" id="L17">public abstract class BaseEntity {</span>
 
     @CreatedDate
