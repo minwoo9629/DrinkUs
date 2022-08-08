@@ -141,6 +141,13 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    // 사용자에게 관리자 권한 부여
+    @PatchMapping("/permission/{user_id}")
+    public ResponseEntity<Void> updateAdminPermission(@LoginUser User user, @PathVariable("user_id")Long userId){
+        userService.updateAdminPermission(user, userId);
+        return ResponseEntity.ok().build();
+    }
+
     //로그아웃
     //쿠키세션 정보 삭제
 

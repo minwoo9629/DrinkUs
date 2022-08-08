@@ -1,5 +1,6 @@
 package com.ssafy.drinkus.user.domain;
 
+import com.ssafy.drinkus.user.domain.type.UserRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -30,4 +31,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Modifying
     @Query("UPDATE User u SET u.userStopDate = :userStopDate WHERE u.userId = :userId")
     Integer updateUserStopDate(@Param("userStopDate")LocalDateTime userStopDate, @Param("userId")Long userId);
+
+    // 사용자에게 권한 부여
+    @Modifying
+    @Query("UPDATE User u SET u.userRole = :userRole WHERE u.userId = :userId")
+    Integer updateUserRole(@Param("userRole")UserRole userRole, @Param("userId")Long userId);
 }

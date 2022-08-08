@@ -41,8 +41,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserService {
 
-    final int POPULARITY_LIMIT = 5;
-
     private final UserRepository userRepository;
     private final AuthRepository authRepository;
     private final BCryptPasswordEncoder passwordEncoder;
@@ -238,11 +236,20 @@ public class UserService {
         emailService.confirmEmailAuth(request);
     }
 
+    // 회원에게 관리자 권한 부여
+    @Transactional
+    public void updateAdminPermission(User user, Long targetUserId){
+        if(user.getUserRole() != UserRole.ROLE_ADMIN){
+            throw new AuthenticationException("관리자만 권한을 부여할 수 있습니다.");
+        }
+        userRepository.updateUserRole(UserRole.ROLE_ADMIN, targetUserId);
+    }
 
     // 인기도 제한 초기화 스케줄 task
     @Scheduled(cron = "0 0 6 * * *") // 매일 6시 정각
     @Transactional
     public void resetPopularityLimit() {
+        final int POPULARITY_LIMIT = 5;
         userRepository.resetUserPopularityLimit(POPULARITY_LIMIT);
     }
 
