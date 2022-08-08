@@ -5,7 +5,9 @@ import { Component } from "react";
 import axios from "axios";
 // const BackGroundWrapper = styled.div``;
 
-const OPENVIDU_SERVER_URL = "https://i7b306.p.ssafy.io:4443";
+// const OPENVIDU_SERVER_URL = "https://i7b306.p.ssafy.io:4443";
+const OPENVIDU_SERVER_URL = "https://i7b306.p.ssafy.io:8443";
+
 const OPENVIDU_SERVER_SECRET = "DRINKUS";
 
 class VideoConference extends Component {
@@ -260,12 +262,13 @@ class VideoConference extends Component {
                   />
                 </p>
                 <p className="text-center">
-                  <input
+                  {/* <input
                     className="btn btn-lg btn-success"
                     name="commit"
                     type="submit"
                     value="JOIN"
-                  />
+                  /> */}
+                  <button>참가하기</button>
                 </p>
               </form>
             </div>
