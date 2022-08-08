@@ -9,8 +9,7 @@ import com.ssafy.drinkus.email.request.UserNameAuthRequest;
 import com.ssafy.drinkus.email.request.UserNameCheckRequest;
 import com.ssafy.drinkus.email.service.EmailService;
 import com.ssafy.drinkus.emailauth.domain.EmailAuth;
-import com.ssafy.drinkus.redis.LoginUser;
-import com.ssafy.drinkus.redis.LoginUserRepository;
+import com.ssafy.drinkus.redis.LoginUser.LoginUserRepository;
 import com.ssafy.drinkus.security.util.JwtUtil;
 import com.ssafy.drinkus.user.domain.User;
 import com.ssafy.drinkus.user.domain.UserRepository;
@@ -27,7 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 

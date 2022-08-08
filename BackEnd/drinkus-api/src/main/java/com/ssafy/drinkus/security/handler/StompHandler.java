@@ -1,8 +1,8 @@
 package com.ssafy.drinkus.security.handler;
 
-import com.ssafy.drinkus.redis.ChatRoomRedisRepository;
-import com.ssafy.drinkus.redis.LoginUser;
-import com.ssafy.drinkus.redis.LoginUserRepository;
+import com.ssafy.drinkus.redis.ChatRoom.ChatRoomRedisRepository;
+import com.ssafy.drinkus.redis.LoginUser.LoginUser;
+import com.ssafy.drinkus.redis.LoginUser.LoginUserRepository;
 import com.ssafy.drinkus.security.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.Message;
