@@ -9,21 +9,28 @@ import com.ssafy.drinkus.email.request.UserNameAuthRequest;
 import com.ssafy.drinkus.email.request.UserNameCheckRequest;
 import com.ssafy.drinkus.email.service.EmailService;
 import com.ssafy.drinkus.emailauth.domain.EmailAuth;
+import com.ssafy.drinkus.report.domain.Report;
+import com.ssafy.drinkus.report.response.ReportInfoResponse;
 import com.ssafy.drinkus.security.util.JwtUtil;
 import com.ssafy.drinkus.user.domain.User;
 import com.ssafy.drinkus.user.domain.UserRepository;
+import com.ssafy.drinkus.user.domain.type.UserRole;
 import com.ssafy.drinkus.user.request.*;
+import com.ssafy.drinkus.user.response.UserListResponse;
 import com.ssafy.drinkus.user.response.UserMyInfoResponse;
 import com.ssafy.drinkus.user.response.UserProfileResponse;
 import com.ssafy.drinkus.util.StringUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -33,8 +40,6 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class UserService {
-
-    final int POPULARITY_LIMIT = 5;
 
     private final UserRepository userRepository;
     private final AuthRepository authRepository;
@@ -56,6 +61,18 @@ public class UserService {
         User findUser = userRepository.findByUserName(request.getUserName())
                 .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
 
+        // 사용자 정지 여부 확인
+        if(findUser.getUserStopDate() != null && LocalDateTime.now().isBefore(findUser.getUserStopDate())){
+            throw new LoginBlockException(
+                    "해당 사용자는 다음 기한까지 정지되었습니다.\n" 
+                            + findUser.getUserStopDate().getYear() + "년 "
+                            + findUser.getUserStopDate().getMonthValue() + "월 "
+                            + findUser.getUserStopDate().getDayOfMonth() + "일 "
+                            + findUser.getUserStopDate().getHour() + "시 "
+                            + findUser.getUserStopDate().getMinute() + "분"
+            );
+        }
+
         if (!passwordEncoder.matches(request.getUserPw(), findUser.getUserPw())) {
             throw new NotMatchException(NotMatchException.PW_NOT_MATCH);
         }
@@ -73,6 +90,20 @@ public class UserService {
                 .build();
         authRepository.save(auth);
         return new TokenResponse(accessToken, refreshToken);
+    }
+
+    //회원 전체 조회
+    public List<UserListResponse> findAllUser(User user){
+        if(user.getUserRole() != UserRole.ROLE_ADMIN){
+            throw new AuthenticationException("관리자만 신고내역을 조회할 수 있습니다.");
+        }
+
+        List<User> userList = userRepository.findAll();
+        List<UserListResponse> response = new ArrayList<>();
+        for (User u : userList) {
+            response.add(UserListResponse.from(u));
+        }
+        return response;
     }
 
     //회원수정
@@ -205,11 +236,20 @@ public class UserService {
         emailService.confirmEmailAuth(request);
     }
 
+    // 회원에게 관리자 권한 부여
+    @Transactional
+    public void updateAdminPermission(User user, Long targetUserId){
+        if(user.getUserRole() != UserRole.ROLE_ADMIN){
+            throw new AuthenticationException("관리자만 권한을 부여할 수 있습니다.");
+        }
+        userRepository.updateUserRole(UserRole.ROLE_ADMIN, targetUserId);
+    }
 
     // 인기도 제한 초기화 스케줄 task
     @Scheduled(cron = "0 0 6 * * *") // 매일 6시 정각
     @Transactional
     public void resetPopularityLimit() {
+        final int POPULARITY_LIMIT = 5;
         userRepository.resetUserPopularityLimit(POPULARITY_LIMIT);
     }
 
