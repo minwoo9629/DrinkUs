@@ -5,6 +5,10 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
+drinkus-api/build/
+drinkus-common/build/
+drinkus-common/build/
+drinkus-external/build/
 
 ### STS ###
 .apt_generated
