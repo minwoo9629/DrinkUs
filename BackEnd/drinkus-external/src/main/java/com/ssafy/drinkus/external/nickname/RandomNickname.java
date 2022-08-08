@@ -1,4 +1,4 @@
-package com.ssafy.drinkus.nickname;
+package com.ssafy.drinkus.external.nickname;
 
 import org.json.JSONObject;
 
