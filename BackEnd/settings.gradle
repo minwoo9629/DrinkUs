@@ -3,4 +3,5 @@ include 'drinkus-api'
 include 'drinkus-common'
 include 'drinkus-domain'
 include 'drinkus-external'
+include 'drinkus-redis'
 
