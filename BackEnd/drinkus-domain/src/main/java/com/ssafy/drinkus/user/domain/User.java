@@ -3,6 +3,7 @@ package com.ssafy.drinkus.user.domain;
 import com.ssafy.drinkus.common.BaseEntity;
 import com.ssafy.drinkus.common.NicknameFailException;
 import com.ssafy.drinkus.common.type.YN;
+import com.ssafy.drinkus.nickname.RandomNickname;
 import com.ssafy.drinkus.report.domain.Report;
 import com.ssafy.drinkus.room.domain.Room;
 import com.ssafy.drinkus.room.domain.RoomHistory;
@@ -89,7 +90,7 @@ public class User extends BaseEntity {
 
     private void defaultUserSettings() {
         try{
-            userNickname = makeRandomNickname();
+            userNickname = RandomNickname.makeRandomNickname();
         }catch (IOException e){
             throw new NicknameFailException(NicknameFailException.MAKE_FAIL);
         }
@@ -155,35 +156,4 @@ public class User extends BaseEntity {
     public void updatePopularityLimit(){
         this.userPopularityLimit -= 1;
     }
-
-    // 닉네임 랜덤 생성
-    public static String makeRandomNickname() throws IOException {
-        URL url = new URL("https://nickname.hwanmoo.kr/?format=json&count=1&max_length=12");
-
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("GET");
-        conn.setRequestProperty("Content-type", "application/json");
-        conn.setConnectTimeout(5000);
-        conn.setReadTimeout(3000);
-
-        BufferedReader rd;
-        if(conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
-            rd = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
-        } else {
-            rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
-        }
-
-        StringBuilder sb = new StringBuilder();
-        String line;
-        while ((line = rd.readLine()) != null) {
-            sb.append(line);
-        }
-
-        rd.close();
-        conn.disconnect();
-        String word = (String) new JSONObject(sb.toString())
-                .getJSONArray("words").get(0);
-        return word;
-    }
-
 }
