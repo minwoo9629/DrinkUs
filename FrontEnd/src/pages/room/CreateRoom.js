@@ -6,8 +6,21 @@ import { useState } from "react";
 import { client } from "../../utils/client"
 
 
-const LetterColorChange = styled.div`
+const CreateRoomBlock = styled.div`
+  margin-top: 20px;
+  margin-bottom: 20px;
   color: white;
+  background-color: #6F92BF;
+  border-radius: 30px;
+  padding: 30px;
+`
+
+const CreateRoomTitle = styled.div`
+  font-size : 50px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 10px;
+  background-color: yellow;
 `
 
 const CreateButton = styled.button `
@@ -113,9 +126,8 @@ const CreateRoom = () => {
     <>
       <Header/>
       <Wrapper>
-        <LetterColorChange>
-          방 생성 페이지입니다.
-          POST 요청을 보내서 방을 만들어야 해.
+        <CreateRoomBlock>
+          <CreateRoomTitle>방 생성</CreateRoomTitle>
           <div>
             <FetchProfile/>
             <div>
@@ -232,7 +244,7 @@ const CreateRoom = () => {
               생성하기
             </CreateButton>
           </div>
-          </LetterColorChange>
+          </CreateRoomBlock>
       </Wrapper>
     </>
   );
