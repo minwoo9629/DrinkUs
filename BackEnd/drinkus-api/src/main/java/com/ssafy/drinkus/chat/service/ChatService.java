@@ -75,6 +75,4 @@ public class ChatService {
 
         return ChatResponse.from(chat);
     }
-
-
 }
