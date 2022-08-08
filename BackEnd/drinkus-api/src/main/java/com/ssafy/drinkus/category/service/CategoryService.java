@@ -19,8 +19,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -64,11 +64,14 @@ public class CategoryService {
     public void createUserInterest(User user, Long subCategoryId){
         SubCategory findInterest = subCategoryRepository.findById(subCategoryId)
                 .orElseThrow(() -> new NotFoundException(NotFoundException.SUBCATEGORY_NOT_FOUND));
+        System.out.println("createUserInterest"+user.getUserId() + findInterest.getSubCategoryId());
 
-        UserSubCategory findUserInterest = userSubCategoryRepository.findByUserAndSubCategory(user, findInterest)
-                .orElseThrow(() -> new DuplicateException("이미 추가한 관심사 입니다."));
+        if (userSubCategoryRepository.existsUserSubCategoryByUserAndSubCategory(user, findInterest)) {
+            throw new DuplicateException("이미 추가한 관심사 입니다.");
+        }
+        UserSubCategory userSubCategory = UserSubCategory.createUserInterest(user, findInterest);
+        userSubCategoryRepository.save(userSubCategory);
 
-        UserSubCategory.createUserInterest(user, findInterest);
     }
 
     //회원의 관심사 삭제
@@ -76,6 +79,10 @@ public class CategoryService {
     public void deleteUserInterest(User user, Long subCategoryId){
         SubCategory findSubCategory = subCategoryRepository.findById(subCategoryId)
                         .orElseThrow(() -> new NotFoundException(NotFoundException.SUBCATEGORY_NOT_FOUND));
+
+        if (!userSubCategoryRepository.existsUserSubCategoryByUserAndSubCategory(user, findSubCategory)) {
+            throw new DuplicateException("이미 없는 관심사 입니다.");
+        }
         userSubCategoryRepository.deleteByUserAndSubCategory(user, findSubCategory);
     }
 }
