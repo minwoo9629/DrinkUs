@@ -9,7 +9,6 @@ import com.ssafy.drinkus.email.request.UserNameAuthRequest;
 import com.ssafy.drinkus.email.request.UserNameCheckRequest;
 import com.ssafy.drinkus.email.service.EmailService;
 import com.ssafy.drinkus.emailauth.domain.EmailAuth;
-import com.ssafy.drinkus.redis.LoginUser.LoginUserRepository;
 import com.ssafy.drinkus.security.util.JwtUtil;
 import com.ssafy.drinkus.user.domain.User;
 import com.ssafy.drinkus.user.domain.UserRepository;
@@ -42,7 +41,6 @@ public class UserService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final EmailService emailService;
-    private final LoginUserRepository loginUserRepository;
 
     @Transactional
     public void createUser(UserCreateRequest request) {

@@ -7,7 +7,6 @@ import com.ssafy.drinkus.chat.request.ChatRequest;
 import com.ssafy.drinkus.chat.response.ChatResponse;
 import com.ssafy.drinkus.chat.domain.ChatRoom;
 import com.ssafy.drinkus.common.NotFoundException;
-import com.ssafy.drinkus.redis.ChatRoomRedisRepository;
 import com.ssafy.drinkus.user.domain.User;
 import com.ssafy.drinkus.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +30,6 @@ import static com.ssafy.drinkus.common.NotFoundException.USER_NOT_FOUND;
 @RequiredArgsConstructor
 public class ChatService {
     private final ChatRepository chatRepository;
-    private final ChatRoomRedisRepository chatRoomRedisRepository;
     private final ChatRoomRepository chatRoomRepository;
     private final UserRepository userRepository;
 
@@ -75,7 +73,6 @@ public class ChatService {
         Chat chat = Chat.createChat(request.getRoomId(), userId, userNickName, request.getContent());
         chatRepository.save(chat);
 
-        List<Long> userIds = chatRoomRedisRepository.getChatRoomUsers(request.getRoomId());
         return ChatResponse.from(chat);
     }
 }
