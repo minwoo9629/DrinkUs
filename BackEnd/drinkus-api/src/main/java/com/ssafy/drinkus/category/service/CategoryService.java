@@ -76,6 +76,7 @@ public class CategoryService {
     public void deleteUserInterest(User user, Long subCategoryId){
         SubCategory findSubCategory = subCategoryRepository.findById(subCategoryId)
                         .orElseThrow(() -> new NotFoundException(NotFoundException.SUBCATEGORY_NOT_FOUND));
+
         userSubCategoryRepository.deleteByUserAndSubCategory(user, findSubCategory);
     }
 }
