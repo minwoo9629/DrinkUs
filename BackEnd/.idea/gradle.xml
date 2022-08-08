@@ -16,7 +16,6 @@
             <option value="$PROJECT_DIR$/drinkus-common" />
             <option value="$PROJECT_DIR$/drinkus-domain" />
             <option value="$PROJECT_DIR$/drinkus-external" />
-            <option value="$PROJECT_DIR$/drinkus-redis" />
           </set>
         </option>
       </GradleProjectSettings>

@@ -1,7 +1,5 @@
 package com.ssafy.drinkus.friend.domain;
 
-import com.ssafy.drinkus.chat.domain.Chat;
-import com.ssafy.drinkus.chat.domain.ChatRoom;
 import com.ssafy.drinkus.common.BaseEntity;
 import com.ssafy.drinkus.user.domain.User;
 import lombok.AccessLevel;
@@ -29,17 +27,11 @@ public class Friend extends BaseEntity {
     @JoinColumn(name = "to_user_id")
     private User toUser;
 
-    //채팅방 아이디
-    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    @JoinColumn(name = "chat_room_id")
-    private ChatRoom chatRoom;
-
     //친구 관계 생성
-    public static Friend createFriend(User fromUser, User toUser, ChatRoom chatRoom) {
+    public static Friend createFriend(User fromUser, User toUser) {
         Friend friend = new Friend();
         friend.fromUser = fromUser;
         friend.toUser = toUser;
-        friend.chatRoom = chatRoom;
         return friend;
     }
 }

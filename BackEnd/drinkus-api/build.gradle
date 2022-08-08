@@ -16,7 +16,6 @@ dependencies {
     implementation(project(":drinkus-domain"))
     implementation(project(":drinkus-common"))
     implementation(project(":drinkus-external"))
-    implementation(project(":drinkus-redis"))
 
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
     implementation "com.querydsl:querydsl-apt:${queryDslVersion}"

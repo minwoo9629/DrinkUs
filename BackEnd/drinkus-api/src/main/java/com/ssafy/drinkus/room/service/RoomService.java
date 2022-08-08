@@ -141,7 +141,7 @@ public class RoomService {
         User findUser = userRepository.findById(user.getUserId())
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
         // target room 정보 얻어온다
-//        Room findRoom = roomRepository.findById(request.getRoomId());
+//        Room findroom = roomRepository.findById(request.getRoomId());
     }
 
     @Transactional

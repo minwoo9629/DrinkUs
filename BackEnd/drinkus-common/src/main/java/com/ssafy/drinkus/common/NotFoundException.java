@@ -8,7 +8,6 @@ public class NotFoundException extends RuntimeException {
     public static final String SUBCATEGORY_NOT_FOUND = "존재하지 않는 관심사입니다.";
     public static final String BOARD_DAILY_NOT_FOUND = "존재하지 않는 글 번호입니다.";
     public static final String BOARD_CALENDAR_NOT_FOUND = "존재하지 않는 일정 번호입니다.";
-    public static final String CHAT_ROOM_NOT_FOUND = "존재하지 않는 채팅방입니다,";
     public NotFoundException(String message) {
         super(message);
     }
