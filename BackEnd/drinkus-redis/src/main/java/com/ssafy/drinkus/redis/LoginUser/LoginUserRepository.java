@@ -1,4 +1,4 @@
-package com.ssafy.drinkus.redis;
+package com.ssafy.drinkus.redis.LoginUser;
 
 import org.springframework.data.repository.CrudRepository;
 
