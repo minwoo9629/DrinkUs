@@ -6,6 +6,7 @@ import com.ssafy.drinkus.email.request.UserNameAuthRequest;
 import com.ssafy.drinkus.email.request.UserNameCheckRequest;
 import com.ssafy.drinkus.user.domain.User;
 import com.ssafy.drinkus.user.request.*;
+import com.ssafy.drinkus.user.response.UserListResponse;
 import com.ssafy.drinkus.user.response.UserMyInfoResponse;
 import com.ssafy.drinkus.user.response.UserProfileResponse;
 import com.ssafy.drinkus.user.service.UserService;
@@ -43,6 +44,13 @@ public class UserController {
                 .header("AccessToken", accessToken)
                 .header("RefreshToken", refreshToken)
                 .build();
+    }
+
+    //전체 유저 조회
+    @GetMapping("/list")
+    public ResponseEntity<List<UserListResponse>> findAllUser(@LoginUser User user){
+        List<UserListResponse> body = userService.findAllUser(user);
+        return ResponseEntity.ok().body(body);
     }
 
     //회원수정

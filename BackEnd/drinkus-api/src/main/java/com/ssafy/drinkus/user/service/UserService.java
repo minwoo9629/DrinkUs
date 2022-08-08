@@ -9,15 +9,20 @@ import com.ssafy.drinkus.email.request.UserNameAuthRequest;
 import com.ssafy.drinkus.email.request.UserNameCheckRequest;
 import com.ssafy.drinkus.email.service.EmailService;
 import com.ssafy.drinkus.emailauth.domain.EmailAuth;
+import com.ssafy.drinkus.report.domain.Report;
+import com.ssafy.drinkus.report.response.ReportInfoResponse;
 import com.ssafy.drinkus.security.util.JwtUtil;
 import com.ssafy.drinkus.user.domain.User;
 import com.ssafy.drinkus.user.domain.UserRepository;
+import com.ssafy.drinkus.user.domain.type.UserRole;
 import com.ssafy.drinkus.user.request.*;
+import com.ssafy.drinkus.user.response.UserListResponse;
 import com.ssafy.drinkus.user.response.UserMyInfoResponse;
 import com.ssafy.drinkus.user.response.UserProfileResponse;
 import com.ssafy.drinkus.util.StringUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -86,6 +92,20 @@ public class UserService {
                 .build();
         authRepository.save(auth);
         return new TokenResponse(accessToken, refreshToken);
+    }
+
+    //회원 전체 조회
+    public List<UserListResponse> findAllUser(User user){
+        if(user.getUserRole() != UserRole.ROLE_ADMIN){
+            throw new AuthenticationException("관리자만 신고내역을 조회할 수 있습니다.");
+        }
+
+        List<User> userList = userRepository.findAll();
+        List<UserListResponse> response = new ArrayList<>();
+        for (User u : userList) {
+            response.add(UserListResponse.from(u));
+        }
+        return response;
     }
 
     //회원수정

@@ -3,6 +3,7 @@ package com.ssafy.drinkus.user.domain;
 import com.ssafy.drinkus.common.BaseEntity;
 import com.ssafy.drinkus.common.NicknameFailException;
 import com.ssafy.drinkus.common.type.YN;
+import com.ssafy.drinkus.report.domain.Report;
 import com.ssafy.drinkus.room.domain.Room;
 import com.ssafy.drinkus.room.domain.RoomHistory;
 import com.ssafy.drinkus.user.domain.type.UserProvider;
