@@ -1,4 +1,4 @@
-FROM openjdk:17-ea-11-jdk-slim
+FROM openjdk:8-jdk-alpine
 
 VOLUME /tmp
 COPY build/libs/drinkus-api-0.0.1-SNAPSHOT.jar drinkus-api.jar
