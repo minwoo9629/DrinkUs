@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserSubCategoryRepository extends JpaRepository<UserSubCategory, Long> {
-    List<UserSubCategory> findByUser(Long userId);
+    List<UserSubCategory> findByUser(User user);
 
     Optional<UserSubCategory> findByUserAndSubCategory(User user, SubCategory subCategory);
 
