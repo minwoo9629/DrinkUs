@@ -81,7 +81,6 @@ const RoomList = () => {
   const onHandlePageButton = (pageNum) => {
     fetchData(pageNum);
   };
-  console.log(BasicData)
 
   useEffect(()=>{
     fetchData();
@@ -110,7 +109,6 @@ const RoomList = () => {
         },
       })
       .then((response)=>response);
-      console.log(result)
       return result
   }
 
@@ -128,7 +126,6 @@ const RoomList = () => {
       alert("검색 결과가 없습니다.")
     }
   };
-  console.log(filterData)
 
   // 체크박스
   const [SameAge, setSameAge] = useState(true);

@@ -10,15 +10,17 @@ const Box = styled.div`
   background-color: white;
 `
 
-const onRoomDetail = async (roomId) => {
-  const result = await client
-    .get(`rooms/${roomId}`)
-    .then((response)=> response);
-    return result
-}
 
 
-const RoomDetail = () => {
+const RoomDetail = (roomId) => {
+  
+  const onRoomDetail = async () => {
+    const result = await client
+      .get(`rooms/${roomId}`)
+      .then((response)=> response);
+      console.log(result)
+      return result
+  }
 
   const [data, setData] = useState({});
 
@@ -38,21 +40,7 @@ const RoomDetail = () => {
       <Header />
       <Wrapper>
         <Box>
-          <div>
-            {/* {JSON.stringify(data.roomId)} */}
-            {/* {data.roomId} |
-            {data.roomName} | 
-            {data.createdDate} |
-            {data.peopleLimit} */}
-          </div>
-          <div>
-            {/* {data.placeTheme} */}
-          </div>
-          <div>
-            {/* {data.user.userName} */}
-            {/* {data.user.userImg} */}
-            {/* 인기도{data.user.userPopularity} */}
-          </div>       
+        {JSON.stringify(roomId)}
         </Box>
         <GoToButton>참여하기</GoToButton>
       </Wrapper> 
