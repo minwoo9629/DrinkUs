@@ -118,8 +118,6 @@ const AgesWrapper = styled.div`
   width: 80px;
   color: black;
   margin: 4px 12px 4px 4px;
-  // margin-left: 4px;
-  // margin-right: 4px;
   background-color: #ffffff;
   border-radius: 4px;
   border: 3px solid #eaf1ff;
@@ -153,7 +151,6 @@ const CreateRoom = () => {
 
   const onRoomInfoInput = (e) => {
     setRoomInfo({ ...roomInfo, [e.target.name]: e.target.value });
-    console.log(roomInfo)
   };
 
   const onRoomInfoSubmit = (e) => {
@@ -216,7 +213,6 @@ const CreateRoom = () => {
   // const onMakeCategory = (e) => {
   //   setMakeCategory({...makecategory, [e.target.name]: {categoryId:e.target.value}});
   // }
-
 
   return (
     <>
