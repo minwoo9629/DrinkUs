@@ -169,9 +169,10 @@ const Join = () => {
     userPwValid: false,
     userPwCheckValid: false,
     doubleCheckValid: false,
-    fullNameValid: false, // 이름은 필수 항목
-    bdayValid: false, // 생일은 필수 항목
   });
+  // disabled 설정하기 위한 변수
+  const enalbed = (state.confirmValid === true) && (state.userPwValid === true) && (state.userPwCheckValid === true) && (state.doubleCheckValid === true)
+
   const navigate = useNavigate();
 
   const onHandleInput = (e) => {
@@ -205,7 +206,7 @@ const Join = () => {
         userPwMsg:
           "비밀번호는 영문자와 숫자,특수기호가 적어도 1개 이상씩 포함된 8자~20자의 비밀번호여야 합니다.",
       });
-      setState({ ...state, userPwValid: false });
+      // setState({ ...state, userPwValid: false });
       FailAlert(
         "비밀번호는 영문자와 숫자,특수기호가 적어도 1개 이상씩 포함된 8자~20자의 비밀번호여야 합니다."
       );
@@ -216,12 +217,21 @@ const Join = () => {
       console.log("비밀번호 통과O");
     }
 
+    // 중복확인 체크
+    if (state.doubleCheckValid === false) {
+      FailAlert("이메일 중복확인을 진행해 주세요")
+    }
+
+    // 이메일 인증 체크
+    if (state.confirmValid === false) {
+      FailAlert("이메일 인증을 진행해 주세요")
+    }
+
     // 비밀번호 확인 체크
     const userPwCheck = state.userPwCheck;
     if (userPwCheck !== state.userPw) {
-      setState({ ...state, userPwCheckValid: false });
+      // setState({ ...state, userPwCheckValid: false });
       FailAlert("비밀번호가 일치하지 않습니다");
-      console.log("비밀번호 일치X");
     } else {
       setState({ ...state, userPwCheckValid: true });
     }
@@ -261,7 +271,6 @@ const Join = () => {
     };
     const response = await sendConfirmEmail(data);
     if (response.status === 200) {
-      setState({...state, confirmValid: true})
       EmptyAlert("입력하신 이메일로 인증번호가 발송됐습니다. 5분안에 인증을 진행해주세요.")
     }
   };
@@ -383,10 +392,11 @@ const Join = () => {
               <Link to="/join/type" style={{textDecoration:"none"}}>
                 <LinkWrapper
                   disabled={
-                    !state.nameValid &&
-                    state.confirmValid &&
-                    state.userPwValid &&
-                    state.userPwCheckValid
+                    // !(state.nameValid &&
+                    // state.confirmValid &&
+                    // state.userPwValid &&
+                    // state.userPwCheckValid)
+                    !enalbed
                   }
                   onClick={onHandleSubmit}
                 >
