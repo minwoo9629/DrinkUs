@@ -19,6 +19,12 @@ const InputForm = styled.input`
   height: 100px;
 `
 
+const DateInputForm = styled.input`
+  background-color: white;
+  width: 200px;
+  height: 50px;
+`
+
 const CheckBoxForm = styled.input`
   background-color: white;
   width: 30px;
@@ -77,24 +83,24 @@ const CreateCalendar = () => {
   const onCalendarInfoSubmit = (e) => {
     e.preventDefault();
     // 내용 유효 체크
-    if (calendarInfo.calendarContent.length === 0) {
-      alert("내용을 입력해 주세요.");
-    }
+    // if (calendarInfo.calendarContent.length === 0) {
+    //   alert("내용을 입력해 주세요.");
+    // }
 
-    // 날짜 유효 체크
-    if (calendarInfo.calendarDatetime.length === 0) {
-      alert("날짜를 입력해 주세요.");
-    }
+    // // 날짜 유효 체크
+    // if (calendarInfo.calendarDatetime.length === 0) {
+    //   alert("날짜를 입력해 주세요.");
+    // }
 
-    // 인원 유효 체크
-    if (calendarInfo.peopleLimit.length === 0) {
-      alert("최대인원을 입력해 주세요.");
-    }
+    // // 인원 유효 체크
+    // if (calendarInfo.peopleLimit.length === 0) {
+    //   alert("최대인원을 입력해 주세요.");
+    // }
 
     client
       .post("calendar", {
         calendarContent: calendarInfo.calendarContent,
-        calendarDatetime: calendarInfo.calendarDatetime,
+        calendarDatetime: dateState.year + dateState.month + dateState.day + dateState.hour + dateState.minute,
         peopleLimit: calendarInfo.peopleLimit,
         place: calendarInfo.place,
         ages: ageCheckedItems,
@@ -133,7 +139,17 @@ const CreateCalendar = () => {
   };
 
   // 날짜 형식
-  const [startDate, setStartDate] = useState(new Date());
+  const [dateState, setDateState] = useState({
+    year: '',
+    month: '',
+    day: '',
+    hour: '',
+    minute: ''
+  });
+
+  const onDaterInfoInput = (e) => {
+    setDateState({...dateState, [e.target.name]: e.target.value})
+  };
 
   return (
     <>
@@ -152,15 +168,43 @@ const CreateCalendar = () => {
             </InputForm>
           </div>
           <div>
-            <InputForm
-              value={calendarInfo.calendarDatetime}
-              name="calendarDatetime"
-              placeholder="날짜 시간 분"
-              onChange={onCalendarInfoInput}
+            <DateInputForm
+              value={dateState.year}
+              name="year"
+              placeholder="ex)2022"
+              onChange={onDaterInfoInput}
               required>
-            </InputForm>
-            <ReactDatePicker
-            />
+            </DateInputForm>년
+            <DateInputForm
+              value={dateState.month}
+              name="month"
+              placeholder="ex)08"
+              onChange={onDaterInfoInput}
+              required>
+            </DateInputForm>월
+            <DateInputForm
+              value={dateState.day}
+              name="day"
+              placeholder="ex)09"
+              onChange={onDaterInfoInput}
+              required>
+            </DateInputForm>일
+          </div>
+          <div>
+            <DateInputForm
+              value={dateState.hour}
+              name="hour"
+              placeholder="ex)22"
+              onChange={onDaterInfoInput}
+              required>
+            </DateInputForm>시
+            <DateInputForm
+              value={dateState.minute}
+              name="minute"
+              placeholder="ex)30"
+              onChange={onDaterInfoInput}
+              required>
+            </DateInputForm>분
           </div>
           <div>
             <SelectBox
