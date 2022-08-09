@@ -15,12 +15,13 @@ import SocialLogin from "./pages/auth/SocialLogin";
 import MyPage from "./pages/auth/MyPage";
 import DrinkLive from "./pages/room/DrinkLive";
 import CreateRoom from "./pages/room/CreateRoom";
-import Rooms from "./pages/room/Rooms";
+import RoomList from "./pages/room/RoomList";
 import Daily from "./pages/Daily";
 import RoomDetail from "./pages/room/RoomDetail";
 import Calendar from "./pages/calendarcommunity/Calendar";
-// import CalendarList from "./pages/calendarcommunity/CalendarList";
+import DailyCalendar from "./pages/calendarcommunity/DailyCalendar";
 import CreateCalendar from "./pages/calendarcommunity/CreateCalendar";
+import EditCalendar from "./pages/calendarcommunity/EditCalendar";
 import EditProfile from "./pages/auth/mypage/EditProfile";
 import EditPassword from "./pages/auth/mypage/EditPassword";
 import EditInterest from "./pages/auth/mypage/EditInterest";
@@ -50,11 +51,13 @@ function App() {
               <Route path="/oauth2/redirect" element={<SocialLogin />} />
               <Route path="/live" element={<DrinkLive />} />
               <Route path="/createroom" element={<CreateRoom />} />
-              <Route path="/rooms" element={<Rooms />} />
+              <Route path="/rooms" element={<RoomList />} />
               <Route path="/daily" element={<Daily />} />
-              <Route path="/rooms/1" element={<RoomDetail />} />
+              <Route path="/rooms/:roomId" element={<RoomDetail />} />
               <Route path="/calendar" element={<Calendar />} />
+              <Route path="/calendar/:year/:month/:index" element={<DailyCalendar />} />
               <Route path="/calendar/create" element={<CreateCalendar />} />
+              <Route path="/calendar/edit/:calendar_id" element={<EditCalendar />} />
               <Route path="/user" element={<MyPage />}>
                 <Route index element={<EditProfile />} />
                 <Route path="edit/profile" element={<EditProfile />} />
