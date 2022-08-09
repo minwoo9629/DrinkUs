@@ -8,19 +8,11 @@ import { client } from "../../utils/client"
 
 const CreateRoomBlock = styled.div`
   width: 800px;
-  margin-top: 20px;
   margin-bottom: 20px;
   color: white;
   background-color: #6F92BF;
   border-radius: 30px;
   padding: 30px;
-`
-
-const CreateRoomTitle = styled.div`
-  font-size : 50px;
-  font-weight: bold;
-  text-align: center;
-  margin-bottom: 10px;
 `
 
 const InputBlock = styled.div`
