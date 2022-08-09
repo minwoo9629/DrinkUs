@@ -46,13 +46,6 @@ public class UserController {
                 .build();
     }
 
-    //전체 유저 조회
-    @GetMapping("/list")
-    public ResponseEntity<List<UserListResponse>> findAllUser(@LoginUser User user){
-        List<UserListResponse> body = userService.findAllUser(user);
-        return ResponseEntity.ok().body(body);
-    }
-
     //회원수정
     @PutMapping
     public ResponseEntity<Void> updateUser(@LoginUser User user,
@@ -138,13 +131,6 @@ public class UserController {
     @PatchMapping("/confirmToken")
     public ResponseEntity<Void> confirmUserNameCheck(@RequestBody @Valid UserNameAuthRequest request){
         userService.confirmUserName(request);
-        return ResponseEntity.ok().build();
-    }
-
-    // 사용자에게 관리자 권한 부여
-    @PatchMapping("/permission/{user_id}")
-    public ResponseEntity<Void> updateAdminPermission(@LoginUser User user, @PathVariable("user_id")Long userId){
-        userService.updateAdminPermission(user, userId);
         return ResponseEntity.ok().build();
     }
 

@@ -92,20 +92,6 @@ public class UserService {
         return new TokenResponse(accessToken, refreshToken);
     }
 
-    //회원 전체 조회
-    public List<UserListResponse> findAllUser(User user){
-        if(user.getUserRole() != UserRole.ROLE_ADMIN){
-            throw new AuthenticationException("관리자만 신고내역을 조회할 수 있습니다.");
-        }
-
-        List<User> userList = userRepository.findAll();
-        List<UserListResponse> response = new ArrayList<>();
-        for (User u : userList) {
-            response.add(UserListResponse.from(u));
-        }
-        return response;
-    }
-
     //회원수정
     @Transactional
     public void updateUser(Long userId, UserUpdateRequest request) {
@@ -234,15 +220,6 @@ public class UserService {
     @Transactional
     public void confirmUserName(UserNameAuthRequest request) {
         emailService.confirmEmailAuth(request);
-    }
-
-    // 회원에게 관리자 권한 부여
-    @Transactional
-    public void updateAdminPermission(User user, Long targetUserId){
-        if(user.getUserRole() != UserRole.ROLE_ADMIN){
-            throw new AuthenticationException("관리자만 권한을 부여할 수 있습니다.");
-        }
-        userRepository.updateUserRole(UserRole.ROLE_ADMIN, targetUserId);
     }
 
     // 인기도 제한 초기화 스케줄 task
