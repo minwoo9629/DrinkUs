@@ -23,17 +23,11 @@ li {
   list-style: none;
 }
 
-a {
-  text-decoration: none;
-  color: whitesmoke;
-  font-family: "Black Han Sans";
-  font-size: 18px;
-}
-
 /* userId Password Icon Css */
 .fa-envelope,
 .fa-lock,
-.fa-calendar-alt, .fa-user {
+.fa-calendar-alt,
+.fa-user {
   margin-right: 24px;
   top: 9px;
   left: 10px;
@@ -44,7 +38,8 @@ a {
   border-radius: 100%;
 }
 
-.fa-calendar-alt, .fa-user{
+.fa-calendar-alt,
+.fa-user {
   padding: 10px 12px;
 }
 
@@ -55,18 +50,42 @@ a {
   padding: 10px 12px;
 }
 
-@media screen and (max-width : 500px){
-  .fa-envelope,.fa-lock, .fa-calendar-alt, .fa-user{
+.fa-arrow-left {
+  font-size: 20px;
+  color: #ebeaea;
+}
+
+@media screen and (max-width: 500px) {
+  .fa-envelope,
+  .fa-lock,
+  .fa-calendar-alt,
+  .fa-user {
     font-size: 16px;
     top: 0px;
     left: 5px;
     margin-right: 12px;
   }
 
-  .fa-lock, .fa-calendar-alt, .fa-user{
+  .fa-lock,
+  .fa-calendar-alt,
+  .fa-user {
     padding: 8px 10px;
   }
-  .fa-envelope{
+  .fa-envelope {
     padding: 8px;
   }
+}
+
+a.tapItem {
+  color: black !important;
+}
+
+#profileImage {
+  display: none;
+}
+
+#profileImageLabel {
+  color: cornflowerblue;
+  font-size: 14px;
+  cursor: pointer;
 }
