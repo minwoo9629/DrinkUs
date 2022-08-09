@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 import Header from "../../../components/layout/Header";
 import { client } from "../../../utils/client";
+<<<<<<< HEAD
 import { AuthInput } from "../../../components/common/inputs/AuthInput";
 
 
@@ -25,6 +26,14 @@ const NeonSignAnimation = keyframes`
   20%,
   24%,
 `;
+=======
+import {
+  sendConfirmEmail,
+  confirmEmail,
+  doubleCheckEmail
+  } from "../../../api/JoinAPI";
+import { FailAlert, EmptyAlert, SuccessAlert } from "../../../utils/sweetAlert";
+>>>>>>> 479e7bccd0a83fb0e85f2a4b79a5e7651f235da3
 
 const Wrapper = styled.div`
   background-color: black;
@@ -159,8 +168,9 @@ const Join = () => {
     // 유효 여부
     nameValid: "",
     confirmValid: false, // 인증번호 유효
-    userPwValid: "",
-    userPwCheckValid: "",
+    userPwValid: false,
+    userPwCheckValid: false,
+    doubleCheckValid: false,
     fullNameValid: false, // 이름은 필수 항목
     bdayValid: false, // 생일은 필수 항목
   });
@@ -179,7 +189,7 @@ const Join = () => {
     if (!idRegex.test(idCurrent)) {
       setState({ ...state, nameMsg: "유효하지 않은 이메일 형식입니다" });
       setState({ ...state, nameValid: false });
-      alert("유효하지 않은 이메일 형식입니다");
+      FailAlert("유효하지 않은 이메일 형식입니다");
     } else {
       setState({ ...state, nameMsg: "이메일OK" });
       setState({ ...state, nameValid: true });
@@ -195,11 +205,11 @@ const Join = () => {
       setState({
         ...state,
         userPwMsg:
-          "비밀번호는 영문 대,소문자와 숫자,특수기호가 적어도 1개 이상씩 포함된 8자~20자의 비밀번호여야 합니다.",
+          "비밀번호는 영문자와 숫자,특수기호가 적어도 1개 이상씩 포함된 8자~20자의 비밀번호여야 합니다.",
       });
       setState({ ...state, userPwValid: false });
-      alert(
-        "비밀번호는 영문 대,소문자와 숫자,특수기호가 적어도 1개 이상씩 포함된 8자~20자의 비밀번호여야 합니다."
+      FailAlert(
+        "비밀번호는 영문자와 숫자,특수기호가 적어도 1개 이상씩 포함된 8자~20자의 비밀번호여야 합니다."
       );
       console.log("비밀번호 통과X");
     } else {
@@ -208,11 +218,11 @@ const Join = () => {
       console.log("비밀번호 통과O");
     }
 
-    // 비밀번호 중복 체크
+    // 비밀번호 확인 체크
     const userPwCheck = state.userPwCheck;
     if (userPwCheck !== state.userPw) {
       setState({ ...state, userPwCheckValid: false });
-      alert("비밀번호가 일치하지 않습니다");
+      FailAlert("비밀번호가 일치하지 않습니다");
       console.log("비밀번호 일치X");
     } else {
       setState({ ...state, userPwCheckValid: true });
@@ -220,17 +230,17 @@ const Join = () => {
 
     // 이름 유효 체크
     if (state.userFullname.length === 0) {
-      alert("이름은 필수 입력 항목입니다");
+      FailAlert("이름은 필수 입력 항목입니다");
     }
 
     // 생년월일 유효 체크  나중에 8자리 됐을 때 20살 이상인지 체크하는거 추가하자
     if (state.userBirthday.length === 0) {
-      alert("생년월일은 필수 입력 항목입니다");
+      FailAlert("생년월일은 필수 입력 항목입니다");
     }
 
     // 회원가입 client 요청
     client
-      .post("http://localhost:8080/users/join", {
+      .post("/users/join", {
         userName: state.userName,
         userPw: state.userPw,
         userFullname: state.userFullname,
@@ -238,6 +248,7 @@ const Join = () => {
       })
       .then(function (response) {
         console.log(response.data.message);
+        SuccessAlert("DRINKUS에 오신걸 환영합니다")
         navigate("/login");
       })
       .catch(function (error) {
@@ -246,48 +257,45 @@ const Join = () => {
   };
 
   // 이메일 인증번호 전송
-  const onSendEmail = (e) => {
-    e.preventDefault();
-    client
-      .post("http://localhost:8080/email/sendCheckMail", {
-        userName: state.userName,
-      })
-      .then(function (response) {})
-      .catch(function (error) {
-        console.log(error);
-      });
+  const onSendEmail = async (e) => {
+    const data = {
+      userName: state.userName
+    };
+    const response = await sendConfirmEmail(data);
+    if (response.status === 200) {
+      setState({...state, confirmValid: true})
+      EmptyAlert("입력하신 이메일로 인증번호가 발송됐습니다. 5분안에 인증을 진행해주세요.")
+    }
   };
 
   // 인증번호 확인
-  const onConfirmEmail = (e) => {
-    e.preventDefault();
-    client
-      .patch("http://localhost:8080/email/confirm", {
-        userName: state.userName,
-        authToken: state.authToken,
-      })
-      .then(function (response) {
-        setState({ ...state, confirmValid: true });
-        alert("유효한 인증번호입니다");
-      })
-      .catch(function (error) {
-        console.log(error);
-        alert("유효하지 않은 인증번호입니다");
-      });
+  const onConfirmEmail = async (e) => {
+    const data = {
+      userName: state.userName,
+      authToken: state.authToken
+    };
+    const response = await confirmEmail(data);
+    if (response.status === 200)
+      {setState({...state, confirmValid: true});
+      SuccessAlert("유효한 인증번호입니다");
+    }else{FailAlert("인증 코드가 만료되었거나 비정상 접근입니다. 인증을 다시 진행해 주세요.")}
   };
 
-  // 중복확인 버튼 --> requestBody로 수정되면 확인할 것!!!!!!!!
-  const onDoubleCheck = (e) => {
-    e.preventDefault();
-    client
-      .post("http://localhost:8080/users/join/id", {
-        userName: state.userName,
-      })
-      .then(function (response) {})
-      .catch(function (error) {
-        console.log(error);
-      });
+  // 중복확인
+  const onDoubleCheck = async (e) => {
+    const data = {
+      userName: state.userName
+    };
+    const response = await doubleCheckEmail(data);
+    if (response.status === 200) {
+      setState({ ...state, doubleCheckValid: true });
+      EmptyAlert("유효한 이메일입니다. 이메일 인증을 진행해 주세요")
+    }
+    if (response.status === 400) {
+      FailAlert("중복된 회원이거나 유효하지 않은 이메일 형식입니다")
+    }
   };
+  
 
   return (
     <div>
@@ -370,6 +378,7 @@ const Join = () => {
               </InputWrapper>
             </JoinForm>
             {/* 모든 유효성 검사 후 버튼 활성화 */}
+<<<<<<< HEAD
             <ButtonWrapper>
             <Link to="/" style={{textDecoration:"none"}}>
                 <LinkWrapper>MAIN</LinkWrapper>
@@ -388,6 +397,23 @@ const Join = () => {
                 </LinkWrapper>
               </Link>
             </ButtonWrapper>
+=======
+            <Button
+              onClick={onHandleSubmit}
+              disabled={
+                !(state.nameValid &&
+                state.confirmValid&&
+                state.userPwValid &&
+                state.userPwCheckValid &&
+                state.doubleCheckValid)
+              }
+            >
+              JOIN
+            </Button>
+            <Link to="/">
+              <Button>MAIN</Button>
+            </Link>
+>>>>>>> 479e7bccd0a83fb0e85f2a4b79a5e7651f235da3
           </JoinWrapper>
         </NeonLoginWrapper>
       </Wrapper>
