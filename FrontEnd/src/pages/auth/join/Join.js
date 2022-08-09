@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 import Header from "../../../components/layout/Header";
 import { client } from "../../../utils/client";
-<<<<<<< HEAD
 import { AuthInput } from "../../../components/common/inputs/AuthInput";
 
 
@@ -26,14 +25,13 @@ const NeonSignAnimation = keyframes`
   20%,
   24%,
 `;
-=======
+
 import {
   sendConfirmEmail,
   confirmEmail,
   doubleCheckEmail
   } from "../../../api/JoinAPI";
 import { FailAlert, EmptyAlert, SuccessAlert } from "../../../utils/sweetAlert";
->>>>>>> 479e7bccd0a83fb0e85f2a4b79a5e7651f235da3
 
 const Wrapper = styled.div`
   background-color: black;
@@ -378,7 +376,6 @@ const Join = () => {
               </InputWrapper>
             </JoinForm>
             {/* 모든 유효성 검사 후 버튼 활성화 */}
-<<<<<<< HEAD
             <ButtonWrapper>
             <Link to="/" style={{textDecoration:"none"}}>
                 <LinkWrapper>MAIN</LinkWrapper>
@@ -397,23 +394,6 @@ const Join = () => {
                 </LinkWrapper>
               </Link>
             </ButtonWrapper>
-=======
-            <Button
-              onClick={onHandleSubmit}
-              disabled={
-                !(state.nameValid &&
-                state.confirmValid&&
-                state.userPwValid &&
-                state.userPwCheckValid &&
-                state.doubleCheckValid)
-              }
-            >
-              JOIN
-            </Button>
-            <Link to="/">
-              <Button>MAIN</Button>
-            </Link>
->>>>>>> 479e7bccd0a83fb0e85f2a4b79a5e7651f235da3
           </JoinWrapper>
         </NeonLoginWrapper>
       </Wrapper>
