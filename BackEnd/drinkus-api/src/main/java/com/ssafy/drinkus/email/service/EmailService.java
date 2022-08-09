@@ -1,11 +1,11 @@
 package com.ssafy.drinkus.email.service;
 
-import com.ssafy.drinkus.common.EmailAuthTokenNotFoundException;
+import com.ssafy.drinkus.common.NotMatchException;
 import com.ssafy.drinkus.email.handler.EmailHandler;
 import com.ssafy.drinkus.email.request.UserNameAuthRequest;
 import com.ssafy.drinkus.email.dto.EmailDto;
-import com.ssafy.drinkus.emailauth.EmailAuth;
-import com.ssafy.drinkus.emailauth.EmailAuthRepository;
+import com.ssafy.drinkus.emailauth.domain.EmailAuth;
+import com.ssafy.drinkus.emailauth.domain.EmailAuthRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,7 +34,7 @@ public class EmailService {
 
     public void confirmEmailAuth(UserNameAuthRequest request){
         EmailAuth emailAuth = emailAuthRepository.findByUserNameAndAuthTokenAndExpireDateAfter(request.getUserName(), request.getAuthToken(), LocalDateTime.now())
-                .orElseThrow(() -> new EmailAuthTokenNotFoundException(EmailAuthTokenNotFoundException.TOKEN_NOT_FOUND));
+                .orElseThrow(() -> new NotMatchException(NotMatchException.EMAIL_TOKEN_NOT_FOUND));
         emailAuth.useToken(); // 토큰 사용 완료 처리
     }
 

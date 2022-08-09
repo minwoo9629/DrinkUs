@@ -1,15 +1,8 @@
 package com.ssafy.drinkus.dailyboard.query;
 
-import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.ssafy.drinkus.dailyboard.DailyBoard;
 //import com.ssafy.drinkus.dailyboard.QDailyBoard;
-import com.ssafy.drinkus.dailyboard.response.DailyBoardResponse;
-import com.ssafy.drinkus.dailyboard.response.MyBoardResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Repository
 @RequiredArgsConstructor

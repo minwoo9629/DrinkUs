@@ -3,6 +3,7 @@ package com.ssafy.drinkus.user.request;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import javax.validation.constraints.NotBlank;
 
 @Data
@@ -20,5 +21,5 @@ public class UserUpdateRequest {
 
     private String userImg;
 
-
+    private String userBirthday;
 }

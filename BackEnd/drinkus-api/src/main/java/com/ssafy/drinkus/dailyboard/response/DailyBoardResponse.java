@@ -1,12 +1,10 @@
 package com.ssafy.drinkus.dailyboard.response;
 
-import com.ssafy.drinkus.dailyboard.DailyBoard;
-import com.ssafy.drinkus.user.domain.User;
+import com.ssafy.drinkus.dailyboard.domain.DailyBoard;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data

@@ -1,13 +1,16 @@
 package com.ssafy.drinkus.room.service;
 
+import com.ssafy.drinkus.category.domain.Category;
+import com.ssafy.drinkus.category.domain.CategoryRepository;
 import com.ssafy.drinkus.common.NotFoundException;
 import com.ssafy.drinkus.common.NotMatchException;
-import com.ssafy.drinkus.interest.domain.Category;
-import com.ssafy.drinkus.interest.domain.CategoryRepository;
 import com.ssafy.drinkus.room.domain.Room;
+import com.ssafy.drinkus.room.domain.RoomHistory;
+import com.ssafy.drinkus.room.domain.RoomHistoryRepository;
 import com.ssafy.drinkus.room.domain.RoomRepository;
 import com.ssafy.drinkus.room.query.RoomQueryRepository;
 import com.ssafy.drinkus.room.request.RoomCreateRequest;
+import com.ssafy.drinkus.room.request.RoomJoinRequest;
 import com.ssafy.drinkus.room.request.RoomSearchRequest;
 import com.ssafy.drinkus.room.request.RoomUpdateRequest;
 import com.ssafy.drinkus.room.response.RoomInfoResponse;
@@ -18,11 +21,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Objects;
-import java.util.Optional;
 
 import static com.ssafy.drinkus.common.NotFoundException.CATEGORY_NOT_FOUND;
 import static com.ssafy.drinkus.common.NotFoundException.USER_NOT_FOUND;
@@ -37,6 +38,9 @@ public class RoomService {
     private final RoomQueryRepository roomQueryRepository;
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
+    private final RoomHistoryRepository roomHistoryRepository;
+
+    private final BCryptPasswordEncoder passwordEncoder;
 
     //화상방 상세 조회
     public RoomInfoResponse findByRoomId(Long roomId){
@@ -52,47 +56,57 @@ public class RoomService {
                 request.getSearchKeyword(),
                 request.getSameAge(),
                 request.getSortOrder(),
-                request.getCategory().getCategoryId(),
+                request.getCategoryId(),
                 pageable,
                 user);
 
-        return findRoomList.map(room -> RoomListResponse.from(room));
+        return findRoomList.map(RoomListResponse::from);
     }
 
     //화상방 생성
     @Transactional
     public void createRoom(User user, RoomCreateRequest request){
+        Category findCategory = null;
         User findUser = userRepository.findById(user.getUserId())
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
-        Category findCategory = categoryRepository.findById(request.getCategory().getCategoryId())
-                .orElseThrow(() -> new NotFoundException(CATEGORY_NOT_FOUND));
+        if(request.getCategoryId() != null){
+            findCategory = categoryRepository.findById(request.getCategoryId())
+                    .orElseThrow(() -> new NotFoundException(CATEGORY_NOT_FOUND));
+        }
+        else {
+            findCategory = null;
+        }
         Room room = Room.createRoom(
                 request.getRoomName(),
                 findUser,
-                request.getRoomPw(),
+                passwordEncoder.encode(request.getRoomPw()),
                 request.getPlaceTheme(),
                 request.getPeopleLimit(),
-                request.getAges20(),
-                request.getAges30(),
-                request.getAges40(),
-                request.getAges50(),
-                request.getAges60(),
-                request.getAges70(),
+                request.getAges(),
                 findCategory
         );
         roomRepository.save(room);
+
+        //방 히스토리에 저장
+        RoomHistory roomHistory = RoomHistory.createRoomHistory(room, findUser);
+        roomHistoryRepository.save(roomHistory);
     }
 
 
     //화상방 수정
     @Transactional
     public void updateRoom(User user, Long roomId, RoomUpdateRequest request){
-        Room findroom = roomRepository.findByRoomId(roomId)
+        Category findCategory = null;
+        Room findroom = roomRepository.findById(roomId)
                 .orElseThrow(() -> new NotFoundException(NotFoundException.ROOM_NOT_FOUND));
 
-        Category findCategory = categoryRepository.findById(request.getCategory().getCategoryId())
-                .orElseThrow(() -> new NotFoundException(CATEGORY_NOT_FOUND));
-
+        if(request.getCategoryId() != null){
+            findCategory = categoryRepository.findById(request.getCategoryId())
+                    .orElseThrow(() -> new NotFoundException(CATEGORY_NOT_FOUND));
+        }
+        else {
+            findCategory = null;
+        }
         if(!user.getUserId().equals(findroom.getUser().getUserId())){
             throw new NotMatchException(USER_NOT_MATCH);
         }
@@ -101,12 +115,7 @@ public class RoomService {
                 request.getRoomName(),
                 request.getRoomPw(),
                 request.getPeopleLimit(),
-                request.getAges20(),
-                request.getAges30(),
-                request.getAges40(),
-                request.getAges50(),
-                request.getAges60(),
-                request.getAges70(),
+                request.getAges(),
                 findCategory
         );
     }
@@ -114,11 +123,30 @@ public class RoomService {
     @Transactional
     //화상방 삭제
     public void deleteRoom(User user, Long roomId){
-        Room findroom = roomRepository.findByRoomId(roomId)
+        Room findroom = roomRepository.findById(roomId)
                 .orElseThrow(() -> new NotFoundException(NotFoundException.ROOM_NOT_FOUND));
         if(!user.getUserId().equals(findroom.getUser().getUserId())){
             throw new NotMatchException(USER_NOT_MATCH);
         }
         roomRepository.deleteById(roomId);
+        RoomHistory findRoomHistory = roomHistoryRepository.findById(findroom.getRoomId())
+                .orElseThrow(() -> new NotFoundException(NotFoundException.ROOM_NOT_FOUND));
+        findRoomHistory.updateRoomHistory(findroom, user);
+    }
+
+    @Transactional
+    // 화상방 입장
+    public void joinRoom(User user, RoomJoinRequest request){
+        // 유저 아이디로 유저 정보 얻어온다
+        User findUser = userRepository.findById(user.getUserId())
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
+        // target room 정보 얻어온다
+//        Room findRoom = roomRepository.findById(request.getRoomId());
+    }
+
+    @Transactional
+    // 화상방 퇴장
+    public void exitRoom(User user){
+
     }
 }
