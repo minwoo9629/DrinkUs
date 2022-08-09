@@ -37,11 +37,37 @@ const SelectBox = styled.select`
  font-size: 16px;
 `
 
+const StyledAmountWrapper = styled.div`
+  background-color: gray;
+  width: 50px;
+  height: 50px;
+  border: 1px solid #6f92bf;
+  border-radius: 100%;
+  margin: 0px 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+`
+
+const StyledButton = styled.button`
+  border: none;
+  background-color: white;
+  font-size: 16px;
+  cursor: pointer;
+`
+
+const RowWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+`
+
 const CreateRoom = () => {
   
   const [roomInfo, setRoomInfo] = useState({
     roomname: '',
-    peoplelimit: '',
+    peoplelimit: 1,
     placetheme: '',
     roompw: '',
     categoryId: '',
@@ -49,7 +75,6 @@ const CreateRoom = () => {
 
   const onRoomInfoInput = (e) => {
     setRoomInfo({ ...roomInfo, [e.target.name]: e.target.value });
-    console.log(roomInfo)
   };
 
   const onRoomInfoSubmit = (e) => {
@@ -99,15 +124,16 @@ const CreateRoom = () => {
     onCheckedAgeItemHandler(target.id, target.checked)
   };
 
-  // 카테고리
-  // const [makecategory, setMakeCategory] = useState({
-  //   category: ''
-  // })
+  // 인원 플러스 마이너스 버튼
+  const onHandleIncrease = (type) => {
+    const amount = roomInfo[type] + 1 > 8 ? 8 : roomInfo[type] + 1;
+    setRoomInfo({ ...roomInfo, [type]: amount });
+  };
 
-  // const onMakeCategory = (e) => {
-  //   setMakeCategory({...makecategory, [e.target.name]: {categoryId:e.target.value}});
-  // }
-
+  const onHandleDecrease = (type) => {
+    const amount = roomInfo[type] - 1 < 1 ? 1 : roomInfo[type] - 1;
+    setRoomInfo({ ...roomInfo, [type]: amount });
+  };
 
   return (
     <>
@@ -145,14 +171,23 @@ const CreateRoom = () => {
             </div>
             <div>
               인원
-              <InputForm 
+              <RowWrapper>
+              <StyledButton onClick={() => onHandleDecrease("peoplelimit")}>
+                <i className="fas fa-minus"></i>
+              </StyledButton>
+              <StyledAmountWrapper>{roomInfo.peoplelimit}</StyledAmountWrapper>
+              <StyledButton onClick={() => onHandleIncrease("peoplelimit")}>
+                  <i className="fas fa-plus"></i>
+              </StyledButton>
+              </RowWrapper>
+              {/* <InputForm 
                 type="integer"
                 value={roomInfo.peoplelimit}
                 name="peoplelimit"
                 placeholder="최대인원을 입력하세요."
                 onChange={onRoomInfoInput}
                 required
-              />
+              /> */}
             </div>
             <div>
               관심사 선택
