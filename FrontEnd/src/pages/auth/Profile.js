@@ -2,6 +2,30 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { client } from "../../utils/client";
+import { getUserProfile } from "../../api/ProfileAPI";
+
+const CategoryWrapper = styled.div`
+  display: flex;
+  margin-bottom: 30px;
+`;
+
+const SubCategoryWrapper = styled.div`
+  margin: 4px 12px 4px 4px;
+  background-color: #ffffff;
+  border-radius: 4px;
+  border: 3px solid #eaf1ff;
+  text-align: center;
+  overflow: hidden;
+
+  & input:checked + span {
+    background-color: #eaf1ff;
+  }
+  & span {
+    cursor: pointer;
+    display: block;
+    padding: 2px 16px;
+  }
+`;
 
 const Wrapper = styled.div`
   background-color: #eaf2ff;
@@ -105,22 +129,24 @@ const Profile = () => {
   // 유저 정보 요청
   useEffect(() => {
     const fetchUsers = async() => {
-      try{
-        const response = await client.get(
-          `/users/profile/6`, {
-            //  params: {
-        //   user_id: "user_id",
-        // }  
-          }
-        );
-        setState(response.data);
-        console.log(response)
-      } catch (e) {
-        console.log(e);
-      }
+      const response = await getUserProfile();
+      setState({...response.data});
+      // try{
+      //   const response = await client.get(
+      //     `/users/profile/6`, {
+      //       //  params: {
+      //   //   user_id: "user_id",
+      //   // }  
+      //     }
+      //   );
+      //   setState(response.data);
+      //   console.log(response)
+      // } catch (e) {
+      //   console.log(e);
+      // }
     };
     fetchUsers();
-  }, []);
+  });
 
 
   return (
@@ -145,7 +171,12 @@ const Profile = () => {
               관심사
         </ProfileWrapper>
         <IntroduceWrapper>
-          관심사 data값에 없음
+          관심사 추가해야 됨
+          <CategoryWrapper>
+            <SubCategoryWrapper>
+              <label>관심</label>
+            </SubCategoryWrapper>
+          </CategoryWrapper>
         </IntroduceWrapper>
         <ProfileWrapper>
           자기 소개

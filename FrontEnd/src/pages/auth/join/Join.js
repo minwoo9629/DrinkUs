@@ -29,7 +29,6 @@ const NeonSignAnimation = keyframes`
       0 0 10rem ${neon_text_color};
   }
 `;
-
 const Wrapper = styled.div`
   background-color: black;
   width: 100vw;

@@ -6,7 +6,7 @@ import { editProfile } from "../../../api/MyPageAPI";
 import ProfileTitle from "../../../components/auth/ProfileTitle";
 import { getUserProfile } from "../../../store/actions/user";
 import { FailAlert, SuccessAlert, loginAlert } from "../../../utils/sweetAlert";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ProfileButton from "../../../components/common/buttons/ProfileButton";
 const ProfileEditWrapper = styled.div`
   padding: 30px 30px 30px 10px;
@@ -357,6 +357,7 @@ const EditProfile = () => {
           borderRadius={"5px"}
         />
       </div>
+      <Link to="/room/detail">화상방 테스트를 위한 링크</Link>
     </div>
   );
 };
