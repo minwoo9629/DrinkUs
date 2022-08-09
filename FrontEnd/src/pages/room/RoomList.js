@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useState, useEffect } from "react";
 import { client } from "../../utils/client"
+import RoomListItem from "../../components/room/RoomListItem"
+import PageNation from "../../components/common/buttons/PageNation";
 
 
 const SearchBox = styled.input`
@@ -45,95 +47,85 @@ const GlobalStyle = styled.div`
   }
 `;
 
-const Post = styled.div`
-  border: 1px solid black;
-  border-radius: 20px;
-  background: white;
-  box-shadow: 10px 5px 5px #7f8fa6;
-`;
-
-const Title = styled.div`
-  height: 20%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-bottom: 1px solid black;
-  font-weight: 600;
-`;
-
-const Body = styled.div`
-  height: 80%;
-  padding: 11px;
-  border-radius: 20px;
-`;
-
-
-// 기본 방 목록 불러오기
-  const onRoomList = async () => {
-    const result = await client
-    .get(`/rooms`, {
-      params: {
-        page: 1,
-        searchKeyword: "",
-        sameAge: false,
-        sortOrder: 0,
-        categoryId: null 
-      },
-    })
-      .then((response)=>response);
-      return result
-  }
+const RoomList = () => {
   
-  
-const Rooms = () => {
-
   const navigate = useNavigate();
 
-  // 기본 방 목록 데이터만 추출하기
-  const [basicData, setBasicData] = useState([]);
+  // 기본 방 목록 불러오기
+    const onRoomList = async (pageNum) => {
+      const result = await client
+      .get(`/rooms`, {
+        params: {
+          page: pageNum,
+          searchKeyword: "",
+          sameAge: false,
+          sortOrder: 0,
+          categoryId: null
+        },
+      })
+        .then((response)=>response);
+        return result
+    }
 
-  const dataRefineFunc = async () => {
-    const result = await onRoomList()
-    setBasicData([...result.data.content]);
-    return basicData
-  }
+  const [BasicData, setBasicData] = useState({
+    content: [],
+    number: 0,
+    numberOfElements: 0,
+    size: 0,
+    totalPages: 0
+  });
+  const fetchData = async (pageNum) => {
+    const response = await onRoomList(pageNum);
+    setBasicData({...response.data});
+  };
+  const onHandlePageButton = (pageNum) => {
+    fetchData(pageNum);
+  };
 
   useEffect(()=>{
-    dataRefineFunc();
+    fetchData();
   },[])
-
 
   // 검색 로직
   const [filter, setFilter] = useState({
     searchKeyword: '',
-    sortOrder: '',
+    sortOrder: '0',
     categoryId: ''
   });
 
   const onFilterInput = (e) => {
     setFilter({...filter, [e.target.name]: e.target.value});
-    console.log(filter)
   };
   
-  const onMakeRoomList = (e) => {
-    e.preventDefault();
-    client
+  const onMakeRoomList = async (pageNum) => {
+    const result = await client
       .get(`/rooms`, {
         params: {
-          page: 1,
+          page: pageNum,
           searchKeyword: filter.searchKeyword,
           sameAge: SameAge,
           sortOrder: filter.sortOrder,
-          categoryId: filter.categoryId 
+          categoryId: filter.categoryId
         },
       })
-      .then(function (response) {
-        console.log(response);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+      .then((response)=>response);
+      return result
   }
+
+  const [filterData, setFilterData] = useState({
+    content: [],
+    number: 0,
+    numberOfElements: 0,
+    size: 0,
+    totalPages: 0
+  });
+  const fetchFilterData = async (pageNum) => {
+    const response = await onMakeRoomList(pageNum);
+    setFilterData({...response.data});
+    if (filterData.length === 0) {
+      alert("검색 결과가 없습니다.")
+    }
+  };
 
   // 체크박스
   const [SameAge, setSameAge] = useState(true);
@@ -193,21 +185,48 @@ const Rooms = () => {
               <option value="1">최신순</option>
             </SelectBox>
           </div>
-          <FilterButton onClick={onMakeRoomList}>검색하기</FilterButton>
+          <FilterButton onClick={fetchFilterData}>검색하기</FilterButton>
         </LetterColorChange>
       </Wrapper>
       {/* 방 목록 */}
-      <Wrapper>
+      <Wrapper color={'#fff'}>
         <GlobalStyle />
-        {basicData.map((room, index) => (
-          <Post key={index}>
-            <Title>{room.roomName}</Title>
-            <Body>{room.placeTheme}</Body>
-          </Post>
+        {BasicData.content.map((room, index) => {
+          if (filterData.content.length === 0) {
+            return (
+              <RoomListItem
+                {...room}
+                key={index}
+              />
+              
+        )
+        }})}
+        {filterData.content.map((room, index) => (
+          <RoomListItem
+          {...room}
+          key={index}
+          />
         ))}
+        
       </Wrapper>
+      <div>
+      <PageNation
+        onClick={onHandlePageButton}
+        number={BasicData.number + 1}
+        size={BasicData.size}
+        totalPages={BasicData.totalPages}
+      />
+      </div>
+      <div>
+      <PageNation
+        onClick={onHandlePageButton}
+        number={filterData.number + 1}
+        size={filterData.size}
+        totalPages={filterData.totalPages}
+      />
+      </div>
     </>
   );
 };
 
-export default Rooms
+export default RoomList

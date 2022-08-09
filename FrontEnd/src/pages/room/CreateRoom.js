@@ -2,25 +2,67 @@ import Header from "../../components/layout/Header";
 import { Wrapper } from "../../components/styled/Wrapper";
 import styled from "styled-components";
 import FetchProfile from "../../components/room/FetchProfile";
-import { SuccessAlert } from "../../utils/sweetAlert";
 import { useState } from "react";
 import { client } from "../../utils/client"
 
 
-const LetterColorChange = styled.div`
+const CreateRoomBlock = styled.div`
+  width: 800px;
+  margin-bottom: 20px;
   color: white;
+  background-color: #6F92BF;
+  border-radius: 30px;
+  padding: 30px;
 `
 
-const CreateButton = styled.button `
-  color: #6f92bf;
-  width: 80px;
+const InputBlock = styled.div`
+  display: block;
+  line-height: 1;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  height: 60px;
+`;
+
+const InputLeftWrap = styled.div`
+  float: left;
+  margin-left: 2%;
+  width: 18%;
   height: 30px;
+  line-height: 30px;
+  padding: 17px 0;
+  font-size: 18px;
+  text-align: left;
+`;
+
+const InputRightWrap = styled.div`
+  float: left;
+  width: 80%;
+  height: 30px;
+  line-height: 30px;
+  padding: 17px 0;
+`;
+
+const CreateButton = styled.button `
+  float: right;
+  margin-right: 4%;
+  background-color: #EAF1FF;
+  color: #676775;
+  width: 120px;
+  height: 50px;
+  font-size: 20px;
+  font-weight: bold;
+  border: 4px solid #BDCFF2;
+  border-radius: 5px;
+  box-shadow: 0px 4px 6px rgba(0,0,0,0.25);
 `
 
 const InputForm = styled.input`
   background-color: white;
-  width: 800px;
-  height: 100px;
+  width: 95%;
+  height: 30px;
+  line-height: 30px;
+  border: 1px solid #BDCFF2;
+  border-radius: 10px;
 `
 
 const CheckBoxForm = styled.input`
@@ -33,18 +75,78 @@ const SelectBox = styled.select`
  width: 200px;
  background-color: white;
  border: 3px solid #BDCFF2;
- height: 56px;
+ height: 36px;
  border-radius: 20px;
  font-size: 16px;
 `
+
+const PeopleLimitWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  padding: 8px;
+`;
+
+const StyledButton = styled.button`
+  adding: 4px;
+  border: none;
+  background-color: transparent;
+  font-size: 16px;
+  color: white;
+  cursor: pointer;
+`;
+
+const StyledAmountWrapper = styled.div`
+  width: 28px;
+  height: 28px;
+  border: 3px solid #BDCFF2;
+  border-radius: 10px;
+  font-size: 16px;
+  margin: 0px 18px;
+  background-color: white;
+  color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+`;
+
+const AgesWrapper = styled.div`
+  display: inline-block;
+  height: 28px;
+  line-height: 28px;
+  width: 80px;
+  color: black;
+  margin: 4px 12px 4px 4px;
+  background-color: #ffffff;
+  border-radius: 4px;
+  border: 3px solid #eaf1ff;
+  text-align: center;
+  overflow: hidden;
+
+  & input:checked + span {
+    background-color: #BDCFF2;
+  }
+  & span {
+    cursor: pointer;
+    display: block;
+    padding: 2px 16px;
+  }
+`;
+
+const CheckBoxStyled = styled.input`
+  display: none;
+  cursor: pointer;
+`;
 
 const CreateRoom = () => {
   
   const [roomInfo, setRoomInfo] = useState({
     roomname: '',
-    peoplelimit: '',
+    peoplelimit: 1,
     placetheme: '',
     roompw: '',
+    categoryId: '',
   });
 
   const onRoomInfoInput = (e) => {
@@ -58,11 +160,6 @@ const CreateRoom = () => {
       alert("방 이름을 입력해 주세요.");
     }
 
-    // 인원 유효 체크
-    if (roomInfo.peoplelimit.length === 0) {
-      alert("최대인원을 입력해 주세요.")
-    }
-
     client
       .post("rooms", {
         roomName:roomInfo.roomname,
@@ -71,11 +168,10 @@ const CreateRoom = () => {
         placeTheme:roomInfo.placetheme,
         peopleLimit:roomInfo.peoplelimit,
         ages:ageCheckedItems,
-        category:makecategory.category
+        categoryId:roomInfo.categoryId
       })
       .then(function (response) {
         console.log(response.data.message);
-        // SuccessAlert("방이 만들어졌습니다.")
       })
       .catch(function (error) {
         console.log(error);
@@ -99,140 +195,179 @@ const CreateRoom = () => {
     onCheckedAgeItemHandler(target.id, target.checked)
   };
 
+  const onHandleIncrease = () => {
+    const amount = roomInfo["peoplelimit"] + 1 > 8 ? 8 : roomInfo["peoplelimit"] + 1;
+    setRoomInfo({ ...roomInfo, ["peoplelimit"]: amount });
+  };
+
+  const onHandleDecrease = () => {
+    const amount = roomInfo["peoplelimit"] - 1 < 1 ? 1 : roomInfo["peoplelimit"] - 1;
+    setRoomInfo({ ...roomInfo, ["peoplelimit"]: amount });
+  };
+
   // 카테고리
-  const [makecategory, setMakeCategory] = useState({
-    category: ''
-  })
+  // const [makecategory, setMakeCategory] = useState({
+  //   category: ''
+  // })
 
-  const onMakeCategory = (e) => {
-    setMakeCategory({...makecategory, [e.target.name]: {categoryId:e.target.value}});
-  }
-
+  // const onMakeCategory = (e) => {
+  //   setMakeCategory({...makecategory, [e.target.name]: {categoryId:e.target.value}});
+  // }
 
   return (
     <>
       <Header/>
       <Wrapper>
-        <LetterColorChange>
-          방 생성 페이지입니다.
-          POST 요청을 보내서 방을 만들어야 해.
+        <CreateRoomBlock>
           <div>
             <FetchProfile/>
-            <div>
-              방 이름
-              <InputForm 
-              type="text"
-              value={roomInfo.roomname}
-              name="roomname"
-              placeholder="방 이름을 입력하세요."
-              onChange={onRoomInfoInput}
-              required
-              />
-            </div>
-            <div>
-              장소 선택
-              <SelectBox 
-                type="selectbox"
-                value={roomInfo.placetheme}
-                name="placetheme" 
-                onChange={onRoomInfoInput}>
-                <option>술집</option>
-                <option>야구장</option>
-                <option>펍</option>
-                <option>편의점</option>
-                <option>한강공원</option>
-              </SelectBox>
-            </div>
-            <div>
-              인원
-              <InputForm 
-                type="integer"
-                value={roomInfo.peoplelimit}
-                name="peoplelimit"
-                placeholder="최대인원을 입력하세요."
+            <InputBlock>
+              <InputLeftWrap>방 이름</InputLeftWrap>
+              <InputRightWrap>
+                <InputForm 
+                type="text"
+                value={roomInfo.roomname}
+                name="roomname"
+                placeholder="방 이름을 입력하세요."
                 onChange={onRoomInfoInput}
                 required
-              />
-            </div>
-            <div>
-              관심사 선택
-              <SelectBox 
-                type="selectbox"
-                name="category" 
-                onChange={onMakeCategory}>
-                <option value="null">관심사 없음</option>
-                <option value="1">스포츠</option>
-                <option value="2">음악</option>
-                <option value="3">게임/오락</option>
-                <option value="4">문화</option>
-                <option value="5">기타</option>
-              </SelectBox>
-            </div>
-            <div>
-              나이대 선택
-              <div>
-                20대
-                <CheckBoxForm
-                  type="checkbox"
-                  id = "0"
-                  value={CheckedAges.roomage}
-                  name="roomage"
-                  onChange={onAgeCheckbox}
                 />
-                30대
-                <CheckBoxForm
-                  type="checkbox"
-                  id = "1"
-                  name="roomage"
-                  onChange={onAgeCheckbox}
+              </InputRightWrap>
+            </InputBlock>
+            <InputBlock>
+              <InputLeftWrap>장소</InputLeftWrap>
+              <InputRightWrap>
+                <SelectBox 
+                  type="selectbox"
+                  value={roomInfo.placetheme}
+                  name="placetheme" 
+                  onChange={onRoomInfoInput}>
+                  <option>술집</option>
+                  <option>야구장</option>
+                  <option>펍</option>
+                  <option>편의점</option>
+                  <option>한강공원</option>
+                </SelectBox>
+              </InputRightWrap>
+            </InputBlock>
+            <InputBlock>
+              <InputLeftWrap>인원</InputLeftWrap>
+              
+              <InputRightWrap>
+                <PeopleLimitWrapper>
+                  <StyledButton onClick={() => onHandleDecrease()}>
+                    <i className="fas fa-minus"></i>
+                  </StyledButton>
+                  <StyledAmountWrapper>{roomInfo.peoplelimit}</StyledAmountWrapper>
+                  <StyledButton onClick={() => onHandleIncrease()}>
+                    <i className="fas fa-plus"></i>
+                  </StyledButton>
+                </PeopleLimitWrapper>
+              </InputRightWrap>
+            </InputBlock>
+            <InputBlock>
+              <InputLeftWrap>관심사</InputLeftWrap>
+              <InputRightWrap>
+                <SelectBox 
+                  type="selectbox"
+                  name="categoryId" 
+                  onChange={onRoomInfoInput}>
+                  <option value="null">관심사 없음</option>
+                  <option value="1">스포츠</option>
+                  <option value="2">음악</option>
+                  <option value="3">게임/오락</option>
+                  <option value="4">문화</option>
+                  <option value="5">기타</option>
+                </SelectBox>
+              </InputRightWrap>
+            </InputBlock>
+            <InputBlock>
+              <InputLeftWrap>방 연령대</InputLeftWrap>
+              <InputRightWrap>
+                <AgesWrapper>
+                  <label>
+                    <CheckBoxStyled
+                      type="checkbox"
+                      id="0"
+                      value={CheckedAges.roomage}
+                      onChange={onAgeCheckbox}
+                    />
+                    <span>20대</span>
+                  </label>
+                </AgesWrapper>
+                <AgesWrapper>
+                  <label>
+                    <CheckBoxStyled
+                      type="checkbox"
+                      id="1"
+                      onChange={onAgeCheckbox}
+                    />
+                    <span>30대</span>
+                  </label>
+                </AgesWrapper>
+                <AgesWrapper>
+                  <label>
+                    <CheckBoxStyled
+                      type="checkbox"
+                      id="2"
+                      onChange={onAgeCheckbox}
+                    />
+                    <span>40대</span>
+                  </label>
+                </AgesWrapper>
+                <AgesWrapper>
+                  <label>
+                    <CheckBoxStyled
+                      type="checkbox"
+                      id="3"
+                      onChange={onAgeCheckbox}
+                    />
+                    <span>50대</span>
+                  </label>
+                </AgesWrapper>
+                <AgesWrapper>
+                  <label>
+                    <CheckBoxStyled
+                      type="checkbox"
+                      id="4"
+                      onChange={onAgeCheckbox}
+                    />
+                    <span>60대</span>
+                  </label>
+                </AgesWrapper>
+                <AgesWrapper>
+                  <label>
+                    <CheckBoxStyled
+                      type="checkbox"
+                      id="5"
+                      onChange={onAgeCheckbox}
+                    />
+                    <span>70대↑</span>
+                  </label>
+                </AgesWrapper>
+              </InputRightWrap>
+            </InputBlock>
+            <InputBlock>
+              <InputLeftWrap>비밀번호</InputLeftWrap>
+              <InputRightWrap>
+                <InputForm 
+                  type="integer" 
+                  value={roomInfo.roompw}
+                  name="roompw"
+                  placeholder="비밀번호를 입력하면 비밀방으로 설정됩니다."
+                  onChange={onRoomInfoInput}
                 />
-                40대
-                <CheckBoxForm
-                  type="checkbox"
-                  id = "2"
-                  name="roomage"
-                  onChange={onAgeCheckbox}
-                />
-                50대
-                <CheckBoxForm
-                  type="checkbox"
-                  id = "3"
-                  name="roomage"
-                  onChange={onAgeCheckbox}
-                />
-                60대
-                <CheckBoxForm
-                  type="checkbox"
-                  id = "4"
-                  name="roomage"
-                  onChange={onAgeCheckbox}
-                />
-                70대 이상
-                <CheckBoxForm
-                  type="checkbox"
-                  id = "5"
-                  name="roomage"
-                  onChange={onAgeCheckbox}
-                />
-              </div>    
-            </div>
-            <div>
-              비밀번호
-              <InputForm 
-                type="integer" 
-                value={roomInfo.roompw}
-                name="roompw"
-                placeholder="비밀번호를 입력하면 비밀방으로 설정됩니다."
-                onChange={onRoomInfoInput}
-              />
-            </div>
-            <CreateButton 
-              onClick={onRoomInfoSubmit}
-            >
-              생성하기
-            </CreateButton>
+              </InputRightWrap>
+            </InputBlock>
+            <InputBlock>
+              <CreateButton 
+                onClick={onRoomInfoSubmit}
+              >
+                생성하기
+              </CreateButton>
+            </InputBlock>
           </div>
-          </LetterColorChange>
+          </CreateRoomBlock>
       </Wrapper>
     </>
   );

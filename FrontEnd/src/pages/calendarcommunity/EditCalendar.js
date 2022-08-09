@@ -4,6 +4,7 @@ import Header from "../../components/layout/Header";
 import FetchProfile from "../../components/room/FetchProfile";
 import { Wrapper } from "../../components/styled/Wrapper";
 import { client } from "../../utils/client";
+import ReactDatePicker from "react-datepicker";
 
 const CreateButton = styled.button `
   color: #6f92bf;
@@ -15,12 +16,6 @@ const InputForm = styled.input`
   background-color: white;
   width: 800px;
   height: 100px;
-`
-
-const DateInputForm = styled.input`
-  background-color: white;
-  width: 200px;
-  height: 50px;
 `
 
 const CheckBoxForm = styled.input`
@@ -78,34 +73,32 @@ const CreateCalendar = () => {
     console.log(calendarInfo)
   };
 
-  const onCalendarInfoSubmit = (e) => {
-    e.preventDefault();
+  const onCalendarInfoSubmit = (calendar_id) => {
     // 내용 유효 체크
-    // if (calendarInfo.calendarContent.length === 0) {
-    //   alert("내용을 입력해 주세요.");
-    // }
+    if (calendarInfo.calendarContent.length === 0) {
+      alert("내용을 입력해 주세요.");
+    }
 
-    // // 날짜 유효 체크
-    // if (calendarInfo.calendarDatetime.length === 0) {
-    //   alert("날짜를 입력해 주세요.");
-    // }
+    // 날짜 유효 체크
+    if (calendarInfo.calendarDatetime.length === 0) {
+      alert("날짜를 입력해 주세요.");
+    }
 
-    // // 인원 유효 체크
-    // if (calendarInfo.peopleLimit.length === 0) {
-    //   alert("최대인원을 입력해 주세요.");
-    // }
+    // 인원 유효 체크
+    if (calendarInfo.peopleLimit.length === 0) {
+      alert("최대인원을 입력해 주세요.");
+    }
 
+    // api 요청
     client
-      .post("calendar", {
+      .put(`calendar/${calendar_id}`, {
         calendarContent: calendarInfo.calendarContent,
-        calendarDatetime: dateState.year + dateState.month + dateState.day + dateState.hour + dateState.minute,
+        calendarDatetime: calendarInfo.calendarDatetime,
         peopleLimit: calendarInfo.peopleLimit,
         place: calendarInfo.place,
         ages: ageCheckedItems,
       })
-      .then(function (response) {
-        console.log(response.data.message);
-      });
+      .then((response) => response);
   };
 
   // Age 관련 체크 로직
@@ -137,17 +130,7 @@ const CreateCalendar = () => {
   };
 
   // 날짜 형식
-  const [dateState, setDateState] = useState({
-    year: '',
-    month: '',
-    day: '',
-    hour: '',
-    minute: ''
-  });
-
-  const onDaterInfoInput = (e) => {
-    setDateState({...dateState, [e.target.name]: e.target.value})
-  };
+  const [startDate, setStartDate] = useState(new Date());
 
   return (
     <>
@@ -166,43 +149,15 @@ const CreateCalendar = () => {
             </InputForm>
           </div>
           <div>
-            <DateInputForm
-              value={dateState.year}
-              name="year"
-              placeholder="ex)2022"
-              onChange={onDaterInfoInput}
+            <InputForm
+              value={calendarInfo.calendarDatetime}
+              name="calendarDatetime"
+              placeholder="날짜 시간 분"
+              onChange={onCalendarInfoInput}
               required>
-            </DateInputForm>년
-            <DateInputForm
-              value={dateState.month}
-              name="month"
-              placeholder="ex)08"
-              onChange={onDaterInfoInput}
-              required>
-            </DateInputForm>월
-            <DateInputForm
-              value={dateState.day}
-              name="day"
-              placeholder="ex)09"
-              onChange={onDaterInfoInput}
-              required>
-            </DateInputForm>일
-          </div>
-          <div>
-            <DateInputForm
-              value={dateState.hour}
-              name="hour"
-              placeholder="ex)22"
-              onChange={onDaterInfoInput}
-              required>
-            </DateInputForm>시
-            <DateInputForm
-              value={dateState.minute}
-              name="minute"
-              placeholder="ex)30"
-              onChange={onDaterInfoInput}
-              required>
-            </DateInputForm>분
+            </InputForm>
+            <ReactDatePicker
+            />
           </div>
           <div>
             <SelectBox
@@ -274,21 +229,12 @@ const CreateCalendar = () => {
                 <i className="fas fa-plus"></i>
             </StyledButton>
             </RowWrapper>
-            {/* <InputForm
-              type="integer"
-              value={calendarInfo.peopleLimit}
-              name="peopleLimit"
-              placeholder="최대인원을 입력하세요."
-              onChange={onCalendarInfoInput}
-              required
-            >
-            </InputForm> */}
           </div>
           <div>
             <CreateButton
               onClick={onCalendarInfoSubmit}
             >
-              생성하기
+              수정하기
             </CreateButton>
           </div>
         </div>
