@@ -4,8 +4,6 @@ import Header from "../../components/layout/Header";
 import FetchProfile from "../../components/room/FetchProfile";
 import { Wrapper } from "../../components/styled/Wrapper";
 import { client } from "../../utils/client";
-import ReactDatePicker from "react-datepicker";
-import moment from "moment";
 
 const CreateButton = styled.button `
   color: #6f92bf;

@@ -1,7 +1,7 @@
 import axios from "axios";
 const BASE_URL = "https://i7b306.p.ssafy.io/api/";
 // const BASE_URL = "http://localhost:8080/api/";
-axios.defaults.baseURL = BASE_URL;
+// axios.defaults.baseURL = BASE_URL;
 
 export const client = axios.create({
   // 요청을 보내는 baseURL을 http://localhost:8080/ 으로 설정
