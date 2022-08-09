@@ -4,7 +4,13 @@ import styled, { keyframes } from "styled-components";
 import Header from "../../../components/layout/Header";
 import { client } from "../../../utils/client";
 import { AuthInput } from "../../../components/common/inputs/AuthInput";
+import {
+  sendConfirmEmail,
+  confirmEmail,
+  doubleCheckEmail
+  } from "../../../api/JoinAPI.js";
 import { FailAlert, EmptyAlert, SuccessAlert } from "../../../utils/sweetAlert";
+
 
 
 const neon_text_color = "#5904de";
@@ -377,7 +383,8 @@ const Join = () => {
                     !state.nameValid &&
                     state.confirmValid &&
                     state.userPwValid &&
-                    state.userPwCheckValid
+                    state.userPwCheckValid&&
+                    state.doubleCheckValid
                   }
                   onClick={onHandleSubmit}
                 >
