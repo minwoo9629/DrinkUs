@@ -26,7 +26,7 @@ public class CalendarBoardQueryRepository {
     private static QUserCalendar qUserCalendar = QUserCalendar.userCalendar;
 
     // 해당 월에 일정이 있는 날짜 리스트를 반환
-    public List<LocalDateTime> getMonthlySchedule(LocalDateTime start, LocalDateTime end) {
+    public List<LocalDateTime> findMonthlySchedule(LocalDateTime start, LocalDateTime end) {
         return queryFactory
                 .select(qCalendarBoard.calendarDatetime)
                 .distinct()
