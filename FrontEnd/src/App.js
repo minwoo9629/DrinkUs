@@ -28,6 +28,9 @@ import EditInterest from "./pages/auth/mypage/EditInterest";
 import MyArticle from "./pages/auth/mypage/MyArticle";
 import MySchedule from "./pages/auth/mypage/MySchedule";
 import { PersistGate } from "redux-persist/integration/react";
+import VideoConference from "./pages/room/VideoConference";
+import Admin from "./pages/admin/Admin";
+
 function App() {
   return (
     <Provider store={store}>
@@ -66,6 +69,8 @@ function App() {
                 <Route path="article" element={<MyArticle />} />
                 <Route path="schedule" element={<MySchedule />} />
               </Route>
+              <Route path="/room/detail" element={<VideoConference />} />
+              <Route path="/admin" element={<Admin />} />
             </Routes>
           </div>
         </BrowserRouter>
