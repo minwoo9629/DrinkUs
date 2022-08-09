@@ -10,9 +10,9 @@ const Box = styled.div`
   background-color: white;
 `
 
-const onRoomDetail = async () => {
+const onRoomDetail = async (roomId) => {
   const result = await client
-    .get("rooms/1")
+    .get(`rooms/${roomId}`)
     .then((response)=> response);
     return result
 }
@@ -25,7 +25,8 @@ const RoomDetail = () => {
   const dataRefineFunc = async () => {
     const result = await onRoomDetail()
     setData(result.data);
-    // return data
+    console.log(result)
+    return data
   }
 
   useEffect(()=>{
@@ -38,19 +39,20 @@ const RoomDetail = () => {
       <Wrapper>
         <Box>
           <div>
-            {data.roomName} | {data.category.categoryName}
+            {/* {JSON.stringify(data.roomId)} */}
+            {/* {data.roomId} |
+            {data.roomName} | 
+            {data.createdDate} |
+            {data.peopleLimit} */}
           </div>
           <div>
-            {data.placeTheme}
+            {/* {data.placeTheme} */}
           </div>
           <div>
-            {data.user.userName}
-            {data.user.userImg}
-            인기도{data.user.userPopularity}
-          </div>
-          <div>
-            20대
-          </div>          
+            {/* {data.user.userName} */}
+            {/* {data.user.userImg} */}
+            {/* 인기도{data.user.userPopularity} */}
+          </div>       
         </Box>
         <GoToButton>참여하기</GoToButton>
       </Wrapper> 
