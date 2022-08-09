@@ -6,7 +6,6 @@ import {
   removeUserInterest,
 } from "../../../api/MyPageAPI";
 import ProfileTitle from "../../../components/auth/ProfileTitle";
-import { client } from "../../../utils/client";
 
 const CheckBoxStyled = styled.input`
   display: none;
