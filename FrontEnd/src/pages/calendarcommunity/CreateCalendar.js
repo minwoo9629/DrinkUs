@@ -8,64 +8,145 @@ import moment from "moment";
 import { FailAlert, SuccessAlert } from "../../utils/sweetAlert";
 import { useNavigate } from "react-router-dom";
 
-const CreateButton = styled.button `
-  color: #6f92bf;
-  width: 80px;
+const CreateCalendarBlock = styled.div`
+  width: 800px;
+  margin-bottom: 20px;
+  color: white;
+  background-color: #6F92BF;
+  border-radius: 30px;
+  padding: 30px;
+`
+
+const InputBlock = styled.div`
+  display: block;
+  line-height: 1;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  height: 60px;
+`;
+
+const InputLeftWrap = styled.div`
+  float: left;
+  margin-left: 2%;
+  width: 18%;
   height: 30px;
+  line-height: 30px;
+  padding: 17px 0;
+  font-size: 18px;
+  text-align: left;
+`;
+
+const InputRightWrap = styled.div`
+  float: left;
+  width: 80%;
+  height: 30px;
+  line-height: 30px;
+  padding: 17px 0;
+`;
+
+const CreateButton = styled.button `
+  float: right;
+  margin-right: 4%;
+  background-color: #EAF1FF;
+  color: #676775;
+  width: 120px;
+  height: 50px;
+  font-size: 20px;
+  font-weight: bold;
+  border: 4px solid #BDCFF2;
+  border-radius: 5px;
+  box-shadow: 0px 4px 6px rgba(0,0,0,0.25);
 `
 
 const InputForm = styled.input`
   background-color: white;
-  width: 800px;
-  height: 100px;
+  width: 95%;
+  height: 30px;
+  line-height: 30px;
+  border: 1px solid #BDCFF2;
+  border-radius: 10px;
 `
 
 const DateInputForm = styled.input`
+  margin-left: ${({ ml }) => ml};
+  margin-right: 4px;
   background-color: white;
-  width: 200px;
-  height: 50px;
-`
-
-const CheckBoxForm = styled.input`
-  background-color: white;
-  width: 30px;
+  width: 10%;
   height: 30px;
+  line-height: 30px;
+  border: 1px solid #BDCFF2;
+  border-radius: 10px;
+  text-align: center;
 `
 
 const SelectBox = styled.select`
- width: 200px;
- background-color: white;
- border: 3px solid #BDCFF2;
- height: 56px;
- border-radius: 20px;
- font-size: 16px;
+  width: 200px;
+  background-color: white;
+  border: 3px solid #BDCFF2;
+  height: 36px;
+  border-radius: 20px;
+  font-size: 16px;
+  margin-right: 4px;
 `
 
+const AgesWrapper = styled.div`
+  display: inline-block;
+  height: 28px;
+  line-height: 28px;
+  width: 80px;
+  color: black;
+  margin: 4px 12px 4px 4px;
+  background-color: #ffffff;
+  border-radius: 4px;
+  border: 3px solid #eaf1ff;
+  text-align: center;
+  overflow: hidden;
+
+  & input:checked + span {
+    background-color: #BDCFF2;
+  }
+  & span {
+    cursor: pointer;
+    display: block;
+    padding: 2px 16px;
+  }
+`;
+
+const CheckBoxStyled = styled.input`
+  display: none;
+  cursor: pointer;
+`;
+
 const StyledAmountWrapper = styled.div`
-  background-color: gray;
-  width: 50px;
-  height: 50px;
-  border: 1px solid #6f92bf;
-  border-radius: 100%;
+  width: 28px;
+  height: 28px;
+  border: 3px solid #BDCFF2;
+  border-radius: 10px;
+  font-size: 16px;
   margin: 0px 18px;
+  background-color: white;
+  color: black;
   display: flex;
   justify-content: center;
   align-items: center;
   box-sizing: border-box;
-`
+`;
 
 const StyledButton = styled.button`
+  adding: 4px;
   border: none;
-  background-color: white;
+  background-color: transparent;
   font-size: 16px;
+  color: white;
   cursor: pointer;
-`
+`;
 
-const RowWrapper = styled.div`
+const PeopleLimitWrapper = styled.div`
   display: flex;
   flex-direction: row;
   align-items: baseline;
-`
+  padding: 8px;
+`;
 
 const CreateCalendar = () => {
 
@@ -73,7 +154,7 @@ const CreateCalendar = () => {
 
   const [calendarInfo, setCalendarInfo] = useState({
     calendarContent: '',
-    peopleLimit: 2,
+    peopleLimit: 1,
     place: '술집',
   });
 
@@ -83,12 +164,13 @@ const CreateCalendar = () => {
 
   const onCalendarInfoSubmit = (e) => {
     e.preventDefault();
-    // 내용 유효 체크
+    // 방 설명 유효성 체크
     if (calendarInfo.calendarContent.length === 0) {
       alert(`방 설명을 써 주세요. '${calendarInfo.place}에서 만날 사람~' 은 어때요?`);
       return;
     }
-
+    // x월, x일, x시, x분 => 0x월, 0x일, 0x시, 0x분
+    // 방 시간 초과 유효성 체크
     if (dateState.year + dateState.month + dateState.day + dateState.hour + dateState.minute <= moment().format('YYYYMMDDHHmm')) {
       alert('이미 지나간 시간을 입력하셨어요!')
       return;
@@ -105,7 +187,7 @@ const CreateCalendar = () => {
       .then(function (response) {
         SuccessAlert('글쓰기 성공!')
         // 상세 페이지 read 만들면 그쪽으로 이동하기
-        navigate("/");
+        navigate("/calendar");
       })
       .catch(function (error) {
         FailAlert(`시간 형식을 맞춰주세요!
@@ -137,7 +219,7 @@ const CreateCalendar = () => {
   };
 
   const onHandleDecrease = (type) => {
-    const amount = calendarInfo[type] - 1 < 2 ? 2 : calendarInfo[type] - 1;
+    const amount = calendarInfo[type] - 1 < 1 ? 1 : calendarInfo[type] - 1;
     setCalendarInfo({ ...calendarInfo, [type]: amount });
   };
 
@@ -158,154 +240,187 @@ const CreateCalendar = () => {
     <>
       <Header/>
       <Wrapper color={'#fff'}>
-        <div>
+        <CreateCalendarBlock>
           <FetchProfile/>
-          <div>
-            <InputForm
-              type="text"
-              value={calendarInfo.calendarContent}
-              name="calendarContent"
-              placeholder="방 설명을 써주세요"
-              onChange={onCalendarInfoInput}
-              required>
-            </InputForm>
-          </div>
-          <div>
-            <DateInputForm
-              value={dateState.year}
-              name="year"
-              placeholder="ex)2022"
-              onChange={onDaterInfoInput}
-              required>
-            </DateInputForm>년
-            <DateInputForm
-              value={dateState.month}
-              name="month"
-              placeholder="ex)08"
-              onChange={onDaterInfoInput}
-              required>
-            </DateInputForm>월
-            <DateInputForm
-              value={dateState.day}
-              name="day"
-              placeholder="ex)09"
-              onChange={onDaterInfoInput}
-              required>
-            </DateInputForm>일
-          </div>
-          <div>
-            <DateInputForm
-              value={dateState.hour}
-              name="hour"
-              placeholder="ex)22"
-              onChange={onDaterInfoInput}
-              required>
-            </DateInputForm>시
-            <DateInputForm
-              value={dateState.minute}
-              name="minute"
-              placeholder="ex)30"
-              onChange={onDaterInfoInput}
-              required>
-            </DateInputForm>분
-          </div>
-          <div>
-            <SelectBox
-              type="selectbox"
-              value={calendarInfo.place}
-              name="place"
-              onChange={onCalendarInfoInput}
-              required
-              >
-              <option>술집</option>
-              <option>펍</option>
-              <option>칵테일바</option>
-              {/* <option>야구장</option>
-              <option>축구장</option>
-              <option>페스티벌</option>
-              <option>클럽</option>
-              <option>엘리니아</option>
-              <option>편의점</option>
-              <option>한강공원</option>
-              <option>미술관</option>
-              <option>영화관</option>
-              <option>협곡</option>
-              <option>독서실</option> */}
-            </SelectBox>
-            에서 만나요!
-          </div>
-          <div>
-            20대
-            <CheckBoxForm
-              type="checkbox"
-              id = "0"
-              name="ages"
-              onChange={onAgeCheckbox}
-            />
-            30대
-            <CheckBoxForm
-              type="checkbox"
-              id = "1"
-              name="ages"
-              onChange={onAgeCheckbox}
-            />
-            40대
-            <CheckBoxForm
-              type="checkbox"
-              id = "2"
-              name="ages"
-              onChange={onAgeCheckbox}
-            />
-            50대
-            <CheckBoxForm
-              type="checkbox"
-              id = "3"
-              name="ages"
-              onChange={onAgeCheckbox}
-            />
-            60대
-            <CheckBoxForm
-              type="checkbox"
-              id = "4"
-              name="ages"
-              onChange={onAgeCheckbox}
-            />
-            70대 이상
-            <CheckBoxForm
-              type="checkbox"
-              id = "5"
-              name="ages"
-              onChange={onAgeCheckbox}
-            />
-          </div>
-          <div>
-            <RowWrapper>
-            <StyledButton onClick={() => onHandleDecrease("peopleLimit")}>
-              <i className="fas fa-minus"></i>
-            </StyledButton>
-            <StyledAmountWrapper>{calendarInfo.peopleLimit}</StyledAmountWrapper>
-            <StyledButton onClick={() => onHandleIncrease("peopleLimit")}>
-                <i className="fas fa-plus"></i>
-            </StyledButton>
-            </RowWrapper>
-            {/* <InputForm
-              type="integer"
-              value={calendarInfo.peopleLimit}
-              name="peopleLimit"
-              placeholder="최대인원을 입력하세요."
-              onChange={onCalendarInfoInput}
-              required
-            >
-            </InputForm> */}
-          </div>
-          <div>
-            <CreateButton
+          <InputBlock>
+            <InputLeftWrap>방 설명</InputLeftWrap>
+            <InputRightWrap>
+              <InputForm
+                type="text"
+                value={calendarInfo.calendarContent}
+                name="calendarContent"
+                placeholder="방 설명을 써주세요"
+                onChange={onCalendarInfoInput}
+                required>
+              </InputForm>
+            </InputRightWrap>
+          </InputBlock>
+          <InputBlock>
+            <InputLeftWrap>일시</InputLeftWrap>
+            <InputRightWrap>
+              <DateInputForm
+                value={dateState.year}
+                name="year"
+                placeholder="ex)2022"
+                onChange={onDaterInfoInput}
+                required>
+              </DateInputForm>년
+              <DateInputForm
+                ml={'20px'}
+                value={dateState.month}
+                name="month"
+                placeholder="ex)08"
+                onChange={onDaterInfoInput}
+                required>
+              </DateInputForm>월
+              <DateInputForm
+                ml={'20px'}
+                value={dateState.day}
+                name="day"
+                placeholder="ex)09"
+                onChange={onDaterInfoInput}
+                required>
+              </DateInputForm>일
+              <DateInputForm
+                ml={'20px'}
+                value={dateState.hour}
+                name="hour"
+                placeholder="ex)22"
+                onChange={onDaterInfoInput}
+                required>
+              </DateInputForm>시
+              <DateInputForm
+                ml={'20px'}
+                value={dateState.minute}
+                name="minute"
+                placeholder="ex)30"
+                onChange={onDaterInfoInput}
+                required>
+              </DateInputForm>분
+            </InputRightWrap>
+          </InputBlock>
+          <InputBlock>
+            <InputLeftWrap>장소</InputLeftWrap>
+            <InputRightWrap>
+              <SelectBox
+                type="selectbox"
+                value={calendarInfo.place}
+                name="place"
+                onChange={onCalendarInfoInput}
+                required
+                >
+                <option>술집</option>
+                <option>펍</option>
+                <option>칵테일바</option>
+                {/* <option>야구장</option>
+                <option>축구장</option>
+                <option>페스티벌</option>
+                <option>클럽</option>
+                <option>엘리니아</option>
+                <option>편의점</option>
+                <option>한강공원</option>
+                <option>미술관</option>
+                <option>영화관</option>
+                <option>협곡</option>
+                <option>독서실</option> */}
+              </SelectBox>
+              에서 만나요!
+            </InputRightWrap>
+          </InputBlock>
+          <InputBlock>
+            <InputLeftWrap>연령대</InputLeftWrap>
+            <InputRightWrap>
+              <AgesWrapper>
+                <label>
+                  <CheckBoxStyled
+                    type="checkbox"
+                    id="0"
+                    name="ages"
+                    value={CheckedAges.roomage}
+                    onChange={onAgeCheckbox}
+                  />
+                  <span>20대</span>
+                </label>
+              </AgesWrapper>
+              <AgesWrapper>
+                <label>
+                  <CheckBoxStyled
+                    type="checkbox"
+                    id="1"
+                    name="ages"
+                    onChange={onAgeCheckbox}
+                  />
+                  <span>30대</span>
+                </label>
+              </AgesWrapper>
+              <AgesWrapper>
+                <label>
+                  <CheckBoxStyled
+                    type="checkbox"
+                    id="2"
+                    name="ages"
+                    onChange={onAgeCheckbox}
+                  />
+                  <span>40대</span>
+                </label>
+              </AgesWrapper>
+              <AgesWrapper>
+                <label>
+                  <CheckBoxStyled
+                    type="checkbox"
+                    id="3"
+                    name="ages"
+                    onChange={onAgeCheckbox}
+                  />
+                  <span>50대</span>
+                </label>
+              </AgesWrapper>
+              <AgesWrapper>
+                <label>
+                  <CheckBoxStyled
+                    type="checkbox"
+                    id="4"
+                    name="ages"
+                    onChange={onAgeCheckbox}
+                  />
+                  <span>60대</span>
+                </label>
+              </AgesWrapper>
+              <AgesWrapper>
+                <label>
+                  <CheckBoxStyled
+                    type="checkbox"
+                    id="5"
+                    name="ages"
+                    onChange={onAgeCheckbox}
+                  />
+                  <span>70대↑</span>
+                </label>
+              </AgesWrapper>
+            </InputRightWrap>
+          </InputBlock>
+          <InputBlock>
+            <InputLeftWrap>인원</InputLeftWrap>
+            <InputRightWrap>
+              <PeopleLimitWrapper>
+                <StyledButton onClick={() => onHandleDecrease("peopleLimit")}>
+                  <i className="fas fa-minus"></i>
+                </StyledButton>
+                <StyledAmountWrapper>{calendarInfo.peopleLimit}</StyledAmountWrapper>
+                <StyledButton onClick={() => onHandleIncrease("peopleLimit")}>
+                  <i className="fas fa-plus"></i>
+                </StyledButton>
+              </PeopleLimitWrapper>
+            </InputRightWrap>
+          </InputBlock>
+          <InputBlock>
+            <CreateButton 
               onClick={onCalendarInfoSubmit}
             >
               생성하기
             </CreateButton>
-          </div>
-        </div>
+          </InputBlock>
+        </CreateCalendarBlock>
       </Wrapper>
     </>
   );
