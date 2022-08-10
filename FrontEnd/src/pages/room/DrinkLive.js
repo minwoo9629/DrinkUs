@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import Header from "../../components/layout/Header";
 import { Wrapper } from "../../components/styled/Wrapper";
 import styled from "styled-components";
+import { useState } from "react";
+import { client } from "../../utils/client";
+import { useEffect } from "react";
 
 
 const Banner = styled.div `
@@ -26,6 +29,21 @@ const DrinkLive = () => {
 
   const navigate = useNavigate();
   
+  const [ageList, setAgeList] = useState({});
+
+  const onMakeAgeList = async () => {
+    const result = await client
+    .get('/rooms/recommend/ages')
+    .then((response) => response)
+    setAgeList([...result.data]);
+    return result.data
+  }
+
+  console.log(ageList)
+
+  useEffect(() => {
+    onMakeAgeList();
+  },[])
   
   return (
   <>

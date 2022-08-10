@@ -4,6 +4,8 @@ import { client } from "../../utils/client"
 import styled from "styled-components";
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { FailAlert } from "../../utils/sweetAlert";
+import { useSelector } from "react-redux";
 
 const CalendarBlock = styled.div`
   width: 800px;
@@ -33,14 +35,18 @@ const StyledButton = styled.button`
 
 
 const CalendarDetail = () => {
+
+  // 로그인 여부 확인
+  const user = useSelector((state) => state.user);
+  console.log(user)
   
   const location = useLocation();
-  console.log(useLocation().pathname.split('/')[2])
+  console.log(location.pathname.split('/')[2])
 
   // 글 정보를 담을 state 
   const [calendar, setCalendar] = useState({});
 
-  // api요청
+  // 글 정보를 가져오는 api요청
   const onCalendarDetail = async () => {
     const result = await client
       .get(`${location.pathname}`)
@@ -78,6 +84,23 @@ const CalendarDetail = () => {
     return result
   }
 
+  // 버튼 api 요청 (post, delete)
+  const onPost = async () => {
+    if (calendar.participant === calendar.peopleLimit) {
+      FailAlert('방 인원이 다 찼어요!')
+    }
+    const result = await client
+      .post(`/calendar/join/${location.pathname.split('/')[2]}`)
+      .then((response) => console.log(response))
+      .catch((error) => console.log(error))
+    return result
+  }
+
+  const onDelete = async () => {
+    await client
+      .delete(`/calendar/join/${location.pathname.split('/')[2]}`)
+  }
+
   return (
     <>
       <Header/>
@@ -100,11 +123,8 @@ const CalendarDetail = () => {
           </ContentBlock>
           <>
             {
-              calendar.participant === calendar.peopleLimit ?
-              <p>마감</p> : (
-                calendar.isParticipate === true ?
-              <StyledButton>취소</StyledButton> : <StyledButton>참가</StyledButton>
-              )
+              calendar.isParticipate === true ?
+              <StyledButton onClick={onDelete}>취소</StyledButton> : <StyledButton onClick={onPost}>참가</StyledButton>
             }
           </>
         </CalendarBlock>

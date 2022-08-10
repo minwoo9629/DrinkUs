@@ -13,8 +13,6 @@ const Box = styled.div`
   height: 600px;
 `
 
-
-
 const RoomDetail = () => {
 
   const location = useLocation();
