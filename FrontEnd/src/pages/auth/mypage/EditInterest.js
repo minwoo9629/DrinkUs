@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import {
   addUserInterest,
@@ -46,24 +46,14 @@ const SubCategoryWrapper = styled.div`
   }
 `;
 const EditInterest = () => {
-  const [categoryState, setCategoryState] = useState([]);
-  console.log(categoryState);
-  const fetchInterestsData = useCallback(async () => {
-    const result = await getUserInterests();
-    setCategoryState((prevState) => [...result.data]);
-  }, []);
-  useEffect(() => {
-    fetchInterestsData();
-  }, [fetchInterestsData]);
-  const onHandleCategoryCheck = (checked, subCategoryId) => {
-    checked
-      ? removeUserInterest(subCategoryId)
-      : addUserInterest(subCategoryId);
-    fetchInterestsData();
+  const [categoryState, setCategoryState] = useState({});
+
+  const onHandleCategoryCheck = (e) => {
+    console.log(e);
   };
 
   return (
-    <div style={{ padding: "30px 0px 30px 60px" }}>
+    <div style={{ padding: "30px" }}>
       <ProfileTitle isEdit={false} />
       <div
         style={{

@@ -4,12 +4,6 @@ import styled, { keyframes } from "styled-components";
 import Header from "../../../components/layout/Header";
 import { client } from "../../../utils/client";
 import { AuthInput } from "../../../components/common/inputs/AuthInput";
-import {
-  sendConfirmEmail,
-  confirmEmail,
-  doubleCheckEmail
-  } from "../../../api/JoinAPI";
-import { FailAlert, EmptyAlert, SuccessAlert } from "../../../utils/sweetAlert";
 
 
 const neon_text_color = "#5904de";
@@ -27,8 +21,16 @@ const NeonSignAnimation = keyframes`
       0 0 6rem ${neon_text_color}, 0 0 8rem ${neon_text_color},
       0 0 10rem ${neon_text_color};
   }
-`
 
+  20%,
+  24%,
+`;
+import {
+  sendConfirmEmail,
+  confirmEmail,
+  doubleCheckEmail
+  } from "../../../api/JoinAPI";
+import { FailAlert, EmptyAlert, SuccessAlert } from "../../../utils/sweetAlert";
 
 const Wrapper = styled.div`
   background-color: black;

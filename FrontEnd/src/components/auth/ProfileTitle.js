@@ -12,18 +12,20 @@ const ProfileImageThumbnail = styled.img`
   object-fit: cover;
   border-radius: 100%;
 `;
-const ProfileTitle = ({ isEdit }) => {
+const ProfileTitle = ({ isEdit, imageId, userName }) => {
   return (
     <div style={{ display: "flex", alignItems: "center" }}>
       <ProfileImageWrapper>
-        <ProfileImageThumbnail src="/assets/muji.jpeg" />
+        <ProfileImageThumbnail
+          src={`/assets/profileImage/profile${imageId}.png`}
+        />
       </ProfileImageWrapper>
       <div>
-        <p>Youji@naver.com</p>
+        <p>{userName}</p>
         {isEdit ? (
           <>
             <input type="file" id="profileImage" />
-            <label for="profileImage" id="profileImageLabel">
+            <label htmlFor="profileImage" id="profileImageLabel">
               프로필 사진 바꾸기
             </label>
           </>
