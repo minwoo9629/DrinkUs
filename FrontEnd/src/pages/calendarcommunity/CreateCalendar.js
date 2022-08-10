@@ -79,12 +79,6 @@ const DateInputForm = styled.input`
   text-align: center;
 `
 
-const CheckBoxForm = styled.input`
-  background-color: white;
-  width: 30px;
-  height: 30px;
-`
-
 const SelectBox = styled.select`
   width: 200px;
   background-color: white;
@@ -160,7 +154,7 @@ const CreateCalendar = () => {
 
   const [calendarInfo, setCalendarInfo] = useState({
     calendarContent: '',
-    peopleLimit: 2,
+    peopleLimit: 1,
     place: '술집',
   });
 
@@ -225,7 +219,7 @@ const CreateCalendar = () => {
   };
 
   const onHandleDecrease = (type) => {
-    const amount = calendarInfo[type] - 1 < 2 ? 2 : calendarInfo[type] - 1;
+    const amount = calendarInfo[type] - 1 < 1 ? 1 : calendarInfo[type] - 1;
     setCalendarInfo({ ...calendarInfo, [type]: amount });
   };
 
