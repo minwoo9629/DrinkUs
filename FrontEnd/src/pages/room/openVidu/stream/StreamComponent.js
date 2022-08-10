@@ -2,16 +2,16 @@ import React, { Component } from "react";
 import "./StreamComponent.css";
 import OvVideoComponent from "./OvVideo";
 
-import MicOff from "@material-ui/icons/MicOff";
-import VideocamOff from "@material-ui/icons/VideocamOff";
-import VolumeUp from "@material-ui/icons/VolumeUp";
-import VolumeOff from "@material-ui/icons/VolumeOff";
-import FormControl from "@material-ui/core/FormControl";
-import Input from "@material-ui/core/Input";
-import InputLabel from "@material-ui/core/InputLabel";
-import IconButton from "@material-ui/core/IconButton";
-import HighlightOff from "@material-ui/icons/HighlightOff";
-import FormHelperText from "@material-ui/core/FormHelperText";
+// import MicOff from "@material-ui/icons/MicOff";
+// import VideocamOff from "@material-ui/icons/VideocamOff";
+// import VolumeUp from "@material-ui/icons/VolumeUp";
+// import VolumeOff from "@material-ui/icons/VolumeOff";
+// import FormControl from "@material-ui/core/FormControl";
+// import Input from "@material-ui/core/Input";
+// import InputLabel from "@material-ui/core/InputLabel";
+// import IconButton from "@material-ui/core/IconButton";
+// import HighlightOff from "@material-ui/icons/HighlightOff";
+// import FormHelperText from "@material-ui/core/FormHelperText";
 
 export default class StreamComponent extends Component {
   constructor(props) {
@@ -61,18 +61,19 @@ export default class StreamComponent extends Component {
       <div className="OT_widget-container">
         <div className="pointer nickname">
           {this.state.showForm ? (
-            <FormControl id="nicknameForm">
-              <IconButton
+            <form id="nicknameForm">
+              <buutton
                 color="inherit"
                 id="closeButton"
                 onClick={this.toggleNicknameForm}
               >
-                <HighlightOff />
-              </IconButton>
-              <InputLabel htmlFor="name-simple" id="label">
+                <p>HighlightOff</p>
+                {/* <HighlightOff /> */}
+              </buutton>
+              <label htmlFor="name-simple" id="label">
                 Nickname
-              </InputLabel>
-              <Input
+              </label>
+              <input
                 color="inherit"
                 id="input"
                 value={this.state.nickname}
@@ -81,16 +82,12 @@ export default class StreamComponent extends Component {
                 required
               />
               {!this.state.isFormValid && this.state.nickname.length <= 3 && (
-                <FormHelperText id="name-error-text">
-                  Nickname is too short!
-                </FormHelperText>
+                <p id="name-error-text">Nickname is too short!</p>
               )}
               {!this.state.isFormValid && this.state.nickname.length >= 20 && (
-                <FormHelperText id="name-error-text">
-                  Nickname is too long!
-                </FormHelperText>
+                <p id="name-error-text">Nickname is too long!</p>
               )}
-            </FormControl>
+            </form>
           ) : (
             <div onClick={this.toggleNicknameForm}>
               <span id="nickname">{this.props.user.getNickname()}</span>
@@ -123,13 +120,15 @@ export default class StreamComponent extends Component {
             </div> */}
             <div>
               {!this.props.user.isLocal() && (
-                <IconButton id="volumeButton" onClick={this.toggleSound}>
+                <button id="volumeButton" onClick={this.toggleSound}>
                   {this.state.mutedSound ? (
-                    <VolumeOff color="secondary" />
+                    <p>VolumeOff</p>
                   ) : (
-                    <VolumeUp />
+                    // <VolumeOff color="secondary" />
+                    <p>VolumeUp</p>
+                    // <VolumeUp />
                   )}
-                </IconButton>
+                </button>
               )}
             </div>
           </div>
