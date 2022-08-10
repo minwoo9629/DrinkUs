@@ -2,7 +2,8 @@ import { useState } from "react";
 // import Header from "../../components/layout/Header";
 import styled from "styled-components";
 import { client } from "../../utils/client";
-import { SuccessAlert } from "../../utils/sweetAlert";
+import { FailAlert, SuccessAlert } from "../../utils/sweetAlert";
+import { reportsSubmit } from "../../api/ProfileAPI";
 
 // 배경
 const Wrapper = styled.div`
@@ -62,30 +63,55 @@ const Reports = () => {
   const [state, setState] = useState({
     reportType: "",
     reportReason: "",
+    reportReasonCheck: false,
   })
   
+  // 신고 대분류
+  const onReportTypeSelect = (e) => {
+    setState({...state, [e.target.name]: e.target.value})
+  };
+
+
   // 신고 입력
-  const onHandleInput = (e) => {
+  const onReportReasonInput = (e) => {
     setState({ ...state, [e.target.name]: e.target.value });
   };
 
   // 신고 제출
-  const onReportsSubmit = (e) => {
-    e.preventDefault();
-    client
-        .post("/reports", {
-        })
-        .then(function (response) {
-          console.log(response);
-          if (response.status === 200){
-            SuccessAlert(`${"신고가 접수 됐습니다"}`);
-            return;
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-  };
+  const onReportsSubmit = async (e) => {
+    // e.preventDefault();
+    // client
+    //     .post("/report", {
+    //     })
+    //     .then(function (response) {
+    //       console.log(response);
+    //       if (response.status === 200){
+    //         SuccessAlert("신고가 접수 됐습니다");
+    //         return;
+    //       }
+    //     })
+    //     .catch(function (error) {
+    //       console.log(error);
+    //     });
+    const data = {
+      toUserId: 1,
+      reportType: state.reportType,
+      reportReason: state.reportReason
+    };
+    const response = await reportsSubmit(data);
+    console.log(response)
+    if (response.status === 200) {
+      SuccessAlert("신고가 접수됐습니다")
+    }
+    if (state.reportReason.length === 0){
+      e.preventDefault()
+      FailAlert("신고 사유를 기입해 주세요")
+    }
+    else{
+      console.log(response.data.message)
+      FailAlert("아직 처리되지 않은 동일한 유저를 재신고 할 수 없습니다.")
+    };
+    }
 
   return(
     <>
@@ -96,6 +122,8 @@ const Reports = () => {
             <ReportsSelect
               value={state.reportType}
               name="reportType"
+              onChange={onReportTypeSelect}
+              defaultValue={"폭언 및 욕설"}
             >
               <option>폭언 및 욕설</option>
               <option>개인정보노출</option>
@@ -107,7 +135,7 @@ const Reports = () => {
               placeholder="신고 사유를 입력해 주세요."
               value={state.reportReason}
               name="reportReason"
-              onChange={onHandleInput}
+              onChange={onReportReasonInput}
             />
           <ReportsButton onClick={onReportsSubmit}>
             유저신고
