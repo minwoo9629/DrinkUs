@@ -5,27 +5,33 @@ import styled from "styled-components";
 import { useState } from "react";
 import { useEffect } from "react";
 import { GoToButton } from "../../components/common/buttons/GoToButton";
+import { useLocation } from "react-router-dom";
 
 const Box = styled.div`
   background-color: white;
+  width: 800px;
+  height: 600px;
 `
 
-const onRoomDetail = async () => {
-  const result = await client
-    .get("rooms/1")
-    .then((response)=> response);
-    return result
-}
 
 
 const RoomDetail = () => {
+
+  const location = useLocation();
+  
+  const onRoomDetail = async () => {
+    const result = await client
+      .get(`${location.pathname}`)
+      .then((response)=> response);
+      return result
+  }
 
   const [data, setData] = useState({});
 
   const dataRefineFunc = async () => {
     const result = await onRoomDetail()
     setData(result.data);
-    // return data
+    return data
   }
 
   useEffect(()=>{
@@ -37,20 +43,10 @@ const RoomDetail = () => {
       <Header />
       <Wrapper>
         <Box>
-          <div>
-            {data.roomName} | {data.category.categoryName}
-          </div>
-          <div>
-            {data.placeTheme}
-          </div>
-          <div>
-            {data.user.userName}
-            {data.user.userImg}
-            인기도{data.user.userPopularity}
-          </div>
-          <div>
-            20대
-          </div>          
+        {JSON.stringify(data.roomName)}
+        {JSON.stringify(data.category)}
+        {JSON.stringify(data.peopleLimit)}
+        {JSON.stringify(data.roomId)}
         </Box>
         <GoToButton>참여하기</GoToButton>
       </Wrapper> 

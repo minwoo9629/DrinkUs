@@ -63,12 +63,15 @@ const Profile = () => {
   const [state, setState] = useState({
     userNickname: "",
     userPopularity: "",  // 인기도
-    popularityNumber: 0,  // 인기도 수정 횟수
     userImg: "",
     userIntroduce: "",
     userSoju: "",
     userBeer: "",
   });
+
+  const [popular, setPopular] = useState({
+    popularityNumber: 0,
+  })
   // 인기도 수정 횟수 5회 제한 + 5회 넘을 시 alert 창
   const popularityDisabled = state.popularityNumber === 5;
 
@@ -77,16 +80,18 @@ const Profile = () => {
   const onPopularityEdit = (e) => {
     const name = e.target.name;
     if (name === "plus") {
-      setState({...state, userPopularity: state.userPopularity + 1, popularityNumber: state.popularityNumber + 1});
+      setState({...state, userPopularity: state.userPopularity + 1});
+      setPopular({...popular, popularityNumber: popular.popularityNumber + 1});
     } else if (name === "minus") {
-      setState({...state, userPopularity:state.userPopularity - 1, popularityNumber: state.popularityNumber + 1});
+      setState({...state, userPopularity:state.userPopularity - 1});
+      setPopular({...popular, popularityNumber: popular.popularityNumber + 1});
     }
     // 인기도 수정 api 요청
     client
-      .patch(`/users/popularity`, {
-         params: {
-          user_id: "6",
-        }  
+      .patch(`/users/popularity/6`, {
+        //  params: {
+        //   user_id: "6",
+        // }  
       })
       .then(function (response) {
         console.log(response);
@@ -97,28 +102,26 @@ const Profile = () => {
     };
 
 
-  // 유저 정보 요청 --> 무한렌더링... setState 쪽 문제인데, 해결방법을 아직 모름,,,
-  client
-    .get(`/users/profile/6`, {
-      //  params: {
-      //   user_no: "6",
-      // }
-    })
-    .then((response) => {
-      console.log(response);
-      console.log(response.data, []);
-      // setState({...state,
-      //   userNickname: response.data.userNickname,
-      //   userPopularity: response.data.userPopularity,
-      //   userImg: response.data.userImg,
-      //   userIntroduce: response.data.userIntroduce,
-      //   userSoju: response.data.userSoju,
-      //   userBeer: response.data.userBeer
-      // }, [])
-    })
-    .catch(function (error) {
-      console.log(error);
-    }, []);
+  // 유저 정보 요청
+  useEffect(() => {
+    const fetchUsers = async() => {
+      try{
+        const response = await client.get(
+          `/users/profile/6`, {
+            //  params: {
+        //   user_id: "user_id",
+        // }  
+          }
+        );
+        setState(response.data);
+        console.log(response)
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    fetchUsers();
+  }, []);
+
 
   return (
   <div>
