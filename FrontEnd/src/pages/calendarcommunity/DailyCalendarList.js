@@ -7,21 +7,21 @@ import { GoToButton } from "../../components/common/buttons/GoToButton";
 import CalendarListItem from "../../components/calendar/CalendarListItem";
 
 
-const DailyCalendar = () => {
+const DailyCalendarList = () => {
 
   const [curDate, setCurDate] = useState(new Date());
   const [dailyCalendar, setDailyCalendar] = useState([]);
   const dailyCalendarTitle = `
     ${curDate.getFullYear()}년
     ${curDate.getMonth() + 1}월
-    ${curDate.getDate()}일
+    ${curDate.getDate() + 1}일
   `
 
   const fetchData = async () => {
     const response = await client
       .get(`/calendar/daily?year=${curDate.getFullYear()}
       &month=${curDate.getMonth() + 1}
-      &day=${curDate.getDate()}`
+      &day=${curDate.getDate() + 1}`
       )
       .then((response) => response);
     setDailyCalendar([...response.data.content]);
@@ -54,9 +54,6 @@ const DailyCalendar = () => {
     );
   };
 
-  // console.log(dailyCalendar)
-
-
   return (
     <>
     <Header/>
@@ -77,4 +74,4 @@ const DailyCalendar = () => {
   );
 };
 
-export default DailyCalendar
+export default DailyCalendarList

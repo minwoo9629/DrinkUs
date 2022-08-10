@@ -4,6 +4,8 @@ import styled from "styled-components";
 import FetchProfile from "../../components/room/FetchProfile";
 import { useState } from "react";
 import { client } from "../../utils/client"
+import { useNavigate } from "react-router-dom";
+import { SuccessAlert } from "../../utils/sweetAlert";
 
 
 const CreateRoomBlock = styled.div`
@@ -140,11 +142,13 @@ const CheckBoxStyled = styled.input`
 `;
 
 const CreateRoom = () => {
+
+  const navigate = useNavigate();
   
   const [roomInfo, setRoomInfo] = useState({
     roomname: '',
-    peoplelimit: 1,
-    placetheme: '',
+    peoplelimit: 2,
+    placetheme: '술집',
     roompw: '',
     categoryId: '',
   });
@@ -157,7 +161,8 @@ const CreateRoom = () => {
     e.preventDefault();
     // 이름 유효 체크
     if (roomInfo.roomname.length === 0) {
-      alert("방 이름을 입력해 주세요.");
+      console.log(roomInfo.placetheme)
+      alert(`방 이름을 입력해 주세요. '${roomInfo.placetheme}에서 같이 마셔요~' 는 어때요?`);
     }
 
     client
@@ -172,6 +177,9 @@ const CreateRoom = () => {
       })
       .then(function (response) {
         console.log(response.data.message);
+        SuccessAlert("방이 생성되었습니다!")
+        // 방 내부 router 작성되면 내부로 보내기
+        navigate("/");
       })
       .catch(function (error) {
         console.log(error);
@@ -201,18 +209,9 @@ const CreateRoom = () => {
   };
 
   const onHandleDecrease = () => {
-    const amount = roomInfo["peoplelimit"] - 1 < 1 ? 1 : roomInfo["peoplelimit"] - 1;
+    const amount = roomInfo["peoplelimit"] - 1 < 2 ? 2 : roomInfo["peoplelimit"] - 1;
     setRoomInfo({ ...roomInfo, ["peoplelimit"]: amount });
   };
-
-  // 카테고리
-  // const [makecategory, setMakeCategory] = useState({
-  //   category: ''
-  // })
-
-  // const onMakeCategory = (e) => {
-  //   setMakeCategory({...makecategory, [e.target.name]: {categoryId:e.target.value}});
-  // }
 
   return (
     <>
@@ -243,10 +242,19 @@ const CreateRoom = () => {
                   name="placetheme" 
                   onChange={onRoomInfoInput}>
                   <option>술집</option>
-                  <option>야구장</option>
                   <option>펍</option>
+                  <option>칵테일바</option>
+                  {/* <option>야구장</option>
+                  <option>축구장</option>
+                  <option>페스티벌</option>
+                  <option>클럽</option>
+                  <option>엘리니아</option>
                   <option>편의점</option>
                   <option>한강공원</option>
+                  <option>미술관</option>
+                  <option>영화관</option>
+                  <option>협곡</option>
+                  <option>독서실</option> */}
                 </SelectBox>
               </InputRightWrap>
             </InputBlock>

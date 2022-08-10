@@ -4,6 +4,9 @@ import Header from "../../components/layout/Header";
 import FetchProfile from "../../components/room/FetchProfile";
 import { Wrapper } from "../../components/styled/Wrapper";
 import { client } from "../../utils/client";
+import moment from "moment";
+import { FailAlert, SuccessAlert } from "../../utils/sweetAlert";
+import { useNavigate } from "react-router-dom";
 
 const CreateButton = styled.button `
   color: #6f92bf;
@@ -66,34 +69,30 @@ const RowWrapper = styled.div`
 
 const CreateCalendar = () => {
 
+  const navigate = useNavigate();
+
   const [calendarInfo, setCalendarInfo] = useState({
     calendarContent: '',
-    // calendarDatetime: '',
-    peopleLimit: 1,
-    place: '',
+    peopleLimit: 2,
+    place: '술집',
   });
 
   const onCalendarInfoInput = (e) => {
     setCalendarInfo({...calendarInfo, [e.target.name]: e.target.value} )
-    console.log(calendarInfo)
   };
 
   const onCalendarInfoSubmit = (e) => {
     e.preventDefault();
     // 내용 유효 체크
-    // if (calendarInfo.calendarContent.length === 0) {
-    //   alert("내용을 입력해 주세요.");
-    // }
+    if (calendarInfo.calendarContent.length === 0) {
+      alert(`방 설명을 써 주세요. '${calendarInfo.place}에서 만날 사람~' 은 어때요?`);
+      return;
+    }
 
-    // // 날짜 유효 체크
-    // if (calendarInfo.calendarDatetime.length === 0) {
-    //   alert("날짜를 입력해 주세요.");
-    // }
-
-    // // 인원 유효 체크
-    // if (calendarInfo.peopleLimit.length === 0) {
-    //   alert("최대인원을 입력해 주세요.");
-    // }
+    if (dateState.year + dateState.month + dateState.day + dateState.hour + dateState.minute <= moment().format('YYYYMMDDHHmm')) {
+      alert('이미 지나간 시간을 입력하셨어요!')
+      return;
+    }
 
     client
       .post("calendar", {
@@ -104,8 +103,14 @@ const CreateCalendar = () => {
         ages: ageCheckedItems,
       })
       .then(function (response) {
-        console.log(response.data.message);
-      });
+        SuccessAlert('글쓰기 성공!')
+        // 상세 페이지 read 만들면 그쪽으로 이동하기
+        navigate("/");
+      })
+      .catch(function (error) {
+        FailAlert(`시간 형식을 맞춰주세요!
+        ex) ${moment().format('YYYY')}년${moment().format('MM')}월${moment().format('DD')}일${moment().format('HH')}시${moment().format('mm')}분`)
+      })
   };
 
   // Age 관련 체크 로직
@@ -132,7 +137,7 @@ const CreateCalendar = () => {
   };
 
   const onHandleDecrease = (type) => {
-    const amount = calendarInfo[type] - 1 < 1 ? 1 : calendarInfo[type] - 1;
+    const amount = calendarInfo[type] - 1 < 2 ? 2 : calendarInfo[type] - 1;
     setCalendarInfo({ ...calendarInfo, [type]: amount });
   };
 
@@ -213,10 +218,19 @@ const CreateCalendar = () => {
               required
               >
               <option>술집</option>
-              <option>야구장</option>
               <option>펍</option>
+              <option>칵테일바</option>
+              {/* <option>야구장</option>
+              <option>축구장</option>
+              <option>페스티벌</option>
+              <option>클럽</option>
+              <option>엘리니아</option>
               <option>편의점</option>
               <option>한강공원</option>
+              <option>미술관</option>
+              <option>영화관</option>
+              <option>협곡</option>
+              <option>독서실</option> */}
             </SelectBox>
             에서 만나요!
           </div>

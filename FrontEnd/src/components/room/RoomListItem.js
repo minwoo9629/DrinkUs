@@ -17,12 +17,12 @@ const RoomListItem = ({
   peopleLimit,
   categoryId
 }) => {
-  
+
   const navigate = useNavigate();
 
   return (
     <RoomBox>
-      <GoToButton onClick={() => navigate(`/rooms/${roomId}`, roomId)} color={"cornflowerblue"}>방 디테일</GoToButton>
+      <GoToButton onClick={() => navigate(`/rooms/${roomId}`, {roomId:roomId})} color={"cornflowerblue"}>방 디테일</GoToButton>
       <div>{roomId}</div>
       <div>{roomName}</div>
       <div>{peopleLimit}</div>

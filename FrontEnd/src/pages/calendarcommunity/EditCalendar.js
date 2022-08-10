@@ -70,7 +70,6 @@ const CreateCalendar = () => {
 
   const onCalendarInfoInput = (e) => {
     setCalendarInfo({...calendarInfo, [e.target.name]: e.target.value} )
-    console.log(calendarInfo)
   };
 
   const onCalendarInfoSubmit = (calendar_id) => {
