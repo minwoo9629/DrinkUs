@@ -2,8 +2,9 @@ import { useState } from "react";
 // import Header from "../../components/layout/Header";
 import styled from "styled-components";
 import { client } from "../../utils/client";
+import { SuccessAlert } from "../../utils/sweetAlert";
 
-
+// 배경
 const Wrapper = styled.div`
   background-color: #eaf2ff;
   width: 100vw;
@@ -13,12 +14,14 @@ const Wrapper = styled.div`
   align-items: center;
 `;
 
+// 화면 가운데 창
 const ReportsWrapper = styled.div`
   background-color: transparent;
   display: flex;
   flex-direction: column;
 `;
 
+// 셀렉트 박스
 const ReportsSelect = styled.select`
   width: 400px;
   height: 40px;
@@ -30,6 +33,7 @@ const ReportsSelect = styled.select`
   color: #676775;
 `;
 
+// 신고 사유 입력 칸
 const ReportsInput = styled.input`
   position: relative;
   height: 400px;
@@ -42,6 +46,7 @@ const ReportsInput = styled.input`
   color: black;
 `
 
+// 신고하기 버튼
 const ReportsButton = styled.button`
   width: 100px;
   height: 40px;
@@ -53,20 +58,10 @@ const ReportsButton = styled.button`
   color: #676775;
 `
 
-// // 신고 사유 드롭 박스
-// const ReportsReason = [
-//   { id: null, value: '신고 사유 선택' },
-//   { id: '0001', value: '폭언 및 욕설' },
-//   { id: '0002', value: '개인정보노출' },
-//   { id: '0003', value: '음란성' },
-//   { id: '0004', value: '명예훼손' },
-//   { id: '0005', value: '기타' },
-// ];
-
 const Reports = () => {
   const [state, setState] = useState({
-    reportsReason: "",
-    reportsDetail: "",
+    reportType: "",
+    reportReason: "",
   })
   
   // 신고 입력
@@ -82,6 +77,10 @@ const Reports = () => {
         })
         .then(function (response) {
           console.log(response);
+          if (response.status === 200){
+            SuccessAlert(`${"신고가 접수 됐습니다"}`);
+            return;
+          }
         })
         .catch(function (error) {
           console.log(error);
@@ -94,12 +93,10 @@ const Reports = () => {
       <Wrapper>
         <ReportsWrapper>
             (프로필 선택한 유저 닉네임)유저를 신고합니다.
-            {/* <ReportsSelect onChange={onHandleSelect}>
-              {ReportsReason.map(el => {
-                return <option key={el.id}>{el.value}</option>;
-              })};
-            </ReportsSelect> */}
-            <ReportsSelect>
+            <ReportsSelect
+              value={state.reportType}
+              name="reportType"
+            >
               <option>폭언 및 욕설</option>
               <option>개인정보노출</option>
               <option>음란성</option>
@@ -108,8 +105,8 @@ const Reports = () => {
             </ReportsSelect>
             <ReportsInput
               placeholder="신고 사유를 입력해 주세요."
-              value={state.reportsDetail}
-              name="reportsDetail"
+              value={state.reportReason}
+              name="reportReason"
               onChange={onHandleInput}
             />
           <ReportsButton onClick={onReportsSubmit}>
