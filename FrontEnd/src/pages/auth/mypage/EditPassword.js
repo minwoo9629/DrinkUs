@@ -1,10 +1,10 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { changePassword } from "../../../api/AuthAPI";
 import ProfileTitle from "../../../components/auth/ProfileTitle";
 import { BaseFlexColWrapper } from "../../../components/styled/Wrapper";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logOut } from "../../../store/actions/user";
 import { FailAlert, SuccessAlert } from "../../../utils/sweetAlert";
 
@@ -46,12 +46,19 @@ const EditPassword = () => {
     newPassword: "",
     confirmNewPassword: "",
   });
+  const [profileImageState, setProfileImageState] = useState("1");
+  const [userNameState, setUserNameState] = useState("");
+  const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const previousPasswordInput = useRef();
   const newPasswordInput = useRef();
   const confirmNewPasswordInput = useRef();
 
+  useEffect(() => {
+    setProfileImageState(user.data.userImg !== "" ? user.data.userImg : "1");
+    setUserNameState(user.data.userName);
+  }, []);
   const onHandleInput = (e) => {
     setState({ ...state, [e.target.name]: e.target.value });
   };
@@ -88,12 +95,16 @@ const EditPassword = () => {
     }
   };
   return (
-    <div style={{ padding: "30px" }}>
-      <ProfileTitle isEdit={false} />
+    <div style={{ padding: "30px 0px 30px 60px" }}>
+      <ProfileTitle
+        isEdit={false}
+        imageId={profileImageState}
+        userName={userNameState}
+      />
       <EditPasswordWrapper>
         <EditPasswordInputWrapper>
           <div
-            style={{ width: "30%", textAlign: "right", alignItems: "center" }}
+            style={{ width: "25%", textAlign: "right", alignItems: "center" }}
           >
             이전 비밀번호
           </div>
@@ -109,7 +120,7 @@ const EditPassword = () => {
         </EditPasswordInputWrapper>
         <EditPasswordInputWrapper alginItem={"flex-start"}>
           <div
-            style={{ width: "30%", textAlign: "right", alignItems: "center" }}
+            style={{ width: "25%", textAlign: "right", alignItems: "center" }}
           >
             새 비밀번호
           </div>
@@ -124,7 +135,7 @@ const EditPassword = () => {
           </div>
         </EditPasswordInputWrapper>
         <EditPasswordInputWrapper alginItem={"baseline"}>
-          <div style={{ width: "30%", textAlign: "right" }}>
+          <div style={{ width: "25%", textAlign: "right" }}>
             새 비밀번호 확인
           </div>
           <div
