@@ -2,7 +2,6 @@ package com.ssafy.drinkus.room.service;
 
 import com.ssafy.drinkus.category.domain.Category;
 import com.ssafy.drinkus.category.domain.CategoryRepository;
-import com.ssafy.drinkus.category.domain.SubCategory;
 import com.ssafy.drinkus.category.domain.SubCategoryRepository;
 import com.ssafy.drinkus.common.NotFoundException;
 import com.ssafy.drinkus.common.NotMatchException;
@@ -25,6 +24,7 @@ import com.ssafy.drinkus.user.domain.UserSubCategoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -119,33 +119,29 @@ public class RoomService {
     public List<RoomListResponse> findBySameInterest(User user){
         Map<Integer, Integer> map = new HashMap<>(); // 대분류이름, 점수
         List<UserSubCategory> userSubCategoryList = userSubCategoryRepository.findByUser(user);
-        for(UserSubCategory ct : userSubCategoryList){
-            //user_subcategory_id로 sub_category를 찾는다.
-            //Long categoryId = subCategoryRepository.findBySubCategoryId(ct.getSubCategory().getSubCategoryId());
-//            if(map.containsKey(category.getCategoryName())){
-//                map.put(category.getCategoryName(), map.get(category.getCategoryName()) + 1);
-//            } else {
-//                map.put(category.getCategoryName(), 1);
-//            }
-
-        }
 //
-//        // 가장 큰 value값을 가진 키(대분류 이름)를 찾는다.
-//        String maxKey = map.keySet().stream()
-//                .max(Comparator.comparing(map::get))
-//                .orElse(null);
-//        System.out.println("###### " + maxKey);
-
-        // 해당 대분류에 해당하는 방들을 찾는다.
-
-        //
+//        PageRequest pageRequest = PageRequest.of(1,1);
+//        Long maxCategoryId = subCategoryRepository.findMaxCategoryId(user.getUserId(), (Pageable) pageRequest);
+//
+//        // 해당 대분류에 해당하는 방들을 찾는다.
+//        List<Room> list = roomRepository.findAllByCategoryId(maxCategoryId)
+//                .orElseThrow(() -> new NotFoundException(NotFoundException.ROOM_NOT_FOUND));
+//
+//        List<RoomListResponse> response = new ArrayList<>();
+//        for (Room room : list) {
+//            RoomListResponse res = RoomListResponse.from(room);
+//            res.setConnectedUserNum(roomHistoryRepository.countPeopleInRoom(room.getRoomId()));
+//            response.add(res);
+//        }
+//
+//        return response;
         return null;
     }
 
     //화상방 추천 - 지금 막 생성된 방
     public List<RoomListResponse> findByCurrentTime(User user){
-        int currentTime = 48;
-        List<Room> list = roomRepository.findTop8ByCreatedDateAfterOrderByCreatedDateDesc(LocalDateTime.now().minusHours(currentTime))
+        int currentHour = 1;
+        List<Room> list = roomRepository.findTop8ByCreatedDateAfterOrderByCreatedDateDesc(LocalDateTime.now().minusHours(currentHour))
                 .orElseThrow(() -> new NotFoundException("방이 존재하지 않습니다."));
 
         List<RoomListResponse> response = new ArrayList<>();
@@ -230,11 +226,7 @@ public class RoomService {
     @Transactional
     // 화상방 입장
     public void joinRoom(User user, RoomJoinRequest request){
-        // 유저 아이디로 유저 정보 얻어온다
-        User findUser = userRepository.findById(user.getUserId())
-                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
-        // target room 정보 얻어온다
-//        Room findRoom = roomRepository.findById(request.getRoomId());
+
     }
 
     @Transactional

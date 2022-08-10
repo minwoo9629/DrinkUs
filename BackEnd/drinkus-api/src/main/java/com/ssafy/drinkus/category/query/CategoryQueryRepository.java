@@ -35,4 +35,12 @@ public class CategoryQueryRepository {
         return results;
     }
 
+//        select category_id, count(s.subcategory_id) as cnt
+//        from sub_category s
+//        join user_sub_category us
+//        on s.subcategory_id = us.subcategory_id
+//        where user_id = 3
+//        group by s.category_id
+//        order by cnt desc
+//        limit 1;
 }
