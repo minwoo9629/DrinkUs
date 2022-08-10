@@ -257,6 +257,7 @@ const Daily = () => {
 
   // 댓글 조회
   const getComment = async(e) => {
+
     const response = await getDailyComment();
     setState({...response.data});
     console.log(response.data.content)
@@ -312,7 +313,7 @@ const Daily = () => {
             </DailyArticlePostButton>
           </DailyArticleInputWrapper>
           <div>
-              <DailyListWrapper>
+              {/* <DailyListWrapper> */}
                   <DailyList
                     dailyList={state.content}
                     onArticleEdit={onArticleEdit}
@@ -341,39 +342,15 @@ const Daily = () => {
                           댓글 달기
                         </DailyCommentPostButton>
                       </DailyCommentInputWrapper>
-                      {/* <CommentList getComment={getComment}/> */}
                     </DailyList>
-              </DailyListWrapper>
+              {/* </DailyListWrapper> */}
           </div>
             {/* <DailyCommentInputWrapper style = {{display: state.isComment === false ? "none" : "block"}}>
-            <DailyCommentInput
-                placeholder="댓글칸"
-                type="string"
-                value={state.boardComment}
-                name="boardComment"
-                onChange={onHandleInput}
-              />
             <DailyCommentPostButton onClick={onCommentPost}>
               댓글 달기
             </DailyCommentPostButton>
           </DailyCommentInputWrapper>
           <DailyListWrapper>
-              <DailyBoardComment>
-                <ProfileWrapper>
-                  <ProfileImg></ProfileImg>
-                </ProfileWrapper>
-                  <DailyContent>
-                  </DailyContent>
-                  <DailyContent>{comment.boardContent}</DailyContent>
-                  <DailyContent>
-                    <DailyBoardEditButton onClick={onCommentEdit}>
-                      수정
-                    </DailyBoardEditButton>
-                    <DailyBoardEditButton onClick={onCommentDelete}>
-                      삭제
-                    </DailyBoardEditButton>
-                  </DailyContent>
-              </DailyBoardComment>
            </DailyListWrapper> */}
         </BaseFlexColWrapper>
       </Wrapper>
