@@ -22,7 +22,7 @@ const CalendarListItem = (content) => {
       {JSON.stringify(content.time)}
       {JSON.stringify(content.place)}
       {JSON.stringify(content.peopleLimit)}
-      <GoToButton>상세조회</GoToButton>
+      <GoToButton onClick={() => navigate(`/calendar/${content.calendarId}`, {calendarId: content.calendarId})} color={"cornflowerblue"}>상세조회</GoToButton>
     </ItemBox>
     </>
   );
