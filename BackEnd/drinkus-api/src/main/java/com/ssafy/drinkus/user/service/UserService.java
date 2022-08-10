@@ -9,8 +9,6 @@ import com.ssafy.drinkus.email.request.UserNameAuthRequest;
 import com.ssafy.drinkus.email.request.UserNameCheckRequest;
 import com.ssafy.drinkus.email.service.EmailService;
 import com.ssafy.drinkus.emailauth.domain.EmailAuth;
-import com.ssafy.drinkus.redis.LoginUser;
-import com.ssafy.drinkus.redis.LoginUserRepository;
 import com.ssafy.drinkus.security.util.JwtUtil;
 import com.ssafy.drinkus.user.domain.User;
 import com.ssafy.drinkus.user.domain.UserRepository;
@@ -26,8 +24,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -37,14 +35,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserService {
 
-    final int POPULARITY_LIMIT = 5;
-
     private final UserRepository userRepository;
     private final AuthRepository authRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final EmailService emailService;
-    private final LoginUserRepository loginUserRepository;
 
     @Transactional
     public void createUser(UserCreateRequest request) {
@@ -59,6 +54,18 @@ public class UserService {
     public TokenResponse loginUser(UserLoginRequest request) {
         User findUser = userRepository.findByUserName(request.getUserName())
                 .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
+
+        // 사용자 정지 여부 확인
+        if(findUser.getUserStopDate() != null && LocalDateTime.now().isBefore(findUser.getUserStopDate())){
+            throw new LoginBlockException(
+                    "해당 사용자는 다음 기한까지 정지되었습니다.\n" 
+                            + findUser.getUserStopDate().getYear() + "년 "
+                            + findUser.getUserStopDate().getMonthValue() + "월 "
+                            + findUser.getUserStopDate().getDayOfMonth() + "일 "
+                            + findUser.getUserStopDate().getHour() + "시 "
+                            + findUser.getUserStopDate().getMinute() + "분"
+            );
+        }
 
         if (!passwordEncoder.matches(request.getUserPw(), findUser.getUserPw())) {
             throw new NotMatchException(NotMatchException.PW_NOT_MATCH);
@@ -209,11 +216,11 @@ public class UserService {
         emailService.confirmEmailAuth(request);
     }
 
-
     // 인기도 제한 초기화 스케줄 task
     @Scheduled(cron = "0 0 6 * * *") // 매일 6시 정각
     @Transactional
     public void resetPopularityLimit() {
+        final int POPULARITY_LIMIT = 5;
         userRepository.resetUserPopularityLimit(POPULARITY_LIMIT);
     }
 

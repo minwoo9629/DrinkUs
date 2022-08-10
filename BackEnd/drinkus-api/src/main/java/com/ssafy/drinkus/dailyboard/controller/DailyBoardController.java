@@ -73,10 +73,3 @@ public class DailyBoardController {
         return ResponseEntity.ok().build();
     }
 }
-
-//{
-//    "searchKeyword" : "",
-//    "sameAge" : true,
-//    "sortOrder" : 1,
-//    "category" : null
-//}

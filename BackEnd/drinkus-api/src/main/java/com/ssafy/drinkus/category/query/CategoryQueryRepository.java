@@ -1,19 +1,15 @@
 package com.ssafy.drinkus.category.query;
 
+import com.querydsl.core.Tuple;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.drinkus.category.domain.Category;
-import com.ssafy.drinkus.category.domain.QCategory;
-import com.ssafy.drinkus.category.domain.QSubCategory;
 import com.ssafy.drinkus.category.domain.SubCategory;
-import com.ssafy.drinkus.category.response.CategoryListResponse;
-import com.ssafy.drinkus.category.response.SubCategoryResponse;
-import com.ssafy.drinkus.user.domain.UserSubCategory;
+import com.ssafy.drinkus.user.domain.QUserSubCategory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.stream.Collectors;
-
 import static com.ssafy.drinkus.category.domain.QCategory.*;
 import static com.ssafy.drinkus.category.domain.QSubCategory.subCategory;
 import static com.ssafy.drinkus.user.domain.QUserSubCategory.userSubCategory;
@@ -42,4 +38,16 @@ public class CategoryQueryRepository {
         return results;
     }
 
+    public Long findCategoryIdByUserId(Long userId) {
+        Tuple tuple = queryFactory
+                .select(subCategory.category.categoryId, subCategory.SubCategoryId.count())
+                .from(subCategory)
+                .join(subCategory.userSubCategoryList, userSubCategory)
+                .where(userSubCategory.user.userId.eq(userId))
+                .groupBy(subCategory.category.categoryId)
+                .orderBy(subCategory.SubCategoryId.count().desc())
+                .limit(1)
+                .fetchOne();
+        return tuple.get(subCategory.category.categoryId);
+    }
 }
