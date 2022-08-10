@@ -88,25 +88,24 @@ public class RoomService {
         List<Room> list;
         switch (age / 10){
             case 2 :
-                list = roomRepository.findAllByAges20(YN.Y).orElseThrow(() -> new NotFoundException("해당 나이대의 방이 없습니다."));
+                list = roomRepository.findTop8ByAges20OrderByCreatedDateDesc(YN.Y).orElseThrow(() -> new NotFoundException("해당 나이대의 방이 없습니다."));
                 break;
             case 3 :
-                list = roomRepository.findAllByAges30(YN.Y).orElseThrow(() -> new NotFoundException("해당 나이대의 방이 없습니다."));
+                list = roomRepository.findTop8ByAges30OrderByCreatedDateDesc(YN.Y).orElseThrow(() -> new NotFoundException("해당 나이대의 방이 없습니다."));
                 break;
             case 4 :
-                list = roomRepository.findAllByAges40(YN.Y).orElseThrow(() -> new NotFoundException("해당 나이대의 방이 없습니다."));
+                list = roomRepository.findTop8ByAges40OrderByCreatedDateDesc(YN.Y).orElseThrow(() -> new NotFoundException("해당 나이대의 방이 없습니다."));
                 break;
             case 5 :
-                list = roomRepository.findAllByAges50(YN.Y).orElseThrow(() -> new NotFoundException("해당 나이대의 방이 없습니다."));
+                list = roomRepository.findTop8ByAges50OrderByCreatedDateDesc(YN.Y).orElseThrow(() -> new NotFoundException("해당 나이대의 방이 없습니다."));
                 break;
             case 6 :
-                list = roomRepository.findAllByAges60(YN.Y).orElseThrow(() -> new NotFoundException("해당 나이대의 방이 없습니다."));
+                list = roomRepository.findTop8ByAges60OrderByCreatedDateDesc(YN.Y).orElseThrow(() -> new NotFoundException("해당 나이대의 방이 없습니다."));
                 break;
             default :
-                list = roomRepository.findAllByAges70(YN.Y).orElseThrow(() -> new NotFoundException("해당 나이대의 방이 없습니다."));
+                list = roomRepository.findTop8ByAges70OrderByCreatedDateDesc(YN.Y).orElseThrow(() -> new NotFoundException("해당 나이대의 방이 없습니다."));
                 break;
         }
-
         List<RoomListResponse> response = new ArrayList<>();
         for (Room room : list) {
             RoomListResponse res = RoomListResponse.from(room);
@@ -146,7 +145,7 @@ public class RoomService {
     //화상방 추천 - 지금 막 생성된 방
     public List<RoomListResponse> findByCurrentTime(User user){
         int currentTime = 48;
-        List<Room> list = roomRepository.findAllByCreatedDateAfter(LocalDateTime.now().minusHours(currentTime))
+        List<Room> list = roomRepository.findTop8ByCreatedDateAfterOrderByCreatedDateDesc(LocalDateTime.now().minusHours(currentTime))
                 .orElseThrow(() -> new NotFoundException("방이 존재하지 않습니다."));
 
         List<RoomListResponse> response = new ArrayList<>();

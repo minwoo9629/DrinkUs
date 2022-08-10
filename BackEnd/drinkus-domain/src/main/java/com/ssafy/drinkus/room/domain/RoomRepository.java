@@ -15,15 +15,15 @@ public interface RoomRepository extends JpaRepository<Room,Long> {
     Optional<List<Room>> findRoomList();
 
     // 같은 나잇대의 방
-    Optional<List<Room>> findAllByAges20(YN ages20);
-    Optional<List<Room>> findAllByAges30(YN ages30);
-    Optional<List<Room>> findAllByAges40(YN ages40);
-    Optional<List<Room>> findAllByAges50(YN ages50);
-    Optional<List<Room>> findAllByAges60(YN ages60);
-    Optional<List<Room>> findAllByAges70(YN ages70);
+    Optional<List<Room>> findTop8ByAges20OrderByCreatedDateDesc(YN ages20);
+    Optional<List<Room>> findTop8ByAges30OrderByCreatedDateDesc(YN ages30);
+    Optional<List<Room>> findTop8ByAges40OrderByCreatedDateDesc(YN ages40);
+    Optional<List<Room>> findTop8ByAges50OrderByCreatedDateDesc(YN ages50);
+    Optional<List<Room>> findTop8ByAges60OrderByCreatedDateDesc(YN ages60);
+    Optional<List<Room>> findTop8ByAges70OrderByCreatedDateDesc(YN ages70);
 
     // 1시간 이내 생성된 방
-    Optional<List<Room>> findAllByCreatedDateAfter(LocalDateTime createdDate);
+    Optional<List<Room>> findTop8ByCreatedDateAfterOrderByCreatedDateDesc(LocalDateTime createdDate);
 
     // 방 존재여부
     Boolean existsByRoomId(Long roomId);
