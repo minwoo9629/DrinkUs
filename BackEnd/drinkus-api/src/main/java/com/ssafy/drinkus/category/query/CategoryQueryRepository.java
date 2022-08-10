@@ -1,8 +1,11 @@
 package com.ssafy.drinkus.category.query;
 
+import com.querydsl.core.Tuple;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.drinkus.category.domain.Category;
 import com.ssafy.drinkus.category.domain.SubCategory;
+import com.ssafy.drinkus.user.domain.QUserSubCategory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -35,12 +38,16 @@ public class CategoryQueryRepository {
         return results;
     }
 
-//        select category_id, count(s.subcategory_id) as cnt
-//        from sub_category s
-//        join user_sub_category us
-//        on s.subcategory_id = us.subcategory_id
-//        where user_id = 3
-//        group by s.category_id
-//        order by cnt desc
-//        limit 1;
+    public Long findCategoryIdByUserId(Long userId) {
+        Tuple tuple = queryFactory
+                .select(subCategory.category.categoryId, subCategory.SubCategoryId.count())
+                .from(subCategory)
+                .join(subCategory.userSubCategoryList, userSubCategory)
+                .where(userSubCategory.user.userId.eq(userId))
+                .groupBy(subCategory.category.categoryId)
+                .orderBy(subCategory.SubCategoryId.count().desc())
+                .limit(1)
+                .fetchOne();
+        return tuple.get(subCategory.category.categoryId);
+    }
 }

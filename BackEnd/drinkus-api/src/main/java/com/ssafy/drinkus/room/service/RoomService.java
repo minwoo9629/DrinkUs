@@ -2,7 +2,10 @@ package com.ssafy.drinkus.room.service;
 
 import com.ssafy.drinkus.category.domain.Category;
 import com.ssafy.drinkus.category.domain.CategoryRepository;
+import com.ssafy.drinkus.category.domain.SubCategory;
 import com.ssafy.drinkus.category.domain.SubCategoryRepository;
+import com.ssafy.drinkus.category.query.CategoryQueryRepository;
+import com.ssafy.drinkus.common.NotExistException;
 import com.ssafy.drinkus.common.NotFoundException;
 import com.ssafy.drinkus.common.NotMatchException;
 import com.ssafy.drinkus.common.type.YN;
@@ -33,9 +36,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
-import static com.ssafy.drinkus.common.NotFoundException.CATEGORY_NOT_FOUND;
-import static com.ssafy.drinkus.common.NotFoundException.USER_NOT_FOUND;
+import static com.ssafy.drinkus.common.NotFoundException.*;
 import static com.ssafy.drinkus.common.NotMatchException.USER_NOT_MATCH;
 
 @Slf4j
@@ -46,7 +49,7 @@ public class RoomService {
     private final RoomRepository roomRepository;
     private final RoomQueryRepository roomQueryRepository;
     private final CategoryRepository categoryRepository;
-    private final SubCategoryRepository subCategoryRepository;
+    private final CategoryQueryRepository categoryQueryRepository;
     private final UserSubCategoryRepository userSubCategoryRepository;
     private final UserRepository userRepository;
     private final RoomHistoryRepository roomHistoryRepository;
@@ -63,13 +66,7 @@ public class RoomService {
 
     //화상방 리스트 전체 조회
     public Page<RoomListResponse> findBySearchRequest(User user, RoomSearchRequest request, Pageable pageable){
-        Page<Room> findRoomList = roomQueryRepository.findBySearchCondition(
-                request.getSearchKeyword(),
-                request.getSameAge(),
-                request.getSortOrder(),
-                request.getCategoryId(),
-                pageable,
-                user);
+        Page<Room> findRoomList = roomQueryRepository.findBySearchCondition(request.getSearchKeyword(), request.getSameAge(), request.getSortOrder(), request.getCategoryId(), pageable, user);
 
         return findRoomList.map(RoomListResponse::from);
     }
@@ -116,26 +113,19 @@ public class RoomService {
     }
 
     //화상방 추천 - 내 관심사
-    public List<RoomListResponse> findBySameInterest(User user){
-        Map<Integer, Integer> map = new HashMap<>(); // 대분류이름, 점수
-        List<UserSubCategory> userSubCategoryList = userSubCategoryRepository.findByUser(user);
-//
-//        PageRequest pageRequest = PageRequest.of(1,1);
-//        Long maxCategoryId = subCategoryRepository.findMaxCategoryId(user.getUserId(), (Pageable) pageRequest);
-//
-//        // 해당 대분류에 해당하는 방들을 찾는다.
-//        List<Room> list = roomRepository.findAllByCategoryId(maxCategoryId)
-//                .orElseThrow(() -> new NotFoundException(NotFoundException.ROOM_NOT_FOUND));
-//
-//        List<RoomListResponse> response = new ArrayList<>();
-//        for (Room room : list) {
-//            RoomListResponse res = RoomListResponse.from(room);
-//            res.setConnectedUserNum(roomHistoryRepository.countPeopleInRoom(room.getRoomId()));
-//            response.add(res);
-//        }
-//
-//        return response;
-        return null;
+    public List<RoomListResponse> findRoomBySameCategory(User user){
+        if(userSubCategoryRepository.findByUser(user).isEmpty()){
+            return null;
+        }
+
+        Long findCategoryId = categoryQueryRepository.findCategoryIdByUserId(user.getUserId());
+        Category findCategory = categoryRepository.findById(findCategoryId)
+                .orElseThrow(() -> new NotFoundException(CATEGORY_NOT_FOUND));
+
+        List<Room> findRoomList = roomRepository.findByCategory(findCategory);
+        return findRoomList.stream()
+                .map(RoomListResponse::from)
+                .collect(Collectors.toList());
     }
 
     //화상방 추천 - 지금 막 생성된 방
@@ -200,13 +190,7 @@ public class RoomService {
             throw new NotMatchException(USER_NOT_MATCH);
         }
 
-        findroom.updateRoom(
-                request.getRoomName(),
-                request.getRoomPw(),
-                request.getPeopleLimit(),
-                request.getAges(),
-                findCategory
-        );
+        findroom.updateRoom(request.getRoomName(), request.getRoomPw(), request.getPeopleLimit(), request.getAges(), findCategory);
     }
 
     @Transactional
