@@ -66,7 +66,7 @@ const DailyListItem = ({
   boardContent,
   onArticleEdit,
   onArticleDelete,
-  onHandleComment
+  onHandleComment,
   }) => {
   return (
     <DailyWrapper>
@@ -84,7 +84,8 @@ const DailyListItem = ({
             답글
           </DailyBoardEditButton>
         </DailyEditWrapper>
-        <CommentList/>
+        <CommentList parentId={boardId}/>
+
       </DailyContent>
     </DailyWrapper>
   );

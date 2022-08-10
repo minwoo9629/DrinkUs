@@ -51,7 +51,7 @@ const CommentListItem = ({
 }) => {
   return (
     <DailyWrapper>
-      <ProfileWrapper style={{ width: "20%" }}>{boardId}</ProfileWrapper>
+      <ProfileWrapper style={{ width: "20%" }}>{parentId}</ProfileWrapper>
         <div style={{ width: "60%" }}>{boardContent}</div>
         <DailyEditWrapper style={{ width: "10%" }}/>
     </DailyWrapper>

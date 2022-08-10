@@ -31,7 +31,7 @@ export const deleteDailyArticle = async (boardId) => {
 export const getDailyComment = async (parentId) => {
   const result = await client
     .get(`/daily/comment/${parentId}`)
-    .then((response) => response);
+    .then((response) => response)
   return result;
 };
 
