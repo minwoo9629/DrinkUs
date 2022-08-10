@@ -54,9 +54,6 @@ const DailyCalendar = () => {
     );
   };
 
-  // console.log(dailyCalendar)
-
-
   return (
     <>
     <Header/>
