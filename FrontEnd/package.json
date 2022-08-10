@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^0.27.2",
     "i": "^0.3.7",
+    "jquery": "^3.6.0",
     "moment": "^2.29.4",
     "npm": "^8.14.0",
     "openvidu-browser": "^2.22.0",
@@ -22,7 +23,7 @@
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.4.1",
     "styled-components": "^5.3.5",
-    "sweetalert2": "^11.4.24",
+    "sweetalert2": "^11.4.26",
     "sweetalert2-react-content": "^5.0.2",
     "web-vitals": "^2.1.4"
   },

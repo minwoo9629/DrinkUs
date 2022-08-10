@@ -28,8 +28,8 @@ import EditInterest from "./pages/auth/mypage/EditInterest";
 import MyArticle from "./pages/auth/mypage/MyArticle";
 import MySchedule from "./pages/auth/mypage/MySchedule";
 import { PersistGate } from "redux-persist/integration/react";
-import VideoConference from "./pages/room/VideoConference";
 import Admin from "./pages/admin/Admin";
+import VideoRoomComponent from "./pages/room/openVidu/VideoRoomComponent";
 
 function App() {
   return (
@@ -58,9 +58,15 @@ function App() {
               <Route path="/daily" element={<Daily />} />
               <Route path="/rooms/:roomId" element={<RoomDetail />} />
               <Route path="/calendar" element={<Calendar />} />
-              <Route path="/calendar/:year/:month/:index" element={<DailyCalendar />} />
+              <Route
+                path="/calendar/:year/:month/:index"
+                element={<DailyCalendar />}
+              />
               <Route path="/calendar/create" element={<CreateCalendar />} />
-              <Route path="/calendar/edit/:calendar_id" element={<EditCalendar />} />
+              <Route
+                path="/calendar/edit/:calendar_id"
+                element={<EditCalendar />}
+              />
               <Route path="/user" element={<MyPage />}>
                 <Route index element={<EditProfile />} />
                 <Route path="edit/profile" element={<EditProfile />} />
@@ -69,8 +75,8 @@ function App() {
                 <Route path="article" element={<MyArticle />} />
                 <Route path="schedule" element={<MySchedule />} />
               </Route>
-              <Route path="/room/detail" element={<VideoConference />} />
               <Route path="/admin" element={<Admin />} />
+              <Route path="/room/detail" element={<VideoRoomComponent />} />
             </Routes>
           </div>
         </BrowserRouter>
