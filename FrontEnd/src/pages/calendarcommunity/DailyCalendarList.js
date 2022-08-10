@@ -21,7 +21,7 @@ const DailyCalendarList = () => {
     const response = await client
       .get(`/calendar/daily?year=${curDate.getFullYear()}
       &month=${curDate.getMonth() + 1}
-      &day=${curDate.getDate() + 1}`
+      &day=${curDate.getDate()}`
       )
       .then((response) => response);
     setDailyCalendar([...response.data.content]);

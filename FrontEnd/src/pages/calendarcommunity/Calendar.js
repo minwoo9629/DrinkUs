@@ -12,7 +12,6 @@ const Calendar = () => {
 
   const dayOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 
-  // const [state, setState] = useState(state 초기값);
   const [curDate, setCurDate] = useState(new Date());
   const [calendar, setCalendar] = useState([]);
   const [first, setFirst] = useState([]);
@@ -71,7 +70,7 @@ const Calendar = () => {
     );
   };
 
-  // 스타일 지정!!!!!
+  // 스타일 지정
   const TopMenuWrap = styled.div`
     justify-content: space-between;
     display: flex;
@@ -175,7 +174,6 @@ const Calendar = () => {
   const InnerWrapper = styled.div`
         width: 60%;
   `
-
   // 스타일 끝
 
   return (
