@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useState, useEffect } from "react";
 import { client } from "../../utils/client"
+import RoomListItem from "../../components/room/RoomListItem"
+import PageNation from "../../components/common/buttons/PageNation";
 
 
 const SearchBox = styled.input`
@@ -45,101 +47,69 @@ const GlobalStyle = styled.div`
   }
 `;
 
-const Post = styled.div`
-  border: 1px solid black;
-  border-radius: 20px;
-  background: white;
-  box-shadow: 10px 5px 5px #7f8fa6;
-`;
-
-const Title = styled.div`
-  height: 20%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-bottom: 1px solid black;
-  font-weight: 600;
-`;
-
-const Body = styled.div`
-  height: 80%;
-  padding: 11px;
-  border-radius: 20px;
-`;
-
-
-// 기본 방 목록 불러오기
-  const onRoomList = async () => {
-    const result = await client
-    .get(`/rooms`, {
-      params: {
-        page: 1,
-        searchKeyword: "",
-        sameAge: false,
-        sortOrder: 0,
-        categoryId: null 
-      },
-    })
-      .then((response)=>response);
-      return result
-  }
+const RoomList = () => {
   
-  
-const Rooms = () => {
-
   const navigate = useNavigate();
 
-  // 기본 방 목록 데이터만 추출하기
-  const [basicData, setBasicData] = useState([]);
-
-  const dataRefineFunc = async () => {
-    const result = await onRoomList()
-    setBasicData([...result.data.content]);
-    return basicData
-  }
-
-  useEffect(()=>{
-    dataRefineFunc();
-  },[])
-
-
-  // 검색 로직
+  // 검색
   const [filter, setFilter] = useState({
     searchKeyword: '',
-    sortOrder: '',
-    categoryId: ''
+    sortOrder: '0',
+    categoryId: null
   });
 
+  // input 값을 filter에 넣어주는 함수
   const onFilterInput = (e) => {
     setFilter({...filter, [e.target.name]: e.target.value});
-    console.log(filter)
   };
-  
-  const onMakeRoomList = (e) => {
-    e.preventDefault();
-    client
+
+  // 검색이 끝나면 초기화
+  const onHandleReset = () => {
+    setFilter({searchKeyword: ''})
+  }
+   
+  // api 요청
+  const onMakeRoomList = async (pageNum) => {
+    const result = await client
       .get(`/rooms`, {
         params: {
-          page: 1,
+          page: pageNum,
           searchKeyword: filter.searchKeyword,
           sameAge: SameAge,
           sortOrder: filter.sortOrder,
-          categoryId: filter.categoryId 
+          categoryId: filter.categoryId
         },
       })
-      .then(function (response) {
-        console.log(response);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+      .then((response)=>response);
+      return result
   }
 
+  // pagenation을 위한 state
+  const [filterState, setFilterState] = useState({
+    content: [],
+    number: 0,
+    numberOfElements: 0,
+    size: 0,
+    totalPages: 0
+  });
+
+  const fetchFilterState = async (pageNum) => {
+    const response = await onMakeRoomList(pageNum);
+    setFilterState({...response.data});
+  };
+  const onHandlePageButton = (pageNum) => {
+    fetchFilterState(pageNum);
+  };
+
+  useEffect(()=>{
+    fetchFilterState();
+  },[])
+
   // 체크박스
-  const [SameAge, setSameAge] = useState(true);
+  const [SameAge, setSameAge] = useState(false);
 
   const onSameAgeCheck = ({target}) => {
-    target.checked? setSameAge(false):setSameAge(true);
+    target.checked? setSameAge(true):setSameAge(false);
     return SameAge
   }
 
@@ -167,7 +137,7 @@ const Rooms = () => {
               type="selectbox"
               name="categoryId" 
               onChange={onFilterInput}>
-              <option value="null">관심사 없음</option>
+              <option value="0">관심사 없음</option>
               <option value="1">스포츠</option>
               <option value="2">음악</option>
               <option value="3">게임/오락</option>
@@ -193,21 +163,35 @@ const Rooms = () => {
               <option value="1">최신순</option>
             </SelectBox>
           </div>
-          <FilterButton onClick={onMakeRoomList}>검색하기</FilterButton>
+          <FilterButton onClick={()=>fetchFilterState(0)}>검색하기</FilterButton>
         </LetterColorChange>
       </Wrapper>
       {/* 방 목록 */}
-      <Wrapper>
+      <Wrapper color={'#fff'}>
         <GlobalStyle />
-        {basicData.map((room, index) => (
-          <Post key={index}>
-            <Title>{room.roomName}</Title>
-            <Body>{room.placeTheme}</Body>
-          </Post>
-        ))}
+        {filterState.content.length <= 0 ? (
+          <div>딱 맞는 방이 없어요. 다른 조건으로 검색해 보세요!</div>
+        ): (
+          <>
+            {filterState.content.map((room, index) => (
+            <RoomListItem
+            {...room}
+            key={index}
+            />
+            ))}
+          </>
+        )}
       </Wrapper>
+      <div>
+      <PageNation
+        onClick={onHandlePageButton}
+        number={filterState.number + 1}
+        size={filterState.size}
+        totalPages={filterState.totalPages}
+      />
+      </div>
     </>
   );
 };
 
-export default Rooms
+export default RoomList

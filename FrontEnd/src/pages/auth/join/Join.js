@@ -1,8 +1,28 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import Header from "../../../components/layout/Header";
 import { client } from "../../../utils/client";
+import { AuthInput } from "../../../components/common/inputs/AuthInput";
+import { FailAlert, EmptyAlert, SuccessAlert } from "../../../utils/sweetAlert";
+
+
+const neon_text_color = "#5904de";
+const NeonSignAnimation = keyframes`
+0%,
+  19%,
+  21%,
+  23%,
+  25%,
+  54%,
+  56%,
+  100% {
+    text-shadow: -0.2rem -0.2rem 1rem #fff, 0.2rem 0.2rem 1rem #fff,
+      0 0 2rem ${neon_text_color}, 0 0 4rem ${neon_text_color},
+      0 0 6rem ${neon_text_color}, 0 0 8rem ${neon_text_color},
+      0 0 10rem ${neon_text_color};
+  }
+`;
 
 const Wrapper = styled.div`
   background-color: black;
@@ -36,25 +56,20 @@ const JoinForm = styled.div`
   flex-direction: column;
 `;
 
-const GuideLine = styled.div`
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  color: white;
-`;
-
 const InputWrapper = styled.div`
+  display: block;
   justify-content: space-between;
+  align-items: center;
   width: 320px;
   height: 64px;
   border-radius: 36px;
   border: 1px solid black;
   background-color: #676775;
-  margin: 14px;
+  margin: 10px;
   position: relative;
 `;
 
-const EmailInput = styled.input`
+const JoinInput = styled.input`
   position: relative;
   height: 30px;
   width: 200px;
@@ -67,39 +82,19 @@ const EmailInput = styled.input`
   color: white;
 `;
 
-const JoinInput = styled.input`
-  position: relative;
-  height: 30px;
-  width: 280px;
-  top: 7px;
-  font-size: 18px;
-  background-color: transparent;
-  outline: none;
-  border: none;
-  margin: 0px;
-  color: white;
-`;
+const ChekWrapper = styled.div`
+  justify-content: right;
+  align-items: center;
+`
 
-const DoubleCheckButton = styled.button`
-  width: 40px;
-  height: 40px;
+const CheckButton = styled.button`
+  width: 120px;
+  height: 35px;
   border-radius: 10px;
   border: 1px solid black;
   background-color: #fff;
-  margin: 14px;
-  font-size: 4px;
   color: #535353;
-`;
-
-const SendEmailButton = styled.button`
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  border: 1px solid black;
-  background-color: #fff;
-  margin: 14px;
-  font-size: 4px;
-  color: #535353;
+  margin: 0 10px;
 `;
 
 const ConfirmButton = styled.button`
@@ -108,8 +103,6 @@ const ConfirmButton = styled.button`
   border-radius: 10px;
   border: 1px solid black;
   background-color: #fff;
-  margin: 14px;
-  font-size: 4px;
   color: #535353;
 `;
 
@@ -122,6 +115,26 @@ const Button = styled.button`
   margin: 14px;
   font-size: 4px;
   color: #535353;
+`;
+
+const ButtonWrapper = styled.div`
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  width: 380px;
+  align-items: center;
+`;
+
+const LinkWrapper = styled.div`
+  display: flex;
+  color: #fff;
+  background-color: #131317;
+  font-size: 23px;
+  margin: 0 40px;
+  font-style: italic;
+  text-transform: uppercase;
+  animation: ${NeonSignAnimation} 1.5s infinite alternate;
+  box-shadow: none;
 `;
 
 const Join = () => {
@@ -144,8 +157,9 @@ const Join = () => {
     // 유효 여부
     nameValid: "",
     confirmValid: false, // 인증번호 유효
-    userPwValid: "",
-    userPwCheckValid: "",
+    userPwValid: false,
+    userPwCheckValid: false,
+    doubleCheckValid: false,
     fullNameValid: false, // 이름은 필수 항목
     bdayValid: false, // 생일은 필수 항목
   });
@@ -164,7 +178,7 @@ const Join = () => {
     if (!idRegex.test(idCurrent)) {
       setState({ ...state, nameMsg: "유효하지 않은 이메일 형식입니다" });
       setState({ ...state, nameValid: false });
-      alert("유효하지 않은 이메일 형식입니다");
+      FailAlert("유효하지 않은 이메일 형식입니다");
     } else {
       setState({ ...state, nameMsg: "이메일OK" });
       setState({ ...state, nameValid: true });
@@ -180,11 +194,11 @@ const Join = () => {
       setState({
         ...state,
         userPwMsg:
-          "비밀번호는 영문 대,소문자와 숫자,특수기호가 적어도 1개 이상씩 포함된 8자~20자의 비밀번호여야 합니다.",
+          "비밀번호는 영문자와 숫자,특수기호가 적어도 1개 이상씩 포함된 8자~20자의 비밀번호여야 합니다.",
       });
       setState({ ...state, userPwValid: false });
-      alert(
-        "비밀번호는 영문 대,소문자와 숫자,특수기호가 적어도 1개 이상씩 포함된 8자~20자의 비밀번호여야 합니다."
+      FailAlert(
+        "비밀번호는 영문자와 숫자,특수기호가 적어도 1개 이상씩 포함된 8자~20자의 비밀번호여야 합니다."
       );
       console.log("비밀번호 통과X");
     } else {
@@ -193,11 +207,11 @@ const Join = () => {
       console.log("비밀번호 통과O");
     }
 
-    // 비밀번호 중복 체크
+    // 비밀번호 확인 체크
     const userPwCheck = state.userPwCheck;
     if (userPwCheck !== state.userPw) {
       setState({ ...state, userPwCheckValid: false });
-      alert("비밀번호가 일치하지 않습니다");
+      FailAlert("비밀번호가 일치하지 않습니다");
       console.log("비밀번호 일치X");
     } else {
       setState({ ...state, userPwCheckValid: true });
@@ -205,17 +219,17 @@ const Join = () => {
 
     // 이름 유효 체크
     if (state.userFullname.length === 0) {
-      alert("이름은 필수 입력 항목입니다");
+      FailAlert("이름은 필수 입력 항목입니다");
     }
 
     // 생년월일 유효 체크  나중에 8자리 됐을 때 20살 이상인지 체크하는거 추가하자
     if (state.userBirthday.length === 0) {
-      alert("생년월일은 필수 입력 항목입니다");
+      FailAlert("생년월일은 필수 입력 항목입니다");
     }
 
     // 회원가입 client 요청
     client
-      .post("http://localhost:8080/users/join", {
+      .post("/users/join", {
         userName: state.userName,
         userPw: state.userPw,
         userFullname: state.userFullname,
@@ -223,6 +237,7 @@ const Join = () => {
       })
       .then(function (response) {
         console.log(response.data.message);
+        SuccessAlert("DRINKUS에 오신걸 환영합니다")
         navigate("/login");
       })
       .catch(function (error) {
@@ -231,48 +246,45 @@ const Join = () => {
   };
 
   // 이메일 인증번호 전송
-  const onSendEmail = (e) => {
-    e.preventDefault();
-    client
-      .post("http://localhost:8080/email/sendCheckMail", {
-        userName: state.userName,
-      })
-      .then(function (response) {})
-      .catch(function (error) {
-        console.log(error);
-      });
+  const onSendEmail = async (e) => {
+    const data = {
+      userName: state.userName
+    };
+    const response = await sendConfirmEmail(data);
+    if (response.status === 200) {
+      setState({...state, confirmValid: true})
+      EmptyAlert("입력하신 이메일로 인증번호가 발송됐습니다. 5분안에 인증을 진행해주세요.")
+    }
   };
 
   // 인증번호 확인
-  const onConfirmEmail = (e) => {
-    e.preventDefault();
-    client
-      .patch("http://localhost:8080/email/confirm", {
-        userName: state.userName,
-        authToken: state.authToken,
-      })
-      .then(function (response) {
-        setState({ ...state, confirmValid: true });
-        alert("유효한 인증번호입니다");
-      })
-      .catch(function (error) {
-        console.log(error);
-        alert("유효하지 않은 인증번호입니다");
-      });
+  const onConfirmEmail = async (e) => {
+    const data = {
+      userName: state.userName,
+      authToken: state.authToken
+    };
+    const response = await confirmEmail(data);
+    if (response.status === 200)
+      {setState({...state, confirmValid: true});
+      SuccessAlert("유효한 인증번호입니다");
+    }else{FailAlert("인증 코드가 만료되었거나 비정상 접근입니다. 인증을 다시 진행해 주세요.")}
   };
 
-  // 중복확인 버튼 --> requestBody로 수정되면 확인할 것!!!!!!!!
-  const onDoubleCheck = (e) => {
-    e.preventDefault();
-    client
-      .post("http://localhost:8080/users/join/id", {
-        userName: state.userName,
-      })
-      .then(function (response) {})
-      .catch(function (error) {
-        console.log(error);
-      });
+  // 중복확인
+  const onDoubleCheck = async (e) => {
+    const data = {
+      userName: state.userName
+    };
+    const response = await doubleCheckEmail(data);
+    if (response.status === 200) {
+      setState({ ...state, doubleCheckValid: true });
+      EmptyAlert("유효한 이메일입니다. 이메일 인증을 진행해 주세요")
+    }
+    if (response.status === 400) {
+      FailAlert("중복된 회원이거나 유효하지 않은 이메일 형식입니다")
+    }
   };
+  
 
   return (
     <div>
@@ -282,91 +294,101 @@ const Join = () => {
           <JoinWrapper>
             {/* 제출 폼 */}
             <JoinForm>
-              <GuideLine>이메일</GuideLine>
               <InputWrapper>
-                <EmailInput
+              <i className="fas fa-envelope"></i>
+                <AuthInput
                   type="email"
                   value={state.userName}
                   name="userName"
+                  placeholder="Email ID"
                   onChange={onHandleInput}
                 />
-                <DoubleCheckButton onClick={onDoubleCheck}>
-                  중복확인
-                </DoubleCheckButton>
-                <SendEmailButton onClick={onSendEmail}>
-                  이메일 인증 보내기
-                </SendEmailButton>
               </InputWrapper>
-              <GuideLine>인증번호 입력</GuideLine>
+              <ChekWrapper>
+              <CheckButton onClick={onDoubleCheck}>
+                  중복확인
+                </CheckButton>
+                <CheckButton onClick={onSendEmail}>
+                  이메일 인증
+                </CheckButton>
+              </ChekWrapper>
               <InputWrapper>
-                <JoinInput
+              <i className="fas fa-lock"></i>
+                <AuthInput
                   type="string"
                   value={state.authToken}
                   name="authToken"
+                  placeholder="인증번호"
                   onChange={onHandleInput}
                 />
                 <ConfirmButton onClick={onConfirmEmail}>
-                  인증번호 확인
+                  확인
                 </ConfirmButton>
               </InputWrapper>
-              <GuideLine>비밀번호</GuideLine>
               <InputWrapper>
-                <JoinInput
+              <i className="fas fa-lock"></i>
+                <AuthInput
                   type="password"
                   value={state.userPw}
+                  placeholder="Password"
                   name="userPw"
                   onChange={onHandleInput}
                 />
               </InputWrapper>
-              <GuideLine>비밀번호 확인</GuideLine>
               <InputWrapper>
-                <JoinInput
+              <i className="fas fa-lock"></i>
+                <AuthInput
                   type="password"
                   value={state.userPwCheck}
+                  placeholder="Password 확인"
                   name="userPwCheck"
                   onChange={onHandleInput}
                 />
               </InputWrapper>
-              <GuideLine>이름</GuideLine>
               <InputWrapper>
-                <JoinInput
+              <i className="fas fa-user"></i>
+                <AuthInput
                   type="userFullname"
                   value={state.userFullname}
                   name="userFullname"
+                  placeholder="이름"
                   onChange={onHandleInput}
                 />
               </InputWrapper>
-              <GuideLine>생년월일</GuideLine>
               <InputWrapper>
-                <JoinInput
+              <i className="fas fa-user"></i>
+                <AuthInput
                   type="userBirthday"
                   value={state.userBirthday}
                   name="userBirthday"
                   onChange={onHandleInput}
-                  placeholder="ex)19991212"
+                  placeholder="생년월일 ex)19991212"
                 />
               </InputWrapper>
             </JoinForm>
             {/* 모든 유효성 검사 후 버튼 활성화 */}
-            <Button
-              onClick={onHandleSubmit}
-              disabled={
-                !state.nameValid &&
-                state.confirmValid &&
-                state.userPwValid &&
-                state.userPwCheckValid
-              }
-            >
-              JOIN
-            </Button>
-            <Link to="/">
-              <Button>MAIN</Button>
-            </Link>
+            <ButtonWrapper>
+            <Link to="/" style={{textDecoration:"none"}}>
+                <LinkWrapper>MAIN</LinkWrapper>
+              </Link>
+              <Link to="/join/type" style={{textDecoration:"none"}}>
+                <LinkWrapper
+                  disabled={
+                    !state.nameValid &&
+                    state.confirmValid &&
+                    state.userPwValid &&
+                    state.userPwCheckValid
+                  }
+                  onClick={onHandleSubmit}
+                >
+                  JOIN
+                </LinkWrapper>
+              </Link>
+            </ButtonWrapper>
           </JoinWrapper>
         </NeonLoginWrapper>
       </Wrapper>
     </div>
   );
 };
-
 export default Join;
