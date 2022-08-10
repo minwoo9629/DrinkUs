@@ -16,18 +16,23 @@ export const editProfile = async (data) => {
   return result;
 };
 
-export const getUserInterest = async (userId) => {
-  const result = await client.get("/interests/{user_no}");
+export const getUserInterests = async () => {
+  const result = await client.get("/categories").then((response) => response);
   return result;
 };
 
-export const getMainCategory = async () => {
-  const result = await client.get("/interests/category");
+export const addUserInterest = async (subCategoryId) => {
+  const result = await client
+    .post(`/categories/${subCategoryId}`)
+    .then((response) => response)
+    .catch((error) => error.response);
   return result;
 };
 
-export const getSubCategory = async () => {
-  const result = await client.get("/interests/");
+export const removeUserInterest = async (subCategoryId) => {
+  const result = await client
+    .delete(`/categories/${subCategoryId}`)
+    .then((response) => response);
   return result;
 };
 
