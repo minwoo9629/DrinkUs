@@ -40,7 +40,7 @@ const CalendarDetail = () => {
   // 글 정보를 담을 state 
   const [calendar, setCalendar] = useState({});
 
-  // api요청
+  // 글 정보를 가져오는 api요청
   const onCalendarDetail = async () => {
     const result = await client
       .get(`${location.pathname}`)
@@ -78,6 +78,20 @@ const CalendarDetail = () => {
     return result
   }
 
+  // 버튼 api 요청 (post, delete)
+  const onPost = async () => {
+    const result = await client
+      .post(`/calendar/join/${useLocation().pathname.split('/')[2]}`)
+      .then((response) => console.log(response))
+      .catch((error) => console.log(error))
+    return result
+  }
+
+  const onDelete = async () => {
+    await client
+      .delete(`/calendar/join/${useLocation().pathname.split('/')[2]}`)
+  }
+
   return (
     <>
       <Header/>
@@ -103,7 +117,7 @@ const CalendarDetail = () => {
               calendar.participant === calendar.peopleLimit ?
               <p>마감</p> : (
                 calendar.isParticipate === true ?
-              <StyledButton>취소</StyledButton> : <StyledButton>참가</StyledButton>
+              <StyledButton onClick={onDelete}>취소</StyledButton> : <StyledButton onClick={onPost}>참가</StyledButton>
               )
             }
           </>
