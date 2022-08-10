@@ -51,52 +51,24 @@ const RoomList = () => {
   
   const navigate = useNavigate();
 
-  // 기본 방 목록 불러오기
-    const onRoomList = async (pageNum) => {
-      const result = await client
-      .get(`/rooms`, {
-        params: {
-          page: pageNum,
-          searchKeyword: "",
-          sameAge: false,
-          sortOrder: 0,
-          categoryId: null
-        },
-      })
-        .then((response)=>response);
-        return result
-    }
-
-  const [BasicData, setBasicData] = useState({
-    content: [],
-    number: 0,
-    numberOfElements: 0,
-    size: 0,
-    totalPages: 0
-  });
-  const fetchData = async (pageNum) => {
-    const response = await onRoomList(pageNum);
-    setBasicData({...response.data});
-  };
-  const onHandlePageButton = (pageNum) => {
-    fetchData(pageNum);
-  };
-
-  useEffect(()=>{
-    fetchData();
-  },[])
-
-  // 검색 로직
+  // 검색
   const [filter, setFilter] = useState({
     searchKeyword: '',
     sortOrder: '0',
-    categoryId: ''
+    categoryId: null
   });
 
+  // input 값을 filter에 넣어주는 함수
   const onFilterInput = (e) => {
     setFilter({...filter, [e.target.name]: e.target.value});
   };
-  
+
+  // 검색이 끝나면 초기화
+  const onHandleReset = () => {
+    setFilter({searchKeyword: ''})
+  }
+   
+  // api 요청
   const onMakeRoomList = async (pageNum) => {
     const result = await client
       .get(`/rooms`, {
@@ -112,26 +84,32 @@ const RoomList = () => {
       return result
   }
 
-  const [filterData, setFilterData] = useState({
+  // pagenation을 위한 state
+  const [filterState, setFilterState] = useState({
     content: [],
     number: 0,
     numberOfElements: 0,
     size: 0,
     totalPages: 0
   });
-  const fetchFilterData = async (pageNum) => {
+
+  const fetchFilterState = async (pageNum) => {
     const response = await onMakeRoomList(pageNum);
-    setFilterData({...response.data});
-    if (filterData.length === 0) {
-      alert("검색 결과가 없습니다.")
-    }
+    setFilterState({...response.data});
+  };
+  const onHandlePageButton = (pageNum) => {
+    fetchFilterState(pageNum);
   };
 
+  useEffect(()=>{
+    fetchFilterState();
+  },[])
+
   // 체크박스
-  const [SameAge, setSameAge] = useState(true);
+  const [SameAge, setSameAge] = useState(false);
 
   const onSameAgeCheck = ({target}) => {
-    target.checked? setSameAge(false):setSameAge(true);
+    target.checked? setSameAge(true):setSameAge(false);
     return SameAge
   }
 
@@ -159,7 +137,7 @@ const RoomList = () => {
               type="selectbox"
               name="categoryId" 
               onChange={onFilterInput}>
-              <option value="null">관심사 없음</option>
+              <option value="0">관심사 없음</option>
               <option value="1">스포츠</option>
               <option value="2">음악</option>
               <option value="3">게임/오락</option>
@@ -185,44 +163,31 @@ const RoomList = () => {
               <option value="1">최신순</option>
             </SelectBox>
           </div>
-          <FilterButton onClick={fetchFilterData}>검색하기</FilterButton>
+          <FilterButton onClick={()=>fetchFilterState(0)}>검색하기</FilterButton>
         </LetterColorChange>
       </Wrapper>
       {/* 방 목록 */}
       <Wrapper color={'#fff'}>
         <GlobalStyle />
-        {BasicData.content.map((room, index) => {
-          if (filterData.content.length === 0) {
-            return (
-              <RoomListItem
-                {...room}
-                key={index}
-              />
-              
-        )
-        }})}
-        {filterData.content.map((room, index) => (
-          <RoomListItem
-          {...room}
-          key={index}
-          />
-        ))}
-        
+        {filterState.content.length <= 0 ? (
+          <div>딱 맞는 방이 없어요. 다른 조건으로 검색해 보세요!</div>
+        ): (
+          <>
+            {filterState.content.map((room, index) => (
+            <RoomListItem
+            {...room}
+            key={index}
+            />
+            ))}
+          </>
+        )}
       </Wrapper>
       <div>
       <PageNation
         onClick={onHandlePageButton}
-        number={BasicData.number + 1}
-        size={BasicData.size}
-        totalPages={BasicData.totalPages}
-      />
-      </div>
-      <div>
-      <PageNation
-        onClick={onHandlePageButton}
-        number={filterData.number + 1}
-        size={filterData.size}
-        totalPages={filterData.totalPages}
+        number={filterState.number + 1}
+        size={filterState.size}
+        totalPages={filterState.totalPages}
       />
       </div>
     </>
