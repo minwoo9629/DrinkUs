@@ -28,7 +28,6 @@ const Calendar = () => {
         }`,
       )
       .then((response) => response);
-    console.log(response.data);
     setCalendar([...response.data]);
     return response.data;
   };
