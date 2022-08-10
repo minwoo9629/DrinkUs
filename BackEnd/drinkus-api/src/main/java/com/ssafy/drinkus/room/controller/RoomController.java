@@ -43,21 +43,21 @@ public class RoomController {
     }
 
     // 내 나이대로 설정된 방 최대 8개
-    @GetMapping("/same-ages")
+    @GetMapping("/recommend/ages")
     public ResponseEntity<List<RoomListResponse>> findRoomBySameAges(@LoginUser User user){
         List<RoomListResponse> body = roomService.findBySameAges(user);
         return ResponseEntity.ok().body(body);
     }
 
     // 관심사가 [내 관심사 중 소주제로 제일 많이 고른 대주제, 개수 똑같은거 있으면 랜덤 하나]로 설정된 방
-    @GetMapping("/same-category")
-    public ResponseEntity<List<RoomListResponse>> findRoomBySameInterest(@LoginUser User user){
-        List<RoomListResponse> body = roomService.findBySameInterest(user);
+    @GetMapping("/recommend/category")
+    public ResponseEntity<List<RoomListResponse>> findRoomBySameCategory(@LoginUser User user){
+        List<RoomListResponse> body = roomService.findRoomBySameCategory(user);
         return ResponseEntity.ok().body(body);
     }
 
     // 지금 막 생성된 방 최대 8개 (지난 1시간 이내 기준)
-    @GetMapping("/current-time")
+    @GetMapping("/recommend/current")
     public ResponseEntity<List<RoomListResponse>> findRoomByCurrentTime(@LoginUser User user){
         List<RoomListResponse> body = roomService.findByCurrentTime(user);
         return ResponseEntity.ok().body(body);
