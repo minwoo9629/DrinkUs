@@ -103,7 +103,7 @@ const Calendar = () => {
 
   const DayOfWeek = styled.div`
         background: darkblue;
-        color: #fff;
+        color: #495F7C;
         text-align: center;
         font-size: 15px;
         line-height: 40px;
@@ -112,11 +112,10 @@ const Calendar = () => {
         border: 1px solid #bdcff2;
 
         :nth-child(even){
-          background-color: #bdcff2;
+          background-color: #EAF1FF;
         }
         :nth-child(odd){
           background-color: #fff;
-          color: #bdcff2;
         }
 `;
 
@@ -129,13 +128,13 @@ const Calendar = () => {
 
   const OnDay = styled.div`
         background: tomato;
-        color: black;
+        color: #495F7C;
         text-align: center;
         font-size: 15px;
         line-height: 40px;
         height: 100px;
         width: 100%;
-        border: 1px tomato solid;
+        border: 1px #bdcff2 solid;
         display: inline-block;
         &:hover{
             background-color: red; 
@@ -143,11 +142,10 @@ const Calendar = () => {
         }
 
         :nth-child(even){
-          background-color: #bdcff2;
+          background-color: #EAF1FF;
         }
         :nth-child(odd){
           background-color: #fff;
-          color: #bdcff2;
         }
 
         :hover{
@@ -158,26 +156,25 @@ const Calendar = () => {
 
   const OffDay = styled.div`
         background:  ${(props) => props.background};
-        color: black;
+        color: #495F7C;
         text-align: center;
         font-size: 15px;
         line-height: 40px;
         height: 100px;
         width: 100%;
         display: inline-block;
-        border: 1px lightgrey solid;
+        border: 1px #bdcff2 solid;
 
         :nth-child(even){
-          background-color: #bdcff2;
+          background-color: #EAF1FF;
         }
         :nth-child(odd){
           background-color: #fff;
-          color: #bdcff2;
         }
 `;
 
   const InnerWrapper = styled.div`
-        width: 800px;
+        width: 60%;
   `
 
   // 스타일 끝
@@ -190,7 +187,7 @@ const Calendar = () => {
           <TopMenuWrap>
             <div>
               <CalendarButton onClick={() => navigate("/calendar/create")} color={"#bdcff2"} textColor={"#fff"}>월간</CalendarButton>
-              <CalendarButton onClick={() => navigate("/daily")} color={"#ffffff"} textColor={"#bdcff2"}>일간</CalendarButton>
+              <CalendarButton onClick={() => navigate("/daily")} color={"#ffffff"} textColor={"#6F92BF"}>일간</CalendarButton>
             </div>
             <TopMenuWrap>
               <div>
