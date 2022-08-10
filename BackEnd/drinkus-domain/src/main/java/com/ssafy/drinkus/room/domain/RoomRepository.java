@@ -4,9 +4,6 @@ import com.ssafy.drinkus.category.domain.Category;
 import com.ssafy.drinkus.common.type.YN;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-
-import java.awt.print.Pageable;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -30,4 +27,7 @@ public interface RoomRepository extends JpaRepository<Room,Long> {
 
     // 방 존재여부
     Boolean existsByRoomId(Long roomId);
+
+    // 카테고리 ID로 방 리스트 조회
+    List<Room> findByCategory(Category category);
 }

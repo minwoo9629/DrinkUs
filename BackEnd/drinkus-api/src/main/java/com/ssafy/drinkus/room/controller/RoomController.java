@@ -51,8 +51,8 @@ public class RoomController {
 
     // 관심사가 [내 관심사 중 소주제로 제일 많이 고른 대주제, 개수 똑같은거 있으면 랜덤 하나]로 설정된 방
     @GetMapping("/recommend/category")
-    public ResponseEntity<List<RoomListResponse>> findRoomBySameInterest(@LoginUser User user){
-        List<RoomListResponse> body = roomService.findBySameInterest(user);
+    public ResponseEntity<List<RoomListResponse>> findRoomBySameCategory(@LoginUser User user){
+        List<RoomListResponse> body = roomService.findRoomBySameCategory(user);
         return ResponseEntity.ok().body(body);
     }
 
@@ -101,7 +101,4 @@ public class RoomController {
     }
 
     //화상방 강퇴
-
-
-
 }
