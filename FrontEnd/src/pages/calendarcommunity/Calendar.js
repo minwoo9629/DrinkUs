@@ -178,7 +178,7 @@ const Calendar = () => {
 
   return (
     <>
-      <Header />
+      <Header location={'lightzone'} />
       <Wrapper color={'#fff'}>
         <InnerWrapper>
           <TopMenuWrap>
