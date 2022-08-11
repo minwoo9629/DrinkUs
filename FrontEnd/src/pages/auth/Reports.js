@@ -79,22 +79,8 @@ const Reports = () => {
 
   // 신고 제출
   const onReportsSubmit = async (e) => {
-    // e.preventDefault();
-    // client
-    //     .post("/report", {
-    //     })
-    //     .then(function (response) {
-    //       console.log(response);
-    //       if (response.status === 200){
-    //         SuccessAlert("신고가 접수 됐습니다");
-    //         return;
-    //       }
-    //     })
-    //     .catch(function (error) {
-    //       console.log(error);
-    //     });
     const data = {
-      toUserId: 1,
+      toUserId: 7,
       reportType: state.reportType,
       reportReason: state.reportReason
     };
@@ -108,14 +94,12 @@ const Reports = () => {
       FailAlert("신고 사유를 기입해 주세요")
     }
     else{
-      console.log(response.data.message)
       FailAlert("아직 처리되지 않은 동일한 유저를 재신고 할 수 없습니다.")
     };
     }
 
   return(
     <>
-      {/* <Header/> */}
       <Wrapper>
         <ReportsWrapper>
             (프로필 선택한 유저 닉네임)유저를 신고합니다.
