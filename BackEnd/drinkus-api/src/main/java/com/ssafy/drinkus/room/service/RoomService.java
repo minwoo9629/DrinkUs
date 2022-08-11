@@ -123,14 +123,20 @@ public class RoomService {
                 .collect(Collectors.toList());
     }
 
-    //화상방 추천 - 지금 막 생성된 방
-    public List<RoomListResponse> findByCurrentTime(User user){
-        int currentHour = 1;
-        List<Room> list = roomRepository.findTop8ByCreatedDateAfterOrderByCreatedDateDesc(LocalDateTime.now().minusHours(currentHour))
-                .orElseThrow(() -> new NotFoundException("방이 존재하지 않습니다."));
+    //화상방 추천 - 최근 12시간 이내 생성 방 중 랜덤 8개
+    public List<RoomListResponse> findRandomRooms(){
+        List<Room> currentRoomList = roomRepository.findAllByCreatedDateAfter(LocalDateTime.now().minusHours(12))
+                .orElseThrow(() -> new NotFoundException(ROOM_NOT_FOUND));
+        int size = currentRoomList.size() < 8 ? currentRoomList.size() : 8;
+
+        Set<Room> roomSet = new HashSet<>();
+        while(roomSet.size() < size){
+            int seq = (int)(Math.random()*size);
+            roomSet.add(currentRoomList.get(seq));
+        }
 
         List<RoomListResponse> response = new ArrayList<>();
-        for (Room room : list) {
+        for (Room room : roomSet) {
             RoomListResponse res = RoomListResponse.from(room);
             res.setConnectedUserNum(roomHistoryRepository.countPeopleInRoom(room.getRoomId()));
             response.add(res);
