@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { BaseFlexColWrapper } from "../components/styled/Wrapper";
+import Header from "../components/layout/Header";
+import { useNavigate } from "react-router-dom";
+import { CalendarButton } from "../components/common/buttons/CalendarButton";
 import {
   getDailyArticle,
   postDailyArticle,
@@ -177,6 +180,12 @@ const DailyBoardComment = styled.div`
   display: flex;
 `
 
+const TopMenuWrap = styled.div`
+/* justify-content: space-between; */
+display: flex;
+align-items: center;
+`;
+
 const Daily = () => {
   // 상태 저장
   const [state, setState] = useState({
@@ -194,6 +203,8 @@ const Daily = () => {
   const [comment, setComment] = useState({
     boardContent: "",
   })
+
+  const navigate = useNavigate();
 
   // 전체 글 fetch
   const fetchArticle = async () => {
@@ -257,7 +268,6 @@ const Daily = () => {
 
   // 댓글 조회
   const getComment = async(e) => {
-
     const response = await getDailyComment();
     setState({...response.data});
     console.log(response.data.content)
@@ -298,8 +308,15 @@ const Daily = () => {
 
   return (
     <>
+      <Header />
       <Wrapper>
         <BaseFlexColWrapper>
+          <TopMenuWrap>
+            <div>
+              <CalendarButton onClick={() => navigate("/calendar")} color={"#ffffff"} textColor={"#6F92BF"}>월간</CalendarButton>
+              <CalendarButton onClick={() => navigate("/daily")} color={"#bdcff2"} textColor={"#fff"}>일간</CalendarButton>
+            </div>
+          </TopMenuWrap>
           <DailyArticleInputWrapper>
             <DailyArticleInput
               placeholder="글을 작성하세요"
@@ -313,45 +330,8 @@ const Daily = () => {
             </DailyArticlePostButton>
           </DailyArticleInputWrapper>
           <div>
-              {/* <DailyListWrapper> */}
-                  <DailyList
-                    dailyList={state.content}
-                    onArticleEdit={onArticleEdit}
-                    onArticleDelete={onArticleDelete}
-                    onHandleComment={onHandleComment}>
-                      {/* <DailyContent>
-                        <DailyBoardEditButton onClick={onArticleEdit}>
-                          수정
-                        </DailyBoardEditButton>
-                        <DailyBoardEditButton onClick={onArticleDelete}>
-                          삭제
-                        </DailyBoardEditButton>
-                        <DailyBoardEditButton onClick={onHandleComment}>
-                          {state.isComment === true? "댓글취소": "댓글달기"}
-                        </DailyBoardEditButton>
-                      </DailyContent> */}
-                      <DailyCommentInputWrapper style = {{display: state.isComment === false ? "none" : "block"}}>
-                        <DailyCommentInput
-                          placeholder="댓글칸"
-                          type="string"
-                          value={state.boardComment}
-                          name="boardComment"
-                          onChange={onHandleInput}
-                        />
-                        <DailyCommentPostButton onClick={onCommentPost}>
-                          댓글 달기
-                        </DailyCommentPostButton>
-                      </DailyCommentInputWrapper>
-                    </DailyList>
-              {/* </DailyListWrapper> */}
+            <DailyList dailyList={state.content}/>
           </div>
-            {/* <DailyCommentInputWrapper style = {{display: state.isComment === false ? "none" : "block"}}>
-            <DailyCommentPostButton onClick={onCommentPost}>
-              댓글 달기
-            </DailyCommentPostButton>
-          </DailyCommentInputWrapper>
-          <DailyListWrapper>
-           </DailyListWrapper> */}
         </BaseFlexColWrapper>
       </Wrapper>
     </>

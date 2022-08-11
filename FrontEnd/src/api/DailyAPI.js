@@ -24,7 +24,7 @@ export const editDailyArticle = async (boardId) => {
 
 // 게시글 삭제
 export const deleteDailyArticle = async (boardId) => {
-  await client.delete(`/daily/${boardId}`)
+  await client.delete(`/daily/${boardId}`);
 } 
 
 // 댓글 조회(부모 글에 해당하는)

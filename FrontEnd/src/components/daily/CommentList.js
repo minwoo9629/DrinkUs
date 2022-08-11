@@ -25,16 +25,14 @@ const CommentList = React.memo(({ parentId }) => {
       fetchComment(parentId);
   },[])
   return (
-    <DailyBoard>
-        <>
-          {commentList.map((content) => (
-            <CommentListItem
-              {...content}
-              key={content.parentId}
-            />
-          ))}
-        </>
-    </DailyBoard>
+    <div>
+      {commentList.map((content) => (
+        <CommentListItem
+          {...content}
+          key={content.parentId}
+        />
+      ))}
+    </div>
   )
 });
 

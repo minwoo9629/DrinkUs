@@ -17,16 +17,16 @@ const DailyBoard = styled.div`
 
 const DailyList = React.memo(({ dailyList, onArticleEdit, onArticleDelete, onHandleComment}) => {
   return (
-    <DailyBoard>
+    <div>
       {dailyList.length !== 0 ? (
         <>
           {dailyList.map((content) => (
             <DailyListItem
               {...content}
               key={content.boardId}
-              onArticleEdit={onArticleEdit}
-              onArticleDelete={onArticleDelete}
-              onHandleComment={onHandleComment}
+              // onArticleEdit={onArticleEdit}
+              // onArticleDelete={onArticleDelete}
+              // onHandleComment={onHandleComment}
             />
           ))}
         </>
@@ -35,7 +35,7 @@ const DailyList = React.memo(({ dailyList, onArticleEdit, onArticleDelete, onHan
           <p>현재 작성된 글이 없습니다.</p>
         </>
       )}
-    </DailyBoard>
+    </div>
   );
 });
 
