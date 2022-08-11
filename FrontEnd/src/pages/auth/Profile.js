@@ -111,27 +111,53 @@ const Profile = () => {
   // 인기도 수정 횟수 5회 제한 + 5회 넘을 시 alert 창
   if (popular.popularityNumber >= 5) {
     FailAlert("인기도 수정횟수는 1일 최대 5회입니다")
-  }
+  };
+  
+  // // 인기도 더하기
+  // const onPopularityPlus = (userId) => {
+  //   client
+  //     .patch(`/users/popularity/${userId}`, {
+  //       popularNum: 1
+  //     })
+  //     .then((response) => resopnse)
+  // }
+
+  // // 인기도 내리기
+  // const onPopularityMinus = (userId) => {
+  //   client
+  //     .patch(`/users/popularity/${userId}`, {
+  //       popularNum: -1
+  //     })
+  //     .then((response) => resopnse)
+  // }
 
   // 인기도 더하기
-  const onPopularityPlus = async (e) => {
+  const onPopularityPlus = async () => {
     const data = {
       popularNum: 1
     }
-    setState({...state, userPopularity: state.userPopularity + 1});
-    setPopular({...popular, popularityNumber: popular.popularityNumber + 1});
     const result = await plusPopularity(data);
-  }
+    if (result.status === 400){
+      FailAlert("오늘의 인기도 수정 횟수를 모두 사용했습니다.")
+    } else {
+      setState({...state, userPopularity: state.userPopularity + 1});
+      setPopular({...popular, popularityNumber: popular.popularityNumber + 1});
+    }
+  };
 
   // 인기도 내리기
-  const onPopularityMinus = async (e) => {
+  const onPopularityMinus = async () => {
     const data = {
       popularNum: -1
     }
-    setState({...state, userPopularity: state.userPopularity - 1});
-    setPopular({...popular, popularityNumber: popular.popularityNumber + 1});
     const result = await minusPopularity(data);
-  }
+    if (result.status === 400){
+      FailAlert("오늘의 인기도 수정 횟수를 모두 사용했습니다.")
+    } else {
+      setState({...state, userPopularity: state.userPopularity - 1});
+      setPopular({...popular, popularityNumber: popular.popularityNumber + 1});
+    }
+  };
 
 
   // 유저 정보 요청

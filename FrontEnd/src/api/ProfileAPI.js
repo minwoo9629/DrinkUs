@@ -26,7 +26,7 @@ export const getUserProfile = async () => {
 
 export const plusPopularity = async (data) => {
   const result = await client
-    .patch(`/users/popularity/6`, data)
+    .patch(`/users/popularity/4`, data)
     .then((response) => response)
     .catch((error) => error.response);
   return result;
@@ -34,7 +34,7 @@ export const plusPopularity = async (data) => {
 
 export const minusPopularity = async (data) => {
   const result = await client
-    .patch(`/users/popularity/6`, data)
+    .patch(`/users/popularity/4`, data)
     .then((response) => response)
     .catch((error) => error.response);
   return result;
