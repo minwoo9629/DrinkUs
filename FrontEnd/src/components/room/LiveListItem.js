@@ -1,6 +1,7 @@
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
-import { GoToButton } from "../common/buttons/GoToButton";
+import { useState } from "react";
+import RoomModal from "./RoomModal";
+import { TimeGap } from "../../utils/TimeGap";
 
 const RoomBox = styled.div`
   display: flex;
@@ -18,17 +19,33 @@ const LiveListItem = ({
   createdDate
 }) => {
 
-  const navigate = useNavigate();
+  // 모달
+  const [isOpen, setIsOpen] = useState(false)
+
+  const modalOpen = () =>{
+    setIsOpen(true);
+  }
+
+  const modalClose = () =>{
+    setIsOpen(false);
+  }
+
+  const timeGap = TimeGap(createdDate)
 
   return (
-    <RoomBox>
-      <GoToButton onClick={() => navigate(`/rooms/${roomId}`, {roomId:roomId})} color={"cornflowerblue"}>방 디테일</GoToButton>
+    <>
+    <RoomModal close={modalClose}
+      isOpen={isOpen}
+      roomId={roomId}
+    />
+    <RoomBox onClick={modalOpen}>
       <div>{roomId}</div>
       <div>{roomName}</div>
       <div>{peopleLimit}</div>
       <div>{placeTheme}</div>
-      <div>{createdDate}</div>
+      <div>{timeGap}시간 전</div>
     </RoomBox>
+    </>
   )
 }
 
