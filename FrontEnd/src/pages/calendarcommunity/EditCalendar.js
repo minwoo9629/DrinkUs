@@ -253,7 +253,7 @@ const EditCalendar = () => {
 
   return (
     <>
-      <Header/>
+      <Header location={'lightzone'}/>
       <Wrapper color={'#fff'}>
         <CreateCalendarBlock>
           <FetchProfile/>

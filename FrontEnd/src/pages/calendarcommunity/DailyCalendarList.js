@@ -58,7 +58,7 @@ const DailyCalendarList = () => {
 
   return (
     <>
-    <Header/>
+    <Header location={'lightzone'}/>
     <Wrapper color={'#fff'}>
       <div>{dailyCalendarTitle}</div>
       <div>
