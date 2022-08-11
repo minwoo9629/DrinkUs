@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useRef, useState } from "react";
 import axios from "axios";
 import "./VideoRoomComponent.css";
 import { OpenVidu } from "openvidu-browser";
@@ -10,6 +10,9 @@ import OpenViduLayout from "./layout/openvidu-layout";
 import UserModel from "./models/user-model";
 import ToolbarComponent from "./toolbar/ToolbarComponent";
 import styled from "styled-components";
+
+import * as StompJs from "@stomp/stompjs";
+import * as SockJS from "sockjs-client";
 
 const ButtonContentComponentWrapper = styled.div`
   width: 330px;
@@ -32,6 +35,11 @@ const StyledLayoutBounds = styled.div`
 `;
 
 var localUser = new UserModel();
+
+// 게임 서버와 연결할 클라이언트
+const ROOM_ID = 5;
+const gameClient = React.createRef({});
+//
 
 class VideoRoomComponent extends Component {
   constructor(props) {
@@ -101,6 +109,7 @@ class VideoRoomComponent extends Component {
     window.addEventListener("resize", this.updateLayout);
     window.addEventListener("resize", this.checkSize);
     this.joinSession();
+    this.connectGameServer();
   }
 
   componentWillUnmount() {
@@ -108,10 +117,12 @@ class VideoRoomComponent extends Component {
     window.removeEventListener("resize", this.updateLayout);
     window.removeEventListener("resize", this.checkSize);
     this.leaveSession();
+    this.disconnectGameServer();
   }
 
   onbeforeunload(event) {
     this.leaveSession();
+    this.disconnectGameServer();
   }
 
   joinSession() {
@@ -127,6 +138,58 @@ class VideoRoomComponent extends Component {
       }
     );
   }
+
+  // Spring Boot Server와 Stomp 소켓 연동 시작
+  connectGameServer(){
+    // STOMP 서버에 연결
+    gameClient.current = new StompJs.Client({
+      brokerURL: "ws://localhost:8080/ws-stomp/websocket",
+      connectHeaders: {
+        // "roomId": ROOM_ID,
+        "AccessToken" : "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2IiwiaWF0IjoxNjYwMTkzNTAxLCJleHAiOjE2NjAyMDA3MDF9.OYKthC3zCG55uf2Y9iIK6LdheTZT1nrWo13ERBFUWpM"
+      },
+      debug: function(str){
+        console.log(str);
+      },
+      reconnectDelay: 5000,
+      heartbeatIncoming: 4000,
+      heartbeatOutgoing: 4000,
+      onConnect: () => {
+        // 세션 접속
+        this.subscribeGameServer();
+      }
+    });
+
+    gameClient.current.activate();
+  }
+
+  disconnectGameServer(){
+    gameClient.current.deactivate();
+  }
+
+  subscribeGameServer(){
+    gameClient.current.subscribe(`/sub`, ({ body }) => {
+      // setChatMessages((_chatMessages) => [..._chatMessages, JSON.parse(body)]);
+    }
+    , {
+      "AccessToken": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2IiwiaWF0IjoxNjYwMTkzNTAxLCJleHAiOjE2NjAyMDA3MDF9.OYKthC3zCG55uf2Y9iIK6LdheTZT1nrWo13ERBFUWpM"
+      ,"roomId": ROOM_ID
+    }
+    );
+  }
+
+  publishGameServer(msg){
+    gameClient.current.publish({
+      destination: `/pub/test`
+    , headers: {
+      "AccessToken": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2IiwiaWF0IjoxNjYwMTkzNTAxLCJleHAiOjE2NjAyMDA3MDF9.OYKthC3zCG55uf2Y9iIK6LdheTZT1nrWo13ERBFUWpM"
+    }
+    ,body: {},
+  });
+  }
+
+  // Spring Boot Server와 Stomp 소켓 연동 끝
+
 
   connectToSession() {
     if (this.props.token !== undefined) {
@@ -566,6 +629,10 @@ class VideoRoomComponent extends Component {
     }
   }
 
+  randomDrink(){
+    alert('랜덤 마시세요');
+  }
+
   render() {
     const mySessionId = this.state.mySessionId;
     const localUser = this.state.localUser;
@@ -589,6 +656,8 @@ class VideoRoomComponent extends Component {
           switchCamera={this.switchCamera}
           leaveSession={this.leaveSession}
           toggleChat={this.toggleChat}
+          randomDrink={this.publishGameServer}
+          subscribeGameServer={this.subscribeGameServer}
         />
         <ButtonContentComponentWrapper>
           {localUser !== undefined &&
