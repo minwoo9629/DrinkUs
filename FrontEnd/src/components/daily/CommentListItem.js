@@ -30,7 +30,7 @@ const DailyEditWrapper = styled.div`
 // 글 수정 삭제 버튼
 const DailyBoardEditButton = styled.button`
   padding: 4px 8px;
-  background-color: red;
+  background-color: transparent;
   color: black;
   font-size: 8px;
   margin: 4px;
@@ -49,11 +49,19 @@ const CommentListItem = ({
   parentId,
   createrId
 }) => {
+  // 댓글 삭제
+  const onCommentDelete = async (boardId) => {
+    deleteDailyComment(boardId)
+  };
+
   return (
     <DailyWrapper>
-      <ProfileWrapper style={{ width: "20%" }}>{parentId}</ProfileWrapper>
+      <ProfileWrapper style={{ width: "20%" }}>{boardId}</ProfileWrapper>
         <div style={{ width: "60%" }}>{boardContent}</div>
-        <DailyEditWrapper style={{ width: "10%" }}/>
+        <DailyEditWrapper style={{ width: "10%" }}>{createrId}</DailyEditWrapper>
+        <DailyBoardEditButton onClick={() => onCommentDelete(boardId)}>
+            삭제
+        </DailyBoardEditButton>
     </DailyWrapper>
   )
 };
