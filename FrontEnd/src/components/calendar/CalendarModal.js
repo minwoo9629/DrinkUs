@@ -1,5 +1,5 @@
-import { useRef, useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { client } from "../../utils/client"
 import { useNavigate } from "react-router-dom";
@@ -9,7 +9,7 @@ import { FailAlert, SuccessAlert } from "../../utils/sweetAlert";
 const ModalWrapper = styled.div`
   display: none;
   position: absolute;
-  top: 0;
+  top: ${({ top }) => `${top}px`};
   left: 0;
   width: 100%;
   height: 100vh;
@@ -86,6 +86,24 @@ const StyledButton = styled.button`
 const CalendarModal = ({ isOpen, close, calendarId }) => {
 
   const navigate = useNavigate();
+
+  // 모달 위치 조정
+  const [ScrollY, setModalLocation] = useState(0);
+  
+  const onHandleLocation = () => {
+    setModalLocation(window.pageYOffset);
+  }
+
+  useEffect(()=> {
+    const watch = () => {
+      window.addEventListener("scroll", onHandleLocation);
+    };
+    onHandleLocation();
+    watch();
+    return () => {
+      window.removeEventListener("scroll", onHandleLocation);
+    }
+  })
 
   // 사용자 정보 확인
   const user = useSelector((state) => state.user);
@@ -165,7 +183,7 @@ const CalendarModal = ({ isOpen, close, calendarId }) => {
   }
 
   return (
-    <ModalWrapper className={isOpen ? "active" : ""}>
+    <ModalWrapper className={isOpen ? "active" : ""} top={ScrollY}>
       <ModalContentWrapper>
         <ModalHeader>
           <ModalCloseButton onClick={close}>X</ModalCloseButton>
