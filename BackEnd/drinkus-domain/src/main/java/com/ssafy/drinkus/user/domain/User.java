@@ -90,6 +90,7 @@ public class User extends BaseEntity {
         }
         userPopularity = 0;
         userPopularityLimit = 5;
+        userImg = Double.toString(Math.random() * 28 + 1);
         userDeleted = YN.N;
         userPoint = 0L;
         userSoju = 0;
