@@ -131,6 +131,7 @@ const EditProfile = () => {
     const userProfile = {
       userName: user.data.userName,
       nickName: user.data.userNickname,
+      userFullname: user.data.userFullname,
       introduce:
         user.data.userIntroduce !== null ? user.data.userIntroduce : "",
       popularlity: user.data.userPopularity,
@@ -206,7 +207,7 @@ const EditProfile = () => {
       userIntroduce: profileState.introduce,
       userSoju: profileState.soju,
       userBeer: profileState.beer,
-      userImg: "",
+      userImg: profileImageState,
       userBirthday,
     };
     const result = await editProfile(data);
@@ -216,19 +217,32 @@ const EditProfile = () => {
     }
   };
 
+  const openModal = () => {
+    setModalState(true);
+  };
+
+  const closeModal = () => {
+    setModalState(false);
+  };
+
   const onHandleChangeProfileImage = (profileImageId) => {
-    console.log("이미지 변경하기");
+    setProfileImageState((prev) => profileImageId);
+    closeModal();
   };
   return (
     <div style={{ padding: "30px 0px 30px 60px" }}>
       <Modal
         isOpen={modalState}
         modalContent={
-          <ProfileImageListContent onClcik={onHandleChangeProfileImage} />
+          <ProfileImageListContent
+            profileImageState={profileImageState}
+            onClcik={onHandleChangeProfileImage}
+          />
         }
       />
       <ProfileTitle
         isEdit={true}
+        openModal={openModal}
         imageId={profileImageState}
         userName={profileState.userName}
       />
@@ -238,7 +252,7 @@ const EditProfile = () => {
             이름
           </RatioWrapper>
           <RatioWrapper width={15} textAlign={"left"} marginLeft={"20"}>
-            박무지
+            {profileState.userFullname}
           </RatioWrapper>
         </ProfileEditRowWapper>
         <ProfileEditRowWapper>
