@@ -30,6 +30,7 @@ import MySchedule from "./pages/auth/mypage/MySchedule";
 import { PersistGate } from "redux-persist/integration/react";
 import Admin from "./pages/admin/Admin";
 import VideoRoomComponent from "./pages/room/openVidu/VideoRoomComponent";
+import PrivateRoute from "./routes/PrivateRoute";
 
 function App() {
   return (
@@ -52,22 +53,46 @@ function App() {
               <Route path="/profile" element={<Profile />} />
               <Route path="/reports" element={<Reports />} />
               <Route path="/oauth2/redirect" element={<SocialLogin />} />
-              <Route path="/live" element={<DrinkLive />} />
-              <Route path="/createroom" element={<CreateRoom />} />
-              <Route path="/rooms" element={<RoomList />} />
-              <Route path="/daily" element={<Daily />} />
-              <Route path="/rooms/:roomId" element={<RoomDetail />} />
-              <Route path="/calendar" element={<Calendar />} />
+              <Route
+                path="/live"
+                element={<PrivateRoute component={<DrinkLive />} />}
+              />
+              <Route
+                path="/createroom"
+                element={<PrivateRoute component={<CreateRoom />} />}
+              />
+              <Route
+                path="/rooms"
+                element={<PrivateRoute component={<RoomList />} />}
+              />
+              <Route
+                path="/daily"
+                element={<PrivateRoute component={<Daily />} />}
+              />
+              <Route
+                path="/rooms/:roomId"
+                element={<PrivateRoute component={<RoomDetail />} />}
+              />
+              <Route
+                path="/calendar"
+                element={<PrivateRoute component={<Calendar />} />}
+              />
               <Route
                 path="/calendar/:year/:month/:index"
-                element={<DailyCalendar />}
+                element={<PrivateRoute component={<DailyCalendar />} />}
               />
-              <Route path="/calendar/create" element={<CreateCalendar />} />
+              <Route
+                path="/calendar/create"
+                element={<PrivateRoute component={<CreateCalendar />} />}
+              />
               <Route
                 path="/calendar/edit/:calendar_id"
-                element={<EditCalendar />}
+                element={<PrivateRoute component={<EditCalendar />} />}
               />
-              <Route path="/user" element={<MyPage />}>
+              <Route
+                path="/user"
+                element={<PrivateRoute component={<MyPage />} />}
+              >
                 <Route index element={<EditProfile />} />
                 <Route path="edit/profile" element={<EditProfile />} />
                 <Route path="edit/password" element={<EditPassword />} />
@@ -75,8 +100,14 @@ function App() {
                 <Route path="article" element={<MyArticle />} />
                 <Route path="schedule" element={<MySchedule />} />
               </Route>
-              <Route path="/admin" element={<Admin />} />
-              <Route path="/room/detail" element={<VideoRoomComponent />} />
+              <Route
+                path="/admin"
+                element={<PrivateRoute component={<Admin />} />}
+              />
+              <Route
+                path="/room/detail"
+                element={<PrivateRoute component={<VideoRoomComponent />} />}
+              />
             </Routes>
           </div>
         </BrowserRouter>
