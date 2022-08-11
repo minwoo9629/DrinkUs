@@ -19,15 +19,16 @@ const ModalWrapper = styled.div`
 `;
 
 const ModalContentWrapper = styled.div`
-  width: 80%;
-  min-height: 600px;
-  max-width: 520px;
+  width: 620px;
+  height: 480px;
   background-color: #fff;
   border-radius: 10px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
   opacity: 1;
+  background-color: #eaf1ff;
+  border: 5px solid #6f92bf;
 `;
 
 const ModalHeader = styled.div`
@@ -51,16 +52,11 @@ const ModalContent = styled.div`
   align-items: center;
   padding: 20px;
 `;
-const Modal = ({ isOpen, close }) => {
+const Modal = ({ isOpen, close, modalContent }) => {
   return (
     <ModalWrapper className={isOpen ? "active" : ""}>
       <ModalContentWrapper>
-        <ModalHeader>
-          <ModalCloseButton onClick={close}>X</ModalCloseButton>
-        </ModalHeader>
-        <ModalContent>
-          <div>모달에 들어갈 콘텐츠</div>
-        </ModalContent>
+        <ModalContent>{modalContent}</ModalContent>
       </ModalContentWrapper>
     </ModalWrapper>
   );

@@ -121,7 +121,29 @@ const DailyListItem = (
   const onEditArticleInput = (e) => {
     setState({...state, [e.target.name]: e.target.value });
   };
+  
+  // 글 수정
+  const onArticleEdit = (boardId) => {
+    client
+      .put(`/daily/${boardId}`, {
+        boardContent: state.boardArticle
+      })
+      .then((response) => response)
+  };
 
+  // 글 수정 창 여닫기
+  const onHandleArticleEdit = (e) => {
+    if(!state.showEditArticle){
+      setState({...state, showEditArticle: !state.showEditArticle, boardArticle:""})
+    }else{
+      setState({...state, showEditArticle: !state.showEditArticle, boardArticle:""})
+    }
+  }
+  
+  // 글 삭제
+  const onArticleDelete = async (boardId) => {
+    deleteDailyArticle(boardId)
+  };
   // 댓글 입력
   const onHandleInput = (e) => {
     setComment({ ...comment, [e.target.name]: e.target.value });
@@ -156,28 +178,7 @@ const DailyListItem = (
     }
   }
 
-  // 글 삭제
-  const onArticleDelete = async (boardId) => {
-    deleteDailyArticle(boardId)
-  };
 
-  // 글 수정
-  const onArticleEdit = (boardId) => {
-    client
-      .put(`/daily/${boardId}`, {
-        boardContent: state.boardArticle
-      })
-      .then((response) => response)
-  };
-
-  // 글 수정 창 여닫기
-  const onHandleArticleEdit = (e) => {
-    if(!state.showEditArticle){
-      setState({...state, showEditArticle: !state.showEditArticle, boardArticle:""})
-    }else{
-      setState({...state, showEditArticle: !state.showEditArticle, boardArticle:""})
-    }
-  }
 
   return (
     <div>

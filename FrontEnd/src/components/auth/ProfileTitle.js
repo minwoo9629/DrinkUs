@@ -12,7 +12,13 @@ const ProfileImageThumbnail = styled.img`
   object-fit: cover;
   border-radius: 100%;
 `;
-const ProfileTitle = ({ isEdit, imageId, userName }) => {
+const OpenProfileImageModalButton = styled.button`
+  border: none;
+  cursor: pointer;
+  background: transparent;
+  color: cornflowerblue;
+`;
+const ProfileTitle = ({ isEdit, imageId, userName, openModal }) => {
   return (
     <div style={{ display: "flex", alignItems: "center" }}>
       <ProfileImageWrapper>
@@ -24,10 +30,9 @@ const ProfileTitle = ({ isEdit, imageId, userName }) => {
         <p>{userName}</p>
         {isEdit ? (
           <>
-            <input type="file" id="profileImage" />
-            <label htmlFor="profileImage" id="profileImageLabel">
+            <OpenProfileImageModalButton onClick={openModal}>
               프로필 사진 바꾸기
-            </label>
+            </OpenProfileImageModalButton>
           </>
         ) : (
           <></>

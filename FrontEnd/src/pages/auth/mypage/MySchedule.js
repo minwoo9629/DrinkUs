@@ -35,7 +35,7 @@ const MySchedule = () => {
 
   useEffect(() => {
     fetchData(scheduleState.number);
-    setProfileImageState(user.data.userImg !== "" ? user.data.userImg : "1");
+    setProfileImageState(!user.data.userImg ? "1" : user.data.userImg);
     setUserNameState(user.data.userName);
   }, []);
   return (
