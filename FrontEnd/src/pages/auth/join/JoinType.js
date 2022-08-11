@@ -81,7 +81,15 @@ const LocalButton = styled.button`
 //   window.location.replace(`http://localhost:8080/oauth2/authorization/${e.target.name}?redirect_uri=http://localhost:3000/`)
 // }
 
+
+
+
 const JoinType = () => {
+
+  const moveSocialJoin = (provider) => {
+    window.location.replace(`https://i7b306.p.ssafy.io/oauth2/authorization/${provider}?redirect_uri=https://i7b306.p.ssafy.io/`);
+  }
+
   return (
     <div>
       <BackButton />
@@ -93,21 +101,14 @@ const JoinType = () => {
                 <LocalButton>로컬 회원가입</LocalButton>
               </Link>
             </div>
-
             <JoinWrapper>
-              <a href="">
-                <SocialJoinButton src="../assets/kakao_login.png" color="#fee500"/>
-              </a>
+              <SocialJoinButton src="../assets/kakao_login.png" color="#fee500" onClick={() => moveSocialJoin("kakao")}/>
             </JoinWrapper>
             <JoinWrapper color="#000000">
-              <a href="">
-                <SocialJoinButton src="../assets/google_login.png" color="white"/>
-              </a>
+              <SocialJoinButton src="../assets/google_login.png" color="white" onClick={() => moveSocialJoin("google")}/>
             </JoinWrapper>
             <JoinWrapper>
-              <a href="">
-                <SocialJoinButton src="../assets/facebook_login.png" color="#2374F2"/>
-              </a>
+              <SocialJoinButton src="../assets/facebook_login.png" color="#2374F2" onClick={() => moveSocialJoin("facebook")}/>
             </JoinWrapper>
           </JoinForm>
         </NeonLoginWrapper>

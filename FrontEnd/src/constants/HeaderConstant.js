@@ -1,6 +1,6 @@
 export const BASIC_MENU = [
   { link: "/", menuName: "DrinkUs" },
-  { link: "/live", menuName: "술Live" },
+  { link: "/live", menuName: "Live" },
   { link: "/calendar", menuName: "커뮤니티" },
 ];
 
