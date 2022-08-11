@@ -1,3 +1,4 @@
+import { useState } from "react";
 import styled from "styled-components";
 import {
   getDailyComment,
@@ -5,6 +6,7 @@ import {
   editDailyComment,
   deleteDailyComment,
 } from "../../api/DailyAPI";
+import { client } from "../../utils/client";
 
 const DailyWrapper = styled.div`
   justify-content: space-between;
@@ -43,26 +45,94 @@ const ProfileWrapper = styled.div`
   margin: 8px;
 `;
 
+// 댓글 인풋
+const DailyCommentInput = styled.input`
+  justify-content: space-between;
+  width: 64vw;
+  height: 8vh;
+  border-radius: 4px;
+  border: #6f92bf;
+  background-color: #eaf1ff;
+  margin: 4px;
+  position: relative;
+`
+
 const CommentListItem = ({
   boardId,
   boardContent,
   parentId,
   createrId
-}) => {
+  }) => {
+  const [state, setState] = useState({
+    boardComment: "",
+    showCommentEdit: false,
+  })
+
   // 댓글 삭제
   const onCommentDelete = async (boardId) => {
     deleteDailyComment(boardId)
   };
 
+  // 댓글 수정
+  const onCommentEdit = (boardId) => {
+    client
+      .put(`/daily/${boardId}`, {
+        boardContent: state.boardComment
+      })
+      .then((response) => response)
+  }
+
+  // 댓글 수정하기 버튼
+  const DailyCommentEditButton = styled.button`
+    padding: 12px 24px;
+    border-radius: 3px;
+    background-color: #bdcff2;
+    color: white;
+    font-size: 16px;
+    margin: 4px;
+    border: 1px #eaf1ff;
+  `
+
+  // 댓글 수정 창 여닫기
+  const onHandleCommentEdit = (e) => {
+    if(!state.showCommentEdit){
+      setState({...state, showCommentEdit: !state.showCommentEdit, boardComment: ""})
+    }else{
+      setState({...state, showCommentEdit: !state.showCommentEdit, boardComment: ""})
+    }
+  };
+
+  // 댓글 수정 입력
+  const onHandleInput = (e) => {
+    setState({...state, [e.target.name]: e.target.value});
+  };
+
   return (
-    <DailyWrapper>
-      <ProfileWrapper style={{ width: "20%" }}>{boardId}</ProfileWrapper>
-        <div style={{ width: "60%" }}>{boardContent}</div>
-        <DailyEditWrapper style={{ width: "10%" }}>{createrId}</DailyEditWrapper>
-        <DailyBoardEditButton onClick={() => onCommentDelete(boardId)}>
-            삭제
-        </DailyBoardEditButton>
-    </DailyWrapper>
+    <div>
+      <DailyWrapper>
+        <ProfileWrapper style={{ width: "20%" }}>{boardId}</ProfileWrapper>
+          <div style={{ width: "60%" }}>{boardContent}</div>
+          <DailyEditWrapper style={{ width: "10%" }}>{createrId}</DailyEditWrapper>
+          <DailyBoardEditButton onClick={() => onHandleCommentEdit()}>
+              수정
+          </DailyBoardEditButton>
+          <DailyBoardEditButton onClick={() => onCommentDelete(boardId)}>
+              삭제
+          </DailyBoardEditButton>
+      </DailyWrapper>
+          <div>
+            <div style = {{ display: state.showCommentEdit === false ? "none" : "block"}}>
+              <DailyCommentInput
+                placeholder="댓글 수정 인풋"
+                type="string"
+                value={state.boardComment}
+                name="boardComment"
+                onChange={onHandleInput}
+                />
+                <DailyCommentEditButton onClick={()=> onCommentEdit(boardId)}>댓글 수정하기</DailyCommentEditButton>
+            </div>
+          </div>
+    </div>
   )
 };
 
