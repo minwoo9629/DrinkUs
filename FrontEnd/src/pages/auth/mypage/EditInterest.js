@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useCallback, useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
 import {
   addUserInterest,
@@ -46,15 +47,51 @@ const SubCategoryWrapper = styled.div`
   }
 `;
 const EditInterest = () => {
-  const [categoryState, setCategoryState] = useState({});
+  const [categoryState, setCategoryState] = useState([]);
+  const [profileImageState, setProfileImageState] = useState("1");
+  const [userNameState, setUserNameState] = useState("");
+  const user = useSelector((state) => state.user);
+  const fetchInterestsData = useCallback(async () => {
+    const result = await getUserInterests();
+    setCategoryState((prevState) => [...result.data]);
+  }, []);
 
-  const onHandleCategoryCheck = (e) => {
-    console.log(e);
+  useEffect(() => {
+    setProfileImageState(!user.data.userImg ? "1" : user.data.userImg);
+    setUserNameState(user.data.userName);
+  }, []);
+
+  useEffect(() => {
+    fetchInterestsData();
+  }, [fetchInterestsData]);
+  const onHandleCategoryCheck = (checked, subCategoryId, categoryId) => {
+    checked
+      ? removeUserInterest(subCategoryId)
+      : addUserInterest(subCategoryId);
+
+    const prevTargetSubCategory = categoryState.filter(
+      (item) => item.categoryResponse.categoryId === categoryId
+    )[0].subCategoryResponse;
+
+    const updatedTargetSubCategory = prevTargetSubCategory.map((item) =>
+      item.subCategoryId === subCategoryId
+        ? { ...item, checked: !checked }
+        : item
+    );
+    const updatedCategoryState = categoryState.map((item) =>
+      item.categoryResponse.categoryId === categoryId
+        ? { ...item, subCategoryResponse: updatedTargetSubCategory }
+        : item
+    );
+    setCategoryState([...updatedCategoryState]);
   };
-
   return (
-    <div style={{ padding: "30px" }}>
-      <ProfileTitle isEdit={false} />
+    <div style={{ padding: "30px 0px 30px 60px" }}>
+      <ProfileTitle
+        isEdit={false}
+        imageId={profileImageState}
+        userName={userNameState}
+      />
       <div
         style={{
           marginTop: "40px",
@@ -95,7 +132,8 @@ const EditInterest = () => {
                           onChange={() =>
                             onHandleCategoryCheck(
                               subItem.checked,
-                              subItem.subCategoryId
+                              subItem.subCategoryId,
+                              item.categoryResponse.categoryId
                             )
                           }
                         />

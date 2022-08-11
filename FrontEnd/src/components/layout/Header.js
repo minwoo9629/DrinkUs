@@ -132,7 +132,7 @@ const Header = ({ position, location }) => {
           {user.isLogin ? (
             <>
               <HeaderMenuLink
-                to={"/user"}
+                to={"/user/edit/profile"}
                 className={location === 'lightzone' ? "" : ( HeaderStatus ? "" : "light" )}
               >
                 {user.data.userNickname}님

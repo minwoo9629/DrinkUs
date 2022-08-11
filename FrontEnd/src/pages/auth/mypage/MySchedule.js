@@ -35,10 +35,9 @@ const MySchedule = () => {
 
   useEffect(() => {
     fetchData(scheduleState.number);
-    setProfileImageState(user.data.userImg !== "" ? user.data.userImg : "1");
+    setProfileImageState(!user.data.userImg ? "1" : user.data.userImg);
     setUserNameState(user.data.userName);
   }, []);
-  console.log(scheduleState);
   return (
     <div style={{ padding: "30px 0px 30px 60px" }}>
       <ProfileTitle
