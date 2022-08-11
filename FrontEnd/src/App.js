@@ -21,7 +21,6 @@ import RoomDetail from "./pages/room/RoomDetail";
 import Calendar from "./pages/calendarcommunity/Calendar";
 import DailyCalendarList from "./pages/calendarcommunity/DailyCalendarList";
 import CreateCalendar from "./pages/calendarcommunity/CreateCalendar";
-import CalendarDetail from "./pages/calendarcommunity/CalendarDetail"
 import EditCalendar from "./pages/calendarcommunity/EditCalendar";
 import EditProfile from "./pages/auth/mypage/EditProfile";
 import EditPassword from "./pages/auth/mypage/EditPassword";
@@ -68,7 +67,6 @@ function App() {
                 path="/calendar/:calendarId/edit"
                 element={<EditCalendar />}
               />
-              <Route path="/calendar/:calendarId" element={<CalendarDetail />} />
               <Route path="/user" element={<MyPage />}>
                 <Route index element={<EditProfile />} />
                 <Route path="edit/profile" element={<EditProfile />} />
