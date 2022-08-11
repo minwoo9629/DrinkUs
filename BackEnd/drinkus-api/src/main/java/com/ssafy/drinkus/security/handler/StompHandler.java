@@ -6,6 +6,7 @@ import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
+import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
@@ -26,26 +27,26 @@ public class StompHandler implements ChannelInterceptor {
 
         // 스톰프 연결
         if (StompCommand.CONNECT == accessor.getCommand()) {
+            System.out.println("###trying connect...");
             if (!jwtUtil.isValidToken(extractToken(accessor))) {
                 throw new AccessDeniedException("연결 거부");
             }
-            Long userId = jwtUtil.getUserId(extractToken(accessor));
-            String userNickName = jwtUtil.getNickName(extractToken(accessor));
-
+            System.out.println("########client connected!!!");
         }
+
         // 채팅방 구독
         else if(StompCommand.SUBSCRIBE == accessor.getCommand()){
+            System.out.println("StompHandler.preSend");
             Long userId = jwtUtil.getUserId(extractToken(accessor));
 
-            String roomId = getRoomId(Optional.ofNullable((String) message.getHeaders().get("simpDestination")).orElse("InvalidRoomId"));
-            String sessionId = (String) message.getHeaders().get("simpSessionId");
-
+            String sessionId = accessor.getNativeHeader("roomId").get(0);
+            System.out.println("###subscribe: " + sessionId);
         }
+
         // 웹소켓 연결 종료
         else if(StompCommand.DISCONNECT == accessor.getCommand()){
-            String sessionId = (String) message.getHeaders().get("simpSessionId");
-
-            Long userId = jwtUtil.getUserId(extractToken(accessor));
+            String sessionId = (String) message.getHeaders().get("roomId");
+            System.out.println("###disconnect: " + sessionId);
         }
         return message;
     }
