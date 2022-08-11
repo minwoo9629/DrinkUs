@@ -32,7 +32,7 @@ client.interceptors.response.use(
       const originalRequest = error.config;
       // 토큰 재요청
       const response = await client
-        .get("users/refreshToken")
+        .get("auth/refreshToken")
         .then((response) => response);
       // 기존의 세션 아이템 삭제
       sessionStorage.removeItem("ACCESS_TOKEN");
