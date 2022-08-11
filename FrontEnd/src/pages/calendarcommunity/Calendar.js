@@ -224,6 +224,7 @@ const Calendar = () => {
                           }}
                         >
                           {index}
+                          <i className="fas fa-glass-cheers"></i>
                         </OnDay>
                       );
                     } else {

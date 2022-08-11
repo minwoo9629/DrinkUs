@@ -154,7 +154,7 @@ const CreateCalendar = () => {
 
   const [calendarInfo, setCalendarInfo] = useState({
     calendarContent: '',
-    peopleLimit: 1,
+    peopleLimit: 2,
     place: '술집',
   });
 
@@ -219,7 +219,7 @@ const CreateCalendar = () => {
   };
 
   const onHandleDecrease = (type) => {
-    const amount = calendarInfo[type] - 1 < 1 ? 1 : calendarInfo[type] - 1;
+    const amount = calendarInfo[type] - 1 < 2 ? 2 : calendarInfo[type] - 1;
     setCalendarInfo({ ...calendarInfo, [type]: amount });
   };
 
