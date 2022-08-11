@@ -9,6 +9,27 @@ import ChatComponent from "./chat/ChatComponent";
 import OpenViduLayout from "./layout/openvidu-layout";
 import UserModel from "./models/user-model";
 import ToolbarComponent from "./toolbar/ToolbarComponent";
+import styled from "styled-components";
+
+const ButtonContentComponentWrapper = styled.div`
+  width: 330px;
+  padding: 20px;
+  background-color: #131317;
+`;
+
+const StyledLayoutBounds = styled.div`
+  background-color: rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+
+  display: flex;
+  flex-wrap: wrap;
+  /* position: absolute; */
+  /* left: 0; */
+  right: 0;
+  height: 100%;
+  min-width: 400px !important;
+  width: 80%;
+`;
 
 var localUser = new UserModel();
 
@@ -548,10 +569,14 @@ class VideoRoomComponent extends Component {
   render() {
     const mySessionId = this.state.mySessionId;
     const localUser = this.state.localUser;
-    var chatDisplay = { display: this.state.chatDisplay };
+    // var chatDisplay = { display: this.state.chatDisplay };
 
     return (
-      <div className="container" id="container">
+      <div
+        style={{ height: "100vh", width: "100vw", display: "flex" }}
+        className="container"
+        id="container"
+      >
         <ToolbarComponent
           sessionId={mySessionId}
           user={localUser}
@@ -565,13 +590,32 @@ class VideoRoomComponent extends Component {
           leaveSession={this.leaveSession}
           toggleChat={this.toggleChat}
         />
+        <ButtonContentComponentWrapper>
+          {localUser !== undefined &&
+            localUser.getStreamManager() !== undefined && (
+              <div
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  display: this.state.chatDisplay,
+                }}
+                // className="OT_root OT_publisher custom-class"
+              >
+                <ChatComponent
+                  user={localUser}
+                  chatDisplay={this.state.chatDisplay}
+                  close={this.toggleChat}
+                  messageReceived={this.checkNotification}
+                />
+              </div>
+            )}
+        </ButtonContentComponentWrapper>
 
         <DialogExtensionComponent
           showDialog={this.state.showExtensionDialog}
           cancelClicked={this.closeDialogExtension}
         />
-
-        <div id="layout" className="bounds">
+        <StyledLayoutBounds id="layout">
           {localUser !== undefined &&
             localUser.getStreamManager() !== undefined && (
               <div className="OT_root OT_publisher custom-class" id="localUser">
@@ -593,21 +637,7 @@ class VideoRoomComponent extends Component {
               />
             </div>
           ))}
-        </div>
-
-        {localUser !== undefined && localUser.getStreamManager() !== undefined && (
-          <div
-            className="OT_root OT_publisher custom-class"
-            style={chatDisplay}
-          >
-            <ChatComponent
-              user={localUser}
-              chatDisplay={this.state.chatDisplay}
-              close={this.toggleChat}
-              messageReceived={this.checkNotification}
-            />
-          </div>
-        )}
+        </StyledLayoutBounds>
       </div>
     );
   }

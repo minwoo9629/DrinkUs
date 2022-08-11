@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import styled from "styled-components";
 import "./ChatComponent.css";
 // import IconButton from "@material-ui/core/IconButton";
 // import Fab from "@material-ui/core/Fab";
@@ -6,6 +7,87 @@ import "./ChatComponent.css";
 // import Send from "@material-ui/icons/Send";
 // import { Tooltip } from "@material-ui/core";
 
+const StyledChatContainer = styled.div`
+  width: 100%;
+  height: 100%;
+`;
+
+const StyledChatComponent = styled.div`
+  position: relative;
+  background: linear-gradient(
+    180deg,
+    rgba(136, 136, 136, 1) 0%,
+    rgba(180, 180, 180, 1) 35%,
+    rgba(181, 181, 181, 1) 59%,
+    rgba(136, 136, 136, 1) 100%
+  );
+  height: 100%;
+  width: 100%;
+  border-radius: 20px;
+  box-shadow: 10px 10px 15px 6px rgba(0, 0, 0, 0.3);
+  display: ${(props) => props.display};
+`;
+
+const StyeldChatToolbar = styled.div`
+  position: sticky;
+  margin: auto;
+  width: 80%;
+  top: 40px;
+  line-height: 35px;
+  height: 45px;
+  background: transparent;
+  box-sizing: border-box;
+  font-weight: bold;
+  font-size: 14px;
+  text-align: center;
+  padding-top: 4px;
+  margin-bottom: 30px;
+  border-radius: 20px;
+  background-color: #bdcff2;
+  color: black;
+`;
+
+const MessageWrapper = styled.div`
+  padding: 0 15px 10px 15px;
+  height: calc(100% - 110px);
+  overflow: auto;
+  box-sizing: border-box;
+`;
+
+const MessageInputWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  margin: auto;
+  position: sticky;
+  bottom: 40px;
+  width: 80%;
+  background-color: #ffffff;
+  text-align: center;
+  padding: 10px 20px;
+  height: 30px;
+  border-radius: 20px;
+`;
+
+const StyledChatInput = styled.input`
+  border: none;
+  height: 25px;
+  width: 85%;
+  outline: none;
+`;
+
+const StyeldSendButton = styled.button`
+  cursor: pointer;
+  border: none;
+  background-color: transparent;
+  position: absolute;
+  right: 0px;
+  top: 0;
+  bottom: 0;
+  width: 50px;
+  height: 50px;
+  color: cornflowerblue;
+  font-size: 20px;
+`;
 export default class ChatComponent extends Component {
   constructor(props) {
     super(props);
@@ -90,20 +172,16 @@ export default class ChatComponent extends Component {
   }
 
   render() {
-    const styleChat = { display: this.props.chatDisplay };
     return (
-      <div id="chatContainer">
-        <div id="chatComponent" style={styleChat}>
-          <div id="chatToolbar">
+      <StyledChatContainer>
+        <StyledChatComponent display={this.props.chatDisplay}>
+          <StyeldChatToolbar>
             <span>
-              {this.props.user.getStreamManager().stream.session.sessionId} -
-              CHAT
+              {/* {this.props.user.getStreamManager().stream.session.sessionId} - */}
+              채팅
             </span>
-            <button id="closeButton" onClick={this.close}>
-              <button color="secondary">닫기</button>
-            </button>
-          </div>
-          <div className="message-wrap" ref={this.chatScroll}>
+          </StyeldChatToolbar>
+          <MessageWrapper ref={this.chatScroll}>
             {this.state.messageList.map((data, i) => (
               <div
                 key={i}
@@ -132,23 +210,27 @@ export default class ChatComponent extends Component {
                 </div>
               </div>
             ))}
-          </div>
+          </MessageWrapper>
 
-          <div id="messageInput">
-            <input
-              placeholder="Send a messge"
+          <MessageInputWrapper>
+            <StyledChatInput
+              placeholder="상대방과 자유롭게 이야기해봐요"
               id="chatInput"
               value={this.state.message}
               onChange={this.handleChange}
               onKeyPress={this.handlePressKey}
             />
-            <button size="small" id="sendButton" onClick={this.sendMessage}>
-              전송하기
-            </button>
+            <StyeldSendButton
+              size="small"
+              id="sendButton"
+              onClick={this.sendMessage}
+            >
+              <i class="fas fa-seedling"></i>
+            </StyeldSendButton>
             {/* <Tooltip title="Send message"></Tooltip> */}
-          </div>
-        </div>
-      </div>
+          </MessageInputWrapper>
+        </StyledChatComponent>
+      </StyledChatContainer>
     );
   }
 }

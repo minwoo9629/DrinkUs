@@ -1,26 +1,88 @@
 import React, { Component } from "react";
-import "./ToolbarComponent.css";
 
-// import AppBar from "@material-ui/core/AppBar";
-// import Toolbar from "@material-ui/core/Toolbar";
+import styled from "styled-components";
 
-// import Mic from "@material-ui/icons/Mic";
-// import MicOff from "@material-ui/icons/MicOff";
-// import Videocam from "@material-ui/icons/Videocam";
-// import VideocamOff from "@material-ui/icons/VideocamOff";
-// import Fullscreen from "@material-ui/icons/Fullscreen";
-// import FullscreenExit from "@material-ui/icons/FullscreenExit";
-// import SwitchVideoIcon from "@material-ui/icons/SwitchVideo";
-// import PictureInPicture from "@material-ui/icons/PictureInPicture";
-// import ScreenShare from "@material-ui/icons/ScreenShare";
-// import StopScreenShare from "@material-ui/icons/StopScreenShare";
-// import Tooltip from "@material-ui/core/Tooltip";
-// import PowerSettingsNew from "@material-ui/icons/PowerSettingsNew";
-// import QuestionAnswer from "@material-ui/icons/QuestionAnswer";
+const ToolBar = styled.div`
+  width: 20%;
+  max-width: 150px;
+  min-width: 150px;
+  color: #ffffff;
+  height: 100%;
+  background-color: #333333;
+  /* position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 999999; */
+`;
 
-// import IconButton from "@material-ui/core/IconButton";
+const ToolbarMenuWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+`;
+const RoomContentWrapper = styled.div`
+  height: 40%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  margin-bottom: 200px;
+`;
+const RoomContentButtonWrapper = styled.div`
+  width: 60px;
+  height: 60px;
+`;
 
-// const logo = require("/assets/images/logo129.png");
+const RoomContentButton = styled.button`
+  border: none;
+  width: 100%;
+  height: 100%;
+  border-radius: 15px;
+  background-color: #676775;
+  position: ${(props) => props.position};
+  cursor: pointer;
+  &.active {
+    background-color: #97c5ff;
+  }
+  &:hover {
+    background-color: #97c5ff;
+  }
+`;
+
+RoomContentButton.default = {
+  position: "static",
+};
+
+const ChatAlertPoint = styled.div`
+  width: 15px;
+  height: 15px;
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  border-radius: 50%;
+  background-color: #ffa600;
+  border: 1px solid #000;
+  z-index: 99999;
+`;
+
+const FontAwesomeStyled = styled.i`
+  font-size: ${({ fontSize }) => fontSize};
+  font-weight: 900;
+`;
+
+FontAwesomeStyled.defaultProps = {
+  fontSize: "32px",
+};
+const MicVideoIconWrapper = styled.div`
+  width: 70px;
+  height: 70px;
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #bdcff2;
+`;
 
 export default class ToolbarComponent extends Component {
   constructor(props) {
@@ -73,8 +135,8 @@ export default class ToolbarComponent extends Component {
     const mySessionId = this.props.sessionId;
     const localUser = this.props.user;
     return (
-      <div className="toolbar" id="header">
-        <div className="toolbar">
+      <ToolBar>
+        <ToolbarMenuWrapper>
           {/* <div id="navSessionInfo">
             <img id="header_img" alt="OpenVidu Logo" src={logo} />
 
@@ -84,8 +146,55 @@ export default class ToolbarComponent extends Component {
               </div>
             )}
           </div> */}
-
-          <div className="buttonsContent">
+          <RoomContentWrapper>
+            <RoomContentButtonWrapper>
+              <RoomContentButton>
+                <FontAwesomeStyled className="fas fa-cog" />
+              </RoomContentButton>
+            </RoomContentButtonWrapper>
+            <RoomContentButtonWrapper>
+              <RoomContentButton>
+                <FontAwesomeStyled className="fas fa-gamepad" />
+              </RoomContentButton>
+            </RoomContentButtonWrapper>
+            <RoomContentButtonWrapper>
+              <RoomContentButton
+                onClick={this.toggleChat}
+                position={"relative"}
+              >
+                <FontAwesomeStyled className="fas fa-comment-dots" />
+                {this.props.showNotification && <ChatAlertPoint />}
+              </RoomContentButton>
+            </RoomContentButtonWrapper>
+            <RoomContentButtonWrapper>
+              <RoomContentButton onClick={this.leaveSession}>
+                <FontAwesomeStyled className="fas fa-sign-out-alt" />
+              </RoomContentButton>
+            </RoomContentButtonWrapper>
+            <RoomContentButtonWrapper>
+              <RoomContentButton onClick={this.micStatusChanged}>
+                {localUser !== undefined && localUser.isAudioActive() ? (
+                  // <p>마이크킨 상태</p>
+                  <FontAwesomeStyled className="fas fa-microphone" />
+                ) : (
+                  // <p>마이크끈상태</p>
+                  <FontAwesomeStyled className="fas fa-microphone-slash" />
+                )}
+              </RoomContentButton>
+            </RoomContentButtonWrapper>
+            <RoomContentButtonWrapper>
+              <RoomContentButton onClick={this.camStatusChanged}>
+                {localUser !== undefined && localUser.isVideoActive() ? (
+                  // <p>캠 켠 상태</p>
+                  <FontAwesomeStyled className="fas fa-video" />
+                ) : (
+                  // <p>캠끈상태</p>
+                  <FontAwesomeStyled className="fas fa-video-slash" />
+                )}
+              </RoomContentButton>
+            </RoomContentButtonWrapper>
+          </RoomContentWrapper>
+          {/* <div className="buttonsContent">
             <button
               color="inherit"
               className="navButton"
@@ -93,11 +202,11 @@ export default class ToolbarComponent extends Component {
               onClick={this.micStatusChanged}
             >
               {localUser !== undefined && localUser.isAudioActive() ? (
-                // <Mic />
+                <Mic />
                 <p>마이크켜기</p>
               ) : (
                 <p>마이크끄기</p>
-                // <MicOff color="IconButtonsecondary" />
+                <MicOff color="IconButtonsecondary" />
               )}
             </button>
 
@@ -129,7 +238,7 @@ export default class ToolbarComponent extends Component {
             {localUser !== undefined && localUser.isScreenShareActive() && (
               <button onClick={this.stopScreenShare} id="navScreenButton">
                 <p>StopScreenShare</p>
-                {/* <StopScreenShare color="secondary" /> */}
+                <StopScreenShare color="secondary" />
               </button>
             )}
 
@@ -139,7 +248,7 @@ export default class ToolbarComponent extends Component {
               onClick={this.switchCamera}
             >
               <p>SwitchVideoIcon</p>
-              {/* <SwitchVideoIcon /> */}
+              <SwitchVideoIcon />
             </button>
             <button
               color="inherit"
@@ -149,9 +258,9 @@ export default class ToolbarComponent extends Component {
               {localUser !== undefined && this.state.fullscreen ? (
                 <p>FullscreenExit</p>
               ) : (
-                // <FullscreenExit />
+                <FullscreenExit />
                 <p>Fullscreen</p>
-                // <Fullscreen />
+                <Fullscreen />
               )}
             </button>
             <button
@@ -161,7 +270,7 @@ export default class ToolbarComponent extends Component {
               id="navLeaveButton"
             >
               <p>PowerSettingsNew</p>
-              {/* <PowerSettingsNew /> */}
+              <PowerSettingsNew />
             </button>
             <button
               color="inherit"
@@ -169,14 +278,14 @@ export default class ToolbarComponent extends Component {
               id="navChatButton"
             >
               {this.props.showNotification && <div id="point" className="" />}
-              {/* <Tooltip title="Chat"> */}
+              <Tooltip title="Chat">
               <p>QuestionAnswer</p>
-              {/* <QuestionAnswer /> */}
-              {/* </Tooltip> */}
+              <QuestionAnswer />
+              </Tooltip>
             </button>
-          </div>
-        </div>
-      </div>
+          </div> */}
+        </ToolbarMenuWrapper>
+      </ToolBar>
     );
   }
 }
