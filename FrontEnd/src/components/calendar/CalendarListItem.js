@@ -1,29 +1,42 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { GoToButton } from "../common/buttons/GoToButton";
-
+import { useState } from "react";
+import CalendarModal from "../../components/calendar/CalendarModal";
 
 const ItemBox = styled.div`
   display: flex;
   align-items: center;
   width: 1000px;
-  height: 200px;
+  height: 100px;
 `
 
 const CalendarListItem = (content) => {
-
   const navigate = useNavigate();
+
+  // 모달
+  const [isOpen, setIsOpen] = useState(false)
+
+  const modalOpen = () =>{
+    setIsOpen(true);
+  }
+
+  const modalClose = () =>{
+    setIsOpen(false);
+  }
 
   return (
     <>
-    <ItemBox>
-      {JSON.stringify(content.calendarId)}
-      {JSON.stringify(content.calendarContent)}
+    <CalendarModal close={modalClose}
+      isOpen={isOpen}
+      calendarId={content.calendarId}
+      />
+    <ItemBox onClick={modalOpen}>
+      {JSON.stringify(content.calendarContent)}/
+      {content.calendarId}/
       {JSON.stringify(content.time)}
       {JSON.stringify(content.place)}
       {JSON.stringify(content.peopleLimit)}
-      <GoToButton>상세조회</GoToButton>
-    </ItemBox>
+      </ItemBox>
     </>
   );
 };

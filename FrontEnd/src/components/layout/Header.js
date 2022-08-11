@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import {
   BASIC_MENU,
@@ -74,6 +74,9 @@ const LogOutButton = styled.button`
 `;
 
 const Header = ({ position }) => {
+
+  const navigate = useNavigate();
+
   const [ScrollY, setHeaderColor] = useState(0);
   const [HeaderStatus, setHeaderStatus] = useState(false);
   const dispatch = useDispatch();
@@ -81,6 +84,7 @@ const Header = ({ position }) => {
     dispatch(logOut());
     sessionStorage.removeItem("ACCESS_TOKEN");
     SuccessAlert("로그아웃되었습니다.");
+    navigate("/");
   };
   const handleColor = () => {
     setHeaderColor(window.pageYOffset);

@@ -19,7 +19,7 @@ import RoomList from "./pages/room/RoomList";
 import Daily from "./pages/Daily";
 import RoomDetail from "./pages/room/RoomDetail";
 import Calendar from "./pages/calendarcommunity/Calendar";
-import DailyCalendar from "./pages/calendarcommunity/DailyCalendar";
+import DailyCalendarList from "./pages/calendarcommunity/DailyCalendarList";
 import CreateCalendar from "./pages/calendarcommunity/CreateCalendar";
 import EditCalendar from "./pages/calendarcommunity/EditCalendar";
 import EditProfile from "./pages/auth/mypage/EditProfile";
@@ -80,14 +80,14 @@ function App() {
               />
               <Route
                 path="/calendar/:year/:month/:index"
-                element={<PrivateRoute component={<DailyCalendar />} />}
+                element={<PrivateRoute component={<DailyCalendarList />} />}
               />
               <Route
                 path="/calendar/create"
                 element={<PrivateRoute component={<CreateCalendar />} />}
               />
               <Route
-                path="/calendar/edit/:calendar_id"
+                path="/calendar/:calendarId/edit"
                 element={<PrivateRoute component={<EditCalendar />} />}
               />
               <Route
