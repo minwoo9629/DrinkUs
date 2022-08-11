@@ -178,7 +178,7 @@ const Calendar = () => {
 
   return (
     <>
-      <Header />
+      <Header location={'lightzone'} />
       <Wrapper color={'#fff'}>
         <InnerWrapper>
           <TopMenuWrap>
@@ -224,6 +224,7 @@ const Calendar = () => {
                           }}
                         >
                           {index}
+                          <i className="fas fa-glass-cheers"></i>
                         </OnDay>
                       );
                     } else {

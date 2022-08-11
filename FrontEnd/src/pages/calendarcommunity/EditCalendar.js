@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Header from "../../components/layout/Header";
 import FetchProfile from "../../components/room/FetchProfile";
@@ -8,6 +8,7 @@ import moment from "moment";
 import { FailAlert, SuccessAlert } from "../../utils/sweetAlert";
 import { useNavigate } from "react-router-dom";
 
+// 스타일
 const CreateCalendarBlock = styled.div`
   width: 800px;
   margin-bottom: 20px;
@@ -148,14 +149,28 @@ const PeopleLimitWrapper = styled.div`
   padding: 8px;
 `;
 
-const CreateCalendar = () => {
+const EditCalendar = () => {
 
   const navigate = useNavigate();
+  const calendar_id = window.location.pathname.split('/')[2];
+
+  // 기본값 요청
+  const onEditBasicData = async () => {
+    const result = await client
+      .get(`calendar/${calendar_id}`)
+      .then((response) => response)
+      setCalendarInfo({...result.data})
+    return result
+  }
+
+  useEffect(()=>{
+    onEditBasicData();
+  },[])
 
   const [calendarInfo, setCalendarInfo] = useState({
     calendarContent: '',
-    peopleLimit: 1,
-    place: '술집',
+    peopleLimit: 2,
+    place: '',
   });
 
   const onCalendarInfoInput = (e) => {
@@ -165,19 +180,18 @@ const CreateCalendar = () => {
   const onCalendarInfoSubmit = (e) => {
     e.preventDefault();
     // 방 설명 유효성 체크
-    if (calendarInfo.calendarContent.length === 0) {
+    if (calendarInfo.calendarContent === []) {
       alert(`방 설명을 써 주세요. '${calendarInfo.place}에서 만날 사람~' 은 어때요?`);
       return;
     }
     // x월, x일, x시, x분 => 0x월, 0x일, 0x시, 0x분
     // 방 시간 초과 유효성 체크
     if (dateState.year + dateState.month + dateState.day + dateState.hour + dateState.minute <= moment().format('YYYYMMDDHHmm')) {
-      alert('이미 지나간 시간을 입력하셨어요!')
+      alert('시간 형식을 맞춰주세요!')
       return;
     }
     
     // api 요청
-    const calendar_id = window.location.pathname.split('/')[2];
     client
       .put(`calendar/${calendar_id}`, {
         calendarContent: calendarInfo.calendarContent,
@@ -190,10 +204,10 @@ const CreateCalendar = () => {
         SuccessAlert('수정 성공!')
         navigate("/calendar");
       })
-      .catch(function (error) {
-        FailAlert(`시간 형식을 맞춰주세요!
-        ex) ${moment().format('YYYY')}년${moment().format('MM')}월${moment().format('DD')}일${moment().format('HH')}시${moment().format('mm')}분`)
-      })
+      // .catch(function (error) {
+      //   FailAlert(`시간 형식을 맞춰주세요!
+      //   ex) ${moment().format('YYYY')}년${moment().format('MM')}월${moment().format('DD')}일${moment().format('HH')}시${moment().format('mm')}분`)
+      // })
   };
 
   // Age 관련 체크 로직
@@ -220,7 +234,7 @@ const CreateCalendar = () => {
   };
 
   const onHandleDecrease = (type) => {
-    const amount = calendarInfo[type] - 1 < 1 ? 1 : calendarInfo[type] - 1;
+    const amount = calendarInfo[type] - 1 < 2 ? 2 : calendarInfo[type] - 1;
     setCalendarInfo({ ...calendarInfo, [type]: amount });
   };
 
@@ -239,7 +253,7 @@ const CreateCalendar = () => {
 
   return (
     <>
-      <Header/>
+      <Header location={'lightzone'}/>
       <Wrapper color={'#fff'}>
         <CreateCalendarBlock>
           <FetchProfile/>
@@ -250,7 +264,6 @@ const CreateCalendar = () => {
                 type="text"
                 value={calendarInfo.calendarContent}
                 name="calendarContent"
-                placeholder="방 설명을 써주세요"
                 onChange={onCalendarInfoInput}
                 required>
               </InputForm>
@@ -427,4 +440,4 @@ const CreateCalendar = () => {
   );
 };
 
-export default CreateCalendar
+export default EditCalendar

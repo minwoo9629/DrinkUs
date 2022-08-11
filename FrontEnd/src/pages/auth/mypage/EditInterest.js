@@ -1,5 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useState } from "react";
 import styled from "styled-components";
 import {
   addUserInterest,
@@ -7,7 +6,6 @@ import {
   removeUserInterest,
 } from "../../../api/MyPageAPI";
 import ProfileTitle from "../../../components/auth/ProfileTitle";
-import { client } from "../../../utils/client";
 
 const CheckBoxStyled = styled.input`
   display: none;
@@ -48,36 +46,15 @@ const SubCategoryWrapper = styled.div`
   }
 `;
 const EditInterest = () => {
-  const [categoryState, setCategoryState] = useState([]);
-  const [profileImageState, setProfileImageState] = useState("1");
-  const [userNameState, setUserNameState] = useState("");
-  const user = useSelector((state) => state.user);
-  const fetchInterestsData = useCallback(async () => {
-    const result = await getUserInterests();
-    setCategoryState((prevState) => [...result.data]);
-  }, []);
+  const [categoryState, setCategoryState] = useState({});
 
-  useEffect(() => {
-    setProfileImageState(user.data.userImg !== "" ? user.data.userImg : "1");
-    setUserNameState(user.data.userName);
-  }, []);
-  useEffect(() => {
-    fetchInterestsData();
-  }, [fetchInterestsData]);
-  const onHandleCategoryCheck = (checked, subCategoryId) => {
-    checked
-      ? removeUserInterest(subCategoryId)
-      : addUserInterest(subCategoryId);
-    fetchInterestsData();
+  const onHandleCategoryCheck = (e) => {
+    console.log(e);
   };
 
   return (
-    <div style={{ padding: "30px 0px 30px 60px" }}>
-      <ProfileTitle
-        isEdit={false}
-        imageId={profileImageState}
-        userName={userNameState}
-      />
+    <div style={{ padding: "30px" }}>
+      <ProfileTitle isEdit={false} />
       <div
         style={{
           marginTop: "40px",

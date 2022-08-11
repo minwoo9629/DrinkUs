@@ -57,7 +57,7 @@ const nestedLink = [
 const MyPage = () => {
   return (
     <>
-      <Header position="static" />
+      <Header position="static" location={'lightzone'} />
       <Wrapper color={"#eaf2ff"} alignItems="none">
         <EditWrapper>
           <TabWrapper>
