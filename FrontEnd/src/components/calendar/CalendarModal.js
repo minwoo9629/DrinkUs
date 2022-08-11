@@ -1,0 +1,201 @@
+import { useRef, useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import styled from "styled-components";
+import { client } from "../../utils/client"
+import { useNavigate } from "react-router-dom";
+import { FailAlert, SuccessAlert } from "../../utils/sweetAlert";
+
+// 모달 스타일
+const ModalWrapper = styled.div`
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 10;
+  background-color: rgb(0, 0, 0, 0.6);
+  &.active {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+  }
+`;
+
+const ModalContentWrapper = styled.div`
+  width: 800px;
+  min-height: 600px;
+  background-color: #EAF1FF;
+  border-radius: 30px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  opacity: 1;
+  padding: 30px;
+`;
+
+const ModalHeader = styled.div`
+  width: 100%;
+  box-sizing: border-box;
+  border-bottom: 1px solid gray;
+  text-align: right;
+  padding: 8px 12px;
+`;
+
+const ModalCloseButton = styled.button`
+  padding: 8px 10px;
+  border: none;
+  background-color: white;
+  cursor: pointer;
+`;
+
+const ModalContent = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+`;
+
+// 모달 내부 스타일
+const CalendarBlock = styled.div`
+  width: 800px;
+  margin-bottom: 20px;
+  color: white;
+  background-color: #6F92BF;
+  border-radius: 30px;
+  padding: 30px;
+`
+
+const ContentBlock = styled.div`
+  display: block;
+  line-height: 1;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  height: 60px;
+`;
+
+const StyledButton = styled.button`
+  adding: 4px;
+  border: none;
+  background-color: black;
+  font-size: 16px;
+  color: white;
+  cursor: pointer;
+`;
+
+const CalendarModal = ({ isOpen, close, calendarId }) => {
+
+  const navigate = useNavigate();
+
+  // 사용자 정보 확인
+  const user = useSelector((state) => state.user);
+
+  // 글 정보를 담을 state 
+  const [calendar, setCalendar] = useState({});
+
+  // 글 정보를 가져오는 api요청
+  const onCalendarDetail = async () => {
+    const result = await client
+      .get(`/calendar/${calendarId}`)
+      .then((response) => response)
+    return result
+  }
+
+  // 모달에 들어오면 바로 api 요청 보내기
+  useEffect(()=>{
+    onHandleData();
+  },[])
+
+  // api 요청으로 받은 데이터(result)를 state에 담아주기
+  const onHandleData = async () => {
+    const result = await onCalendarDetail()
+    setCalendar(result.data);
+    setAgeState(result.data.ages)
+    return calendar, ageState
+  }
+
+  const [ageState, setAgeState] = useState([]);
+
+  // 나이대 값 ~대 로 변경
+  const rendering = () => {
+    const result = [];
+    for (let i = 0; i < 6; i++) {
+      if (ageState[i] === 'Y') {
+        result.push(
+        <span key={i}>
+          {i+2 + '0' + '대'}
+        </span>
+        )
+      }
+    }
+    return result
+  }
+
+  // 참가, 참가 취소 api 요청
+  const onPost = async () => {
+    if (calendar.participant === calendar.peopleLimit) {
+      FailAlert('방 인원이 다 찼어요!')
+    }
+    const result = await client
+      .post(`/calendar/join/${calendarId}`)
+      .then((response) => response)
+      SuccessAlert('참가신청이 완료되었습니다!')
+    return result
+  }
+
+  const onDelete = async () => {
+    await client
+      .delete(`/calendar/join/${calendarId}`)
+      SuccessAlert('취소되었습니다!')
+  }
+
+  // 일정 삭제 api 요청
+  const onDeleteCalendar = async () => {
+    await client
+    .delete(`/calendar/${calendarId}`)
+    SuccessAlert('게시글이 삭제되었습니다!')
+    navigate(-1);
+  }
+
+  return (
+    <ModalWrapper className={isOpen ? "active" : ""}>
+      <ModalContentWrapper>
+        <ModalHeader>
+          <ModalCloseButton onClick={close}>X</ModalCloseButton>
+        </ModalHeader>
+        <ModalContent>
+          <ContentBlock>
+            작성자: {calendar.createrNickname}
+          </ContentBlock>
+          <ContentBlock>
+            방 내용: {calendar.calendarContent}
+          </ContentBlock>
+          <ContentBlock>
+            참가자: {calendar.participant} / {calendar.peopleLimit}
+          </ContentBlock>
+          <ContentBlock>
+            장소: {calendar.place} 에서
+          </ContentBlock>
+          <ContentBlock>
+            시간: {calendar.time} 에 만나요
+          </ContentBlock>
+          <ContentBlock>
+            나이대: {rendering()}
+          </ContentBlock>
+          <>
+            {
+              user.data.userId === calendar.createrId ?
+              <>
+              <StyledButton onClick={() => navigate(`/calendar/${calendar.calendarId}/edit`)}>수정하기</StyledButton>/
+              <StyledButton onClick={onDeleteCalendar}>삭제하기</StyledButton>
+              </> : (calendar.isParticipate === true ?
+              <StyledButton onClick={onDelete}>취소</StyledButton> : <StyledButton onClick={onPost}>참가</StyledButton>)
+            }
+          </>
+        </ModalContent>
+      </ModalContentWrapper>
+    </ModalWrapper>
+  );
+};
+
+export default CalendarModal;
