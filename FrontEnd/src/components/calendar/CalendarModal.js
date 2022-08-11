@@ -140,6 +140,7 @@ const CalendarModal = ({ isOpen, close, calendarId }) => {
       .post(`/calendar/join/${calendarId}`)
       .then((response) => response)
       SuccessAlert('참가신청이 완료되었습니다!')
+      onHandleData()
     return result
   }
 
@@ -147,6 +148,7 @@ const CalendarModal = ({ isOpen, close, calendarId }) => {
     await client
       .delete(`/calendar/join/${calendarId}`)
       SuccessAlert('취소되었습니다!')
+      onHandleData()
   }
 
   // 일정 삭제 api 요청
@@ -155,6 +157,11 @@ const CalendarModal = ({ isOpen, close, calendarId }) => {
     .delete(`/calendar/${calendarId}`)
     SuccessAlert('게시글이 삭제되었습니다!')
     navigate(-1);
+  }
+
+  // 참가, 취소 버튼 누르면 바뀌기
+  const onHandleParticipate = () => {
+    setCalendar(calendar.isParticipate = !calendar.isParticipate)
   }
 
   return (
@@ -189,7 +196,8 @@ const CalendarModal = ({ isOpen, close, calendarId }) => {
               <StyledButton onClick={() => navigate(`/calendar/${calendar.calendarId}/edit`)}>수정하기</StyledButton>/
               <StyledButton onClick={onDeleteCalendar}>삭제하기</StyledButton>
               </> : (calendar.isParticipate === true ?
-              <StyledButton onClick={onDelete}>취소</StyledButton> : <StyledButton onClick={onPost}>참가</StyledButton>)
+              <StyledButton onClick={ () => {onDelete(), onHandleParticipate()} }>취소</StyledButton> : 
+              <StyledButton onClick={ () => {onPost(), onHandleParticipate()} }>참가</StyledButton>)
             }
           </>
         </ModalContent>
