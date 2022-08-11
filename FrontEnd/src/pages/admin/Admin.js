@@ -1,18 +1,27 @@
 import { useState } from "react";
 import styled from "styled-components";
 import { client } from "../../utils/client";
-import { Wrapper } from "../../components/styled/Wrapper";
 import Header from "../../components/layout/Header";
 import Footer from "../../components/layout/Footer";
-import { BaseFlexWrapper, BaseFlexColWrapper } from "../../components/styled/Wrapper";
+import { BaseFlexWrapper } from "../../components/styled/Wrapper";
+
+export const AdminWrapper = styled(BaseFlexWrapper)`
+  flex-direction: column;
+  background-color: ${({ color }) => color};
+  width: 100vw;
+  min-height: 100vh;
+  align-items: ${({ alignItems }) => alignItems};
+`;
 
 const ContentWrapper = styled(BaseFlexWrapper)`
   background: ${(props) => props.background};
   height: ${(props) => props.height};
   width: 100vw;
+
 `;
 
 const FunctionBlock = styled.div`
+  display: block;
   width: 80%;
   margin-bottom: 20px;
   color: black;
@@ -23,6 +32,7 @@ const FunctionBlock = styled.div`
 `
 
 const FunctionTitle = styled.div`
+  display: block;
   font-size : 50px;
   font-weight: bold;
   text-align: center;
@@ -30,7 +40,7 @@ const FunctionTitle = styled.div`
 `
 
 const FunctionContent = styled.div`
-  display: block
+  display: block;
   width: 100%;
   height: 300px;
   background-color: #ff33ff;
@@ -41,8 +51,8 @@ const FunctionContent = styled.div`
 const Admin = () => {
   return(
     <>
-      <Header position={'fixed'} />
-      <Wrapper color={'white'}>
+      <Header />
+      <AdminWrapper color={'white'} width={'1200px'}>
         <FunctionBlock>
           <FunctionTitle>사용자 목록 조회</FunctionTitle>
           <FunctionContent>
@@ -57,7 +67,7 @@ const Admin = () => {
           </FunctionContent>
         </FunctionBlock>
 
-      </Wrapper>
+      </AdminWrapper>
 
       <Footer />
     </>
