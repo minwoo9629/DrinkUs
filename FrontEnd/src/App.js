@@ -31,6 +31,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import Admin from "./pages/admin/Admin";
 import VideoRoomComponent from "./pages/room/openVidu/VideoRoomComponent";
 import PrivateRoute from "./routes/PrivateRoute";
+import NotFound from "./pages/error/NotFound";
 
 function App() {
   return (
@@ -108,6 +109,7 @@ function App() {
                 path="/room/detail"
                 element={<PrivateRoute component={<VideoRoomComponent />} />}
               />
+              <Route path="/*" element={<NotFound />} />
             </Routes>
           </div>
         </BrowserRouter>
