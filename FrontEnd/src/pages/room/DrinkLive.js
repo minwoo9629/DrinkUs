@@ -1,19 +1,42 @@
-import { GoToButton } from "../../components/common/buttons/GoToButton";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/layout/Header";
-import { Wrapper } from "../../components/styled/Wrapper";
 import styled from "styled-components";
 import { useState } from "react";
 import { client } from "../../utils/client";
 import { useEffect } from "react";
 import LiveListItem from '../../components/room/LiveListItem'
-import { BaseFlexWrapper } from "../../components/styled/Wrapper";
-import Modal from "../../components/modals/Modal";
 
+const LiveWrapper = styled.div`
+  display: flex;
+  background-color: black;
+  justify-content: center;
+  width: 100vw;
+`
+
+const LiveButtonWrapper = styled.div`
+  width: 1000px;
+  height: 110px;
+`
+
+const LiveButton = styled.button`
+  width: 160px;
+  height: 48px;
+  margin-right: 20px;
+  border-radius: 30px;
+  background-color: #EAF1FF;
+  color: #676775;
+  font-size: 18px;
+  margin-top: 40px;
+  line-height: 3px;
+  border: 3px solid #BDCFF2;
+  box-shadow: inset 0px 0px 4px 4px rgba(189, 207, 242, 0.5);
+  cursor: pointer;
+`
 
 const Banner = styled.div `
   height: 270px;
-  width: 1500px;
+  width: 1000px;
+  border-radius: 30px;
   background-color: #EAF1FF;
 `
 
@@ -27,7 +50,7 @@ const GlobalStyle = styled.div`
   }
 `;
 
-const RecommendWrapper = styled(BaseFlexWrapper)`
+const RecommendWrapper = styled.div`
   background-color: black;
   width: 100vw;
   min-height: 400px;
@@ -82,13 +105,16 @@ const DrinkLive = () => {
   return (
   <>
     <Header/>
-    <Wrapper>
-      <Banner>배너입니다.
+    <LiveWrapper>
+      <LiveButtonWrapper>
+      <LiveButton onClick={() => navigate("/createroom")} color={"cornflowerblue"}>방 만들기</LiveButton>
+      <LiveButton onClick={() => navigate("/rooms")} color={"#EAF1FF"}>모든 방 보기</LiveButton>
+    </LiveButtonWrapper>
+    </LiveWrapper>
+    <LiveWrapper>
+      <Banner>
       </Banner>
-        <GoToButton onClick={() => navigate("/createroom")} color={"cornflowerblue"}>방 만들기</GoToButton>
-        <GoToButton onClick={() => navigate("/rooms")} color={"#EAF1FF"}>모든 방 보기</GoToButton>
-        
-    </Wrapper>
+    </LiveWrapper>
     <RecommendWrapper>
       <GlobalStyle />
       <>
