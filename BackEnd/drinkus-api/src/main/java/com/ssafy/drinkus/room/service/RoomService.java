@@ -5,6 +5,7 @@ import com.ssafy.drinkus.category.domain.CategoryRepository;
 import com.ssafy.drinkus.category.query.CategoryQueryRepository;
 import com.ssafy.drinkus.common.NotFoundException;
 import com.ssafy.drinkus.common.NotMatchException;
+import com.ssafy.drinkus.common.RoomException;
 import com.ssafy.drinkus.common.type.YN;
 import com.ssafy.drinkus.room.domain.Room;
 import com.ssafy.drinkus.room.domain.RoomHistory;
@@ -122,14 +123,20 @@ public class RoomService {
                 .collect(Collectors.toList());
     }
 
-    //화상방 추천 - 지금 막 생성된 방
-    public List<RoomListResponse> findByCurrentTime(User user){
-        int currentHour = 1;
-        List<Room> list = roomRepository.findTop8ByCreatedDateAfterOrderByCreatedDateDesc(LocalDateTime.now().minusHours(currentHour))
-                .orElseThrow(() -> new NotFoundException("방이 존재하지 않습니다."));
+    //화상방 추천 - 최근 12시간 이내 생성 방 중 랜덤 8개
+    public List<RoomListResponse> findRandomRooms(){
+        List<Room> currentRoomList = roomRepository.findAllByCreatedDateAfter(LocalDateTime.now().minusHours(12))
+                .orElseThrow(() -> new NotFoundException(ROOM_NOT_FOUND));
+        int size = currentRoomList.size() < 8 ? currentRoomList.size() : 8;
+
+        Set<Room> roomSet = new HashSet<>();
+        while(roomSet.size() < size){
+            int seq = (int)(Math.random()*size);
+            roomSet.add(currentRoomList.get(seq));
+        }
 
         List<RoomListResponse> response = new ArrayList<>();
-        for (Room room : list) {
+        for (Room room : roomSet) {
             RoomListResponse res = RoomListResponse.from(room);
             res.setConnectedUserNum(roomHistoryRepository.countPeopleInRoom(room.getRoomId()));
             response.add(res);
@@ -204,6 +211,13 @@ public class RoomService {
     @Transactional
     // 화상방 입장
     public void joinRoom(User user, Long roomId){
+
+        // 접속중인 방이 있으면 다른 방에 접속 불가
+        if(roomHistoryRepository.findTopByUserUserIdAndIsExited(user.getUserId(), YN.N).isPresent()){
+            throw new RoomException(RoomException.JOINING_OTHER_ROOM);
+        }
+
+        // 방 접속
         Room room = roomRepository.findById(roomId)
                 .orElseThrow(() -> new NotFoundException(ROOM_NOT_FOUND));
         RoomHistory roomHistory = RoomHistory.createRoomHistory(room,user);
@@ -213,7 +227,7 @@ public class RoomService {
     @Transactional
     // 화상방 퇴장
     public void exitRoom(User user, Long roomId){
-        RoomHistory roomHistory = roomHistoryRepository.findByRoomRoomIdAndUserUserId(roomId, user.getUserId())
+        RoomHistory roomHistory = roomHistoryRepository.findTopByRoomRoomIdAndUserUserId(roomId, user.getUserId())
                 .orElseThrow(() -> new NotMatchException(NotMatchException.ROOM_HISTORY_NOT_MATCH));
         if(roomHistory.getIsExited() == YN.N)
             roomHistory.updateRoomHistory(YN.Y);
