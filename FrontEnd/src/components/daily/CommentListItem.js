@@ -1,9 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
 import {
-  getDailyComment,
-  postDailyComment,
-  editDailyComment,
   deleteDailyComment,
 } from "../../api/DailyAPI";
 import { client } from "../../utils/client";

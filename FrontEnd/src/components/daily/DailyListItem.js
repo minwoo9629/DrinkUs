@@ -1,15 +1,10 @@
 import styled from "styled-components";
 import {
   getDailyArticle,
-  postDailyArticle,
-  editDailyArticle,
   deleteDailyArticle,
-  postDailyComment,
-  deleteDailyComment,
 } from "../../api/DailyAPI";
 import CommentList from "./CommentList";
 import { useState } from "react";
-import { FailAlert } from "../../utils/sweetAlert";
 import { client } from "../../utils/client";
 
 const DailyWrapper = styled.div`
@@ -104,8 +99,6 @@ const DailyListItem = (
   createrId,
   boardId,
   boardContent,
-  // onArticleEdit,
-  // onArticleDelete,
   }) => {
   const [state, setState] = useState({
     boardArticle: "",
@@ -121,7 +114,14 @@ const DailyListItem = (
   const onEditArticleInput = (e) => {
     setState({...state, [e.target.name]: e.target.value });
   };
-  
+
+  // 전체 글 fetch
+  const fetchArticle = async () => {
+    const response = await getDailyArticle();
+    setState({...response.data});
+    console.log(response.data.content)
+  };
+
   // 글 수정
   const onArticleEdit = (boardId) => {
     client
@@ -129,6 +129,7 @@ const DailyListItem = (
         boardContent: state.boardArticle
       })
       .then((response) => response)
+    fetchArticle();
   };
 
   // 글 수정 창 여닫기
