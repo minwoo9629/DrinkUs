@@ -157,9 +157,8 @@ const EditProfile = () => {
       return { ...prevState, ...userProfile };
     });
     setPopularlityPercentState(popularlityPercent);
-    setProfileImageState(user.data.userImg !== "" ? user.data.userImg : "1");
+    setProfileImageState(!user.data.userImg ? "1" : user.data.userImg);
   }, []);
-
   const onHandleProfileState = (e) => {
     setProfileState({ ...profileState, [e.target.name]: e.target.value });
   };
