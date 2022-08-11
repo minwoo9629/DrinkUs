@@ -74,7 +74,6 @@ const LogOutButton = styled.button`
 `;
 
 const Header = ({ position }) => {
-
   const navigate = useNavigate();
 
   const [ScrollY, setHeaderColor] = useState(0);
@@ -128,7 +127,7 @@ const Header = ({ position }) => {
           {user.isLogin ? (
             <>
               <HeaderMenuLink
-                to={"/user"}
+                to={"/user/edit/profile"}
                 className={HeaderStatus ? "" : "light"}
               >
                 {user.data.userNickname}님

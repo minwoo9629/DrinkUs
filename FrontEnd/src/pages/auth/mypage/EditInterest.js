@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useCallback, useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
 import {
   addUserInterest,
@@ -52,7 +53,6 @@ const EditInterest = () => {
   const user = useSelector((state) => state.user);
   const fetchInterestsData = useCallback(async () => {
     const result = await getUserInterests();
-    console.log(result);
     setCategoryState((prevState) => [...result.data]);
   }, []);
 
@@ -86,8 +86,12 @@ const EditInterest = () => {
     setCategoryState([...updatedCategoryState]);
   };
   return (
-    <div style={{ padding: "30px" }}>
-      <ProfileTitle isEdit={false} />
+    <div style={{ padding: "30px 0px 30px 60px" }}>
+      <ProfileTitle
+        isEdit={false}
+        imageId={profileImageState}
+        userName={userNameState}
+      />
       <div
         style={{
           marginTop: "40px",

@@ -38,7 +38,6 @@ const MySchedule = () => {
     setProfileImageState(user.data.userImg !== "" ? user.data.userImg : "1");
     setUserNameState(user.data.userName);
   }, []);
-  console.log(scheduleState);
   return (
     <div style={{ padding: "30px 0px 30px 60px" }}>
       <ProfileTitle
