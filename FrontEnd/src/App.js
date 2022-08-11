@@ -17,7 +17,6 @@ import DrinkLive from "./pages/room/DrinkLive";
 import CreateRoom from "./pages/room/CreateRoom";
 import RoomList from "./pages/room/RoomList";
 import Daily from "./pages/Daily";
-import RoomDetail from "./pages/room/RoomDetail";
 import Calendar from "./pages/calendarcommunity/Calendar";
 import DailyCalendarList from "./pages/calendarcommunity/DailyCalendarList";
 import CreateCalendar from "./pages/calendarcommunity/CreateCalendar";
@@ -69,10 +68,6 @@ function App() {
               <Route
                 path="/daily"
                 element={<PrivateRoute component={<Daily />} />}
-              />
-              <Route
-                path="/rooms/:roomId"
-                element={<PrivateRoute component={<RoomDetail />} />}
               />
               <Route
                 path="/calendar"

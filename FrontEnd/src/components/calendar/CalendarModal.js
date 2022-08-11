@@ -1,5 +1,5 @@
-import { useRef, useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { client } from "../../utils/client"
 import { useNavigate } from "react-router-dom";
@@ -9,7 +9,7 @@ import { FailAlert, SuccessAlert } from "../../utils/sweetAlert";
 const ModalWrapper = styled.div`
   display: none;
   position: absolute;
-  top: 0;
+  top: ${({ top }) => `${top}px`};
   left: 0;
   width: 100%;
   height: 100vh;
@@ -87,6 +87,24 @@ const CalendarModal = ({ isOpen, close, calendarId }) => {
 
   const navigate = useNavigate();
 
+  // 모달 위치 조정
+  const [ScrollY, setModalLocation] = useState(0);
+  
+  const onHandleLocation = () => {
+    setModalLocation(window.pageYOffset);
+  }
+
+  useEffect(()=> {
+    const watch = () => {
+      window.addEventListener("scroll", onHandleLocation);
+    };
+    onHandleLocation();
+    watch();
+    return () => {
+      window.removeEventListener("scroll", onHandleLocation);
+    }
+  })
+
   // 사용자 정보 확인
   const user = useSelector((state) => state.user);
 
@@ -140,6 +158,7 @@ const CalendarModal = ({ isOpen, close, calendarId }) => {
       .post(`/calendar/join/${calendarId}`)
       .then((response) => response)
       SuccessAlert('참가신청이 완료되었습니다!')
+      onHandleData()
     return result
   }
 
@@ -147,6 +166,7 @@ const CalendarModal = ({ isOpen, close, calendarId }) => {
     await client
       .delete(`/calendar/join/${calendarId}`)
       SuccessAlert('취소되었습니다!')
+      onHandleData()
   }
 
   // 일정 삭제 api 요청
@@ -157,8 +177,13 @@ const CalendarModal = ({ isOpen, close, calendarId }) => {
     navigate(-1);
   }
 
+  // 참가, 취소 버튼 누르면 바뀌기
+  const onHandleParticipate = () => {
+    setCalendar(calendar.isParticipate = !calendar.isParticipate)
+  }
+
   return (
-    <ModalWrapper className={isOpen ? "active" : ""}>
+    <ModalWrapper className={isOpen ? "active" : ""} top={ScrollY}>
       <ModalContentWrapper>
         <ModalHeader>
           <ModalCloseButton onClick={close}>X</ModalCloseButton>
@@ -189,7 +214,8 @@ const CalendarModal = ({ isOpen, close, calendarId }) => {
               <StyledButton onClick={() => navigate(`/calendar/${calendar.calendarId}/edit`)}>수정하기</StyledButton>/
               <StyledButton onClick={onDeleteCalendar}>삭제하기</StyledButton>
               </> : (calendar.isParticipate === true ?
-              <StyledButton onClick={onDelete}>취소</StyledButton> : <StyledButton onClick={onPost}>참가</StyledButton>)
+              <StyledButton onClick={ () => {onDelete(), onHandleParticipate()} }>취소</StyledButton> : 
+              <StyledButton onClick={ () => {onPost(), onHandleParticipate()} }>참가</StyledButton>)
             }
           </>
         </ModalContent>
