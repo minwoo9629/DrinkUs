@@ -1,5 +1,6 @@
 package com.ssafy.drinkus.category.query;
 
+import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.drinkus.category.domain.Category;
 import com.ssafy.drinkus.category.domain.SubCategory;
@@ -35,4 +36,16 @@ public class CategoryQueryRepository {
         return results;
     }
 
+    public Long findCategoryIdByUserId(Long userId) {
+        Tuple tuple = queryFactory
+                .select(subCategory.category.categoryId, subCategory.SubCategoryId.count())
+                .from(subCategory)
+                .join(subCategory.userSubCategoryList, userSubCategory)
+                .where(userSubCategory.user.userId.eq(userId))
+                .groupBy(subCategory.category.categoryId)
+                .orderBy(subCategory.SubCategoryId.count().desc())
+                .limit(1)
+                .fetchOne();
+        return tuple.get(subCategory.category.categoryId);
+    }
 }

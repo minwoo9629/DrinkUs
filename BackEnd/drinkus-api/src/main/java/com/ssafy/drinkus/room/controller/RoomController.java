@@ -6,11 +6,7 @@ import com.ssafy.drinkus.room.response.RoomInfoResponse;
 import com.ssafy.drinkus.room.response.RoomListResponse;
 import com.ssafy.drinkus.room.service.RoomService;
 import com.ssafy.drinkus.user.domain.User;
-import com.ssafy.drinkus.util.StringUtil;
-import io.openvidu.java.client.OpenVidu;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -18,8 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
-//http://i7b306.p.ssafy.io/api/
 @RestController
 @RequestMapping("/api/rooms")
 @RequiredArgsConstructor
@@ -42,6 +38,27 @@ public class RoomController {
                                                                       @Valid RoomSearchRequest request,
                                                                       @PageableDefault Pageable pageable){
         Page<RoomListResponse> body = roomService.findBySearchRequest(user, request, pageable);
+        return ResponseEntity.ok().body(body);
+    }
+
+    // 내 나이대로 설정된 방 최대 8개
+    @GetMapping("/recommend/ages")
+    public ResponseEntity<List<RoomListResponse>> findRoomBySameAges(@LoginUser User user){
+        List<RoomListResponse> body = roomService.findBySameAges(user);
+        return ResponseEntity.ok().body(body);
+    }
+
+    // 관심사가 [내 관심사 중 소주제로 제일 많이 고른 대주제, 개수 똑같은거 있으면 랜덤 하나]로 설정된 방
+    @GetMapping("/recommend/category")
+    public ResponseEntity<List<RoomListResponse>> findRoomBySameCategory(@LoginUser User user){
+        List<RoomListResponse> body = roomService.findRoomBySameCategory(user);
+        return ResponseEntity.ok().body(body);
+    }
+
+    // 지금 막 생성된 방 최대 8개 (지난 1시간 이내 기준)
+    @GetMapping("/recommend/current")
+    public ResponseEntity<List<RoomListResponse>> findRoomByCurrentTime(@LoginUser User user){
+        List<RoomListResponse> body = roomService.findByCurrentTime(user);
         return ResponseEntity.ok().body(body);
     }
 
@@ -83,7 +100,4 @@ public class RoomController {
     }
 
     //화상방 강퇴
-
-
-
 }
