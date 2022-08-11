@@ -56,10 +56,10 @@ public class RoomController {
         return ResponseEntity.ok().body(body);
     }
 
-    // 지금 막 생성된 방 최대 8개 (지난 1시간 이내 기준)
+    // 지난 12시간 이내 생성 방 랜덤 8개
     @GetMapping("/recommend/current")
-    public ResponseEntity<List<RoomListResponse>> findRoomByCurrentTime(@LoginUser User user){
-        List<RoomListResponse> body = roomService.findByCurrentTime(user);
+    public ResponseEntity<List<RoomListResponse>> findRoomByCurrentTime(){
+        List<RoomListResponse> body = roomService.findRandomRooms();
         return ResponseEntity.ok().body(body);
     }
 
