@@ -30,9 +30,7 @@ public class AdminService {
 
     //회원 전체 조회
     public List<UserListResponse> findAllUser(User user){
-        if(user.getUserRole() != UserRole.ROLE_ADMIN){
-            throw new AuthenticationException("관리자만 신고내역을 조회할 수 있습니다.");
-        }
+        checkPermission(user);
 
         List<User> userList = userRepository.findAll();
         return userList.stream()
@@ -102,7 +100,7 @@ public class AdminService {
 
     private void checkPermission(User user){
         if(user.getUserRole() != UserRole.ROLE_ADMIN){
-            throw new AuthenticationException("관리자만 신고내역을 조회할 수 있습니다.");
+            throw new AuthenticationException("관리자만 해당 기능을 이용 가능합니다.");
         }
     }
 }
