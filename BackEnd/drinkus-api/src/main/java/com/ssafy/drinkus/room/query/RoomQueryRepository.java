@@ -111,9 +111,4 @@ public class RoomQueryRepository {
         System.out.println(LocalDate.now().getYear() - Integer.parseInt(userBirth) + 1);
         return LocalDate.now().getYear() - Integer.parseInt(userBirth) + 1;
     }
-
-    //    찾은 대분류 기반 방 찾기
-    //    select *
-    //    from room r
-    //    where category_id = 1;
 }
