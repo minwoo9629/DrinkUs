@@ -18,7 +18,7 @@ const InputForm = styled.input`
   background-color: white;
   width: ${({ width }) => width};
   height: 100%;
-  line-height: 30px;
+  line-height: 100%;
   border: 1px solid #BDCFF2;
   border-radius: 10px;
 `
@@ -59,12 +59,20 @@ const ReportListItem = ({
       <div style={{ width: "5%" }}>{toUserId}</div>
       <div style={{ width: "20%" }}>{reportType}</div>
       <div style={{ width: "25%" }}>{reportReason}</div>
-      <div style={{ width: "10%" }}>{reportCompleted}</div>
       {
-        reportResult === null ? (
+        reportCompleted === 'Y' ? (
+          <div style={{ width: "10%", color: "blue"}}>O</div>
+        ) : (
+          <div style={{ width: "10%", color: "red"}}>X</div>
+        )
+      }
+      
+      {
+        reportCompleted === 'N' ? (
           <InputForm
             width="20%"
             type="number"
+            min="0"
             value={state.stopPeriod}
             name="stopPeriod"
             placeholder="정지일"
@@ -75,11 +83,12 @@ const ReportListItem = ({
           <div style={{ width: "20%" }}>{reportResult}</div>
         )
       }
+      <div style={{ width: "2%" }}></div>
       {
-        reportResult === null ? (
+        reportCompleted === 'N' ? (
           <CustomButton
             bg="red"
-            width="5%" 
+            width="3%" 
             onClick={() => onHandleProcessReport(state)}
           >
             처리
@@ -87,7 +96,7 @@ const ReportListItem = ({
         ) : (
           <CustomButton
             bg="darkgrey"
-            width="5%" >
+            width="3%" >
             -
           </CustomButton>
         )

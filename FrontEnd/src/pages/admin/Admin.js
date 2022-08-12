@@ -18,15 +18,9 @@ export const AdminWrapper = styled(BaseFlexWrapper)`
   align-items: ${({ alignItems }) => alignItems};
 `;
 
-const ContentWrapper = styled(BaseFlexWrapper)`
-  background: ${(props) => props.background};
-  height: ${(props) => props.height};
-  width: 100vw;
-`;
-
 const FunctionBlock = styled.div`
   display: block;
-  width: 90%;
+  width: 90vw;
   margin-bottom: 20px;
   color: black;
   background-color: #ffffff;
@@ -43,8 +37,20 @@ const FunctionTitle = styled.div`
   margin-bottom: 10px;
 `
 
+const InputBlock = styled.div`
+  display: block;
+  height: 40px;
+  line-height: 40px;
+  background-color: yellow;
+  font-size: 16px;
+  text-align: center;
+  margin-bottom: 10px;
+`
+
 const FunctionContent = styled.div`
   display: block;
+  background-color: lightgrey;
+  border-radius: 15px;
   width: 100%;
   height: 500px;
   text-align: center;
@@ -88,6 +94,11 @@ const Admin = () => {
   }
 
   const onHandleProcessReport = async (state) => {
+    if(state.stopPeriod < 0){
+      alert("정지 기한은 음수로 설정할 수 없습니다.");
+      return;
+    }
+
     const response = await processReport(state);
     if(response.status === 200){
       alert("성공적으로 처리되었습니다.");
@@ -103,6 +114,7 @@ const Admin = () => {
       <AdminWrapper color={'white'} width={'1200px'}>
         <FunctionBlock>
           <FunctionTitle>사용자 목록 조회</FunctionTitle>
+          <InputBlock></InputBlock>
           <FunctionContent>
             <UserList
               userList={userList}

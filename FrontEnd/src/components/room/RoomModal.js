@@ -7,6 +7,7 @@ import { TimeGap } from "../../utils/TimeGap";
 import { useDispatch } from "react-redux";
 import { setRoomSession } from "../../store/actions/room";
 
+// 모달 기본 스타일
 const ModalWrapper = styled.div`
   display: none;
   position: absolute;
@@ -51,15 +52,71 @@ const ModalCloseButton = styled.button`
 `;
 
 const ModalContent = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
   padding: 20px;
 `;
+
+// 프로필 스타일
+const ProfileBlock = styled.div`
+  line-height: 1;
+  display: block;
+  align-items: center;
+  margin-bottom: 10px;
+`;
+
+const ProfileImageWrapper = styled.div`
+  float: left;
+  width: 60px;
+  height: 60px;
+  margin: 0px 20px 0px 20px;
+`;
+
+const ProfileImageThumbnail = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 100%;
+  border: 3px solid white;
+`;
+
+const Nickname = styled.div`
+  display: inline-block;
+  display: block;
+  margin-bottom: 4px;
+  height: 30px;
+  line-height: 30px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #000;
+`;
+
+const Popularity = styled.div`
+  display: inline-block;
+  display: block;
+  height: 30px;
+  line-height: 30px;
+  font-weight: bold;
+  color: #000;
+`;
+
+// 컨텐츠 스타일
+const ContentBlock = styled.div`
+  display: block;
+  line-height: 1;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  height: 60px;
+`
+
 const RoomModal = ({ isOpen, close, roomId }) => {
+<<<<<<< HEAD
   // Room 입장을 위한 세션설정
   const dispatch = useDispatch();
   const navigate = useNavigate();
+=======
+
+  const navigate = useNavigate();
+
+>>>>>>> 501e36d4c840a589df49c7bb37cb9d7d98a9eda2
   // 모달 위치 조정
   const [ScrollY, setModalLocation] = useState(0);
 
@@ -88,9 +145,12 @@ const RoomModal = ({ isOpen, close, roomId }) => {
 
   const [data, setData] = useState({});
 
+  const [userData, setUserData] = useState({});
+
   const dataRefineFunc = async () => {
     const result = await onRoomDetail();
     setData(result.data);
+    setUserData(result.data.user)
     return data;
   };
 
@@ -100,6 +160,7 @@ const RoomModal = ({ isOpen, close, roomId }) => {
 
   const timeGap = TimeGap(data.createdDate);
 
+<<<<<<< HEAD
   const onHandleEnterRoom = () => {
     const sessionData = {
       sessionName: `Session${data.roomId}`,
@@ -107,6 +168,11 @@ const RoomModal = ({ isOpen, close, roomId }) => {
     dispatch(setRoomSession(sessionData));
     navigate("/room/detail");
   };
+=======
+  const Img = userData.userImg
+  const userId = userData.userId
+
+>>>>>>> 501e36d4c840a589df49c7bb37cb9d7d98a9eda2
   return (
     <ModalWrapper className={isOpen ? "active" : ""} top={ScrollY}>
       <ModalContentWrapper>
@@ -114,6 +180,7 @@ const RoomModal = ({ isOpen, close, roomId }) => {
           <ModalCloseButton onClick={close}>X</ModalCloseButton>
         </ModalHeader>
         <ModalContent>
+<<<<<<< HEAD
           <div>
             {timeGap}시간 전{JSON.stringify(data.roomName)}
             {JSON.stringify(data.category)}
@@ -121,6 +188,30 @@ const RoomModal = ({ isOpen, close, roomId }) => {
             {JSON.stringify(data.roomId)}
           </div>
           <GoToButton onClick={onHandleEnterRoom}>참여하기</GoToButton>
+=======
+          <ProfileBlock>
+            <ProfileImageWrapper>
+              <ProfileImageThumbnail src={Img} onClick={()=>navigate("/profile")}/>
+            </ProfileImageWrapper>
+            <Nickname>{JSON.stringify(userData.userNickname)}</Nickname>
+            <Popularity>{JSON.stringify(userData.userPopularity)}</Popularity>
+          </ProfileBlock>
+          <ContentBlock>
+            {timeGap}시간 전
+          </ContentBlock>
+          <ContentBlock>
+            {JSON.stringify(data.roomName)}
+          </ContentBlock>
+          <ContentBlock>
+            {JSON.stringify(data.category)}
+          </ContentBlock>
+          <ContentBlock>
+            {JSON.stringify(data.peopleLimit)}
+          </ContentBlock>
+          <GoToButton>
+          <Link to="/room/detail">참여하기</Link>
+          </GoToButton>
+>>>>>>> 501e36d4c840a589df49c7bb37cb9d7d98a9eda2
         </ModalContent>
       </ModalContentWrapper>
     </ModalWrapper>
