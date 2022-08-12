@@ -2,9 +2,10 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { client } from "../../utils/client";
 import { GoToButton } from "../common/buttons/GoToButton";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { TimeGap } from "../../utils/TimeGap";
 
+// 모달 기본 스타일
 const ModalWrapper = styled.div`
   display: none;
   position: absolute;
@@ -49,12 +50,64 @@ const ModalCloseButton = styled.button`
 `;
 
 const ModalContent = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
   padding: 20px;
 `;
+
+// 프로필 스타일
+const ProfileBlock = styled.div`
+  line-height: 1;
+  display: block;
+  align-items: center;
+  margin-bottom: 10px;
+`;
+
+const ProfileImageWrapper = styled.div`
+  float: left;
+  width: 60px;
+  height: 60px;
+  margin: 0px 20px 0px 20px;
+`;
+
+const ProfileImageThumbnail = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 100%;
+  border: 3px solid white;
+`;
+
+const Nickname = styled.div`
+  display: inline-block;
+  display: block;
+  margin-bottom: 4px;
+  height: 30px;
+  line-height: 30px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #000;
+`;
+
+const Popularity = styled.div`
+  display: inline-block;
+  display: block;
+  height: 30px;
+  line-height: 30px;
+  font-weight: bold;
+  color: #000;
+`;
+
+// 컨텐츠 스타일
+const ContentBlock = styled.div`
+  display: block;
+  line-height: 1;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  height: 60px;
+`
+
 const RoomModal = ({ isOpen, close, roomId }) => {
+
+  const navigate = useNavigate();
 
   // 모달 위치 조정
   const [ScrollY, setModalLocation] = useState(0);
@@ -84,9 +137,12 @@ const RoomModal = ({ isOpen, close, roomId }) => {
 
   const [data, setData] = useState({});
 
+  const [userData, setUserData] = useState({});
+
   const dataRefineFunc = async () => {
     const result = await onRoomDetail();
     setData(result.data);
+    setUserData(result.data.user)
     return data;
   };
 
@@ -96,6 +152,9 @@ const RoomModal = ({ isOpen, close, roomId }) => {
 
   const timeGap = TimeGap(data.createdDate)
 
+  const Img = userData.userImg
+  const userId = userData.userId
+
   return (
     <ModalWrapper className={isOpen ? "active" : ""} top={ScrollY}>
       <ModalContentWrapper>
@@ -103,13 +162,25 @@ const RoomModal = ({ isOpen, close, roomId }) => {
           <ModalCloseButton onClick={close}>X</ModalCloseButton>
         </ModalHeader>
         <ModalContent>
-          <div>
-          {timeGap}시간 전
-          {JSON.stringify(data.roomName)}
-          {JSON.stringify(data.category)}
-          {JSON.stringify(data.peopleLimit)}
-          {JSON.stringify(data.roomId)}
-          </div>
+          <ProfileBlock>
+            <ProfileImageWrapper>
+              <ProfileImageThumbnail src={Img} onClick={()=>navigate("/profile")}/>
+            </ProfileImageWrapper>
+            <Nickname>{JSON.stringify(userData.userNickname)}</Nickname>
+            <Popularity>{JSON.stringify(userData.userPopularity)}</Popularity>
+          </ProfileBlock>
+          <ContentBlock>
+            {timeGap}시간 전
+          </ContentBlock>
+          <ContentBlock>
+            {JSON.stringify(data.roomName)}
+          </ContentBlock>
+          <ContentBlock>
+            {JSON.stringify(data.category)}
+          </ContentBlock>
+          <ContentBlock>
+            {JSON.stringify(data.peopleLimit)}
+          </ContentBlock>
           <GoToButton>
           <Link to="/room/detail">참여하기</Link>
           </GoToButton>
