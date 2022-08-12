@@ -30,9 +30,6 @@ public class StompHandler implements ChannelInterceptor {
                 throw new AccessDeniedException("연결 거부");
             }
 
-            accessor.setUser(jwtUtil.getAuthentication(extractToken(accessor)));
-            System.out.println("user: " + accessor.getUser());
-            System.out.println("id: " + jwtUtil.getUserId(extractToken(accessor)));
             System.out.println("########client connected!!!");
         }
 
