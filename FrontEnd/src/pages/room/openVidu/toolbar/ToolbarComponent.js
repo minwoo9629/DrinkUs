@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 
 import styled from "styled-components";
+import { randomDrink } from "../../../../utils/sweetAlert";
 
 const ToolBar = styled.div`
   width: 20%;
@@ -154,7 +155,7 @@ export default class ToolbarComponent extends Component {
               </RoomContentButton>
             </RoomContentButtonWrapper>
             <RoomContentButtonWrapper>
-              <RoomContentButton>
+              <RoomContentButton onClick={() => randomDrink("~~님 마셔요!!!!")}>
                 <FontAwesomeStyled className="fas fa-gamepad" />
               </RoomContentButton>
             </RoomContentButtonWrapper>
