@@ -15,7 +15,7 @@ const DailyBoard = styled.div`
   flex-direction: column;
 `
 
-const DailyList = React.memo(({ dailyList, onArticleEdit, onArticleDelete, onHandleComment}) => {
+const DailyList = React.memo(({ dailyList }) => {
   return (
     <div>
       {dailyList.length !== 0 ? (
@@ -24,9 +24,6 @@ const DailyList = React.memo(({ dailyList, onArticleEdit, onArticleDelete, onHan
             <DailyListItem
               {...content}
               key={content.boardId}
-              // onArticleEdit={onArticleEdit}
-              // onArticleDelete={onArticleDelete}
-              // onHandleComment={onHandleComment}
             />
           ))}
         </>
