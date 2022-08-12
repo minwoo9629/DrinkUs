@@ -53,7 +53,6 @@ public class GameService {
     }
 
     public String findUserByRoomId(Long roomId) {
-        System.out.println("roomId = " + roomId);
         Map<String, Long> usersInRoom = ROOMS.get(roomId);
         Long userId = makeRandomDrinkUserId(usersInRoom);
         User findUser = userRepository.findById(userId)
@@ -78,13 +77,9 @@ public class GameService {
             ROOMS.get(roomId).remove(sessionId); // 방에서 사용자 제거
             if (ROOMS.get(roomId).size() == 0) {
                 ROOMS.remove(roomId);  // 남아있는 사용자가 한 명도 없으면 방도 제거
-                System.out.println(roomId + " 번 방 제거됨");
             }
-            System.out.println("사용자 정보 삭제중");
         }
         SESSION_USER_ID.remove(sessionId); // USERID 정보도 제거
         SESSION_ROOM_ID.remove(sessionId);
-        System.out.println("사용자 정보 삭제 완료");
     }
-
 }
