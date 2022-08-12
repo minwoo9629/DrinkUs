@@ -49,4 +49,5 @@ public class GameService {
         UserMyInfoResponse userMyInfoResponse = null;
         return userMyInfoResponse;
     };
+
 }
