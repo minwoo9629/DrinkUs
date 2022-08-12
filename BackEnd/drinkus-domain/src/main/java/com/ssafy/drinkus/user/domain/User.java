@@ -68,6 +68,8 @@ public class User extends BaseEntity {
 
     private Integer userBeer;
 
+    private String fcmToken;
+
     @OneToMany(mappedBy = "user")
     private List<RoomHistory> roomHistoryList = new ArrayList<>();
 
@@ -144,5 +146,10 @@ public class User extends BaseEntity {
     //인기도 제한횟수 수정
     public void updatePopularityLimit(){
         this.userPopularityLimit -= 1;
+    }
+
+    //fcm토큰 재설정
+    public void updateFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
     }
 }
