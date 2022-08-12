@@ -1,9 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import {
-  getDailyComment,
-  postDailyComment,
-  editDailyComment,
   deleteDailyComment,
 } from "../../api/DailyAPI";
 import { client } from "../../utils/client";
@@ -68,10 +65,25 @@ const CommentListItem = ({
     showCommentEdit: false,
   })
 
+// 접속한 유저 정보 가져오기
+const fetchUser = async () => {
+  client
+    .get("users")
+    .then(function(response) {
+      const data = response.data;
+      setState({...state,
+        userId: data.userId})
+  })
+};
+
   // 댓글 삭제
   const onCommentDelete = async (boardId) => {
     deleteDailyComment(boardId)
   };
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
 
   // 댓글 수정
   const onCommentEdit = (boardId) => {
@@ -110,15 +122,19 @@ const CommentListItem = ({
   return (
     <div>
       <DailyWrapper>
-        <ProfileWrapper style={{ width: "20%" }}>{boardId}</ProfileWrapper>
+        <ProfileWrapper style={{ width: "20%" }}>{createrId}: 작성자 id</ProfileWrapper>
           <div style={{ width: "60%" }}>{boardContent}</div>
-          <DailyEditWrapper style={{ width: "10%" }}>{createrId}</DailyEditWrapper>
-          <DailyBoardEditButton onClick={() => onHandleCommentEdit()}>
-              수정
-          </DailyBoardEditButton>
-          <DailyBoardEditButton onClick={() => onCommentDelete(boardId)}>
-              삭제
-          </DailyBoardEditButton>
+          <div style = {{ display: state.userId === createrId ? "block" : "none"}}>
+
+            <DailyBoardEditButton
+            onClick={() => onHandleCommentEdit()}
+            >
+                수정
+            </DailyBoardEditButton>
+            <DailyBoardEditButton onClick={() => onCommentDelete(boardId)}>
+                삭제
+            </DailyBoardEditButton>
+          </div>
       </DailyWrapper>
           <div>
             <div style = {{ display: state.showCommentEdit === false ? "none" : "block"}}>
