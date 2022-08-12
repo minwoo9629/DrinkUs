@@ -7,7 +7,6 @@ import com.ssafy.drinkus.room.domain.Topic;
 import com.ssafy.drinkus.user.domain.User;
 import com.ssafy.drinkus.user.domain.UserRepository;
 import com.ssafy.drinkus.user.response.UserMyInfoResponse;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
