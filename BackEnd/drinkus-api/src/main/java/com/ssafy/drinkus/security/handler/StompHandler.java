@@ -1,18 +1,16 @@
 package com.ssafy.drinkus.security.handler;
 
+import com.ssafy.drinkus.security.service.UserPrincipal;
 import com.ssafy.drinkus.security.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
-import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
-import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -31,13 +29,17 @@ public class StompHandler implements ChannelInterceptor {
             if (!jwtUtil.isValidToken(extractToken(accessor))) {
                 throw new AccessDeniedException("연결 거부");
             }
+
+            accessor.setUser(jwtUtil.getAuthentication(extractToken(accessor)));
+            System.out.println("user: " + accessor.getUser());
+            System.out.println("id: " + jwtUtil.getUserId(extractToken(accessor)));
             System.out.println("########client connected!!!");
         }
 
         // 채팅방 구독
         else if(StompCommand.SUBSCRIBE == accessor.getCommand()){
             System.out.println("StompHandler.preSend");
-            Long userId = jwtUtil.getUserId(extractToken(accessor));
+//            Long userId = jwtUtil.getUserId(extractToken(accessor));
 
             String sessionId = accessor.getNativeHeader("roomId").get(0);
             System.out.println("###subscribe: " + sessionId);
