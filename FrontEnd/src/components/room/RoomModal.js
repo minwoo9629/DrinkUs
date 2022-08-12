@@ -2,8 +2,10 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { client } from "../../utils/client";
 import { GoToButton } from "../common/buttons/GoToButton";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { TimeGap } from "../../utils/TimeGap";
+import { useDispatch } from "react-redux";
+import { setRoomSession } from "../../store/actions/room";
 
 const ModalWrapper = styled.div`
   display: none;
@@ -24,7 +26,7 @@ const ModalWrapper = styled.div`
 const ModalContentWrapper = styled.div`
   width: 800px;
   min-height: 600px;
-  background-color: #EAF1FF;
+  background-color: #eaf1ff;
   border-radius: 30px;
   display: flex;
   flex-direction: column;
@@ -55,15 +57,17 @@ const ModalContent = styled.div`
   padding: 20px;
 `;
 const RoomModal = ({ isOpen, close, roomId }) => {
-
+  // Room 입장을 위한 세션설정
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   // 모달 위치 조정
   const [ScrollY, setModalLocation] = useState(0);
-  
+
   const onHandleLocation = () => {
     setModalLocation(window.pageYOffset);
-  }
+  };
 
-  useEffect(()=> {
+  useEffect(() => {
     const watch = () => {
       window.addEventListener("scroll", onHandleLocation);
     };
@@ -71,8 +75,8 @@ const RoomModal = ({ isOpen, close, roomId }) => {
     watch();
     return () => {
       window.removeEventListener("scroll", onHandleLocation);
-    }
-  })
+    };
+  });
 
   // api 요청
   const onRoomDetail = async () => {
@@ -94,8 +98,15 @@ const RoomModal = ({ isOpen, close, roomId }) => {
     dataRefineFunc();
   }, []);
 
-  const timeGap = TimeGap(data.createdDate)
+  const timeGap = TimeGap(data.createdDate);
 
+  const onHandleEnterRoom = () => {
+    const sessionData = {
+      sessionName: `Session${data.roomId}`,
+    };
+    dispatch(setRoomSession(sessionData));
+    navigate("/room/detail");
+  };
   return (
     <ModalWrapper className={isOpen ? "active" : ""} top={ScrollY}>
       <ModalContentWrapper>
@@ -104,15 +115,12 @@ const RoomModal = ({ isOpen, close, roomId }) => {
         </ModalHeader>
         <ModalContent>
           <div>
-          {timeGap}시간 전
-          {JSON.stringify(data.roomName)}
-          {JSON.stringify(data.category)}
-          {JSON.stringify(data.peopleLimit)}
-          {JSON.stringify(data.roomId)}
+            {timeGap}시간 전{JSON.stringify(data.roomName)}
+            {JSON.stringify(data.category)}
+            {JSON.stringify(data.peopleLimit)}
+            {JSON.stringify(data.roomId)}
           </div>
-          <GoToButton>
-          <Link to="/room/detail">참여하기</Link>
-          </GoToButton>
+          <GoToButton onClick={onHandleEnterRoom}>참여하기</GoToButton>
         </ModalContent>
       </ModalContentWrapper>
     </ModalWrapper>
