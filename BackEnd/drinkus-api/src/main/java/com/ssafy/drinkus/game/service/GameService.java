@@ -35,7 +35,7 @@ public class GameService {
     }
 
     public BombResponse findByRoomId(){
-        int second = -1;
+        int second = (int)(Math.random()*8)+3;
         int clickCount = second * 2;
         return new BombResponse(second, clickCount);
     }
