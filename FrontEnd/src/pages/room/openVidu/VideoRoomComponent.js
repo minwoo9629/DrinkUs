@@ -143,10 +143,10 @@ class VideoRoomComponent extends Component {
   connectGameServer(){
     // STOMP 서버에 연결
     gameClient.current = new StompJs.Client({
-      brokerURL: "ws://localhost:8080/ws-stomp/websocket",
+      brokerURL: "ws://192.168.31.135:8080/ws-stomp/websocket",
       connectHeaders: {
         // "roomId": ROOM_ID,
-        "AccessToken" : "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2IiwiaWF0IjoxNjYwMTkzNTAxLCJleHAiOjE2NjAyMDA3MDF9.OYKthC3zCG55uf2Y9iIK6LdheTZT1nrWo13ERBFUWpM"
+        "AccessToken" : "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2IiwiaWF0IjoxNjYwMTk3MjEwLCJleHAiOjE2NjAyMDQ0MTB9.slzg3u6kbyGwGyLZxOK74_QxvoJSokWFQZXYTO0s54E"
       },
       debug: function(str){
         console.log(str);
@@ -168,21 +168,22 @@ class VideoRoomComponent extends Component {
   }
 
   subscribeGameServer(){
-    gameClient.current.subscribe(`/sub`, ({ body }) => {
+    gameClient.current.subscribe(`/sub/${ROOM_ID}`, ({ body }) => {
       // setChatMessages((_chatMessages) => [..._chatMessages, JSON.parse(body)]);
     }
     , {
-      "AccessToken": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2IiwiaWF0IjoxNjYwMTkzNTAxLCJleHAiOjE2NjAyMDA3MDF9.OYKthC3zCG55uf2Y9iIK6LdheTZT1nrWo13ERBFUWpM"
+      "AccessToken": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2IiwiaWF0IjoxNjYwMTk3MjEwLCJleHAiOjE2NjAyMDQ0MTB9.slzg3u6kbyGwGyLZxOK74_QxvoJSokWFQZXYTO0s54E"
       ,"roomId": ROOM_ID
+      , "id": "rara"
     }
     );
   }
 
   publishGameServer(msg){
     gameClient.current.publish({
-      destination: `/pub/test`
+      destination: `/pub/test/${ROOM_ID}`
     , headers: {
-      "AccessToken": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2IiwiaWF0IjoxNjYwMTkzNTAxLCJleHAiOjE2NjAyMDA3MDF9.OYKthC3zCG55uf2Y9iIK6LdheTZT1nrWo13ERBFUWpM"
+      "AccessToken": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2IiwiaWF0IjoxNjYwMTk3MjEwLCJleHAiOjE2NjAyMDQ0MTB9.slzg3u6kbyGwGyLZxOK74_QxvoJSokWFQZXYTO0s54E"
     }
     ,body: {},
   });
