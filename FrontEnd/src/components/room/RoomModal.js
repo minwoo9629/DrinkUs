@@ -4,8 +4,6 @@ import { client } from "../../utils/client";
 import { GoToButton } from "../common/buttons/GoToButton";
 import { Link, useNavigate } from "react-router-dom";
 import { TimeGap } from "../../utils/TimeGap";
-import { useDispatch } from "react-redux";
-import { setRoomSession } from "../../store/actions/room";
 
 // 모달 기본 스타일
 const ModalWrapper = styled.div`
@@ -27,7 +25,7 @@ const ModalWrapper = styled.div`
 const ModalContentWrapper = styled.div`
   width: 800px;
   min-height: 600px;
-  background-color: #eaf1ff;
+  background-color: #EAF1FF;
   border-radius: 30px;
   display: flex;
   flex-direction: column;
@@ -108,23 +106,17 @@ const ContentBlock = styled.div`
 `
 
 const RoomModal = ({ isOpen, close, roomId }) => {
-<<<<<<< HEAD
-  // Room 입장을 위한 세션설정
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-=======
 
   const navigate = useNavigate();
 
->>>>>>> 501e36d4c840a589df49c7bb37cb9d7d98a9eda2
   // 모달 위치 조정
   const [ScrollY, setModalLocation] = useState(0);
-
+  
   const onHandleLocation = () => {
     setModalLocation(window.pageYOffset);
-  };
+  }
 
-  useEffect(() => {
+  useEffect(()=> {
     const watch = () => {
       window.addEventListener("scroll", onHandleLocation);
     };
@@ -132,8 +124,8 @@ const RoomModal = ({ isOpen, close, roomId }) => {
     watch();
     return () => {
       window.removeEventListener("scroll", onHandleLocation);
-    };
-  });
+    }
+  })
 
   // api 요청
   const onRoomDetail = async () => {
@@ -158,21 +150,11 @@ const RoomModal = ({ isOpen, close, roomId }) => {
     dataRefineFunc();
   }, []);
 
-  const timeGap = TimeGap(data.createdDate);
+  const timeGap = TimeGap(data.createdDate)
 
-<<<<<<< HEAD
-  const onHandleEnterRoom = () => {
-    const sessionData = {
-      sessionName: `Session${data.roomId}`,
-    };
-    dispatch(setRoomSession(sessionData));
-    navigate("/room/detail");
-  };
-=======
   const Img = userData.userImg
   const userId = userData.userId
 
->>>>>>> 501e36d4c840a589df49c7bb37cb9d7d98a9eda2
   return (
     <ModalWrapper className={isOpen ? "active" : ""} top={ScrollY}>
       <ModalContentWrapper>
@@ -180,15 +162,6 @@ const RoomModal = ({ isOpen, close, roomId }) => {
           <ModalCloseButton onClick={close}>X</ModalCloseButton>
         </ModalHeader>
         <ModalContent>
-<<<<<<< HEAD
-          <div>
-            {timeGap}시간 전{JSON.stringify(data.roomName)}
-            {JSON.stringify(data.category)}
-            {JSON.stringify(data.peopleLimit)}
-            {JSON.stringify(data.roomId)}
-          </div>
-          <GoToButton onClick={onHandleEnterRoom}>참여하기</GoToButton>
-=======
           <ProfileBlock>
             <ProfileImageWrapper>
               <ProfileImageThumbnail src={Img} onClick={()=>navigate("/profile")}/>
@@ -211,7 +184,6 @@ const RoomModal = ({ isOpen, close, roomId }) => {
           <GoToButton>
           <Link to="/room/detail">참여하기</Link>
           </GoToButton>
->>>>>>> 501e36d4c840a589df49c7bb37cb9d7d98a9eda2
         </ModalContent>
       </ModalContentWrapper>
     </ModalWrapper>

@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Header from "../../components/layout/Header";
 import Footer from "../../components/layout/Footer";
 import { BaseFlexWrapper } from "../../components/styled/Wrapper";
-import { getUserInfoList, processReport } from "../../api/AdminAPI";
+import { getUserInfoList, processReport, searchUser } from "../../api/AdminAPI";
 import { getReportList } from "../../api/AdminAPI";
 import { permitUser } from "../../api/AdminAPI";
 import { removeUser } from "../../api/AdminAPI";
@@ -57,21 +57,36 @@ const FunctionContent = styled.div`
   overflow-y: scroll;
 `;
 
+const SearchUserInput = styled.input`
+  border: 0.5px solid #bab8b8;
+  border-radius: 8px;
+  height: 36px;
+  padding: 0px 20px;
+  width: 240px;
+  margin: 0;
+`;
+
+
 const Admin = () => {
 
   useEffect(() => {
-    setData();
+    getUList();
+    getRList();
   }, []);
 
   const [userList, setUserList] = useState([]);
   const [reportList, setReportList] = useState([]);
+  const [searchInput, setSearchInput] = useState("");
 
-  const setData = async () => {
+  const getUList = async () => {
     const uList = await getUserInfoList();
-    const rList = await getReportList();
     setUserList([...uList.data]);
+  }
+
+  const getRList = async () => {
+    const rList = await getReportList();
     setReportList([...rList.data]);
-  };
+  }
 
   const onHandlePermitUser = async (userId) => {
     const response = await permitUser(userId);
@@ -114,7 +129,6 @@ const Admin = () => {
       <AdminWrapper color={'white'} width={'1200px'}>
         <FunctionBlock>
           <FunctionTitle>사용자 목록 조회</FunctionTitle>
-          <InputBlock></InputBlock>
           <FunctionContent>
             <UserList
               userList={userList}

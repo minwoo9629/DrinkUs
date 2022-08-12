@@ -40,11 +40,10 @@ const processReport = async(data) => {
   return result;
 }
 
-
 export {
   getUserInfoList,
   getReportList,
   permitUser,
   removeUser,
-  processReport
+  processReport,
 };
