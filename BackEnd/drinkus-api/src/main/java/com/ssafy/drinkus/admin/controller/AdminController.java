@@ -7,6 +7,7 @@ import com.ssafy.drinkus.report.request.ReportUpdateRequest;
 import com.ssafy.drinkus.report.response.ReportInfoResponse;
 import com.ssafy.drinkus.user.domain.User;
 import com.ssafy.drinkus.user.response.UserListResponse;
+import com.ssafy.drinkus.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +34,14 @@ public class AdminController {
         adminService.updateAdminPermission(user, userId);
         return ResponseEntity.ok().build();
     }
+
+    // 회원 삭제
+    @DeleteMapping("/{user_id}")
+    public ResponseEntity<Void> deleteUser(@LoginUser User user, @PathVariable("user_id") Long deleteUserId) {
+        adminService.deleteUser(user, deleteUserId);
+        return ResponseEntity.ok().build();
+    }
+
 
     // 신고내역 전체 조회
     @GetMapping("/report")
