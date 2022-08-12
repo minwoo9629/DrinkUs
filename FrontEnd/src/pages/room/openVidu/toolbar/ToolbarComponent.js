@@ -99,7 +99,7 @@ export default class ToolbarComponent extends Component {
     this.randomDrink = this.randomDrink.bind(this);
   }
 
-  randomDrink(){
+  randomDrink() {
     this.props.randomDrink();
   }
 

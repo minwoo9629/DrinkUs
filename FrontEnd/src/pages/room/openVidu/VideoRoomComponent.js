@@ -103,7 +103,7 @@ class VideoRoomComponent extends Component {
 
     this.layout.initLayoutContainer(
       document.getElementById("layout"),
-      openViduLayoutOptions
+      openViduLayoutOptions,
     );
     window.addEventListener("beforeunload", this.onbeforeunload);
     window.addEventListener("resize", this.updateLayout);
@@ -135,20 +135,21 @@ class VideoRoomComponent extends Component {
       () => {
         this.subscribeToStreamCreated();
         this.connectToSession();
-      }
+      },
     );
   }
 
   // Spring Boot Server와 Stomp 소켓 연동 시작
-  connectGameServer(){
+  connectGameServer() {
     // STOMP 서버에 연결
     gameClient.current = new StompJs.Client({
-      brokerURL: "ws://192.168.31.135:8080/ws-stomp/websocket",
+      brokerURL: "ws://211.230.24.113:8080/ws-stomp/websocket",
       connectHeaders: {
         // "roomId": ROOM_ID,
-        "AccessToken" : "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2IiwiaWF0IjoxNjYwMTk3MjEwLCJleHAiOjE2NjAyMDQ0MTB9.slzg3u6kbyGwGyLZxOK74_QxvoJSokWFQZXYTO0s54E"
+        AccessToken:
+          "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2IiwiaWF0IjoxNjYwMjY3NTg3LCJleHAiOjE2NjAyNzQ3ODd9.iJ2ZywZqUbtZl0q1BdqKyE3FzOB8cJfFpiCPAnn9_2g",
       },
-      debug: function(str){
+      debug: function (str) {
         console.log(str);
       },
       reconnectDelay: 5000,
@@ -157,40 +158,46 @@ class VideoRoomComponent extends Component {
       onConnect: () => {
         // 세션 접속
         this.subscribeGameServer();
-      }
+      },
     });
 
     gameClient.current.activate();
   }
 
-  disconnectGameServer(){
+  disconnectGameServer() {
     gameClient.current.deactivate();
   }
 
-  subscribeGameServer(){
-    gameClient.current.subscribe(`/sub/${ROOM_ID}`, ({ body }) => {
-      // setChatMessages((_chatMessages) => [..._chatMessages, JSON.parse(body)]);
-    }
-    , {
-      "AccessToken": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2IiwiaWF0IjoxNjYwMTk3MjEwLCJleHAiOjE2NjAyMDQ0MTB9.slzg3u6kbyGwGyLZxOK74_QxvoJSokWFQZXYTO0s54E"
-      ,"roomId": ROOM_ID
-      , "id": "rara"
-    }
+  subscribeGameServer() {
+    gameClient.current.subscribe(
+      `/sub/chat/${ROOM_ID}`,
+      ({ body }) => {
+        console.log("#body: ", body);
+      },
+      {
+        AccessToken:
+          "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2IiwiaWF0IjoxNjYwMjY3NTg3LCJleHAiOjE2NjAyNzQ3ODd9.iJ2ZywZqUbtZl0q1BdqKyE3FzOB8cJfFpiCPAnn9_2g",
+        roomId: ROOM_ID,
+        id: "rara",
+      },
     );
   }
 
-  publishGameServer(msg){
+  publishGameServer() {
     gameClient.current.publish({
-      destination: `/pub/test/${ROOM_ID}`
-    , headers: {
-      "AccessToken": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2IiwiaWF0IjoxNjYwMTk3MjEwLCJleHAiOjE2NjAyMDQ0MTB9.slzg3u6kbyGwGyLZxOK74_QxvoJSokWFQZXYTO0s54E"
-    }
-    ,body: {},
-  });
+      destination: `/pub/chat`,
+      body: JSON.stringify({
+        roomId: ROOM_ID,
+        message: "aa",
+      }),
+      //   headers: {
+      //     AccessToken:
+      //       "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2IiwiaWF0IjoxNjYwMjY3NTg3LCJleHAiOjE2NjAyNzQ3ODd9.iJ2ZywZqUbtZl0q1BdqKyE3FzOB8cJfFpiCPAnn9_2g",
+      //   },
+    });
   }
 
   // Spring Boot Server와 Stomp 소켓 연동 끝
-
 
   connectToSession() {
     if (this.props.token !== undefined) {
@@ -214,7 +221,7 @@ class VideoRoomComponent extends Component {
           console.log(
             "There was an error getting the token:",
             error.code,
-            error.message
+            error.message,
           );
           alert("There was an error getting the token:", error.message);
         });
@@ -240,7 +247,7 @@ class VideoRoomComponent extends Component {
         console.log(
           "There was an error connecting to the session:",
           error.code,
-          error.message
+          error.message,
         );
       });
   }
@@ -286,10 +293,10 @@ class VideoRoomComponent extends Component {
         this.state.localUser.getStreamManager().on("streamPlaying", (e) => {
           this.updateLayout();
           publisher.videos[0].video.parentElement.classList.remove(
-            "custom-class"
+            "custom-class",
           );
         });
-      }
+      },
     );
   }
 
@@ -309,7 +316,7 @@ class VideoRoomComponent extends Component {
           });
         }
         this.updateLayout();
-      }
+      },
     );
   }
 
@@ -359,7 +366,7 @@ class VideoRoomComponent extends Component {
   deleteSubscriber(stream) {
     const remoteUsers = this.state.subscribers;
     const userStream = remoteUsers.filter(
-      (user) => user.getStreamManager().stream === stream
+      (user) => user.getStreamManager().stream === stream,
     )[0];
     let index = remoteUsers.indexOf(userStream, 0);
     if (index > -1) {
@@ -377,7 +384,7 @@ class VideoRoomComponent extends Component {
       subscriber.on("streamPlaying", (e) => {
         this.checkSomeoneShareScreen();
         subscriber.videos[0].video.parentElement.classList.remove(
-          "custom-class"
+          "custom-class",
         );
       });
       const newUser = new UserModel();
@@ -431,7 +438,7 @@ class VideoRoomComponent extends Component {
         {
           subscribers: remoteUsers,
         },
-        () => this.checkSomeoneShareScreen()
+        () => this.checkSomeoneShareScreen(),
       );
     });
   }
@@ -485,12 +492,13 @@ class VideoRoomComponent extends Component {
     try {
       const devices = await this.OV.getDevices();
       var videoDevices = devices.filter(
-        (device) => device.kind === "videoinput"
+        (device) => device.kind === "videoinput",
       );
 
       if (videoDevices && videoDevices.length > 1) {
         var newVideoDevice = videoDevices.filter(
-          (device) => device.deviceId !== this.state.currentVideoDevice.deviceId
+          (device) =>
+            device.deviceId !== this.state.currentVideoDevice.deviceId,
         );
 
         if (newVideoDevice.length > 0) {
@@ -506,7 +514,7 @@ class VideoRoomComponent extends Component {
 
           //newPublisher.once("accessAllowed", () => {
           await this.state.session.unpublish(
-            this.state.localUser.getStreamManager()
+            this.state.localUser.getStreamManager(),
           );
           await this.state.session.publish(newPublisher);
           this.state.localUser.setStreamManager(newPublisher);
@@ -542,7 +550,7 @@ class VideoRoomComponent extends Component {
         } else if (error && error.name === "SCREEN_CAPTURE_DENIED") {
           alert("You need to choose a window or application to share");
         }
-      }
+      },
     );
 
     publisher.once("accessAllowed", () => {
@@ -630,8 +638,8 @@ class VideoRoomComponent extends Component {
     }
   }
 
-  randomDrink(){
-    alert('랜덤 마시세요');
+  randomDrink() {
+    alert("랜덤 마시세요");
   }
 
   render() {
@@ -726,7 +734,7 @@ class VideoRoomComponent extends Component {
 
   getToken() {
     return this.createSession(this.state.mySessionId).then((sessionId) =>
-      this.createToken(sessionId)
+      this.createToken(sessionId),
     );
   }
 
@@ -753,7 +761,7 @@ class VideoRoomComponent extends Component {
             console.log(error);
             console.warn(
               "No connection to OpenVidu Server. This may be a certificate error at " +
-                this.OPENVIDU_SERVER_URL
+                this.OPENVIDU_SERVER_URL,
             );
             if (
               window.confirm(
@@ -762,11 +770,11 @@ class VideoRoomComponent extends Component {
                   '"\n\nClick OK to navigate and accept it. ' +
                   'If no certificate warning is shown, then check that your OpenVidu Server is up and running at "' +
                   this.OPENVIDU_SERVER_URL +
-                  '"'
+                  '"',
               )
             ) {
               window.location.assign(
-                this.OPENVIDU_SERVER_URL + "/accept-certificate"
+                this.OPENVIDU_SERVER_URL + "/accept-certificate",
               );
             }
           }
@@ -790,7 +798,7 @@ class VideoRoomComponent extends Component {
                 "Basic " + btoa("OPENVIDUAPP:" + this.OPENVIDU_SERVER_SECRET),
               "Content-Type": "application/json",
             },
-          }
+          },
         )
         .then((response) => {
           console.log("TOKEN", response);
