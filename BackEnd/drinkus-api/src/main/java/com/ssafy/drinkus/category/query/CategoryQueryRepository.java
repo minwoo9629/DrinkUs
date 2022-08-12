@@ -1,11 +1,9 @@
 package com.ssafy.drinkus.category.query;
 
 import com.querydsl.core.Tuple;
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.drinkus.category.domain.Category;
 import com.ssafy.drinkus.category.domain.SubCategory;
-import com.ssafy.drinkus.user.domain.QUserSubCategory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
