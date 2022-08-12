@@ -158,7 +158,6 @@ class VideoRoomComponent extends Component {
       heartbeatOutgoing: 4000,
       onConnect: () => {
         // 세션 접속
-        this.subscribeGameServer();
         this.subRecommendTopics();
         this.subRandomDrink();
       },
@@ -216,30 +215,6 @@ class VideoRoomComponent extends Component {
         roomId: ROOM_ID,
       },
     );
-  }
-
-  subscribeGameServer() {
-    gameClient.current.subscribe(
-      `/sub/chat/${ROOM_ID}`,
-      ({ body }) => {
-        console.log("#body: ", body);
-      },
-      {
-        AccessToken:
-          "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2IiwiaWF0IjoxNjYwMjg2NTk3LCJleHAiOjE2NjAyOTM3OTd9.0e4HVfr91L7WqmLZ3PEz0kluPv81YLtmtYvTWKF0uqk",
-        roomId: ROOM_ID,
-      },
-    );
-  }
-
-  publishGameServer() {
-    gameClient.current.publish({
-      destination: `/pub/chat`,
-      body: JSON.stringify({
-        roomId: ROOM_ID,
-        message: "aa",
-      }),
-    });
   }
 
   // Spring Boot Server와 Stomp 소켓 연동 끝
