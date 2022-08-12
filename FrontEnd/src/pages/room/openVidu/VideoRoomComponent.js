@@ -51,6 +51,7 @@ class VideoRoomComponent extends Component {
       : "DRINKUS";
     this.hasBeenUpdated = false;
     this.layout = new OpenViduLayout();
+    console.log(this.props.sessionInfo);
     let sessionName = this.props.sessionInfo
       ? this.props.sessionInfo.sessionName
       : "SessionA";
@@ -259,10 +260,9 @@ class VideoRoomComponent extends Component {
   leaveSession() {
     const mySession = this.state.session;
 
-    this.props.clearSession();
-
     if (mySession) {
       mySession.disconnect();
+      this.props.clearSession();
     }
 
     // Empty all properties...
@@ -743,7 +743,7 @@ class VideoRoomComponent extends Component {
 
 const mapStateToProps = (state) => ({
   user: state.user.data,
-  sessionInfo: state.room.sessionName,
+  sessionInfo: state.room,
 });
 
 const mapDispatchToProps = (dispatch) => ({
