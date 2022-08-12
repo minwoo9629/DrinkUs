@@ -55,10 +55,10 @@ public class RoomController {
         return ResponseEntity.ok().body(body);
     }
 
-    // 지금 막 생성된 방 최대 8개 (지난 1시간 이내 기준)
+    // 지난 12시간 이내 생성 방 랜덤 8개
     @GetMapping("/recommend/current")
-    public ResponseEntity<List<RoomListResponse>> findRoomByCurrentTime(@LoginUser User user){
-        List<RoomListResponse> body = roomService.findByCurrentTime(user);
+    public ResponseEntity<List<RoomListResponse>> findRoomByCurrentTime(){
+        List<RoomListResponse> body = roomService.findRandomRooms();
         return ResponseEntity.ok().body(body);
     }
 
@@ -86,17 +86,17 @@ public class RoomController {
     }
 
     //화상방 참가
-    @PostMapping("/join")
-    public ResponseEntity<Void> joinRoom(@LoginUser User user, @RequestBody RoomJoinRequest joinRoomRequest){
-        System.out.println("## Join Room Controller");
-        return null;
+    @PostMapping("/join/{room_id}")
+    public ResponseEntity<Void> joinRoom(@LoginUser User user, @PathVariable("room_id") Long roomId){
+        roomService.joinRoom(user, roomId);
+        return ResponseEntity.ok().build();
     }
 
     //화상방 퇴장
-    @PatchMapping("/exit")
-    public ResponseEntity<Void> exitRoom(@LoginUser User user, @RequestBody RoomExitRequest exitRoomRequest){
-        System.out.println("## Exit Room Controller");
-        return null;
+    @PatchMapping("/exit/{room_id}")
+    public ResponseEntity<Void> exitRoom(@LoginUser User user, @PathVariable("room_id") Long roomId){
+        roomService.exitRoom(user, roomId);
+        return ResponseEntity.ok().build();
     }
 
     //화상방 강퇴

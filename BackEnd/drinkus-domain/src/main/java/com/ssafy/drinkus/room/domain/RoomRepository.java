@@ -24,6 +24,7 @@ public interface RoomRepository extends JpaRepository<Room,Long> {
 
     // 1시간 이내 생성된 방
     Optional<List<Room>> findTop8ByCreatedDateAfterOrderByCreatedDateDesc(LocalDateTime createdDate);
+    Optional<List<Room>> findAllByCreatedDateAfter(LocalDateTime createdDate);
 
     // 방 존재여부
     Boolean existsByRoomId(Long roomId);

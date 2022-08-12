@@ -50,11 +50,6 @@ public class User extends BaseEntity {
 
     private String userImg;
 
-    private LocalDateTime userDeleteDate;
-
-    @Enumerated(EnumType.STRING)
-    private YN userDeleted; // Boolean type을 YN enum으로 사용
-
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
@@ -92,7 +87,7 @@ public class User extends BaseEntity {
         }
         userPopularity = 0;
         userPopularityLimit = 5;
-        userDeleted = YN.N;
+        userImg = Integer.toString((int)(Math.random() * 25) + 1);
         userPoint = 0L;
         userSoju = 0;
         userBeer = 0;
