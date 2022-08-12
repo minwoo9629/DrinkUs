@@ -53,6 +53,7 @@ public class AdminService {
     }
 
     // 신고내역 전체 조회 (for Admin)
+    @Transactional(readOnly = true)
     public List<ReportInfoResponse> findAll(User user){
         checkPermission(user);
 
@@ -64,6 +65,7 @@ public class AdminService {
     }
 
     // 특정 유저에 대한 신고내역 조회 (for Admin)
+    @Transactional(readOnly = true)
     public List<ReportInfoResponse> findByToUser(User user, String toUserName){
         checkPermission(user);
 
