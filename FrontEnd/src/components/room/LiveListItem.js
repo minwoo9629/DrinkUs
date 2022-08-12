@@ -11,11 +11,11 @@ const RoomBox = styled.div`
   border-radius: 30px;
 `
 
-const RoomListItem = ({
+const LiveListItem = ({
   roomId,
   roomName,
   peopleLimit,
-  categoryId,
+  placeTheme,
   createdDate
 }) => {
 
@@ -39,14 +39,14 @@ const RoomListItem = ({
       roomId={roomId}
     />
     <RoomBox onClick={modalOpen}>
-      {timeGap}시간 전
-      {roomId}
-      {roomName}
-      {peopleLimit}
-      {categoryId}
+      <div>{roomId}</div>
+      <div>{roomName}</div>
+      <div>{peopleLimit}</div>
+      <div>{placeTheme}</div>
+      <div>{timeGap}시간 전</div>
     </RoomBox>
     </>
   )
 }
 
-export default RoomListItem
+export default LiveListItem

@@ -85,7 +85,7 @@ const Home = () => {
   });
   return (
     <>
-      <Header position={'fixed'} />
+      <Header position={'fixed'} location={'home'} />
       <ContentWrapper background={"#000"} height={"100vh"}>
         <NeonSignTitle>OPEN DRINKUS</NeonSignTitle>
       </ContentWrapper>

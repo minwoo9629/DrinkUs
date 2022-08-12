@@ -17,9 +17,8 @@ import DrinkLive from "./pages/room/DrinkLive";
 import CreateRoom from "./pages/room/CreateRoom";
 import RoomList from "./pages/room/RoomList";
 import Daily from "./pages/Daily";
-import RoomDetail from "./pages/room/RoomDetail";
 import Calendar from "./pages/calendarcommunity/Calendar";
-import DailyCalendar from "./pages/calendarcommunity/DailyCalendar";
+import DailyCalendarList from "./pages/calendarcommunity/DailyCalendarList";
 import CreateCalendar from "./pages/calendarcommunity/CreateCalendar";
 import EditCalendar from "./pages/calendarcommunity/EditCalendar";
 import EditProfile from "./pages/auth/mypage/EditProfile";
@@ -31,6 +30,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import Admin from "./pages/admin/Admin";
 import VideoRoomComponent from "./pages/room/openVidu/VideoRoomComponent";
 import PrivateRoute from "./routes/PrivateRoute";
+import NotFound from "./pages/error/NotFound";
 
 function App() {
   return (
@@ -70,23 +70,19 @@ function App() {
                 element={<PrivateRoute component={<Daily />} />}
               />
               <Route
-                path="/rooms/:roomId"
-                element={<PrivateRoute component={<RoomDetail />} />}
-              />
-              <Route
                 path="/calendar"
                 element={<PrivateRoute component={<Calendar />} />}
               />
               <Route
                 path="/calendar/:year/:month/:index"
-                element={<PrivateRoute component={<DailyCalendar />} />}
+                element={<PrivateRoute component={<DailyCalendarList />} />}
               />
               <Route
                 path="/calendar/create"
                 element={<PrivateRoute component={<CreateCalendar />} />}
               />
               <Route
-                path="/calendar/edit/:calendar_id"
+                path="/calendar/:calendarId/edit"
                 element={<PrivateRoute component={<EditCalendar />} />}
               />
               <Route
@@ -108,6 +104,7 @@ function App() {
                 path="/room/detail"
                 element={<PrivateRoute component={<VideoRoomComponent />} />}
               />
+              <Route path="/*" element={<NotFound />} />
             </Routes>
           </div>
         </BrowserRouter>

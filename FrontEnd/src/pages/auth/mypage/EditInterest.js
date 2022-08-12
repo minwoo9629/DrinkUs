@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import {
@@ -7,7 +7,6 @@ import {
   removeUserInterest,
 } from "../../../api/MyPageAPI";
 import ProfileTitle from "../../../components/auth/ProfileTitle";
-import { client } from "../../../utils/client";
 
 const CheckBoxStyled = styled.input`
   display: none;
@@ -58,19 +57,34 @@ const EditInterest = () => {
   }, []);
 
   useEffect(() => {
-    setProfileImageState(user.data.userImg !== "" ? user.data.userImg : "1");
+    setProfileImageState(!user.data.userImg ? "1" : user.data.userImg);
     setUserNameState(user.data.userName);
   }, []);
+
   useEffect(() => {
     fetchInterestsData();
   }, [fetchInterestsData]);
-  const onHandleCategoryCheck = (checked, subCategoryId) => {
+  const onHandleCategoryCheck = (checked, subCategoryId, categoryId) => {
     checked
       ? removeUserInterest(subCategoryId)
       : addUserInterest(subCategoryId);
-    fetchInterestsData();
-  };
 
+    const prevTargetSubCategory = categoryState.filter(
+      (item) => item.categoryResponse.categoryId === categoryId
+    )[0].subCategoryResponse;
+
+    const updatedTargetSubCategory = prevTargetSubCategory.map((item) =>
+      item.subCategoryId === subCategoryId
+        ? { ...item, checked: !checked }
+        : item
+    );
+    const updatedCategoryState = categoryState.map((item) =>
+      item.categoryResponse.categoryId === categoryId
+        ? { ...item, subCategoryResponse: updatedTargetSubCategory }
+        : item
+    );
+    setCategoryState([...updatedCategoryState]);
+  };
   return (
     <div style={{ padding: "30px 0px 30px 60px" }}>
       <ProfileTitle
@@ -118,7 +132,8 @@ const EditInterest = () => {
                           onChange={() =>
                             onHandleCategoryCheck(
                               subItem.checked,
-                              subItem.subCategoryId
+                              subItem.subCategoryId,
+                              item.categoryResponse.categoryId
                             )
                           }
                         />
