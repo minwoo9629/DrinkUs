@@ -63,7 +63,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/ws-stomp/**", "/api/port", "/actuator/health").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/users/refreshToken").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/auth/refreshToken").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/users/join", "/api/users/login", "/api/users/join/id", "/api/users/id", "/api/users/pw", "/api/users/sendConfirmEmail").permitAll()
                 .antMatchers(HttpMethod.PATCH, "/api/users/confirmToken").permitAll()
                 .anyRequest().hasAnyRole("USER", "ADMIN", "SOCIAL")
