@@ -1,8 +1,6 @@
 package com.ssafy.drinkus.category.response;
 
 import com.ssafy.drinkus.category.domain.Category;
-import com.ssafy.drinkus.category.domain.SubCategory;
-import com.ssafy.drinkus.user.domain.User;
 import com.ssafy.drinkus.user.domain.UserSubCategory;
 import lombok.AllArgsConstructor;
 import lombok.Data;

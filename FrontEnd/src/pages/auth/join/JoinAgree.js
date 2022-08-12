@@ -33,6 +33,7 @@ const AgreeForm = styled.div`
 
 const AgreeWrapper = styled.div`
   justify-content: space-between;
+  align-items: center;
   width: 380px;
   height: 64px;
   background-color: #131317;
@@ -66,6 +67,11 @@ const LinkWrapper = styled.div`
   font-size: 20px;
   margin: 40px;
 `;
+
+const input = styled.input`
+  width: 30px;
+  height: 30px;
+`
 
 const JoinAgree = ({ history }) => {
   const [checkedButtons, setCheckedButtons] = useState([]);
