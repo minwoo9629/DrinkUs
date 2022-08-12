@@ -10,6 +10,9 @@ import OpenViduLayout from "./layout/openvidu-layout";
 import UserModel from "./models/user-model";
 import ToolbarComponent from "./toolbar/ToolbarComponent";
 import styled from "styled-components";
+import { connect } from "react-redux";
+import { clearRoomSession } from "../../../store/actions/room";
+import { useNavigate } from "react-router-dom";
 
 const ButtonContentComponentWrapper = styled.div`
   width: 330px;
@@ -33,6 +36,10 @@ const StyledLayoutBounds = styled.div`
 
 var localUser = new UserModel();
 
+function withNavigation(Component) {
+  return (props) => <Component navigate={useNavigate()} {...props} />;
+}
+
 class VideoRoomComponent extends Component {
   constructor(props) {
     super(props);
@@ -44,11 +51,12 @@ class VideoRoomComponent extends Component {
       : "DRINKUS";
     this.hasBeenUpdated = false;
     this.layout = new OpenViduLayout();
-    let sessionName = this.props.sessionName
-      ? this.props.sessionName
+    console.log(this.props.sessionInfo);
+    let sessionName = this.props.sessionInfo
+      ? this.props.sessionInfo.sessionName
       : "SessionA";
     let userName = this.props.user
-      ? this.props.user
+      ? this.props.user.userNickName
       : "OpenVidu_User" + Math.floor(Math.random() * 100);
     this.remotes = [];
     this.localUserAccessAllowed = false;
@@ -254,6 +262,7 @@ class VideoRoomComponent extends Component {
 
     if (mySession) {
       mySession.disconnect();
+      this.props.clearSession();
     }
 
     // Empty all properties...
@@ -268,6 +277,7 @@ class VideoRoomComponent extends Component {
     if (this.props.leaveSession) {
       this.props.leaveSession();
     }
+    this.props.navigate("/live", { replace: true });
   }
   camStatusChanged() {
     localUser.setVideoActive(!localUser.isVideoActive());
@@ -730,4 +740,17 @@ class VideoRoomComponent extends Component {
     });
   }
 }
-export default VideoRoomComponent;
+
+const mapStateToProps = (state) => ({
+  user: state.user.data,
+  sessionInfo: state.room,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  clearSession: () => dispatch(clearRoomSession()),
+});
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withNavigation(VideoRoomComponent));
+// export default VideoRoomComponent;

@@ -23,6 +23,7 @@ const ToolbarMenuWrapper = styled.div`
 `;
 const RoomContentWrapper = styled.div`
   height: 40%;
+  min-height: 530px;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
