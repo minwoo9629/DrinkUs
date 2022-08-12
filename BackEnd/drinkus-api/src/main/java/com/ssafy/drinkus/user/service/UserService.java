@@ -83,6 +83,8 @@ public class UserService {
                 .refreshToken(refreshToken)
                 .build();
         authRepository.save(auth);
+
+        findUser.updateFcmToken(request.getFcmToken());
         return new TokenResponse(accessToken, refreshToken);
     }
 
