@@ -10,6 +10,8 @@ spring:
   security:
     oauth2:
       client:
+        preEstablishedRedirectUri: https://i7b306.p.ssafy.io/oauth2/redirect
+        useCurrentUri: false
         registration:
           google:
             client-id: 544385537574-774c31vj941hkdl0fp70vt0skjc3je3n.apps.googleusercontent.com
