@@ -37,13 +37,15 @@ const StyledLayoutBounds = styled.div`
 var localUser = new UserModel();
 
 // 게임 서버와 연결할 클라이언트
-const ROOM_ID = 5;
+const ROOM_ID = 4;
+// const ROOM_ID = Math.ceil(Math.random() * 5);
 const gameClient = React.createRef({});
 //
 
 class VideoRoomComponent extends Component {
   constructor(props) {
     super(props);
+    this.accessToken = sessionStorage.getItem("ACCESS_TOKEN");
     this.OPENVIDU_SERVER_URL = this.props.openviduServerUrl
       ? this.props.openviduServerUrl
       : "https://i7b306.p.ssafy.io:8443";
@@ -143,11 +145,10 @@ class VideoRoomComponent extends Component {
   connectGameServer() {
     // STOMP 서버에 연결
     gameClient.current = new StompJs.Client({
-      brokerURL: "ws://211.230.24.113:8080/ws-stomp/websocket",
+      brokerURL: "ws://localhost:8080/ws-stomp/websocket",
       connectHeaders: {
-        // "roomId": ROOM_ID,
-        AccessToken:
-          "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2IiwiaWF0IjoxNjYwMjY3NTg3LCJleHAiOjE2NjAyNzQ3ODd9.iJ2ZywZqUbtZl0q1BdqKyE3FzOB8cJfFpiCPAnn9_2g",
+        roomId: ROOM_ID,
+        AccessToken: `Bearer ${this.accessToken}`,
       },
       debug: function (str) {
         console.log(str);
@@ -158,6 +159,8 @@ class VideoRoomComponent extends Component {
       onConnect: () => {
         // 세션 접속
         this.subscribeGameServer();
+        this.subRecommendTopics();
+        this.subRandomDrink();
       },
     });
 
@@ -168,6 +171,53 @@ class VideoRoomComponent extends Component {
     gameClient.current.deactivate();
   }
 
+  pubRandomDrink() {
+    gameClient.current.publish({
+      destination: `/pub/random`,
+      body: JSON.stringify({
+        roomId: ROOM_ID,
+      }),
+    });
+  }
+
+  subRandomDrink() {
+    gameClient.current.subscribe(
+      `/sub/random/${ROOM_ID}`,
+      ({ body }) => {
+        // 여기에 화면에 띄우는 로직 작성
+        console.log("#랜덤 마시기: ", body);
+      },
+      {
+        AccessToken: `Bearer ${this.accessToken}`,
+        roomId: ROOM_ID,
+      },
+    );
+  }
+
+  pubRecommendTopics() {
+    gameClient.current.publish({
+      destination: `/pub/topic`,
+      body: JSON.stringify({
+        roomId: ROOM_ID,
+        categoryId: null, // 방의 카테고리ID (없으면 null)
+      }),
+    });
+  }
+
+  subRecommendTopics() {
+    gameClient.current.subscribe(
+      `/sub/topic/${ROOM_ID}`,
+      ({ body }) => {
+        // 여기에 화면에 띄우는 로직 작성
+        console.log("#대화주제 추천: ", body);
+      },
+      {
+        AccessToken: `Bearer ${this.accessToken}`,
+        roomId: ROOM_ID,
+      },
+    );
+  }
+
   subscribeGameServer() {
     gameClient.current.subscribe(
       `/sub/chat/${ROOM_ID}`,
@@ -176,9 +226,8 @@ class VideoRoomComponent extends Component {
       },
       {
         AccessToken:
-          "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2IiwiaWF0IjoxNjYwMjY3NTg3LCJleHAiOjE2NjAyNzQ3ODd9.iJ2ZywZqUbtZl0q1BdqKyE3FzOB8cJfFpiCPAnn9_2g",
+          "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2IiwiaWF0IjoxNjYwMjg2NTk3LCJleHAiOjE2NjAyOTM3OTd9.0e4HVfr91L7WqmLZ3PEz0kluPv81YLtmtYvTWKF0uqk",
         roomId: ROOM_ID,
-        id: "rara",
       },
     );
   }
@@ -190,10 +239,6 @@ class VideoRoomComponent extends Component {
         roomId: ROOM_ID,
         message: "aa",
       }),
-      //   headers: {
-      //     AccessToken:
-      //       "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2IiwiaWF0IjoxNjYwMjY3NTg3LCJleHAiOjE2NjAyNzQ3ODd9.iJ2ZywZqUbtZl0q1BdqKyE3FzOB8cJfFpiCPAnn9_2g",
-      //   },
     });
   }
 
@@ -638,10 +683,6 @@ class VideoRoomComponent extends Component {
     }
   }
 
-  randomDrink() {
-    alert("랜덤 마시세요");
-  }
-
   render() {
     const mySessionId = this.state.mySessionId;
     const localUser = this.state.localUser;
@@ -665,8 +706,9 @@ class VideoRoomComponent extends Component {
           switchCamera={this.switchCamera}
           leaveSession={this.leaveSession}
           toggleChat={this.toggleChat}
-          randomDrink={this.publishGameServer}
-          subscribeGameServer={this.subscribeGameServer}
+          ////// !!!!
+          recommendTopics={this.pubRecommendTopics}
+          randomDrink={this.pubRandomDrink}
         />
         <ButtonContentComponentWrapper>
           {localUser !== undefined &&
