@@ -99,7 +99,7 @@ const Login = () => {
   };
   return (
     <>
-      <BackButton />
+      <BackButton type={"main"} />
       <Wrapper>
         <RoundedWrapper
           width={"450"}
