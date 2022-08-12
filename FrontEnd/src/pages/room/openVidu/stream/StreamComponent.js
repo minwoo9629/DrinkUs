@@ -59,7 +59,7 @@ export default class StreamComponent extends Component {
   render() {
     return (
       <div className="OT_widget-container">
-        <div className="pointer nickname">
+        {/* <div className="pointer nickname">
           {this.state.showForm ? (
             <form id="nicknameForm">
               <buutton
@@ -68,7 +68,7 @@ export default class StreamComponent extends Component {
                 onClick={this.toggleNicknameForm}
               >
                 <p>HighlightOff</p>
-                {/* <HighlightOff /> */}
+                <HighlightOff />
               </buutton>
               <label htmlFor="name-simple" id="label">
                 Nickname
@@ -94,7 +94,7 @@ export default class StreamComponent extends Component {
               {this.props.user.isLocal() && <span id=""> (edit)</span>}
             </div>
           )}
-        </div>
+        </div> */}
 
         {this.props.user !== undefined &&
         this.props.user.getStreamManager() !== undefined ? (
@@ -109,11 +109,13 @@ export default class StreamComponent extends Component {
               {!this.props.user.isVideoActive() ? (
                 <div id="camIcon">
                   <VideocamOff id="statusCam" />
+                  <p style={{ color: "white" }}>롸?</p>
                 </div>
               ) : null}
 
               {!this.props.user.isAudioActive() ? (
                 <div id="micIcon">
+                  <p style={{ color: "white" }}>롸?</p>
                   <MicOff id="statusMic" />
                 </div>
               ) : null}

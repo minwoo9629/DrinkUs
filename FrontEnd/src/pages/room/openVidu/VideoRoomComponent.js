@@ -13,6 +13,7 @@ import styled from "styled-components";
 import { connect } from "react-redux";
 import { clearRoomSession } from "../../../store/actions/room";
 import { useNavigate } from "react-router-dom";
+import { isCompositeComponent } from "react-dom/test-utils";
 
 const ButtonContentComponentWrapper = styled.div`
   width: 330px;
@@ -51,9 +52,12 @@ class VideoRoomComponent extends Component {
       : "DRINKUS";
     this.hasBeenUpdated = false;
     this.layout = new OpenViduLayout();
+    console.log(this.props.sessionInfo);
+    console.log(this.props.sessionInfo.sessionName);
     let sessionName = this.props.sessionInfo
       ? this.props.sessionInfo.sessionName
       : "SessionA";
+    console.log(this.props.user);
     let userName = this.props.user
       ? this.props.user.userNickName
       : "OpenVidu_User" + Math.floor(Math.random() * 100);
@@ -258,8 +262,6 @@ class VideoRoomComponent extends Component {
 
   leaveSession() {
     const mySession = this.state.session;
-
-    this.props.clearSession();
 
     if (mySession) {
       mySession.disconnect();
@@ -743,14 +745,8 @@ class VideoRoomComponent extends Component {
 
 const mapStateToProps = (state) => ({
   user: state.user.data,
-  sessionInfo: state.room.sessionName,
+  sessionInfo: state.room,
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  clearSession: () => dispatch(clearRoomSession()),
-});
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withNavigation(VideoRoomComponent));
+export default connect(mapStateToProps)(withNavigation(VideoRoomComponent));
 // export default VideoRoomComponent;

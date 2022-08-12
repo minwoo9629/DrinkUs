@@ -41,3 +41,28 @@ export const loginAlert = () => {
     timer: 1200,
   });
 };
+
+export const randomDrink = (title) => {
+  let timerInterval;
+  MySwal.fire({
+    title,
+    html: "빨리빨리! <b></b> milliseconds.",
+    timer: 2000,
+    timerProgressBar: true,
+    didOpen: () => {
+      Swal.showLoading();
+      const b = Swal.getHtmlContainer().querySelector("b");
+      timerInterval = setInterval(() => {
+        b.textContent = Swal.getTimerLeft();
+      }, 100);
+    },
+    willClose: () => {
+      clearInterval(timerInterval);
+    },
+  }).then((result) => {
+    /* Read more about handling dismissals below */
+    if (result.dismiss === Swal.DismissReason.timer) {
+      console.log("I was closed by the timer");
+    }
+  });
+};
