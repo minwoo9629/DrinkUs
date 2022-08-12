@@ -203,7 +203,7 @@ const Daily = () => {
 
   // useEffect를 이용하여 전체 게시글 fetch 하기
   useEffect(() => {
-    fetchArticle();
+    fetchArticle()
   }, []);
 
   // 입력
