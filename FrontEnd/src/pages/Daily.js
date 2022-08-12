@@ -7,16 +7,10 @@ import { CalendarButton } from "../components/common/buttons/CalendarButton";
 import {
   getDailyArticle,
   postDailyArticle,
-  editDailyArticle,
-  deleteDailyArticle,
-  getDailyComment,
-  postDailyComment,
-  editDailyComment,
-  deleteDailyComment
 } from "../api/DailyAPI";
 import DailyList from "../components/daily/DailyList";
-import CommentList from "../components/daily/CommentList";
 
+// 전체 배경
 const Wrapper = styled.div`
   display: flex;
   justify-content: center;
@@ -191,17 +185,11 @@ const Daily = () => {
   const [state, setState] = useState({
     // 받아온 정보
     content: [],
-    // boardId: "",
-    // createrId: "",
-    // boardContent: "",
     // 보낼 정보
     boardArticle: "",
     boardComment: "",
     // 댓글 창 여닫을 때 필요한 값
     isComment: false,
-  })
-  const [comment, setComment] = useState({
-    boardContent: "",
   })
 
   const navigate = useNavigate();
@@ -215,7 +203,7 @@ const Daily = () => {
 
   // useEffect를 이용하여 전체 게시글 fetch 하기
   useEffect(() => {
-    fetchArticle();
+    fetchArticle()
   }, []);
 
   // 입력
@@ -223,9 +211,8 @@ const Daily = () => {
     setState({ ...state, [e.target.name]: e.target.value });
   };
       
-  // 글 작성  --> 작성하면 화면에 바로 나타나게 해야할듯
+  // 글 작성
   const onArticlePost = async (e) => {
-    // e.preventDefault();
     const data = {
       boardContent: state.boardArticle
     };
@@ -233,78 +220,8 @@ const Daily = () => {
     if (response.status === 200) {
       setState({...state, boardArticle: ""})
     }
+    fetchArticle();
     };
-    
-  // 글 수정
-  const onArticleEdit = async (e) => {
-    const data = {
-      boardContent: state.boardArticle
-    };
-    const response = await editDailyArticle(data);
-    if (response.status === 200) {
-      setState({...state, boardArticle: ""})
-    }
-  };
-    
-  // 글 삭제
-  const onArticleDelete = async (e) => {
-    const data = {
-      boardContent: state.boardArticle
-    };
-    const response = await deleteDailyArticle(data);
-    if (response.status === 200) {
-      setState({...state, boardArticle: ""})
-    }
-  };
-
-  // 댓글 창 여닫기
-  const onHandleComment = (e) => {
-    if(!state.isComment){
-      setState({...state, isComment: !state.isComment, boardComment:""})
-    }else{
-      setState({...state, isComment: !state.isComment, boardComment:""})
-    }
-  }
-
-  // 댓글 조회
-  const getComment = async(e) => {
-    const response = await getDailyComment();
-    setState({...response.data});
-    console.log(response.data.content)
-  }
-
-  // 댓글 작성
-  const onCommentPost = async (e) => {
-    const data = {
-      boardContent: state.boardArticle
-    };
-    const response = await postDailyComment(data);
-    if (response.status === 200) {
-      setState({...state, boardArticle: ""})
-    }
-  };
-
-  // 댓글 수정
-  const onCommentEdit = async (e) => {
-    const data = {
-      boardContent: state.boardArticle
-    };
-    const response = await editDailyComment(data);
-    if (response.status === 200) {
-      setState({...state, boardArticle: ""})
-    }
-  };
-
-  // 댓글 삭제
-  const onCommentDelete = async (e) => {
-    const data = {
-      boardContent: state.boardArticle
-    };
-    const response = await deleteDailyComment(data);
-    if (response.status === 200) {
-      setState({...state, boardArticle: ""})
-    }
-  };
 
   return (
     <>
