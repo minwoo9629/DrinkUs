@@ -14,6 +14,8 @@ import { connect } from "react-redux";
 import { clearRoomSession } from "../../../store/actions/room";
 import { useNavigate } from "react-router-dom";
 import { isCompositeComponent } from "react-dom/test-utils";
+import RoomSetting from "./setting/RoomSetting";
+import RoomGame from "./game/RoomGame";
 
 import * as StompJs from "@stomp/stompjs";
 import * as SockJS from "sockjs-client";
@@ -22,6 +24,7 @@ const ButtonContentComponentWrapper = styled.div`
   width: 330px;
   padding: 20px;
   background-color: #131317;
+  display: ${(props) => props.display};
 `;
 
 const StyledLayoutBounds = styled.div`
@@ -35,7 +38,7 @@ const StyledLayoutBounds = styled.div`
   right: 0;
   height: 100%;
   min-width: 400px !important;
-  width: 80%;
+  width: 100%;
 `;
 
 var localUser = new UserModel();
@@ -48,6 +51,21 @@ const gameClient = React.createRef({});
 function withNavigation(Component) {
   return (props) => <Component navigate={useNavigate()} {...props} />;
 }
+
+const BombGame = () => {
+  return (
+    <div
+      style={{
+        position: "absolute",
+        width: "100px",
+        height: "100px",
+        backgroundColor: "blue",
+      }}
+    >
+      폭탄돌리기
+    </div>
+  );
+};
 
 class VideoRoomComponent extends Component {
   constructor(props) {
@@ -79,7 +97,11 @@ class VideoRoomComponent extends Component {
       localUser: undefined,
       subscribers: [],
       chatDisplay: "none",
+      gameDisplay: "none",
+      settingDisplay: "none",
       currentVideoDevice: undefined,
+      clickCount: 0,
+      second: 0,
     };
 
     this.joinSession = this.joinSession.bind(this);
@@ -97,6 +119,8 @@ class VideoRoomComponent extends Component {
     this.toggleChat = this.toggleChat.bind(this);
     this.checkNotification = this.checkNotification.bind(this);
     this.checkSize = this.checkSize.bind(this);
+    this.toggleSetting = this.toggleSetting.bind(this);
+    this.toggleGame = this.toggleGame.bind(this);
   }
 
   componentDidMount() {
@@ -115,7 +139,7 @@ class VideoRoomComponent extends Component {
 
     this.layout.initLayoutContainer(
       document.getElementById("layout"),
-      openViduLayoutOptions,
+      openViduLayoutOptions
     );
     window.addEventListener("beforeunload", this.onbeforeunload);
     window.addEventListener("resize", this.updateLayout);
@@ -147,7 +171,7 @@ class VideoRoomComponent extends Component {
       () => {
         this.subscribeToStreamCreated();
         this.connectToSession();
-      },
+      }
     );
   }
 
@@ -201,7 +225,7 @@ class VideoRoomComponent extends Component {
       {
         AccessToken: `Bearer ${this.accessToken}`,
         roomId: ROOM_ID,
-      },
+      }
     );
   }
 
@@ -225,7 +249,7 @@ class VideoRoomComponent extends Component {
       {
         AccessToken: `Bearer ${this.accessToken}`,
         roomId: ROOM_ID,
-      },
+      }
     );
   }
 
@@ -247,7 +271,40 @@ class VideoRoomComponent extends Component {
       {
         AccessToken: `Bearer ${this.accessToken}`,
         roomId: ROOM_ID,
+      }
+    );
+  }
+
+  subStartBombGame() {
+    gameClient.current.subscribe(
+      `/sub/bomb/start/${ROOM_ID}`,
+      ({ body }) => {
+        // 여기에 화면에 띄우는 로직 작성
+        console.log("폭탄 돌리기 시작: ", body);
+        const obj = JSON.parse(body);
+
+        this.setState({ second: obj.second, clickCount: obj.clickCount });
+        let second = obj.second;
+        let leftClickCount = obj.clickCount;
+
+        let interval = setInterval(() => {
+          console.log(second);
+          second--;
+
+          // 뭔가 띄우기
+          // 그것의 onClick = leftClickCount--
+          // if(leftClickCount <= 0) : 뭔가 띄웠던 것 숨기기, 성공 표시
+
+          if (second < 0) {
+            clearInterval(interval);
+            console.log("시간끝");
+          }
+        }, 1000);
       },
+      {
+        AccessToken: `Bearer ${this.accessToken}`,
+        roomId: ROOM_ID,
+      }
     );
   }
 
@@ -275,7 +332,7 @@ class VideoRoomComponent extends Component {
           console.log(
             "There was an error getting the token:",
             error.code,
-            error.message,
+            error.message
           );
           alert("There was an error getting the token:", error.message);
         });
@@ -301,7 +358,7 @@ class VideoRoomComponent extends Component {
         console.log(
           "There was an error connecting to the session:",
           error.code,
-          error.message,
+          error.message
         );
       });
   }
@@ -347,10 +404,10 @@ class VideoRoomComponent extends Component {
         this.state.localUser.getStreamManager().on("streamPlaying", (e) => {
           this.updateLayout();
           publisher.videos[0].video.parentElement.classList.remove(
-            "custom-class",
+            "custom-class"
           );
         });
-      },
+      }
     );
   }
 
@@ -370,7 +427,7 @@ class VideoRoomComponent extends Component {
           });
         }
         this.updateLayout();
-      },
+      }
     );
   }
 
@@ -421,7 +478,7 @@ class VideoRoomComponent extends Component {
   deleteSubscriber(stream) {
     const remoteUsers = this.state.subscribers;
     const userStream = remoteUsers.filter(
-      (user) => user.getStreamManager().stream === stream,
+      (user) => user.getStreamManager().stream === stream
     )[0];
     let index = remoteUsers.indexOf(userStream, 0);
     if (index > -1) {
@@ -439,7 +496,7 @@ class VideoRoomComponent extends Component {
       subscriber.on("streamPlaying", (e) => {
         this.checkSomeoneShareScreen();
         subscriber.videos[0].video.parentElement.classList.remove(
-          "custom-class",
+          "custom-class"
         );
       });
       const newUser = new UserModel();
@@ -493,7 +550,7 @@ class VideoRoomComponent extends Component {
         {
           subscribers: remoteUsers,
         },
-        () => this.checkSomeoneShareScreen(),
+        () => this.checkSomeoneShareScreen()
       );
     });
   }
@@ -547,13 +604,12 @@ class VideoRoomComponent extends Component {
     try {
       const devices = await this.OV.getDevices();
       var videoDevices = devices.filter(
-        (device) => device.kind === "videoinput",
+        (device) => device.kind === "videoinput"
       );
 
       if (videoDevices && videoDevices.length > 1) {
         var newVideoDevice = videoDevices.filter(
-          (device) =>
-            device.deviceId !== this.state.currentVideoDevice.deviceId,
+          (device) => device.deviceId !== this.state.currentVideoDevice.deviceId
         );
 
         if (newVideoDevice.length > 0) {
@@ -569,7 +625,7 @@ class VideoRoomComponent extends Component {
 
           //newPublisher.once("accessAllowed", () => {
           await this.state.session.unpublish(
-            this.state.localUser.getStreamManager(),
+            this.state.localUser.getStreamManager()
           );
           await this.state.session.publish(newPublisher);
           this.state.localUser.setStreamManager(newPublisher);
@@ -605,7 +661,7 @@ class VideoRoomComponent extends Component {
         } else if (error && error.name === "SCREEN_CAPTURE_DENIED") {
           alert("You need to choose a window or application to share");
         }
-      },
+      }
     );
 
     publisher.once("accessAllowed", () => {
@@ -664,10 +720,52 @@ class VideoRoomComponent extends Component {
       display = this.state.chatDisplay === "none" ? "block" : "none";
     }
     if (display === "block") {
-      this.setState({ chatDisplay: display, messageReceived: false });
+      console.log("채팅창 열기");
+      console.log(this.state.settingDisplay);
+      this.setState({
+        chatDisplay: display,
+        messageReceived: false,
+        settingDisplay: "none",
+        gameDisplay: "none",
+      });
     } else {
       console.log("chat", display);
       this.setState({ chatDisplay: display });
+    }
+    this.updateLayout();
+  }
+
+  toggleSetting(property) {
+    let display = property;
+    if (display === undefined) {
+      display = this.state.settingDisplay === "none" ? "block" : "none";
+    }
+    if (display === "block") {
+      this.setState({
+        settingDisplay: display,
+        chatDisplay: "none",
+        gameDisplay: "none",
+      });
+    } else {
+      console.log(display);
+      this.setState({ settingDisplay: display });
+    }
+    this.updateLayout();
+  }
+
+  toggleGame(property) {
+    let display = property;
+    if (display === undefined) {
+      display = this.state.gameDisplay === "none" ? "block" : "none";
+    }
+    if (display === "block") {
+      this.setState({
+        gameDisplay: display,
+        settingDisplay: "none",
+        chatDisplay: "none",
+      });
+    } else {
+      this.setState({ gameDisplay: display });
     }
     this.updateLayout();
   }
@@ -699,77 +797,97 @@ class VideoRoomComponent extends Component {
     // var chatDisplay = { display: this.state.chatDisplay };
 
     return (
-      <div
-        style={{ height: "100vh", width: "100vw", display: "flex" }}
-        className="container"
-        id="container"
-      >
-        <ToolbarComponent
-          sessionId={mySessionId}
-          user={localUser}
-          showNotification={this.state.messageReceived}
-          camStatusChanged={this.camStatusChanged}
-          micStatusChanged={this.micStatusChanged}
-          screenShare={this.screenShare}
-          stopScreenShare={this.stopScreenShare}
-          toggleFullscreen={this.toggleFullscreen}
-          switchCamera={this.switchCamera}
-          leaveSession={this.leaveSession}
-          toggleChat={this.toggleChat}
-          ////// !!!!
-          recommendTopics={this.pubRecommendTopics}
-          randomDrink={this.pubRandomDrink}
-          recommendToasts={this.pubRecommendToasts}
-        />
-        <ButtonContentComponentWrapper>
-          {localUser !== undefined &&
-            localUser.getStreamManager() !== undefined && (
-              <div
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  display: this.state.chatDisplay,
-                }}
-                // className="OT_root OT_publisher custom-class"
-              >
+      <>
+        {setInterval(BombGame, this.second)}
+        <div
+          style={{ height: "100vh", width: "100vw", display: "flex" }}
+          className="container"
+          id="container"
+        >
+          <ToolbarComponent
+            sessionId={mySessionId}
+            user={localUser}
+            showNotification={this.state.messageReceived}
+            camStatusChanged={this.camStatusChanged}
+            micStatusChanged={this.micStatusChanged}
+            screenShare={this.screenShare}
+            stopScreenShare={this.stopScreenShare}
+            toggleFullscreen={this.toggleFullscreen}
+            switchCamera={this.switchCamera}
+            leaveSession={this.leaveSession}
+            toggleChat={this.toggleChat}
+            recommendTopics={this.pubRecommendTopics}
+            randomDrink={this.pubRandomDrink}
+            recommendToasts={this.pubRecommendToasts}
+            toggleSetting={this.toggleSetting}
+            toggleGame={this.toggleGame}
+          />
+          <ButtonContentComponentWrapper
+            display={
+              this.state.chatDisplay !== "none" ||
+              this.state.gameDisplay !== "none" ||
+              this.state.settingDisplay != "none"
+                ? "flex"
+                : "none"
+            }
+          >
+            {localUser !== undefined &&
+              localUser.getStreamManager() !== undefined && (
                 <ChatComponent
                   user={localUser}
                   chatDisplay={this.state.chatDisplay}
                   close={this.toggleChat}
                   messageReceived={this.checkNotification}
                 />
-              </div>
-            )}
-        </ButtonContentComponentWrapper>
+              )}
+            {localUser !== undefined &&
+              localUser.getStreamManager() !== undefined && (
+                <RoomSetting
+                  settingDisplay={this.state.settingDisplay}
+                  close={this.toggleSetting}
+                />
+              )}
+            {localUser !== undefined &&
+              localUser.getStreamManager() !== undefined && (
+                <RoomGame
+                  gameDisplay={this.state.gameDisplay}
+                  close={this.toggleGame}
+                />
+              )}
+          </ButtonContentComponentWrapper>
 
-        <DialogExtensionComponent
-          showDialog={this.state.showExtensionDialog}
-          cancelClicked={this.closeDialogExtension}
-        />
-        <StyledLayoutBounds id="layout">
-          {localUser !== undefined &&
-            localUser.getStreamManager() !== undefined && (
-              <div className="OT_root OT_publisher custom-class" id="localUser">
+          <DialogExtensionComponent
+            showDialog={this.state.showExtensionDialog}
+            cancelClicked={this.closeDialogExtension}
+          />
+          <StyledLayoutBounds id="layout">
+            {localUser !== undefined &&
+              localUser.getStreamManager() !== undefined && (
+                <div
+                  className="OT_root OT_publisher custom-class"
+                  id="localUser"
+                >
+                  <StreamComponent
+                    user={localUser}
+                    handleNickname={this.nicknameChanged}
+                  />
+                </div>
+              )}
+            {this.state.subscribers.map((sub, i) => (
+              <div
+                key={i}
+                className="OT_root OT_publisher custom-class"
+                id="remoteUsers"
+              >
                 <StreamComponent
-                  user={localUser}
-                  handleNickname={this.nicknameChanged}
+                  user={sub}
+                  streamId={sub.streamManager.stream.streamId}
                 />
               </div>
-            )}
-          {this.state.subscribers.map((sub, i) => (
-            <div
-              key={i}
-              className="OT_root OT_publisher custom-class"
-              id="remoteUsers"
-            >
-              <StreamComponent
-                user={sub}
-                streamId={sub.streamManager.stream.streamId}
-              />
-            </div>
-          ))}
-        </StyledLayoutBounds>
-      </div>
+            ))}
+          </StyledLayoutBounds>
+        </div>
+      </>
     );
   }
 
@@ -787,7 +905,7 @@ class VideoRoomComponent extends Component {
 
   getToken() {
     return this.createSession(this.state.mySessionId).then((sessionId) =>
-      this.createToken(sessionId),
+      this.createToken(sessionId)
     );
   }
 
@@ -814,7 +932,7 @@ class VideoRoomComponent extends Component {
             console.log(error);
             console.warn(
               "No connection to OpenVidu Server. This may be a certificate error at " +
-                this.OPENVIDU_SERVER_URL,
+                this.OPENVIDU_SERVER_URL
             );
             if (
               window.confirm(
@@ -823,11 +941,11 @@ class VideoRoomComponent extends Component {
                   '"\n\nClick OK to navigate and accept it. ' +
                   'If no certificate warning is shown, then check that your OpenVidu Server is up and running at "' +
                   this.OPENVIDU_SERVER_URL +
-                  '"',
+                  '"'
               )
             ) {
               window.location.assign(
-                this.OPENVIDU_SERVER_URL + "/accept-certificate",
+                this.OPENVIDU_SERVER_URL + "/accept-certificate"
               );
             }
           }
@@ -851,7 +969,7 @@ class VideoRoomComponent extends Component {
                 "Basic " + btoa("OPENVIDUAPP:" + this.OPENVIDU_SERVER_SECRET),
               "Content-Type": "application/json",
             },
-          },
+          }
         )
         .then((response) => {
           console.log("TOKEN", response);
