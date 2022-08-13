@@ -5,7 +5,6 @@ import com.ssafy.drinkus.common.NicknameFailException;
 import com.ssafy.drinkus.common.type.YN;
 import com.ssafy.drinkus.external.nickname.RandomNickname;
 import com.ssafy.drinkus.room.domain.Room;
-import com.ssafy.drinkus.room.domain.RoomHistory;
 import com.ssafy.drinkus.user.domain.type.UserProvider;
 import com.ssafy.drinkus.user.domain.type.UserRole;
 import lombok.AccessLevel;
@@ -69,9 +68,6 @@ public class User extends BaseEntity {
     private Integer userBeer;
 
     private String fcmToken;
-
-    @OneToMany(mappedBy = "user")
-    private List<RoomHistory> roomHistoryList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
     private List<Room> roomList = new ArrayList<>();
