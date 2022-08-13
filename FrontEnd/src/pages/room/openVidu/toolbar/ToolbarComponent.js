@@ -100,6 +100,11 @@ export default class ToolbarComponent extends Component {
     this.toggleChat = this.toggleChat.bind(this);
     this.randomDrink = this.randomDrink.bind(this);
     this.recommendTopics = this.recommendTopics.bind(this);
+    this.recommendToasts = this.recommendToasts.bind(this);
+  }
+
+  recommendToasts() {
+    this.props.recommendToasts();
   }
 
   recommendTopics() {
@@ -206,8 +211,9 @@ export default class ToolbarComponent extends Component {
               </RoomContentButton>
             </RoomContentButtonWrapper>
           </RoomContentWrapper>
-          <button onClick={this.randomDrink}>randomDrink</button>
+          <button onClick={this.randomDrink}>랜덤마시기k</button>
           <button onClick={this.recommendTopics}>대화주제추천</button>
+          <button onClick={this.recommendToasts}>건배사 추천</button>
           {/* <div className="buttonsContent">
             <button
               color="inherit"
