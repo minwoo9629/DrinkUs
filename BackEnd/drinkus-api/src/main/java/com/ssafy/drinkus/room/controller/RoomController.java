@@ -84,20 +84,4 @@ public class RoomController {
         roomService.deleteRoom(user, roomId);
         return ResponseEntity.ok().build();
     }
-
-    //화상방 참가
-    @PostMapping("/join/{room_id}")
-    public ResponseEntity<Void> joinRoom(@LoginUser User user, @PathVariable("room_id") Long roomId){
-        roomService.joinRoom(user, roomId);
-        return ResponseEntity.ok().build();
-    }
-
-    //화상방 퇴장
-    @PatchMapping("/exit/{room_id}")
-    public ResponseEntity<Void> exitRoom(@LoginUser User user, @PathVariable("room_id") Long roomId){
-        roomService.exitRoom(user, roomId);
-        return ResponseEntity.ok().build();
-    }
-
-    //화상방 강퇴
 }
