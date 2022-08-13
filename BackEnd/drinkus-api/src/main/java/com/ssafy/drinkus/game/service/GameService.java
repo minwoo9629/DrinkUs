@@ -3,6 +3,8 @@ package com.ssafy.drinkus.game.service;
 import com.ssafy.drinkus.common.NotFoundException;
 import com.ssafy.drinkus.game.query.TopicQueryRepository;
 import com.ssafy.drinkus.game.response.BombResponse;
+import com.ssafy.drinkus.room.domain.Toast;
+import com.ssafy.drinkus.room.domain.ToastRepository;
 import com.ssafy.drinkus.room.domain.Topic;
 import com.ssafy.drinkus.user.domain.User;
 import com.ssafy.drinkus.user.domain.UserRepository;
@@ -27,6 +29,7 @@ import static com.ssafy.drinkus.util.RandomUtil.makeRandomDrinkUserId;
 public class GameService {
     private final TopicQueryRepository topicQueryRepository;
     private final UserRepository userRepository;
+    private final ToastRepository toastRepository;
 
     private final Map<Long, Map<String, Long>> ROOMS = new HashMap<>(); // 방 번호, 방에 있는 유저의 세션ID
     private final Map<String, Long> SESSION_USER_ID = new HashMap<>(); // 해당 세션 ID에 해당하는 USER_ID
@@ -38,6 +41,13 @@ public class GameService {
                 .map(Topic::getTopicContent)
                 .collect(Collectors.toList());
         return makeRandomTopic(topicList);
+    }
+
+    public String findByToastId() {
+        Long tot = toastRepository.count();
+        Toast toast = toastRepository.findById((long) (Math.random() * tot + 1))
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 건배사 번호입니다."));
+        return toast.getToastContent();
     }
 
     public BombResponse findByRoomId() {
