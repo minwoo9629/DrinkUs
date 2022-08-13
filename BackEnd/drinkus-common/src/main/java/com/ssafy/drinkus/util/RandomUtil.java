@@ -1,7 +1,5 @@
 package com.ssafy.drinkus.util;
 
-import lombok.RequiredArgsConstructor;
-
 import java.util.List;
 import java.util.Map;
 

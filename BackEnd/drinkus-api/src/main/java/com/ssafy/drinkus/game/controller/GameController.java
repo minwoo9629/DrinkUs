@@ -36,6 +36,13 @@ public class GameController {
         messagingTemplate.convertAndSend("/sub/topic/" + request.getRoomId(), topic);
     }
 
+    // 건배사 추천 요청 : DB에 있는 여러 가지 건배사 중 하나를 랜덤으로 뽑아와서 추천
+    @MessageMapping("/toast")
+    public void findByToastId(GameIdRequest request) {
+        String toast = gameService.findByToastId();
+        messagingTemplate.convertAndSend("/sub/toast/" + request.getRoomId(), toast);
+    }
+
     // 폭탄돌리기 : 폭탄돌리기가 시작됐다는 요청 받으면(room_id)
     // random 초랑 시간(초)내에 눌러야하는 클릭횟수를 보내줌
     @MessageMapping("/bomb/start")
