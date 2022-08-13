@@ -155,8 +155,8 @@ class VideoRoomComponent extends Component {
   connectGameServer() {
     // STOMP 서버에 연결
     gameClient.current = new StompJs.Client({
-      //   brokerURL: "ws://i7b306.p.ssafy.io:8081/ws-stomp/websocket",
-      brokerURL: "ws://localhost:8080/ws-stomp/websocket",
+      brokerURL: "ws://i7b306.p.ssafy.io:8081/ws-stomp/websocket",
+      //   brokerURL: "ws://localhost:8080/ws-stomp/websocket",
       connectHeaders: {
         roomId: ROOM_ID,
         AccessToken: `Bearer ${this.accessToken}`,
