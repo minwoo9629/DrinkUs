@@ -44,7 +44,7 @@ const NeonLoginWrapper = styled.div`
   justify-content: center;
   border-radius: 13px;
   padding: 10px;
-  height: 750px;
+  height: 800px;
   background: rgb(56, 56, 56);
   background: linear-gradient(
     146deg,
