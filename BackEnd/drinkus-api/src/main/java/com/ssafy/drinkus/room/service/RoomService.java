@@ -49,7 +49,7 @@ public class RoomService {
     private final BCryptPasswordEncoder passwordEncoder;
 
     //화상방 상세 조회
-    public RoomInfoResponse findByRoomId(Long roomId){
+    public RoomInfoResponse findByRoomId(Long roomId) {
         //아이디를 통해 화상방정보를 조회해온다
         Room room = roomRepository.findById(roomId)
                 .orElseThrow(() -> new NotFoundException(NotFoundException.ROOM_NOT_FOUND));
@@ -57,14 +57,14 @@ public class RoomService {
     }
 
     //화상방 리스트 전체 조회
-    public Page<RoomListResponse> findBySearchRequest(User user, RoomSearchRequest request, Pageable pageable){
+    public Page<RoomListResponse> findBySearchRequest(User user, RoomSearchRequest request, Pageable pageable) {
         Page<Room> findRoomList = roomQueryRepository.findBySearchCondition(request.getSearchKeyword(), request.getSameAge(), request.getSortOrder(), request.getCategoryId(), pageable, user);
 
         return findRoomList.map(RoomListResponse::from);
     }
 
     //화상방 추천 - 같은 나이대
-    public List<RoomListResponse> findBySameAges(User user){
+    public List<RoomListResponse> findBySameAges(User user) {
         // 나이 변환
         StringBuilder sb = new StringBuilder(user.getUserBirthday());
         sb.insert(6, "-");
@@ -75,23 +75,23 @@ public class RoomService {
 
         // 같은 나이대로 설정된 방 찾기
         List<Room> list;
-        switch (age / 10){
-            case 2 :
+        switch (age / 10) {
+            case 2:
                 list = roomRepository.findTop8ByAges20OrderByCreatedDateDesc(YN.Y).orElseThrow(() -> new NotFoundException("해당 나이대의 방이 없습니다."));
                 break;
-            case 3 :
+            case 3:
                 list = roomRepository.findTop8ByAges30OrderByCreatedDateDesc(YN.Y).orElseThrow(() -> new NotFoundException("해당 나이대의 방이 없습니다."));
                 break;
-            case 4 :
+            case 4:
                 list = roomRepository.findTop8ByAges40OrderByCreatedDateDesc(YN.Y).orElseThrow(() -> new NotFoundException("해당 나이대의 방이 없습니다."));
                 break;
-            case 5 :
+            case 5:
                 list = roomRepository.findTop8ByAges50OrderByCreatedDateDesc(YN.Y).orElseThrow(() -> new NotFoundException("해당 나이대의 방이 없습니다."));
                 break;
-            case 6 :
+            case 6:
                 list = roomRepository.findTop8ByAges60OrderByCreatedDateDesc(YN.Y).orElseThrow(() -> new NotFoundException("해당 나이대의 방이 없습니다."));
                 break;
-            default :
+            default:
                 list = roomRepository.findTop8ByAges70OrderByCreatedDateDesc(YN.Y).orElseThrow(() -> new NotFoundException("해당 나이대의 방이 없습니다."));
                 break;
         }
@@ -104,8 +104,8 @@ public class RoomService {
     }
 
     //화상방 추천 - 내 관심사
-    public List<RoomListResponse> findRoomBySameCategory(User user){
-        if(userSubCategoryRepository.findByUser(user).isEmpty()){
+    public List<RoomListResponse> findRoomBySameCategory(User user) {
+        if (userSubCategoryRepository.findByUser(user).isEmpty()) {
             return null;
         }
 
@@ -120,14 +120,14 @@ public class RoomService {
     }
 
     //화상방 추천 - 최근 12시간 이내 생성 방 중 랜덤 8개
-    public List<RoomListResponse> findRandomRooms(){
+    public List<RoomListResponse> findRandomRooms() {
         List<Room> currentRoomList = roomRepository.findAllByCreatedDateAfter(LocalDateTime.now().minusHours(12))
                 .orElseThrow(() -> new NotFoundException(ROOM_NOT_FOUND));
         int size = currentRoomList.size() < 8 ? currentRoomList.size() : 8;
 
         Set<Room> roomSet = new HashSet<>();
-        while(roomSet.size() < size){
-            int seq = (int)(Math.random()*size);
+        while (roomSet.size() < size) {
+            int seq = (int) (Math.random() * size);
             roomSet.add(currentRoomList.get(seq));
         }
 
@@ -141,21 +141,20 @@ public class RoomService {
 
     //화상방 생성
     @Transactional
-    public void createRoom(User user, RoomCreateRequest request){
+    public void createRoom(User user, RoomCreateRequest request) {
         Category findCategory = null;
         User findUser = userRepository.findById(user.getUserId())
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
-        if(request.getCategoryId() != null){
+        if (request.getCategoryId() != null) {
             findCategory = categoryRepository.findById(request.getCategoryId())
                     .orElseThrow(() -> new NotFoundException(CATEGORY_NOT_FOUND));
-        }
-        else {
+        } else {
             findCategory = null;
         }
         Room room = Room.createRoom(
                 request.getRoomName(),
                 findUser,
-                passwordEncoder.encode(request.getRoomPw()),
+                request.getRoomPw() == null ? null : passwordEncoder.encode(request.getRoomPw()),
                 request.getPlaceTheme(),
                 request.getPeopleLimit(),
                 request.getAges(),
@@ -166,19 +165,18 @@ public class RoomService {
 
     //화상방 수정
     @Transactional
-    public void updateRoom(User user, Long roomId, RoomUpdateRequest request){
+    public void updateRoom(User user, Long roomId, RoomUpdateRequest request) {
         Category findCategory = null;
         Room findroom = roomRepository.findById(roomId)
                 .orElseThrow(() -> new NotFoundException(NotFoundException.ROOM_NOT_FOUND));
 
-        if(request.getCategoryId() != null){
+        if (request.getCategoryId() != null) {
             findCategory = categoryRepository.findById(request.getCategoryId())
                     .orElseThrow(() -> new NotFoundException(CATEGORY_NOT_FOUND));
-        }
-        else {
+        } else {
             findCategory = null;
         }
-        if(!user.getUserId().equals(findroom.getUser().getUserId())){
+        if (!user.getUserId().equals(findroom.getUser().getUserId())) {
             throw new NotMatchException(USER_NOT_MATCH);
         }
 
@@ -187,10 +185,10 @@ public class RoomService {
 
     @Transactional
     //화상방 삭제
-    public void deleteRoom(User user, Long roomId){
+    public void deleteRoom(User user, Long roomId) {
         Room findroom = roomRepository.findById(roomId)
                 .orElseThrow(() -> new NotFoundException(NotFoundException.ROOM_NOT_FOUND));
-        if(!user.getUserId().equals(findroom.getUser().getUserId())){
+        if (!user.getUserId().equals(findroom.getUser().getUserId())) {
             throw new NotMatchException(USER_NOT_MATCH);
         }
         roomRepository.deleteById(roomId);
