@@ -6,6 +6,7 @@ spring:
       - external
       - oauth
 
+  ## OAuth2 설정
   security:
     oauth2:
       client:
@@ -13,18 +14,20 @@ spring:
           google:
             client-id: 544385537574-774c31vj941hkdl0fp70vt0skjc3je3n.apps.googleusercontent.com
             client-secret: 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
+            redirect-uri: https://i7b306.p.ssafy.io/oauth2/code/google
             scope:
               - email
               - profile
           facebook:
             client-id: 1129306567796641
             client-secret: 906862fcf400aec6f0e4b28452eb0be6
+            redirect-uri: https://i7b306.p.ssafy.io/oauth2/code/facebook
             scope:
               - email
               - public_profile
           kakao:
             client-id: c72139d8987d18a01da876852d181267
-            redirect-uri: "http://localhost:8080/login/oauth2/code/kakao" #기본 제공 클라이언트가 아니기 때문에 반드시 적어줘야 함. 그래서 아무거나 적어도 되지만 되도록 규칙에 맞추기
+            redirect-uri: https://i7b306.p.ssafy.io/login/oauth2/code/kakao #기본 제공 클라이언트가 아니기 때문에 반드시 적어줘야 함. 그래서 아무거나 적어도 되지만 되도록 규칙에 맞추기
             client-authentication-method: POST
             authorization-grant-type: authorization_code #oauth2의 코드 방식 사용
             scope: profile_nickname, account_email
@@ -32,7 +35,7 @@ spring:
           naver:
             client-id: KJPFs_Lf5t3L81JjcKWR
             client-secret: mbaBXEF8TR
-            redirect-uri: "http://localhost:8080/login/oauth2/code/naver"
+            redirect-uri: https://i7b306.p.ssafy.io/login/oauth2/code/naver # /login/oauth2/code/naver
             authorization-grant-type: authorization_code
             scope:
               - name
@@ -56,14 +59,14 @@ spring:
       max-file-size: 10MB
       max-request-size: 100MB
 
+  ## SMTP 설정
   mail:
     host: smtp.gmail.com
     port: 465
     username: wolfmob9612@gmail.com
     password: ingjpyytdhsojlxg
     protocol: smtps
-    # 전송 위한 prop, ssl의 신뢰 및 권한 등 사용허가
-    properties:
+    properties: # 전송 위한 prop, ssl의 신뢰 및 권한 등 사용허가
       mail.smtp.auth: true
       mail.smtp.enable: true
       mail.smtp.timeout: 5000
@@ -74,7 +77,7 @@ spring:
       mail.smtp.socketFactory:fallback: true
 
 token:
-  expiration_time: 7200000 # 2시간
+  expiration_time: 7200000 # 2시간 (7200000)
   refresh_token_expiration_time: 604800000 # 7일
   secret: secret
 
