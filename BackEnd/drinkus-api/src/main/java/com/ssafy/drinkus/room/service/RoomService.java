@@ -8,8 +8,6 @@ import com.ssafy.drinkus.common.NotMatchException;
 import com.ssafy.drinkus.common.RoomException;
 import com.ssafy.drinkus.common.type.YN;
 import com.ssafy.drinkus.room.domain.Room;
-import com.ssafy.drinkus.room.domain.RoomHistory;
-import com.ssafy.drinkus.room.domain.RoomHistoryRepository;
 import com.ssafy.drinkus.room.domain.RoomRepository;
 import com.ssafy.drinkus.room.query.RoomQueryRepository;
 import com.ssafy.drinkus.room.request.RoomCreateRequest;
@@ -47,7 +45,6 @@ public class RoomService {
     private final CategoryQueryRepository categoryQueryRepository;
     private final UserSubCategoryRepository userSubCategoryRepository;
     private final UserRepository userRepository;
-    private final RoomHistoryRepository roomHistoryRepository;
 
     private final BCryptPasswordEncoder passwordEncoder;
 
@@ -101,7 +98,6 @@ public class RoomService {
         List<RoomListResponse> response = new ArrayList<>();
         for (Room room : list) {
             RoomListResponse res = RoomListResponse.from(room);
-            res.setConnectedUserNum(roomHistoryRepository.countPeopleInRoom(room.getRoomId()));
             response.add(res);
         }
         return response;
@@ -138,7 +134,6 @@ public class RoomService {
         List<RoomListResponse> response = new ArrayList<>();
         for (Room room : roomSet) {
             RoomListResponse res = RoomListResponse.from(room);
-            res.setConnectedUserNum(roomHistoryRepository.countPeopleInRoom(room.getRoomId()));
             response.add(res);
         }
         return response;
@@ -167,10 +162,6 @@ public class RoomService {
                 findCategory
         );
         roomRepository.save(room);
-
-        //방 히스토리에 저장
-        RoomHistory roomHistory = RoomHistory.createRoomHistory(room, findUser);
-        roomHistoryRepository.save(roomHistory);
     }
 
     //화상방 수정
@@ -203,33 +194,5 @@ public class RoomService {
             throw new NotMatchException(USER_NOT_MATCH);
         }
         roomRepository.deleteById(roomId);
-        RoomHistory findRoomHistory = roomHistoryRepository.findById(findroom.getRoomId())
-                .orElseThrow(() -> new NotFoundException(NotFoundException.ROOM_NOT_FOUND));
-        findRoomHistory.updateRoomHistory(YN.Y);
-    }
-
-    @Transactional
-    // 화상방 입장
-    public void joinRoom(User user, Long roomId){
-
-        // 접속중인 방이 있으면 다른 방에 접속 불가
-        if(roomHistoryRepository.findTopByUserUserIdAndIsExited(user.getUserId(), YN.N).isPresent()){
-            throw new RoomException(RoomException.JOINING_OTHER_ROOM);
-        }
-
-        // 방 접속
-        Room room = roomRepository.findById(roomId)
-                .orElseThrow(() -> new NotFoundException(ROOM_NOT_FOUND));
-        RoomHistory roomHistory = RoomHistory.createRoomHistory(room,user);
-        roomHistoryRepository.save(roomHistory);
-    }
-
-    @Transactional
-    // 화상방 퇴장
-    public void exitRoom(User user, Long roomId){
-        RoomHistory roomHistory = roomHistoryRepository.findTopByRoomRoomIdAndUserUserId(roomId, user.getUserId())
-                .orElseThrow(() -> new NotMatchException(NotMatchException.ROOM_HISTORY_NOT_MATCH));
-        if(roomHistory.getIsExited() == YN.N)
-            roomHistory.updateRoomHistory(YN.Y);
     }
 }
