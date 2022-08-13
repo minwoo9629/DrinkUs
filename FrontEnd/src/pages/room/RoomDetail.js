@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import { GoToButton } from "../../components/common/buttons/GoToButton";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { setRoomSession } from "../../store/actions/room";
 
 const Box = styled.div`
   background-color: white;
