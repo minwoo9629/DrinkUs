@@ -1,11 +1,13 @@
 package com.ssafy.drinkus.room.controller;
 
+import com.ssafy.drinkus.auth.response.TokenResponse;
 import com.ssafy.drinkus.config.LoginUser;
 import com.ssafy.drinkus.room.request.*;
 import com.ssafy.drinkus.room.response.RoomInfoResponse;
 import com.ssafy.drinkus.room.response.RoomListResponse;
 import com.ssafy.drinkus.room.service.RoomService;
 import com.ssafy.drinkus.user.domain.User;
+import com.ssafy.drinkus.user.request.UserLoginRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -82,6 +84,13 @@ public class RoomController {
     @DeleteMapping("/{room_id}")
     public ResponseEntity<Void> deleteRoom(@LoginUser User user, @PathVariable("room_id") Long roomId) {
         roomService.deleteRoom(user, roomId);
+        return ResponseEntity.ok().build();
+    }
+
+    // 화상방 비밀번호 확인
+    @PostMapping("/pwcheck")
+    public ResponseEntity<Void> findById(@RequestBody @Valid RoomConnectRequest request) {
+        roomService.findById(request);
         return ResponseEntity.ok().build();
     }
 }
