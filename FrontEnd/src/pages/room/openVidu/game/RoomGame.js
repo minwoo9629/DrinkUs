@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import GameButton from "./GameButton";
 
 const StyledRoomGameContainer = styled.div`
   width: 100%;
@@ -34,6 +35,16 @@ const StyeldRoomGameTittle = styled.div`
   color: black;
 `;
 
+const StyeldRoomGameButtonWrapper = styled.div`
+  height: 90%;
+  background-color: cornflowerblue;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+`;
+
 const RoomGame = ({ gameDisplay }) => {
   return (
     <StyledRoomGameContainer display={gameDisplay}>
@@ -41,10 +52,23 @@ const RoomGame = ({ gameDisplay }) => {
         <StyeldRoomGameTittle>
           <span>게임설정</span>
         </StyeldRoomGameTittle>
-        <div style={{ color: "white" }}>방연령대 표시하기</div>
-        <div style={{ color: "white" }}>관심사 표시하기</div>
-        <div style={{ color: "white" }}>인원 표시하기</div>
-        <div style={{ color: "white" }}>비밀번호</div>
+        <StyeldRoomGameButtonWrapper>
+          <div style={{ color: "white" }}>
+            <GameButton onClick={() => console.log("")} text={"랜덤 마시기"} />
+          </div>
+          <div style={{ color: "white" }}>
+            <GameButton onClick={() => console.log("")} text={"폭탄 돌리기"} />
+          </div>
+          <div style={{ color: "white" }}>
+            <GameButton
+              onClick={() => console.log("")}
+              text={"대화주제 추천"}
+            />
+          </div>
+          <div style={{ color: "white" }}>
+            <GameButton onClick={() => console.log("")} text={"건배사 추천"} />
+          </div>
+        </StyeldRoomGameButtonWrapper>
       </StyledRoomGameComponent>
     </StyledRoomGameContainer>
   );
