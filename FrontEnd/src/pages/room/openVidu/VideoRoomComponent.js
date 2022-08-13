@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useRef, useState } from "react";
 import axios from "axios";
 import "./VideoRoomComponent.css";
 import { OpenVidu } from "openvidu-browser";
@@ -14,6 +14,9 @@ import { connect } from "react-redux";
 import { clearRoomSession } from "../../../store/actions/room";
 import { useNavigate } from "react-router-dom";
 import { isCompositeComponent } from "react-dom/test-utils";
+
+import * as StompJs from "@stomp/stompjs";
+import * as SockJS from "sockjs-client";
 
 const ButtonContentComponentWrapper = styled.div`
   width: 330px;
@@ -37,6 +40,11 @@ const StyledLayoutBounds = styled.div`
 
 var localUser = new UserModel();
 
+// 게임 서버와 연결할 클라이언트
+const ROOM_ID = 4;
+// const ROOM_ID = Math.ceil(Math.random() * 5);
+const gameClient = React.createRef({});
+//
 function withNavigation(Component) {
   return (props) => <Component navigate={useNavigate()} {...props} />;
 }
@@ -44,6 +52,7 @@ function withNavigation(Component) {
 class VideoRoomComponent extends Component {
   constructor(props) {
     super(props);
+    this.accessToken = sessionStorage.getItem("ACCESS_TOKEN");
     this.OPENVIDU_SERVER_URL = this.props.openviduServerUrl
       ? this.props.openviduServerUrl
       : "https://i7b306.p.ssafy.io:8443";
@@ -106,12 +115,13 @@ class VideoRoomComponent extends Component {
 
     this.layout.initLayoutContainer(
       document.getElementById("layout"),
-      openViduLayoutOptions
+      openViduLayoutOptions,
     );
     window.addEventListener("beforeunload", this.onbeforeunload);
     window.addEventListener("resize", this.updateLayout);
     window.addEventListener("resize", this.checkSize);
     this.joinSession();
+    this.connectGameServer();
   }
 
   componentWillUnmount() {
@@ -119,10 +129,12 @@ class VideoRoomComponent extends Component {
     window.removeEventListener("resize", this.updateLayout);
     window.removeEventListener("resize", this.checkSize);
     this.leaveSession();
+    this.disconnectGameServer();
   }
 
   onbeforeunload(event) {
     this.leaveSession();
+    this.disconnectGameServer();
   }
 
   joinSession() {
@@ -135,9 +147,111 @@ class VideoRoomComponent extends Component {
       () => {
         this.subscribeToStreamCreated();
         this.connectToSession();
-      }
+      },
     );
   }
+
+  // Spring Boot Server와 Stomp 소켓 연동 시작
+  connectGameServer() {
+    // STOMP 서버에 연결
+    gameClient.current = new StompJs.Client({
+      brokerURL: "ws://i7b306.p.ssafy.io:8081/ws-stomp/websocket",
+      //   brokerURL: "ws://localhost:8080/ws-stomp/websocket",
+      connectHeaders: {
+        roomId: ROOM_ID,
+        AccessToken: `Bearer ${this.accessToken}`,
+      },
+      debug: function (str) {
+        console.log(str);
+      },
+      reconnectDelay: 5000,
+      heartbeatIncoming: 4000,
+      heartbeatOutgoing: 4000,
+      onConnect: () => {
+        // 세션 접속
+        this.subRecommendTopics();
+        this.subRandomDrink();
+        this.subRecommendToasts();
+      },
+    });
+
+    gameClient.current.activate();
+  }
+
+  disconnectGameServer() {
+    gameClient.current.deactivate();
+  }
+
+  pubRandomDrink() {
+    gameClient.current.publish({
+      destination: `/pub/random`,
+      body: JSON.stringify({
+        roomId: ROOM_ID,
+      }),
+    });
+  }
+
+  subRandomDrink() {
+    gameClient.current.subscribe(
+      `/sub/random/${ROOM_ID}`,
+      ({ body }) => {
+        // 여기에 화면에 띄우는 로직 작성
+        console.log("#랜덤 마시기: ", body);
+      },
+      {
+        AccessToken: `Bearer ${this.accessToken}`,
+        roomId: ROOM_ID,
+      },
+    );
+  }
+
+  pubRecommendTopics() {
+    gameClient.current.publish({
+      destination: `/pub/topic`,
+      body: JSON.stringify({
+        roomId: ROOM_ID,
+        categoryId: null, // 방의 카테고리ID (없으면 null)
+      }),
+    });
+  }
+
+  subRecommendTopics() {
+    gameClient.current.subscribe(
+      `/sub/topic/${ROOM_ID}`,
+      ({ body }) => {
+        // 여기에 화면에 띄우는 로직 작성
+        console.log("#대화주제 추천: ", body);
+      },
+      {
+        AccessToken: `Bearer ${this.accessToken}`,
+        roomId: ROOM_ID,
+      },
+    );
+  }
+
+  pubRecommendToasts() {
+    gameClient.current.publish({
+      destination: `/pub/toast`,
+      body: JSON.stringify({
+        roomId: ROOM_ID,
+      }),
+    });
+  }
+
+  subRecommendToasts() {
+    gameClient.current.subscribe(
+      `/sub/toast/${ROOM_ID}`,
+      ({ body }) => {
+        console.log("#건배사 추천: ", body);
+      },
+      {
+        AccessToken: `Bearer ${this.accessToken}`,
+        roomId: ROOM_ID,
+      },
+    );
+  }
+
+  // Spring Boot Server와 Stomp 소켓 연동 끝
 
   connectToSession() {
     if (this.props.token !== undefined) {
@@ -161,7 +275,7 @@ class VideoRoomComponent extends Component {
           console.log(
             "There was an error getting the token:",
             error.code,
-            error.message
+            error.message,
           );
           alert("There was an error getting the token:", error.message);
         });
@@ -187,7 +301,7 @@ class VideoRoomComponent extends Component {
         console.log(
           "There was an error connecting to the session:",
           error.code,
-          error.message
+          error.message,
         );
       });
   }
@@ -233,10 +347,10 @@ class VideoRoomComponent extends Component {
         this.state.localUser.getStreamManager().on("streamPlaying", (e) => {
           this.updateLayout();
           publisher.videos[0].video.parentElement.classList.remove(
-            "custom-class"
+            "custom-class",
           );
         });
-      }
+      },
     );
   }
 
@@ -256,7 +370,7 @@ class VideoRoomComponent extends Component {
           });
         }
         this.updateLayout();
-      }
+      },
     );
   }
 
@@ -307,7 +421,7 @@ class VideoRoomComponent extends Component {
   deleteSubscriber(stream) {
     const remoteUsers = this.state.subscribers;
     const userStream = remoteUsers.filter(
-      (user) => user.getStreamManager().stream === stream
+      (user) => user.getStreamManager().stream === stream,
     )[0];
     let index = remoteUsers.indexOf(userStream, 0);
     if (index > -1) {
@@ -325,7 +439,7 @@ class VideoRoomComponent extends Component {
       subscriber.on("streamPlaying", (e) => {
         this.checkSomeoneShareScreen();
         subscriber.videos[0].video.parentElement.classList.remove(
-          "custom-class"
+          "custom-class",
         );
       });
       const newUser = new UserModel();
@@ -379,7 +493,7 @@ class VideoRoomComponent extends Component {
         {
           subscribers: remoteUsers,
         },
-        () => this.checkSomeoneShareScreen()
+        () => this.checkSomeoneShareScreen(),
       );
     });
   }
@@ -433,12 +547,13 @@ class VideoRoomComponent extends Component {
     try {
       const devices = await this.OV.getDevices();
       var videoDevices = devices.filter(
-        (device) => device.kind === "videoinput"
+        (device) => device.kind === "videoinput",
       );
 
       if (videoDevices && videoDevices.length > 1) {
         var newVideoDevice = videoDevices.filter(
-          (device) => device.deviceId !== this.state.currentVideoDevice.deviceId
+          (device) =>
+            device.deviceId !== this.state.currentVideoDevice.deviceId,
         );
 
         if (newVideoDevice.length > 0) {
@@ -454,7 +569,7 @@ class VideoRoomComponent extends Component {
 
           //newPublisher.once("accessAllowed", () => {
           await this.state.session.unpublish(
-            this.state.localUser.getStreamManager()
+            this.state.localUser.getStreamManager(),
           );
           await this.state.session.publish(newPublisher);
           this.state.localUser.setStreamManager(newPublisher);
@@ -490,7 +605,7 @@ class VideoRoomComponent extends Component {
         } else if (error && error.name === "SCREEN_CAPTURE_DENIED") {
           alert("You need to choose a window or application to share");
         }
-      }
+      },
     );
 
     publisher.once("accessAllowed", () => {
@@ -601,6 +716,10 @@ class VideoRoomComponent extends Component {
           switchCamera={this.switchCamera}
           leaveSession={this.leaveSession}
           toggleChat={this.toggleChat}
+          ////// !!!!
+          recommendTopics={this.pubRecommendTopics}
+          randomDrink={this.pubRandomDrink}
+          recommendToasts={this.pubRecommendToasts}
         />
         <ButtonContentComponentWrapper>
           {localUser !== undefined &&
@@ -668,7 +787,7 @@ class VideoRoomComponent extends Component {
 
   getToken() {
     return this.createSession(this.state.mySessionId).then((sessionId) =>
-      this.createToken(sessionId)
+      this.createToken(sessionId),
     );
   }
 
@@ -695,7 +814,7 @@ class VideoRoomComponent extends Component {
             console.log(error);
             console.warn(
               "No connection to OpenVidu Server. This may be a certificate error at " +
-                this.OPENVIDU_SERVER_URL
+                this.OPENVIDU_SERVER_URL,
             );
             if (
               window.confirm(
@@ -704,11 +823,11 @@ class VideoRoomComponent extends Component {
                   '"\n\nClick OK to navigate and accept it. ' +
                   'If no certificate warning is shown, then check that your OpenVidu Server is up and running at "' +
                   this.OPENVIDU_SERVER_URL +
-                  '"'
+                  '"',
               )
             ) {
               window.location.assign(
-                this.OPENVIDU_SERVER_URL + "/accept-certificate"
+                this.OPENVIDU_SERVER_URL + "/accept-certificate",
               );
             }
           }
@@ -732,7 +851,7 @@ class VideoRoomComponent extends Component {
                 "Basic " + btoa("OPENVIDUAPP:" + this.OPENVIDU_SERVER_SECRET),
               "Content-Type": "application/json",
             },
-          }
+          },
         )
         .then((response) => {
           console.log("TOKEN", response);
