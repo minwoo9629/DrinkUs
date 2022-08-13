@@ -2,8 +2,10 @@ import { useState } from "react";
 // import Header from "../../components/layout/Header";
 import styled from "styled-components";
 import { client } from "../../utils/client";
+import { FailAlert, SuccessAlert } from "../../utils/sweetAlert";
+import { reportsSubmit } from "../../api/ProfileAPI";
 
-
+// 배경
 const Wrapper = styled.div`
   background-color: #eaf2ff;
   width: 100vw;
@@ -13,12 +15,14 @@ const Wrapper = styled.div`
   align-items: center;
 `;
 
+// 화면 가운데 창
 const ReportsWrapper = styled.div`
   background-color: transparent;
   display: flex;
   flex-direction: column;
 `;
 
+// 셀렉트 박스
 const ReportsSelect = styled.select`
   width: 400px;
   height: 40px;
@@ -30,6 +34,7 @@ const ReportsSelect = styled.select`
   color: #676775;
 `;
 
+// 신고 사유 입력 칸
 const ReportsInput = styled.input`
   position: relative;
   height: 400px;
@@ -42,6 +47,7 @@ const ReportsInput = styled.input`
   color: black;
 `
 
+// 신고하기 버튼
 const ReportsButton = styled.button`
   width: 100px;
   height: 40px;
@@ -53,53 +59,56 @@ const ReportsButton = styled.button`
   color: #676775;
 `
 
-// // 신고 사유 드롭 박스
-// const ReportsReason = [
-//   { id: null, value: '신고 사유 선택' },
-//   { id: '0001', value: '폭언 및 욕설' },
-//   { id: '0002', value: '개인정보노출' },
-//   { id: '0003', value: '음란성' },
-//   { id: '0004', value: '명예훼손' },
-//   { id: '0005', value: '기타' },
-// ];
-
 const Reports = () => {
   const [state, setState] = useState({
-    reportsReason: "",
-    reportsDetail: "",
+    reportType: "",
+    reportReason: "",
+    reportReasonCheck: false,
   })
   
+  // 신고 대분류
+  const onReportTypeSelect = (e) => {
+    setState({...state, [e.target.name]: e.target.value})
+  };
+
+
   // 신고 입력
-  const onHandleInput = (e) => {
+  const onReportReasonInput = (e) => {
     setState({ ...state, [e.target.name]: e.target.value });
   };
 
   // 신고 제출
-  const onReportsSubmit = (e) => {
-    e.preventDefault();
-    client
-        .post("/reports", {
-        })
-        .then(function (response) {
-          console.log(response);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-  };
+  const onReportsSubmit = async (e) => {
+    const data = {
+      toUserId: 7,
+      reportType: state.reportType,
+      reportReason: state.reportReason
+    };
+    const response = await reportsSubmit(data);
+    console.log(response)
+    if (response.status === 200) {
+      SuccessAlert("신고가 접수됐습니다")
+    }
+    if (state.reportReason.length === 0){
+      e.preventDefault()
+      FailAlert("신고 사유를 기입해 주세요")
+    }
+    else{
+      FailAlert("아직 처리되지 않은 동일한 유저를 재신고 할 수 없습니다.")
+    };
+    }
 
   return(
     <>
-      {/* <Header/> */}
       <Wrapper>
         <ReportsWrapper>
             (프로필 선택한 유저 닉네임)유저를 신고합니다.
-            {/* <ReportsSelect onChange={onHandleSelect}>
-              {ReportsReason.map(el => {
-                return <option key={el.id}>{el.value}</option>;
-              })};
-            </ReportsSelect> */}
-            <ReportsSelect>
+            <ReportsSelect
+              value={state.reportType}
+              name="reportType"
+              onChange={onReportTypeSelect}
+              defaultValue={"폭언 및 욕설"}
+            >
               <option>폭언 및 욕설</option>
               <option>개인정보노출</option>
               <option>음란성</option>
@@ -108,9 +117,9 @@ const Reports = () => {
             </ReportsSelect>
             <ReportsInput
               placeholder="신고 사유를 입력해 주세요."
-              value={state.reportsDetail}
-              name="reportsDetail"
-              onChange={onHandleInput}
+              value={state.reportReason}
+              name="reportReason"
+              onChange={onReportReasonInput}
             />
           <ReportsButton onClick={onReportsSubmit}>
             유저신고

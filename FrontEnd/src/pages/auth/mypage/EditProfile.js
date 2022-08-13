@@ -8,6 +8,10 @@ import { getUserProfile } from "../../../store/actions/user";
 import { FailAlert, SuccessAlert, loginAlert } from "../../../utils/sweetAlert";
 import { useNavigate } from "react-router-dom";
 import ProfileButton from "../../../components/common/buttons/ProfileButton";
+import { CalcUserCreated } from "../../../utils/CalcUserCreated";
+import { GetPopularlityPercent } from "../../../utils/GetPopularlityPercent";
+import Modal from "../../../components/modals/Modal";
+import ProfileImageListContent from "../../../components/modals/contents/ProfileImageListContent";
 const ProfileEditWrapper = styled.div`
   padding: 30px 30px 30px 10px;
   display: flex;
@@ -17,9 +21,20 @@ const ProfileEditWrapper = styled.div`
 const ProfileEditRowWapper = styled.div`
   display: flex;
   flex-direction: row;
-  align-items: baseline;
-  padding: 8px 20px;
+  align-items: ${(props) => props.alignItems};
+  padding: ${(props) => props.padding};
+  border: ${(props) => props.border};
+  border-radius: ${(props) => props.borderRadius};
+  margin-left: ${(props) => props.marginLeft};
 `;
+
+ProfileEditRowWapper.defaultProps = {
+  padding: "8px 20px",
+  border: "none",
+  borderRadius: "0px",
+  marginLeft: "0px",
+  alignItems: "baseline",
+};
 
 const RatioWrapper = styled.div`
   width: ${(props) => props.width}%;
@@ -77,12 +92,22 @@ ProfileEditInput.defaultProps = {
   marginRight: "0px",
 };
 
+const StyledPopularlity = styled.div`
+  padding: 5px 20px;
+  background-color: #eaf1ff;
+  border-radius: 5px;
+  box-sizing: border-box;
+  width: ${(props) => props.width}%;
+  box-sizing: border-box;
+`;
+
 const EditProfile = () => {
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const nickNameInput = useRef();
   const [profileState, setProfileState] = useState({
+    userName: "",
     nickName: "",
     nickNameIsAvailAble: true,
     introduce: "",
@@ -92,24 +117,49 @@ const EditProfile = () => {
     day: 0,
     soju: 0,
     beer: 0,
+    userCreatedYear: 0,
+    userCreatedMonth: 0,
+    userCreatedDay: 0,
   });
+  const [PopularlityPercentState, setPopularlityPercentState] = useState(1);
+  const [profileImageState, setProfileImageState] = useState("1");
+  const [modalState, setModalState] = useState(false);
   useEffect(() => {
+    const [userCreatedYear, userCreatedMonth, userCreatedDay] = CalcUserCreated(
+      user.data.userCreatedDate
+    );
     const userProfile = {
+      userName: user.data.userName,
       nickName: user.data.userNickname,
+      userFullname: user.data.userFullname,
       introduce:
         user.data.userIntroduce !== null ? user.data.userIntroduce : "",
       popularlity: user.data.userPopularity,
-      year: user.data.userBirthday.substr(0, 4),
-      month: user.data.userBirthday.substr(4, 2),
-      day: user.data.userBirthday.substr(6, 2),
+      year:
+        user.data.userBirthday !== null
+          ? user.data.userBirthday.substr(0, 4)
+          : "0000",
+      month:
+        user.data.userBirthday !== null
+          ? user.data.userBirthday.substr(4, 2)
+          : "00",
+      day:
+        user.data.userBirthday !== null
+          ? user.data.userBirthday.substr(6, 2)
+          : "00",
       soju: user.data.userSoju,
       beer: user.data.userBeer,
+      userCreatedYear,
+      userCreatedMonth,
+      userCreatedDay,
     };
+    const popularlityPercent = GetPopularlityPercent(user.data.userPopularity);
     setProfileState((prevState) => {
       return { ...prevState, ...userProfile };
     });
+    setPopularlityPercentState(popularlityPercent);
+    setProfileImageState(!user.data.userImg ? "1" : user.data.userImg);
   }, []);
-
   const onHandleProfileState = (e) => {
     setProfileState({ ...profileState, [e.target.name]: e.target.value });
   };
@@ -150,12 +200,15 @@ const EditProfile = () => {
       nickNameInput.current.focus();
       return;
     }
+    const userBirthday =
+      profileState.year + profileState.month + profileState.day;
     const data = {
       userNickname: profileState.nickName,
       userIntroduce: profileState.introduce,
       userSoju: profileState.soju,
       userBeer: profileState.beer,
-      userImg: "",
+      userImg: profileImageState,
+      userBirthday,
     };
     const result = await editProfile(data);
     if (result.status === 200) {
@@ -163,16 +216,43 @@ const EditProfile = () => {
       dispatch(getUserProfile());
     }
   };
+
+  const openModal = () => {
+    setModalState(true);
+  };
+
+  const closeModal = () => {
+    setModalState(false);
+  };
+
+  const onHandleChangeProfileImage = (profileImageId) => {
+    setProfileImageState((prev) => profileImageId);
+    closeModal();
+  };
   return (
     <div style={{ padding: "30px 0px 30px 60px" }}>
-      <ProfileTitle isEdit={true} />
+      <Modal
+        isOpen={modalState}
+        modalContent={
+          <ProfileImageListContent
+            profileImageState={profileImageState}
+            onClcik={onHandleChangeProfileImage}
+          />
+        }
+      />
+      <ProfileTitle
+        isEdit={true}
+        openModal={openModal}
+        imageId={profileImageState}
+        userName={profileState.userName}
+      />
       <ProfileEditWrapper>
         <ProfileEditRowWapper>
           <RatioWrapper width={15} textAlign={"right"}>
             이름
           </RatioWrapper>
           <RatioWrapper width={15} textAlign={"left"} marginLeft={"20"}>
-            박무지
+            {profileState.userFullname}
           </RatioWrapper>
         </ProfileEditRowWapper>
         <ProfileEditRowWapper>
@@ -221,19 +301,31 @@ const EditProfile = () => {
             />
           </ProfileEditRowWapper>
         </ProfileEditRowWapper>
-        <ProfileEditRowWapper>
+        <ProfileEditRowWapper alignItems={"center"}>
           <RatioWrapper width={15} textAlign={"right"}>
             인기도
           </RatioWrapper>
           <ProfileEditRowWapper
-            style={{ width: "70%" }}
+            style={{ width: "40%" }}
+            padding={"0px"}
             textAlign={"left"}
-            marginLeft={"20"}
+            marginLeft={"20px"}
+            border={"1px solid #bcb9b9"}
+            borderRadius={"5px"}
           >
-            <div>
-              <div>{profileState.popularlity}</div>
+            <div style={{ width: "100%" }}>
+              <StyledPopularlity width={profileState.popularlity}>
+                {profileState.popularlity}º
+              </StyledPopularlity>
             </div>
           </ProfileEditRowWapper>
+          <img
+            style={{ width: "40px", height: "40px", marginLeft: "20px" }}
+            src={
+              process.env.PUBLIC_URL +
+              `/assets/alcoholImage/${PopularlityPercentState}.png`
+            }
+          />
         </ProfileEditRowWapper>
         <ProfileEditRowWapper>
           <RatioWrapper width={15} textAlign={"right"}>
@@ -291,19 +383,19 @@ const EditProfile = () => {
           >
             <div style={{ display: "flex" }}>
               <UserCreatedDayWrapper width={"80px"} marginRight={"10px"}>
-                2000
+                {profileState.userCreatedYear}
               </UserCreatedDayWrapper>
               <span style={{ padding: "4px 0px" }}>년</span>
             </div>
             <div style={{ display: "flex", padding: "4px" }}>
               <UserCreatedDayWrapper width={"80px"} marginRight={"10px"}>
-                01
+                {profileState.userCreatedMonth}
               </UserCreatedDayWrapper>
               <span style={{ padding: "4px 0px" }}>월</span>
             </div>
             <div style={{ display: "flex" }}>
               <UserCreatedDayWrapper width={"80px"} marginRight={"10px"}>
-                02
+                {profileState.userCreatedDay}
               </UserCreatedDayWrapper>
               <span style={{ padding: "4px 0px" }}>일</span>
             </div>

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { getMySchedule } from "../../../api/MyPageAPI";
 import ProfileTitle from "../../../components/auth/ProfileTitle";
@@ -20,6 +21,9 @@ const MySchedule = () => {
     size: 0,
     totalPages: 0,
   });
+  const [profileImageState, setProfileImageState] = useState("1");
+  const [userNameState, setUserNameState] = useState("");
+  const user = useSelector((state) => state.user);
   const fetchData = async (pageNum) => {
     const response = await getMySchedule(pageNum);
     setScheduleState({ ...response.data });
@@ -31,11 +35,16 @@ const MySchedule = () => {
 
   useEffect(() => {
     fetchData(scheduleState.number);
+    setProfileImageState(!user.data.userImg ? "1" : user.data.userImg);
+    setUserNameState(user.data.userName);
   }, []);
-  console.log(scheduleState);
   return (
-    <div style={{ padding: "30px" }}>
-      <ProfileTitle isEdit={false} />
+    <div style={{ padding: "30px 0px 30px 60px" }}>
+      <ProfileTitle
+        isEdit={false}
+        imageId={profileImageState}
+        userName={userNameState}
+      />
       <div style={{ marginTop: "30px" }}>
         <ScheduleTap>
           <div style={{ width: "15%" }}>글 번호</div>

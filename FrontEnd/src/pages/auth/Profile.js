@@ -2,6 +2,31 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { client } from "../../utils/client";
+import { getUserCategory, getUserProfile, plusPopularity, minusPopularity } from "../../api/ProfileAPI";
+import { FailAlert } from "../../utils/sweetAlert";
+
+const CategoryWrapper = styled.div`
+  display: flex;
+  margin-bottom: 30px;
+`;
+
+const SubCategoryWrapper = styled.div`
+  margin: 4px 12px 4px 4px;
+  background-color: #ffffff;
+  border-radius: 4px;
+  border: 3px solid #eaf1ff;
+  text-align: center;
+  overflow: hidden;
+
+  & input:checked + span {
+    background-color: #eaf1ff;
+  }
+  & span {
+    cursor: pointer;
+    display: block;
+    padding: 2px 16px;
+  }
+`;
 
 const Wrapper = styled.div`
   background-color: #eaf2ff;
@@ -48,6 +73,15 @@ const IntroduceWrapper = styled.div`
   align-items: center;
 `
 
+const InterestWrapper = styled.div`
+  background-color: transparent;
+  width: 40vw;
+  height: 10vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+
 const ReportsButton = styled.button`
   width: 100px;
   height: 40px;
@@ -63,62 +97,85 @@ const Profile = () => {
   const [state, setState] = useState({
     userNickname: "",
     userPopularity: "",  // 인기도
-    popularityNumber: 0,  // 인기도 수정 횟수
     userImg: "",
     userIntroduce: "",
     userSoju: "",
     userBeer: "",
   });
+
+  const [popular, setPopular] = useState({
+    popularityNumber: 0,
+  })
+
+  const [category, setCategory] = useState([]);
   // 인기도 수정 횟수 5회 제한 + 5회 넘을 시 alert 창
-  const popularityDisabled = state.popularityNumber === 5;
+  if (popular.popularityNumber >= 5) {
+    FailAlert("인기도 수정횟수는 1일 최대 5회입니다")
+  };
+  
+  // // 인기도 더하기
+  // const onPopularityPlus = (userId) => {
+  //   client
+  //     .patch(`/users/popularity/${userId}`, {
+  //       popularNum: 1
+  //     })
+  //     .then((response) => resopnse)
+  // }
 
+  // // 인기도 내리기
+  // const onPopularityMinus = (userId) => {
+  //   client
+  //     .patch(`/users/popularity/${userId}`, {
+  //       popularNum: -1
+  //     })
+  //     .then((response) => resopnse)
+  // }
 
-  // 인기도 수정
-  const onPopularityEdit = (e) => {
-    const name = e.target.name;
-    if (name === "plus") {
-      setState({...state, userPopularity: state.userPopularity + 1, popularityNumber: state.popularityNumber + 1});
-    } else if (name === "minus") {
-      setState({...state, userPopularity:state.userPopularity - 1, popularityNumber: state.popularityNumber + 1});
+  // 인기도 더하기
+  const onPopularityPlus = async () => {
+    const data = {
+      popularNum: 1
     }
-    // 인기도 수정 api 요청
-    client
-      .patch(`/users/popularity`, {
-         params: {
-          user_id: "6",
-        }  
-      })
-      .then(function (response) {
-        console.log(response);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-    };
+    const result = await plusPopularity(data);
+    if (result.status === 400){
+      FailAlert("오늘의 인기도 수정 횟수를 모두 사용했습니다.")
+    } else {
+      setState({...state, userPopularity: state.userPopularity + 1});
+      setPopular({...popular, popularityNumber: popular.popularityNumber + 1});
+    }
+  };
+
+  // 인기도 내리기
+  const onPopularityMinus = async () => {
+    const data = {
+      popularNum: -1
+    }
+    const result = await minusPopularity(data);
+    if (result.status === 400){
+      FailAlert("오늘의 인기도 수정 횟수를 모두 사용했습니다.")
+    } else {
+      setState({...state, userPopularity: state.userPopularity - 1});
+      setPopular({...popular, popularityNumber: popular.popularityNumber + 1});
+    }
+  };
 
 
-  // 유저 정보 요청 --> 무한렌더링... setState 쪽 문제인데, 해결방법을 아직 모름,,,
-  client
-    .get(`/users/profile/6`, {
-      //  params: {
-      //   user_no: "6",
-      // }
-    })
-    .then((response) => {
-      console.log(response);
-      console.log(response.data, []);
-      // setState({...state,
-      //   userNickname: response.data.userNickname,
-      //   userPopularity: response.data.userPopularity,
-      //   userImg: response.data.userImg,
-      //   userIntroduce: response.data.userIntroduce,
-      //   userSoju: response.data.userSoju,
-      //   userBeer: response.data.userBeer
-      // }, [])
-    })
-    .catch(function (error) {
-      console.log(error);
-    }, []);
+  // 유저 정보 요청
+  const fetchUsers = async() => {
+    const response = await getUserProfile();
+    setState({...response.data});
+  };
+
+  // 유저 관심사 요청
+  const fetchCategory = async() => {
+    const response = await getUserCategory();
+    setCategory([...response.data]);
+  };
+
+  useEffect(() => {
+    fetchUsers();
+    fetchCategory();
+  }, []);
 
   return (
   <div>
@@ -128,22 +185,29 @@ const Profile = () => {
           <ProfileImg>{state.userImg}</ProfileImg>
             인기도: {state.userPopularity}°
             <EditButton
-              onClick={onPopularityEdit}
+              onClick={onPopularityPlus}
               name="plus"
-              disabled={popularityDisabled}
+              disabled={popular.popularityNumber === 5}
             > + </EditButton>
             <EditButton
-              onClick={onPopularityEdit}
+              onClick={onPopularityMinus}
               name="minus"
-              disabled={popularityDisabled}
+              disabled={popular.popularityNumber === 5}
             > - </EditButton>
         </ProfileWrapper>
         <ProfileWrapper>
               관심사
         </ProfileWrapper>
-        <IntroduceWrapper>
-          관심사 data값에 없음
-        </IntroduceWrapper>
+        <InterestWrapper>
+          {category.map((item)=>(
+            <CategoryWrapper key={item.subCategoryId}>
+            <SubCategoryWrapper>
+              <label>{item.subCategoryName}</label>
+            </SubCategoryWrapper>
+          </CategoryWrapper>
+          )
+          )}
+        </InterestWrapper>
         <ProfileWrapper>
           자기 소개
         </ProfileWrapper>
@@ -163,6 +227,6 @@ const Profile = () => {
       </Wrapper>
   </div>
   )
-}
+};
 
 export default Profile;

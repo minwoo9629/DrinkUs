@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import {
   BASIC_MENU,
@@ -43,7 +43,7 @@ const HeaderMenuLinkWrapper = styled.div`
 
 const HeaderMenuLink = styled(NavLink)`
   text-decoration: none;
-  color: lightpink;
+  color: #6F92BF;
   font-family: "Black Han Sans";
   font-size: 20px;
   transition: color 0.5s linear;
@@ -60,7 +60,7 @@ const LogOutButton = styled.button`
   cursor: pointer;
   background-color: transparent;
   border: none;
-  color: lightpink;
+  color: #6F92BF;
   font-family: "Black Han Sans";
   font-size: 20px;
   transition: color 0.5s linear;
@@ -73,7 +73,10 @@ const LogOutButton = styled.button`
   }
 `;
 
-const Header = ({ position }) => {
+const Header = ({ position, location }) => {
+
+  const navigate = useNavigate();
+
   const [ScrollY, setHeaderColor] = useState(0);
   const [HeaderStatus, setHeaderStatus] = useState(false);
   const dispatch = useDispatch();
@@ -81,6 +84,7 @@ const Header = ({ position }) => {
     dispatch(logOut());
     sessionStorage.removeItem("ACCESS_TOKEN");
     SuccessAlert("로그아웃되었습니다.");
+    navigate("/");
   };
   const handleColor = () => {
     setHeaderColor(window.pageYOffset);
@@ -101,8 +105,12 @@ const Header = ({ position }) => {
   const user = useSelector((state) => state.user);
   return (
     <DrinkUsHeader
-      color={HeaderStatus ? "white" : "black"}
-      opacity={HeaderStatus ? "0.9" : "0.7"}
+      color={location === 'home' ? (
+        HeaderStatus ? "white" : "black"
+      ) : (location === 'lightzone' ? "white" : "black")}
+      opacity={location === 'home' ? (
+        HeaderStatus ? "0.9" : "0.7"
+      ) : '1'}
       position={position}
     >
       <HeaderMenu width={100} justify={"space-between"}>
@@ -111,7 +119,7 @@ const Header = ({ position }) => {
             <HeaderMenuLink
               key={idx}
               to={item.link}
-              className={HeaderStatus ? "" : "light"}
+              className={location === 'lightzone' ? "" : ( HeaderStatus ? "" : "light" )}
             >
               {item.menuName}
             </HeaderMenuLink>
@@ -124,8 +132,8 @@ const Header = ({ position }) => {
           {user.isLogin ? (
             <>
               <HeaderMenuLink
-                to={"/user"}
-                className={HeaderStatus ? "" : "light"}
+                to={"/user/edit/profile"}
+                className={location === 'lightzone' ? "" : ( HeaderStatus ? "" : "light" )}
               >
                 {user.data.userNickname}님
               </HeaderMenuLink>
@@ -133,14 +141,14 @@ const Header = ({ position }) => {
                 <HeaderMenuLink
                   key={idx}
                   to={item.link}
-                  className={HeaderStatus ? "" : "light"}
+                  className={location === 'lightzone' ? "" : ( HeaderStatus ? "" : "light" )}
                 >
                   <i className={item.className} />
                 </HeaderMenuLink>
               ))}
               <LogOutButton
                 onClick={onHandleLogout}
-                className={HeaderStatus ? "" : "light"}
+                className={location === 'lightzone' ? "" : ( HeaderStatus ? "" : "light" )}
               >
                 로그아웃
               </LogOutButton>
@@ -151,7 +159,7 @@ const Header = ({ position }) => {
                 <HeaderMenuLink
                   key={idx}
                   to={item.link}
-                  className={HeaderStatus ? "" : "light"}
+                  className={location === 'lightzone' ? "" : ( HeaderStatus ? "" : "light" )}
                 >
                   {item.menuName}
                 </HeaderMenuLink>

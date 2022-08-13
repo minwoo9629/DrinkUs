@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { getMyArticle, removeMyArticle } from "../../../api/MyPageAPI";
@@ -21,7 +22,16 @@ const MyArticle = () => {
     size: 0,
     totalPages: 0,
   });
+  const [profileImageState, setProfileImageState] = useState("1");
+  const [userNameState, setUserNameState] = useState("");
+  const user = useSelector((state) => state.user);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setProfileImageState(!user.data.userImg ? "1" : user.data.userImg);
+    setUserNameState(user.data.userName);
+  }, []);
+
   const fetchData = async (pageNum) => {
     const response = await getMyArticle(pageNum);
     setArticleState({ ...response.data });
@@ -43,8 +53,12 @@ const MyArticle = () => {
     fetchData(articleState.number);
   }, [articleState.numberOfElements]);
   return (
-    <div style={{ padding: "30px" }}>
-      <ProfileTitle isEdit={false} />
+    <div style={{ padding: "30px 0px 30px 60px" }}>
+      <ProfileTitle
+        isEdit={false}
+        imageId={profileImageState}
+        userName={userNameState}
+      />
       <div style={{ marginTop: "30px" }}>
         <ArticleTap>
           <div style={{ width: "20%" }}>종류</div>

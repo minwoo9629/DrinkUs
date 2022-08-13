@@ -15,18 +15,24 @@ import SocialLogin from "./pages/auth/SocialLogin";
 import MyPage from "./pages/auth/MyPage";
 import DrinkLive from "./pages/room/DrinkLive";
 import CreateRoom from "./pages/room/CreateRoom";
-import Rooms from "./pages/room/Rooms";
-import Daily from "./pages/Daily";
 import RoomDetail from "./pages/room/RoomDetail";
+import RoomList from "./pages/room/RoomList";
+import Daily from "./pages/Daily";
 import Calendar from "./pages/calendarcommunity/Calendar";
-// import CalendarList from "./pages/calendarcommunity/CalendarList";
+import DailyCalendarList from "./pages/calendarcommunity/DailyCalendarList";
 import CreateCalendar from "./pages/calendarcommunity/CreateCalendar";
+import EditCalendar from "./pages/calendarcommunity/EditCalendar";
 import EditProfile from "./pages/auth/mypage/EditProfile";
 import EditPassword from "./pages/auth/mypage/EditPassword";
 import EditInterest from "./pages/auth/mypage/EditInterest";
 import MyArticle from "./pages/auth/mypage/MyArticle";
 import MySchedule from "./pages/auth/mypage/MySchedule";
 import { PersistGate } from "redux-persist/integration/react";
+import Admin from "./pages/admin/Admin";
+import VideoRoomComponent from "./pages/room/openVidu/VideoRoomComponent";
+import PrivateRoute from "./routes/PrivateRoute";
+import NotFound from "./pages/error/NotFound";
+
 function App() {
   return (
     <Provider store={store}>
@@ -48,15 +54,46 @@ function App() {
               <Route path="/profile" element={<Profile />} />
               <Route path="/reports" element={<Reports />} />
               <Route path="/oauth2/redirect" element={<SocialLogin />} />
-              <Route path="/live" element={<DrinkLive />} />
-              <Route path="/createroom" element={<CreateRoom />} />
-              <Route path="/rooms" element={<Rooms />} />
-              <Route path="/daily" element={<Daily />} />
-              <Route path="/rooms/1" element={<RoomDetail />} />
-              <Route path="/calendar" element={<Calendar />} />
-              {/* <Route path="/calendar/list" element={<CalendarList />} /> */}
-              <Route path="/calendar/create" element={<CreateCalendar />} />
-              <Route path="/user" element={<MyPage />}>
+              <Route
+                path="/live"
+                element={<PrivateRoute component={<DrinkLive />} />}
+              />
+              <Route
+                path="/createroom"
+                element={<PrivateRoute component={<CreateRoom />} />}
+              />
+              <Route
+                path="/rooms"
+                element={<PrivateRoute component={<RoomList />} />}
+              />
+              <Route
+                path="/rooms/:roomId"
+                element={<PrivateRoute component={<RoomDetail />} />}
+              />
+              <Route
+                path="/daily"
+                element={<PrivateRoute component={<Daily />} />}
+              />
+              <Route
+                path="/calendar"
+                element={<PrivateRoute component={<Calendar />} />}
+              />
+              <Route
+                path="/calendar/:year/:month/:index"
+                element={<PrivateRoute component={<DailyCalendarList />} />}
+              />
+              <Route
+                path="/calendar/create"
+                element={<PrivateRoute component={<CreateCalendar />} />}
+              />
+              <Route
+                path="/calendar/:calendarId/edit"
+                element={<PrivateRoute component={<EditCalendar />} />}
+              />
+              <Route
+                path="/user"
+                element={<PrivateRoute component={<MyPage />} />}
+              >
                 <Route index element={<EditProfile />} />
                 <Route path="edit/profile" element={<EditProfile />} />
                 <Route path="edit/password" element={<EditPassword />} />
@@ -64,6 +101,15 @@ function App() {
                 <Route path="article" element={<MyArticle />} />
                 <Route path="schedule" element={<MySchedule />} />
               </Route>
+              <Route
+                path="/admin"
+                element={<PrivateRoute component={<Admin />} />}
+              />
+              <Route
+                path="/room/detail"
+                element={<PrivateRoute component={<VideoRoomComponent />} />}
+              />
+              <Route path="/*" element={<NotFound />} />
             </Routes>
           </div>
         </BrowserRouter>
