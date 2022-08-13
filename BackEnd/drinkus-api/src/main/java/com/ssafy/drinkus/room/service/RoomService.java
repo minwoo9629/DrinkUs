@@ -152,7 +152,6 @@ public class RoomService {
         } else {
             findCategory = null;
         }
-        System.out.println("request.getRoomPw() = " + request.getRoomPw());
         Room room = Room.createRoom(
                 request.getRoomName(),
                 findUser,
