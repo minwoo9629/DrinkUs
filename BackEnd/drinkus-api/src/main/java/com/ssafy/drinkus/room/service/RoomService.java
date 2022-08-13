@@ -151,10 +151,11 @@ public class RoomService {
         } else {
             findCategory = null;
         }
+        System.out.println("request.getRoomPw() = " + request.getRoomPw());
         Room room = Room.createRoom(
                 request.getRoomName(),
                 findUser,
-                request.getRoomPw() == null ? null : passwordEncoder.encode(request.getRoomPw()),
+                request.getRoomPw().equals(null) || request.getRoomPw().equals("") ? null : passwordEncoder.encode(request.getRoomPw()),
                 request.getPlaceTheme(),
                 request.getPeopleLimit(),
                 request.getAges(),
