@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 
 import styled from "styled-components";
+import { randomDrink } from "../../../../utils/sweetAlert";
 
 const ToolBar = styled.div`
   width: 20%;
@@ -97,6 +98,21 @@ export default class ToolbarComponent extends Component {
     this.switchCamera = this.switchCamera.bind(this);
     this.leaveSession = this.leaveSession.bind(this);
     this.toggleChat = this.toggleChat.bind(this);
+    this.randomDrink = this.randomDrink.bind(this);
+    this.recommendTopics = this.recommendTopics.bind(this);
+    this.recommendToasts = this.recommendToasts.bind(this);
+  }
+
+  recommendToasts() {
+    this.props.recommendToasts();
+  }
+
+  recommendTopics() {
+    this.props.recommendTopics();
+  }
+
+  randomDrink() {
+    this.props.randomDrink();
   }
 
   micStatusChanged() {
@@ -154,7 +170,7 @@ export default class ToolbarComponent extends Component {
               </RoomContentButton>
             </RoomContentButtonWrapper>
             <RoomContentButtonWrapper>
-              <RoomContentButton>
+              <RoomContentButton onClick={() => randomDrink("~~님 마셔요!!!!")}>
                 <FontAwesomeStyled className="fas fa-gamepad" />
               </RoomContentButton>
             </RoomContentButtonWrapper>
@@ -195,6 +211,9 @@ export default class ToolbarComponent extends Component {
               </RoomContentButton>
             </RoomContentButtonWrapper>
           </RoomContentWrapper>
+          <button onClick={this.randomDrink}>랜덤마시기k</button>
+          <button onClick={this.recommendTopics}>대화주제추천</button>
+          <button onClick={this.recommendToasts}>건배사 추천</button>
           {/* <div className="buttonsContent">
             <button
               color="inherit"
