@@ -28,7 +28,7 @@ public class UserController {
 
     //회원가입
     @PostMapping("/join")
-    public ResponseEntity<Void> createUser(@RequestBody @Valid UserCreateRequest request) throws IOException {
+    public ResponseEntity<Void> createUser(@RequestBody @Valid UserCreateRequest request){
         userService.createUser(request);
         return ResponseEntity.ok().build();
     }

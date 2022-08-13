@@ -68,6 +68,17 @@ public class Room extends BaseEntity {
     @OneToMany(mappedBy = "toUser")
     private List<Friend> toFriends = new ArrayList<>();
 
+    public YN[] getAges(){
+        YN[] ages = new YN[6];
+        ages[0] = this.ages20;
+        ages[1] = this.ages30;
+        ages[2] = this.ages40;
+        ages[3] = this.ages50;
+        ages[4] = this.ages60;
+        ages[5] = this.ages70;
+        return ages;
+    }
+
     private static void setAges(Room room, YN[] ages) {
         room.ages20 = ages[0];
         room.ages30 = ages[1];
