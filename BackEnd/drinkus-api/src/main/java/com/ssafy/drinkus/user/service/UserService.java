@@ -44,7 +44,7 @@ public class UserService {
     @Transactional
     public void createUser(UserCreateRequest request) {
         if (userRepository.existsByUserName(request.getUserName())) {
-            throw new DuplicateException("이미 가입된 회원입니다.");
+            throw new DuplicateException("이미 가입된 이메일입니다.");
         }
         User user = User.createUser(request.getUserName(), passwordEncoder.encode(request.getUserPw()), request.getUserFullname(), request.getUserBirthday(), request.getUserName());
         userRepository.save(user);
@@ -200,7 +200,7 @@ public class UserService {
     @Transactional
     public void sendEmailAuthEmail(UserNameCheckRequest request) {
         if (userRepository.existsByUserName(request.getUserName())) {
-            throw new DuplicateException("이미 가입된 회원입니다.");
+            throw new DuplicateException("이미 가입된 이메일입니다.");
         }
 
         EmailAuth emailAuth = EmailAuth.createEmailAuth(request.getUserName(), UUID.randomUUID().toString());
