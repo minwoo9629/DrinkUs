@@ -10,6 +10,7 @@ import com.ssafy.drinkus.common.type.YN;
 import com.ssafy.drinkus.room.domain.Room;
 import com.ssafy.drinkus.room.domain.RoomRepository;
 import com.ssafy.drinkus.room.query.RoomQueryRepository;
+import com.ssafy.drinkus.room.request.RoomConnectRequest;
 import com.ssafy.drinkus.room.request.RoomCreateRequest;
 import com.ssafy.drinkus.room.request.RoomSearchRequest;
 import com.ssafy.drinkus.room.request.RoomUpdateRequest;
@@ -187,11 +188,21 @@ public class RoomService {
     @Transactional
     //화상방 삭제
     public void deleteRoom(User user, Long roomId) {
-        Room findroom = roomRepository.findById(roomId)
+        Room findRoom = roomRepository.findById(roomId)
                 .orElseThrow(() -> new NotFoundException(NotFoundException.ROOM_NOT_FOUND));
-        if (!user.getUserId().equals(findroom.getUser().getUserId())) {
+        if (!user.getUserId().equals(findRoom.getUser().getUserId())) {
             throw new NotMatchException(USER_NOT_MATCH);
         }
         roomRepository.deleteById(roomId);
+    }
+
+    @Transactional
+    public void findById(RoomConnectRequest request) {
+        Room findRoom = roomRepository.findById(request.getRoomId())
+                .orElseThrow(() -> new NotFoundException(NotFoundException.ROOM_NOT_FOUND));
+
+        if (!passwordEncoder.matches(request.getRoomPw(), findRoom.getRoomPw())) {
+            throw new NotMatchException(NotMatchException.PW_NOT_MATCH);
+        }
     }
 }
