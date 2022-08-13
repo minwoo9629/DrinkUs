@@ -284,7 +284,6 @@ const Join = () => {
         userBirthday: state.userBirthday,
       })
       .then(function (response) {
-        console.log(response.data.message);
         SuccessAlert("DRINKUS에 오신걸 환영합니다");
         navigate("/login");
       })
