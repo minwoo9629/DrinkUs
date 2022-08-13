@@ -51,9 +51,9 @@ public class AdminController {
     }
 
     // 특정 유저에 대한 신고 내역 조회
-    @GetMapping("/report/{to_user_id}")
-    public ResponseEntity<List<ReportInfoResponse>> findReportByToUser(@LoginUser User user, @PathVariable("to_user_id")Long toUserId){
-        List<ReportInfoResponse> body = adminService.findByToUser(user, toUserId);
+    @GetMapping("/report/{to_user_name}")
+    public ResponseEntity<List<ReportInfoResponse>> findReportByToUser(@LoginUser User user, @PathVariable("to_user_name")String toUserName){
+        List<ReportInfoResponse> body = adminService.findByToUser(user, toUserName);
         return ResponseEntity.ok().body(body);
     }
 

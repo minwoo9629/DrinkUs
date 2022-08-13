@@ -16,7 +16,9 @@ public class ReportInfoResponse {
 
     private Long reportId;
     private Long fromUserId;
+    private String fromUserName;
     private Long toUserId;
+    private String toUserName;
     private String reportType;
     private String reportReason;
 
@@ -28,7 +30,9 @@ public class ReportInfoResponse {
         return new ReportInfoResponse(
                 report.getReportId(),
                 report.getFromUser().getUserId(),
+                report.getFromUser().getUserName(),
                 report.getToUser().getUserId(),
+                report.getToUser().getUserName(),
                 report.getReportType(),
                 report.getReportReason(),
                 report.getReportCompleted(),
