@@ -31,7 +31,7 @@ public class GameService {
     private final UserRepository userRepository;
     private final ToastRepository toastRepository;
 
-    private final Map<Long, Map<String, Long>> ROOMS = new HashMap<>(); // 방 번호, 방에 있는 유저의 세션ID
+    private final Map<Long, Map<String, String>> ROOMS = new HashMap<>(); // 방 번호, 방에 있는 유저의 세션ID
     private final Map<String, Long> SESSION_USER_ID = new HashMap<>(); // 해당 세션 ID에 해당하는 USER_ID
     private final Map<String, Long> SESSION_ROOM_ID = new HashMap<>(); // 해당 세션 ID가 참여해있는 방 정보
 
@@ -51,8 +51,8 @@ public class GameService {
     }
 
     public BombResponse findByRoomId() {
-        int second = (int) (Math.random() * 8) + 3;
-        int clickCount = second * 2;
+        int second = (int) (Math.random() * 5) + 3;
+        int clickCount = second + (int) (Math.random() * second);
         return new BombResponse(second, clickCount);
     }
 
@@ -63,8 +63,8 @@ public class GameService {
     }
 
     public String findUserByRoomId(Long roomId) {
-        Map<String, Long> usersInRoom = ROOMS.get(roomId);
-        Long userId = makeRandomDrinkUserId(usersInRoom);
+        Map<String, String> usersInRoom = ROOMS.get(roomId);
+        Long userId = makeRandomDrinkUserId(usersInRoom, SESSION_USER_ID);
         User findUser = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
 
@@ -76,7 +76,7 @@ public class GameService {
         if (!ROOMS.containsKey(roomId)) { // 방이 없었으면 새로 생성해줘야함
             ROOMS.put(roomId, new HashMap<>());
         }
-        ROOMS.get(roomId).put(sessionId, userId);
+        ROOMS.get(roomId).put(sessionId, sessionId);
         SESSION_USER_ID.put(sessionId, userId);
         SESSION_ROOM_ID.put(sessionId, roomId);
     }

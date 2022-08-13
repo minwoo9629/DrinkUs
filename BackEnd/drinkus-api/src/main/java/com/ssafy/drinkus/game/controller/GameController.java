@@ -53,7 +53,7 @@ public class GameController {
 
     // 폭탄 돌리기 결과 : 못누른 사람의 id를 받으면(user_id)
     // 해당 user_id의 회원 정보를 모든 사람들에게 뿌려주기
-    @MessageMapping("/bomb/result/{room_id}")
+    @MessageMapping("/bomb/result")
     public void findByUserId(@Header(HttpHeaders.AUTHORIZATION) String bearerToken
             , GameIdRequest request) {
         Long userId = jwtUtil.getUserId(bearerToken.substring(7));
