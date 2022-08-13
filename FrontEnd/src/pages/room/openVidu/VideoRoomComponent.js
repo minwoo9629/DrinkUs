@@ -204,7 +204,7 @@ class VideoRoomComponent extends Component {
     );
   }
 
-  pubRandomDrink() {
+  pubBombGame() {
     gameClient.current.publish({
       destination: `/pub/random`,
       body: JSON.stringify({
@@ -213,7 +213,7 @@ class VideoRoomComponent extends Component {
     });
   }
 
-  subRandomDrink() {
+  subBombGame() {
     gameClient.current.subscribe(
       `/sub/random/${ROOM_ID}`,
       ({ body }) => {
