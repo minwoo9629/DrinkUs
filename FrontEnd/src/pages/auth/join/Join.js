@@ -68,19 +68,6 @@ const JoinForm = styled.div`
   flex-direction: column;
 `;
 
-const JoinInput = styled.input`
-  position: relative;
-  height: 30px;
-  width: 200px;
-  top: 7px;
-  font-size: 18px;
-  background-color: transparent;
-  outline: none;
-  border: none;
-  margin: 0px;
-  color: white;
-`;
-
 const InputWrapper = styled.div`
   width: 320px;
   height: 45px;
@@ -151,17 +138,6 @@ const ConfirmButton = styled.button`
   color: #535353;
 `;
 
-const Button = styled.button`
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  border: 1px solid black;
-  background-color: #fff;
-  margin: 14px;
-  font-size: 4px;
-  color: #535353;
-`;
-
 const ButtonWrapper = styled.div`
   margin-top: 30px;
   display: flex;
@@ -229,20 +205,6 @@ const Join = () => {
     userPwCheck: "",
     userFullname: "",
     userBirthday: "",
-
-    // 유효 문구
-    nameMsg: "",
-    confirmMsg: "",
-    nameDoubleMsg: "",
-    userPwMsg: "",
-    userPwCheckMsg: "",
-
-    // 유효 여부
-    nameValid: "",
-    confirmValid: false, // 인증번호 유효
-    userPwValid: false,
-    userPwCheckValid: false,
-    doubleCheckValid: false,
 
     enabled: false,
 
@@ -330,8 +292,6 @@ const Join = () => {
         console.log(error);
       });
   };
-
-  const enabledCheck = () => {};
 
   // 비밀번호 유효성 체크
   const userPwRegex =
