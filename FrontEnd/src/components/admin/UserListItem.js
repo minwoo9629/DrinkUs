@@ -32,6 +32,10 @@ const UserListItem = ({
   onHandlePermitUser,
   onHandleRemoveUser
 }) => {
+
+  const now = new Date();
+  console.log(now);
+  console.log(userStopDate);
   return (
     <div
       style={{
@@ -57,8 +61,14 @@ const UserListItem = ({
       }
       <div style={{ width: "5%" }}>{userPoint}</div>
       {
-        userStopDate > new Date() ? (
-          <div style={{ width: "10%" }}>{userStopDate}</div>
+        userStopDate ? (
+          <div style={{ width: "10%" }}>
+            {userStopDate.substr(0,4)}년&nbsp;
+            {userStopDate.substr(5,2)}월&nbsp;
+            {userStopDate.substr(8,2)}일&nbsp;
+            {userStopDate.substr(11,2)}시&nbsp;
+            {userStopDate.substr(14,2)}분&nbsp;
+          </div>
         ) : (
           <div style={{ width: "10%" }}>-</div>
         )

@@ -81,6 +81,7 @@ const Admin = () => {
   const getUList = async () => {
     const uList = await getUserInfoList();
     setUserList([...uList.data]);
+    console.log(uList);
   }
 
   const getRList = async () => {
