@@ -29,7 +29,7 @@ public class StompHandler implements ChannelInterceptor {
                 throw new AccessDeniedException("연결 거부");
             }
 
-            System.out.println("########client connected!!!");
+            System.out.println("###client connected!!!");
         }
 
         // 채팅방 구독

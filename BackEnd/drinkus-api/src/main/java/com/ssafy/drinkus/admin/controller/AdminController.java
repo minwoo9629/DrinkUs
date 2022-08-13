@@ -1,12 +1,14 @@
 package com.ssafy.drinkus.admin.controller;
 
 
+import com.ssafy.drinkus.admin.request.AdminReportSearchRequest;
 import com.ssafy.drinkus.admin.service.AdminService;
 import com.ssafy.drinkus.config.LoginUser;
 import com.ssafy.drinkus.report.request.ReportUpdateRequest;
 import com.ssafy.drinkus.report.response.ReportInfoResponse;
 import com.ssafy.drinkus.user.domain.User;
 import com.ssafy.drinkus.user.response.UserListResponse;
+import com.ssafy.drinkus.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +36,14 @@ public class AdminController {
         return ResponseEntity.ok().build();
     }
 
+    // 회원 삭제
+    @DeleteMapping("/{user_id}")
+    public ResponseEntity<Void> deleteUser(@LoginUser User user, @PathVariable("user_id") Long deleteUserId) {
+        adminService.deleteUser(user, deleteUserId);
+        return ResponseEntity.ok().build();
+    }
+
+
     // 신고내역 전체 조회
     @GetMapping("/report")
     public ResponseEntity<List<ReportInfoResponse>> findAllReport(@LoginUser User user){
@@ -42,9 +52,9 @@ public class AdminController {
     }
 
     // 특정 유저에 대한 신고 내역 조회
-    @GetMapping("/report/{to_user_id}")
-    public ResponseEntity<List<ReportInfoResponse>> findReportByToUser(@LoginUser User user, @PathVariable("to_user_id")Long toUserId){
-        List<ReportInfoResponse> body = adminService.findByToUser(user, toUserId);
+    @PostMapping("/report/user")
+    public ResponseEntity<List<ReportInfoResponse>> findReportByToUser(@LoginUser User user, @RequestBody AdminReportSearchRequest request){
+        List<ReportInfoResponse> body = adminService.findByToUser(user, request.getToUserName());
         return ResponseEntity.ok().body(body);
     }
 

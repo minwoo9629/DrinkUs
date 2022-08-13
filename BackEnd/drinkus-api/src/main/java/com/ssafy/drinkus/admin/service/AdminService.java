@@ -7,6 +7,7 @@ import com.ssafy.drinkus.report.domain.Report;
 import com.ssafy.drinkus.report.domain.ReportRepository;
 import com.ssafy.drinkus.report.request.ReportUpdateRequest;
 import com.ssafy.drinkus.report.response.ReportInfoResponse;
+import com.ssafy.drinkus.room.response.RoomListResponse;
 import com.ssafy.drinkus.user.domain.User;
 import com.ssafy.drinkus.user.domain.UserRepository;
 import com.ssafy.drinkus.user.domain.type.UserRole;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,65 +30,58 @@ public class AdminService {
 
     //회원 전체 조회
     public List<UserListResponse> findAllUser(User user){
-        if(user.getUserRole() != UserRole.ROLE_ADMIN){
-            throw new AuthenticationException("관리자만 신고내역을 조회할 수 있습니다.");
-        }
+        checkPermission(user);
 
         List<User> userList = userRepository.findAll();
-        List<UserListResponse> response = new ArrayList<>();
-        for (User u : userList) {
-            response.add(UserListResponse.from(u));
-        }
-        return response;
+        return userList.stream()
+                .map(UserListResponse::from)
+                .collect(Collectors.toList());
     }
 
     // 회원에게 관리자 권한 부여
     @Transactional
     public void updateAdminPermission(User user, Long targetUserId){
-        if(user.getUserRole() != UserRole.ROLE_ADMIN){
-            throw new AuthenticationException("관리자만 권한을 부여할 수 있습니다.");
-        }
+        checkPermission(user);
         userRepository.updateUserRole(UserRole.ROLE_ADMIN, targetUserId);
     }
 
+    // 회원 삭제
+    @Transactional
+    public void deleteUser(User user, Long deleteUserId) {
+        checkPermission(user);
+        userRepository.deleteById(deleteUserId);
+    }
+
     // 신고내역 전체 조회 (for Admin)
+    @Transactional(readOnly = true)
     public List<ReportInfoResponse> findAll(User user){
-        if(user.getUserRole() != UserRole.ROLE_ADMIN){
-            throw new AuthenticationException("관리자만 신고내역을 조회할 수 있습니다.");
-        }
+        checkPermission(user);
 
         List<Report> results = reportRepository.findAll(Sort.by(Sort.Direction.DESC, "reportId"));
 
-        List<ReportInfoResponse> response = new ArrayList<>();
-        for (Report r : results) {
-            response.add(ReportInfoResponse.from(r));
-        }
-        return response;
+        return results.stream()
+                .map(ReportInfoResponse::from)
+                .collect(Collectors.toList());
     }
 
     // 특정 유저에 대한 신고내역 조회 (for Admin)
-    public List<ReportInfoResponse> findByToUser(User user, Long toUserId){
-        if(user.getUserRole() != UserRole.ROLE_ADMIN){
-            throw new AuthenticationException("관리자만 신고내역을 조회할 수 있습니다.");
-        }
+    @Transactional(readOnly = true)
+    public List<ReportInfoResponse> findByToUser(User user, String toUserName){
+        checkPermission(user);
 
-        User toUser = userRepository.findById(toUserId)
+        User toUser = userRepository.findByUserName(toUserName)
                 .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
         List<Report> results = reportRepository.findByToUserOrderByReportIdDesc(toUser);
 
-        List<ReportInfoResponse> response = new ArrayList<>();
-        for (Report r : results) {
-            response.add(ReportInfoResponse.from(r));
-        }
-        return response;
+        return results.stream()
+                .map(ReportInfoResponse::from)
+                .collect(Collectors.toList());
     }
 
     // 신고내역 처리 (for Admin)
     @Transactional
     public void updateReport(User user, ReportUpdateRequest request){
-        if(user.getUserRole() != UserRole.ROLE_ADMIN){
-            throw new AuthenticationException("관리자만 신고내역을 처리할 수 있습니다.");
-        }
+        checkPermission(user);
 
         // 신고내역 업데이트
         Report report = reportRepository.findById(request.getReportId())
@@ -101,9 +96,13 @@ public class AdminService {
     // 신고내역 삭제 (for Admin)
     @Transactional
     public void deleteReport(User user, Long reportId){
-        if(user.getUserRole() != UserRole.ROLE_ADMIN){
-            throw new AuthenticationException("관리자만 신고내역을 삭제할 수 있습니다.");
-        }
+        checkPermission(user);
         reportRepository.deleteByReportId(reportId);
+    }
+
+    private void checkPermission(User user){
+        if(user.getUserRole() != UserRole.ROLE_ADMIN){
+            throw new AuthenticationException("관리자만 해당 기능을 이용 가능합니다.");
+        }
     }
 }

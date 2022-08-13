@@ -62,9 +62,6 @@ public class Room extends BaseEntity {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @OneToMany(mappedBy = "room")
-    private List<RoomHistory> roomHistories = new ArrayList<>();
-
     @OneToMany(mappedBy = "fromUser")
     private List<Friend> fromFriends = new ArrayList<>();
 

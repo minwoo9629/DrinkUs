@@ -38,6 +38,7 @@ public class RoomInfoResponse {
         roomInfoResponse.user = UserMyInfoResponse.from(room.getUser());
         roomInfoResponse.roomPw = room.getRoomPw();
         roomInfoResponse.placeTheme = room.getPlaceTheme();
+        roomInfoResponse.peopleLimit = room.getPeopleLimit();
         roomInfoResponse.createdDate = room.getCreatedDate();
         roomInfoResponse.ages20 = room.getAges20();
         roomInfoResponse.ages30 = room.getAges30();

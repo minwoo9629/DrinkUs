@@ -42,14 +42,14 @@ public class CalendarBoardService {
 
 
     // 월별 일정 조회
-    public Boolean[] getMonthlySchedule(Integer year, Integer month) {
+    public Boolean[] findMonthlySchedule(Integer year, Integer month) {
         LocalDateTime start = LocalDateTime.of(year, month, 1, 0, 0);
         int endDay = month == 2 ? ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0 ? 29 : 28) : (month % 2 + month / 8) % 2 == 0 ? 30 : 31;
         LocalDateTime end = LocalDateTime.of(year, month, endDay, 23, 59);
 
         Boolean[] response = new Boolean[endDay + 1];
 
-        List<LocalDateTime> monthlySchedules = calendarBoardQueryRepository.getMonthlySchedule(start, end);
+        List<LocalDateTime> monthlySchedules = calendarBoardQueryRepository.findMonthlySchedule(start, end);
 
         for (LocalDateTime localDateTime : monthlySchedules) {
             response[localDateTime.getDayOfMonth()] = true;

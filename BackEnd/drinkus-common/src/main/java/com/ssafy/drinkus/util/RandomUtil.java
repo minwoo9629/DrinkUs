@@ -1,7 +1,5 @@
 package com.ssafy.drinkus.util;
 
-import lombok.RequiredArgsConstructor;
-
 import java.util.List;
 import java.util.Map;
 
@@ -12,8 +10,8 @@ public class RandomUtil {
         return s;
     }
 
-    public static Long makeRandomDrinkUserId(Map<String, Long> users) {
+    public static Long makeRandomDrinkUserId(Map<String, String> users, Map<String, Long> SESSION_USER_ID) {
         int rand = (int) (Math.random() * users.size());
-        return users.get((users.keySet().toArray())[rand]);
+        return SESSION_USER_ID.get(users.get((users.keySet().toArray())[rand]));
     }
 }

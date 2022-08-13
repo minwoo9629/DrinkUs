@@ -9,7 +9,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface RoomRepository extends JpaRepository<Room,Long> {
-    
+
+    // 방 번호에 따라 방 제거
+    void deleteById(Long roomId);
+
     // 기본 방리스트의 방정보 반환형
     @Query("select r.roomId, r.roomName, r.createdDate, r.peopleLimit, r.placeTheme from Room as r")
     Optional<List<Room>> findRoomList();
@@ -24,6 +27,7 @@ public interface RoomRepository extends JpaRepository<Room,Long> {
 
     // 1시간 이내 생성된 방
     Optional<List<Room>> findTop8ByCreatedDateAfterOrderByCreatedDateDesc(LocalDateTime createdDate);
+    Optional<List<Room>> findAllByCreatedDateAfter(LocalDateTime createdDate);
 
     // 방 존재여부
     Boolean existsByRoomId(Long roomId);

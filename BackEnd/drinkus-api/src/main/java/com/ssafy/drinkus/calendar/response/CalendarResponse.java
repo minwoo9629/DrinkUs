@@ -15,6 +15,11 @@ public class CalendarResponse {
 
     Long calendarId; // 일정 번호
 
+    Long createrId; // 작성자 정보
+    String createrImg;
+    String createrNickname;
+    Integer createrPopularity;
+
     String calendarContent; // 내용
 
     LocalDateTime time; // 시간
@@ -29,7 +34,7 @@ public class CalendarResponse {
 
     Boolean isParticipate; // 참여여부
 
-    public static CalendarResponse from(CalendarBoard calendarBoard, Long participant, Boolean isParticipate){
-        return new CalendarResponse(calendarBoard.getCalendarId(), calendarBoard.getCalendarContent(), calendarBoard.getCalendarDatetime(), calendarBoard.getPlace(), calendarBoard.getPeopleLimit(), participant, calendarBoard.getAges(), isParticipate);
+    public static CalendarResponse from(CalendarBoard calendarBoard, Long participant, Boolean isParticipate) {
+        return new CalendarResponse(calendarBoard.getCalendarId(), calendarBoard.getCreater().getUserId(), calendarBoard.getCreater().getUserImg(), calendarBoard.getCreater().getUserNickname(), calendarBoard.getCreater().getUserPopularity(), calendarBoard.getCalendarContent(), calendarBoard.getCalendarDatetime(), calendarBoard.getPlace(), calendarBoard.getPeopleLimit(), participant, calendarBoard.getAges(), isParticipate);
     }
 }

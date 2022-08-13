@@ -36,6 +36,13 @@ public class GameController {
         messagingTemplate.convertAndSend("/sub/topic/" + request.getRoomId(), topic);
     }
 
+    // 건배사 추천 요청 : DB에 있는 여러 가지 건배사 중 하나를 랜덤으로 뽑아와서 추천
+    @MessageMapping("/toast")
+    public void findByToastId(GameIdRequest request) {
+        String toast = gameService.findByToastId();
+        messagingTemplate.convertAndSend("/sub/toast/" + request.getRoomId(), toast);
+    }
+
     // 폭탄돌리기 : 폭탄돌리기가 시작됐다는 요청 받으면(room_id)
     // random 초랑 시간(초)내에 눌러야하는 클릭횟수를 보내줌
     @MessageMapping("/bomb/start")
@@ -46,7 +53,7 @@ public class GameController {
 
     // 폭탄 돌리기 결과 : 못누른 사람의 id를 받으면(user_id)
     // 해당 user_id의 회원 정보를 모든 사람들에게 뿌려주기
-    @MessageMapping("/bomb/result/{room_id}")
+    @MessageMapping("/bomb/result")
     public void findByUserId(@Header(HttpHeaders.AUTHORIZATION) String bearerToken
             , GameIdRequest request) {
         Long userId = jwtUtil.getUserId(bearerToken.substring(7));
