@@ -1,7 +1,9 @@
 import styled from "styled-components";
 
-const DeleteButton = styled.div`
-  background-color: #bdcff2;
+const CustomButton = styled.div`
+  height: 20px;
+  line-height: 20px;
+  background-color: ${({ bg }) => bg};
   border-radius: 5px;
   border: none;
   cursor: pointer;
@@ -27,7 +29,8 @@ const UserListItem = ({
   userStopDate,
   userSoju,
   userBeer,
-  onHandleRemoveArticle,
+  onHandlePermitUser,
+  onHandleRemoveUser
 }) => {
   return (
     <div
@@ -50,14 +53,34 @@ const UserListItem = ({
             <div style={{ width: "10%" }}>관리자</div>
         ) : (
             <div style={{ width: "10%" }}>사용자</div>
-        )}
+        )
+      }
       <div style={{ width: "5%" }}>{userPoint}</div>
-      <div style={{ width: "10%" }}>{userStopDate}</div>
-      <div style={{ width: "10%" }}>권한부여</div>
+      {
+        userStopDate > new Date() ? (
+          <div style={{ width: "10%" }}>{userStopDate}</div>
+        ) : (
+          <div style={{ width: "10%" }}>-</div>
+        )
+      }
+      <div style={{ width: "8%" }}>
+      {
+        userRole === "ROLE_ADMIN" ? (
+          <CustomButton bg="darkgrey">
+            -
+          </CustomButton>
+        ) : (
+          <CustomButton bg="blue" onClick={() => onHandlePermitUser(userId)}>
+            권한부여
+          </CustomButton>
+        )
+      }
+      </div>
+      <div style={{ width: "2%" }}></div>
       <div style={{ width: "5%" }}>
-        <DeleteButton onClick={() => console.log("hello")}>
+        <CustomButton bg="red" onClick={() => onHandleRemoveUser(userId)}>
           삭제
-        </DeleteButton>
+        </CustomButton>
       </div>
     </div>
   );

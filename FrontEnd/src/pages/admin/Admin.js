@@ -3,9 +3,12 @@ import styled from "styled-components";
 import Header from "../../components/layout/Header";
 import Footer from "../../components/layout/Footer";
 import { BaseFlexWrapper } from "../../components/styled/Wrapper";
-import { getUserInfoList } from "../../api/AdminAPI";
+import { getUserInfoList, processReport, searchUser } from "../../api/AdminAPI";
 import { getReportList } from "../../api/AdminAPI";
+import { permitUser } from "../../api/AdminAPI";
+import { removeUser } from "../../api/AdminAPI";
 import UserList from "../../components/admin/UserList";
+import ReportList from "../../components/admin/ReportList";
 
 export const AdminWrapper = styled(BaseFlexWrapper)`
   flex-direction: column;
@@ -15,15 +18,9 @@ export const AdminWrapper = styled(BaseFlexWrapper)`
   align-items: ${({ alignItems }) => alignItems};
 `;
 
-const ContentWrapper = styled(BaseFlexWrapper)`
-  background: ${(props) => props.background};
-  height: ${(props) => props.height};
-  width: 100vw;
-`;
-
 const FunctionBlock = styled.div`
   display: block;
-  width: 90%;
+  width: 90vw;
   margin-bottom: 20px;
   color: black;
   background-color: #ffffff;
@@ -40,40 +37,90 @@ const FunctionTitle = styled.div`
   margin-bottom: 10px;
 `
 
+const InputBlock = styled.div`
+  display: block;
+  height: 40px;
+  line-height: 40px;
+  background-color: yellow;
+  font-size: 16px;
+  text-align: center;
+  margin-bottom: 10px;
+`
+
 const FunctionContent = styled.div`
   display: block;
+  background-color: lightgrey;
+  border-radius: 15px;
   width: 100%;
   height: 500px;
   text-align: center;
   overflow-y: scroll;
 `;
 
+const SearchUserInput = styled.input`
+  border: 0.5px solid #bab8b8;
+  border-radius: 8px;
+  height: 36px;
+  padding: 0px 20px;
+  width: 240px;
+  margin: 0;
+`;
+
+
 const Admin = () => {
 
   useEffect(() => {
-    setData();
+    getUList();
+    getRList();
   }, []);
 
   const [userList, setUserList] = useState([]);
   const [reportList, setReportList] = useState([]);
+  const [searchInput, setSearchInput] = useState("");
 
-  const setData = async () => {
+  const getUList = async () => {
     const uList = await getUserInfoList();
-    const rList = await getReportList();
     setUserList([...uList.data]);
+  }
+
+  const getRList = async () => {
+    const rList = await getReportList();
     setReportList([...rList.data]);
-  };
-
-  const onHandlePermitUser = async () => {
-
   }
 
-  const onHandleRemoveUser = async () => {
-
+  const onHandlePermitUser = async (userId) => {
+    const response = await permitUser(userId);
+    if(response.status === 200){
+      alert("관리자 권한 부여되었습니다.");
+      window.location.replace("/admin");
+    } else {
+      alert("관리자 권한 부여에 실패했습니다.");
+    }
   }
 
-  const onHandleProcessReport = async () => {
+  const onHandleRemoveUser = async (userId) => {
+    const response = await removeUser(userId);
+    if(response.status === 200){
+      alert("삭제에 성공했습니다.");
+      window.location.replace("/admin");
+    } else {
+      alert("삭제에 실패했습니다.");
+    }
+  }
 
+  const onHandleProcessReport = async (state) => {
+    if(state.stopPeriod < 0){
+      alert("정지 기한은 음수로 설정할 수 없습니다.");
+      return;
+    }
+
+    const response = await processReport(state);
+    if(response.status === 200){
+      alert("성공적으로 처리되었습니다.");
+      window.location.replace("/admin");
+    } else {
+      alert("처리에 실패했습니다.");
+    }
   }
 
   return(
@@ -93,8 +140,10 @@ const Admin = () => {
         <FunctionBlock>
           <FunctionTitle>신고 내역 조회</FunctionTitle>
           <FunctionContent>
-            신고 목록을 띄우는 공간입니다.
-            신고 처리도 함께
+            <ReportList
+              reportList={reportList}
+              onHandleProcessReport={onHandleProcessReport}
+            />
           </FunctionContent>
         </FunctionBlock>
 

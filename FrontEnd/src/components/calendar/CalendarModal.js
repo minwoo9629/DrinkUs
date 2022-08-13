@@ -50,22 +50,53 @@ const ModalCloseButton = styled.button`
 `;
 
 const ModalContent = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
   padding: 20px;
 `;
 
-// 모달 내부 스타일
-const CalendarBlock = styled.div`
-  width: 800px;
-  margin-bottom: 20px;
-  color: white;
-  background-color: #6F92BF;
-  border-radius: 30px;
-  padding: 30px;
-`
+// 프로필 스타일
+const ProfileBlock = styled.div`
+  line-height: 1;
+  display: block;
+  align-items: center;
+  margin-bottom: 10px;
+`;
 
+const ProfileImageWrapper = styled.div`
+  float: left;
+  width: 60px;
+  height: 60px;
+  margin: 0px 20px 0px 20px;
+`;
+
+const ProfileImageThumbnail = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 100%;
+  border: 3px solid white;
+`;
+
+const Nickname = styled.div`
+  display: inline-block;
+  display: block;
+  margin-bottom: 4px;
+  height: 30px;
+  line-height: 30px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #000;
+`;
+
+const Popularity = styled.div`
+  display: inline-block;
+  display: block;
+  height: 30px;
+  line-height: 30px;
+  font-weight: bold;
+  color: #000;
+`;
+
+// 모달 내부 스타일
 const ContentBlock = styled.div`
   display: block;
   line-height: 1;
@@ -182,6 +213,8 @@ const CalendarModal = ({ isOpen, close, calendarId }) => {
     setCalendar(calendar.isParticipate = !calendar.isParticipate)
   }
 
+  const userId = calendar.createrId
+
   return (
     <ModalWrapper className={isOpen ? "active" : ""} top={ScrollY}>
       <ModalContentWrapper>
@@ -189,9 +222,13 @@ const CalendarModal = ({ isOpen, close, calendarId }) => {
           <ModalCloseButton onClick={close}>X</ModalCloseButton>
         </ModalHeader>
         <ModalContent>
-          <ContentBlock>
-            작성자: {calendar.createrNickname}
-          </ContentBlock>
+          <ProfileBlock>
+            <ProfileImageWrapper>
+              <ProfileImageThumbnail src={calendar.createrImg} onClick={()=>navigate("/profile")}/>
+            </ProfileImageWrapper>
+            <Nickname>{calendar.createrNickname}</Nickname>
+            <Popularity>{calendar.createrPopularity}</Popularity>
+          </ProfileBlock>
           <ContentBlock>
             방 내용: {calendar.calendarContent}
           </ContentBlock>
