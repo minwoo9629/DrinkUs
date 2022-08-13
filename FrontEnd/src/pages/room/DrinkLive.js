@@ -8,8 +8,6 @@ import Banner from "../../components/room/Banner";
 import Slider from "react-slick";
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import RoomModal from "../../components/room/RoomModal";
-import { TimeGap } from "../../utils/TimeGap";
 
 // 버튼, 배너
 const LiveWrapper = styled.div`
@@ -80,7 +78,16 @@ const RecommendInnerWrapper = styled.div`
 const Container = styled.div`
   width: 1200px;
   overflow:hidden;
-  border-radius: 30px;
+  .slick-dots {
+    .slick-active {
+      button::before {
+        color: #c1c1c1;
+      }
+    }
+    button::before {
+      color: #e9e9e9;
+    }
+  }
 `;
 
 const StyledSlider = styled(Slider)`
@@ -89,24 +96,20 @@ const StyledSlider = styled(Slider)`
     }
 `;
 
-// 리스트 아이템
-const RoomBox = styled.div`
-  display: flex;
-  background-color: white;
-  width: 300px;
-  height: 200px;
-  border-radius: 30px;
-  margin-right: 10px;
-`
-
 const DrinkLive = () => {
 
   // 캐러셀 설정
   const settings = {
+    className: "center",
+    centerMode: true,
     dots: true,
     infinite: true,
-    speed: 500,
+    speed: 1800,
     slidesToShow: 3,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 3000,
+    pauseOnHover: true,
   };
 
   const navigate = useNavigate();
@@ -151,31 +154,6 @@ const DrinkLive = () => {
     onCurrentList();    
   },[])
 
-  // 모달
-  const [isOpen, setIsOpen] = useState(false)
-
-  const [roomId, setRoomId] = useState();
-  const modalOpen = () =>{
-  
-      setIsOpen(true)
-    }
-
-
-  const changeRoomId = (id) => {
-    return new Promise((resolve, reject) =>{
-      setRoomId(id);
-      return resolve();
-    })
-  }
-
-  const modalClose = (id) =>{
-    changeRoomId(id).then(setIsOpen(false));
-    
-  }
-
-  // 시간계산
-  // const timeGap = TimeGap(createdDate)
-
   return (
   <>
     <Header/>
@@ -203,16 +181,11 @@ const DrinkLive = () => {
           </RecommendLetter>
         ) : (
           <>
-          <RoomModal close={modalClose}
-                isOpen={isOpen}
-                roomId={roomId}/>
           <Container>
             <StyledSlider {...settings}>
               {ageList.map((content, index) => (
                 <>
               <LiveListItem
-              changeRoomId={changeRoomId}
-              modalOpen={modalOpen}
               {...content}
                 key={index}
               > 
@@ -222,17 +195,7 @@ const DrinkLive = () => {
             </StyledSlider>
           </Container>
           </>
-          // <>
-          // {ageList.map((content, index) => (
-          // <LiveListItem
-          // {...content}
-          //   key={index}
-          // > 
-          // </LiveListItem>
-          // ))}
-          // </>
         )}
-        
       </RecommendInnerWrapper>
     </RecommendWrapper>
     <LetterWrapper>
@@ -249,6 +212,8 @@ const DrinkLive = () => {
           </RecommendLetter>
         ):(
           <>
+          <Container>
+            <StyledSlider {...settings}>
           {categoryList.map((content, index) => (
             <LiveListItem
             {...content}
@@ -256,6 +221,8 @@ const DrinkLive = () => {
             > 
             </LiveListItem>
           ))}
+          </StyledSlider>
+          </Container>
           </>
         )}
       </RecommendInnerWrapper>
@@ -274,16 +241,19 @@ const DrinkLive = () => {
           </RecommendLetter>
         ) : (
           <>
-            {currentList.map((content, index) => (
-            <LiveListItem
-            {...content}
-              key={index}
-            > 
-            </LiveListItem>
-            ))}
+          <Container>
+            <StyledSlider {...settings}>
+              {currentList.map((content, index) => (
+              <LiveListItem
+              {...content}
+                key={index}
+              >
+              </LiveListItem>
+          ))}
+          </StyledSlider>
+          </Container>
           </>
         )}
-        
       </RecommendInnerWrapper>
     </RecommendWrapper>
   </>
