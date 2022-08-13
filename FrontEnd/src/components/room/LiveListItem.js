@@ -1,14 +1,14 @@
 import styled from "styled-components";
-import { useState } from "react";
-import RoomModal from "./RoomModal";
 import { TimeGap } from "../../utils/TimeGap";
+import { useNavigate } from "react-router-dom";
 
 const RoomBox = styled.div`
   display: flex;
   background-color: white;
-  width: 400px;
-  height: 300px;
+  width: 350px;
+  height: 200px;
   border-radius: 30px;
+  margin-right: 10px;
 `
 
 const LiveListItem = ({
@@ -16,29 +16,18 @@ const LiveListItem = ({
   roomName,
   peopleLimit,
   placeTheme,
-  createdDate
+  createdDate,
 }) => {
 
-  // 모달
-  const [isOpen, setIsOpen] = useState(false)
-
-  const modalOpen = () =>{
-    setIsOpen(true);
-  }
-
-  const modalClose = () =>{
-    setIsOpen(false);
-  }
+  const navigate = useNavigate();
 
   const timeGap = TimeGap(createdDate)
 
   return (
     <>
-    <RoomModal close={modalClose}
-      isOpen={isOpen}
-      roomId={roomId}
-    />
-    <RoomBox onClick={modalOpen}>
+    <RoomBox 
+    onClick={() => navigate(`/rooms/${roomId}`)}
+    >
       <div>{roomId}</div>
       <div>{roomName}</div>
       <div>{peopleLimit}</div>
