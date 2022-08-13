@@ -91,6 +91,7 @@ const AgreeForm = styled.div`
 const AgreeWrapper = styled.div`
   align-items: center;
   justify-content: space-between;
+  align-items: center;
   width: 380px;
   height: 64px;
   background-color: #131317;
@@ -128,6 +129,11 @@ const LinkWrapper = styled.div`
   animation: ${NeonSignAnimation} 1.5s infinite alternate;
   box-shadow: none;
 `;
+
+const input = styled.input`
+  width: 30px;
+  height: 30px;
+`
 
 const JoinAgree = ({ history }) => {
   const [checkedButtons, setCheckedButtons] = useState([]);
