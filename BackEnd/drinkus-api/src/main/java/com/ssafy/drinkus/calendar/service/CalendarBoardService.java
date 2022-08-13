@@ -12,6 +12,7 @@ import com.ssafy.drinkus.common.AuthenticationException;
 import com.ssafy.drinkus.common.InvalidException;
 import com.ssafy.drinkus.common.NotExistException;
 import com.ssafy.drinkus.common.NotFoundException;
+import com.ssafy.drinkus.external.fcm.FirebaseClient;
 import com.ssafy.drinkus.user.domain.User;
 import com.ssafy.drinkus.user.domain.type.UserRole;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,6 +38,7 @@ public class CalendarBoardService {
     private final UserCalendarRepository userCalendarRepository;
 
     private final CalendarBoardQueryRepository calendarBoardQueryRepository;
+    private final FirebaseClient firebaseClient;
 
 
     // 월별 일정 조회
@@ -128,7 +131,7 @@ public class CalendarBoardService {
     // 일정 참가
     @Transactional
     public void joinCalendar(User user, Long calendarId) {
-        CalendarBoard calendarBoard = calendarBoardRepository.findById(calendarId)
+        CalendarBoard calendarBoard = calendarBoardQueryRepository.findCalenderAndUserById(calendarId)
                 .orElseThrow(() -> new NotFoundException(NotFoundException.BOARD_CALENDAR_NOT_FOUND));
 
         if (userCalendarRepository.existsByUserAndCalendarBoard(user, calendarBoard)) {
@@ -143,6 +146,11 @@ public class CalendarBoardService {
 
         UserCalendar userCalendar = UserCalendar.createUserCalendar(user, calendarBoard);
         userCalendarRepository.save(userCalendar);
+
+        //유저 아이디와 해당 유저의 fcm토큰을 가져옴
+        String fcmToken = calendarBoard.getCreater().getFcmToken();
+        String userNickname = calendarBoard.getCreater().getUserNickname();
+        firebaseClient.send(fcmToken,userNickname + "님의 일정에 누군가가 참여했습니다");
     }
 
     // 일정 참가 취소
