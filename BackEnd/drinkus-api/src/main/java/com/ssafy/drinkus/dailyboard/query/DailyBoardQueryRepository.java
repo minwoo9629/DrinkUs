@@ -13,13 +13,13 @@ import static com.ssafy.drinkus.user.domain.QUser.user;
 @Repository
 @RequiredArgsConstructor
 public class DailyBoardQueryRepository {
-    private JPAQueryFactory queryFactory;
+    private final JPAQueryFactory queryFactory;
 
-    public Optional<DailyBoard> findDailyAndUserById(Long dailyId){
+    public Optional<DailyBoard> findDailyAndUserById(Long parentId){
         DailyBoard dailyBoard = queryFactory
                 .selectFrom(QDailyBoard.dailyBoard)
                 .join(QDailyBoard.dailyBoard.creater, user).fetchJoin()
-                .where(QDailyBoard.dailyBoard.boardId.eq(dailyId))
+                .where(QDailyBoard.dailyBoard.parentId.eq(parentId))
                 .fetchOne();
         return Optional.ofNullable(dailyBoard);
     }
