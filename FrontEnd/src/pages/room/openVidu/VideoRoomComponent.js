@@ -156,7 +156,6 @@ class VideoRoomComponent extends Component {
     // STOMP 서버에 연결
     gameClient.current = new StompJs.Client({
       brokerURL: "wss://i7b306.p.ssafy.io/ws-stomp/websocket",
-      //   brokerURL: "ws://localhost:8080/ws-stomp/websocket",
       connectHeaders: {
         roomId: ROOM_ID,
         AccessToken: `Bearer ${this.accessToken}`,
@@ -180,6 +179,29 @@ class VideoRoomComponent extends Component {
 
   disconnectGameServer() {
     gameClient.current.deactivate();
+  }
+
+  pubRandomDrink() {
+    gameClient.current.publish({
+      destination: `/pub/random`,
+      body: JSON.stringify({
+        roomId: ROOM_ID,
+      }),
+    });
+  }
+
+  subRandomDrink() {
+    gameClient.current.subscribe(
+      `/sub/random/${ROOM_ID}`,
+      ({ body }) => {
+        // 여기에 화면에 띄우는 로직 작성
+        console.log("#랜덤 마시기: ", body);
+      },
+      {
+        AccessToken: `Bearer ${this.accessToken}`,
+        roomId: ROOM_ID,
+      },
+    );
   }
 
   pubRandomDrink() {
