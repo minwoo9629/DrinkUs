@@ -156,6 +156,7 @@ class VideoRoomComponent extends Component {
     // STOMP 서버에 연결
     gameClient.current = new StompJs.Client({
       brokerURL: "wss://i7b306.p.ssafy.io:8081/ws-stomp/websocket",
+      //   brokerURL: "ws://localhost:8080/ws-stomp/websocket",
       connectHeaders: {
         roomId: ROOM_ID,
         AccessToken: `Bearer ${this.accessToken}`,
@@ -170,6 +171,7 @@ class VideoRoomComponent extends Component {
         // 세션 접속
         this.subRecommendTopics();
         this.subRandomDrink();
+        this.subRecommendToasts();
       },
     });
 
@@ -219,6 +221,28 @@ class VideoRoomComponent extends Component {
       ({ body }) => {
         // 여기에 화면에 띄우는 로직 작성
         console.log("#대화주제 추천: ", body);
+      },
+      {
+        AccessToken: `Bearer ${this.accessToken}`,
+        roomId: ROOM_ID,
+      },
+    );
+  }
+
+  pubRecommendToasts() {
+    gameClient.current.publish({
+      destination: `/pub/toast`,
+      body: JSON.stringify({
+        roomId: ROOM_ID,
+      }),
+    });
+  }
+
+  subRecommendToasts() {
+    gameClient.current.subscribe(
+      `/sub/toast/${ROOM_ID}`,
+      ({ body }) => {
+        console.log("#건배사 추천: ", body);
       },
       {
         AccessToken: `Bearer ${this.accessToken}`,
@@ -695,6 +719,7 @@ class VideoRoomComponent extends Component {
           ////// !!!!
           recommendTopics={this.pubRecommendTopics}
           randomDrink={this.pubRandomDrink}
+          recommendToasts={this.pubRecommendToasts}
         />
         <ButtonContentComponentWrapper>
           {localUser !== undefined &&
