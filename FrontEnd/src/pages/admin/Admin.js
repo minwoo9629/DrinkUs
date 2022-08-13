@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
 import Header from "../../components/layout/Header";
 import Footer from "../../components/layout/Footer";
@@ -9,6 +10,8 @@ import { permitUser } from "../../api/AdminAPI";
 import { removeUser } from "../../api/AdminAPI";
 import UserList from "../../components/admin/UserList";
 import ReportList from "../../components/admin/ReportList";
+import { FailAlert } from "../../utils/sweetAlert";
+import { useNavigate } from "react-router-dom";
 
 export const AdminWrapper = styled(BaseFlexWrapper)`
   flex-direction: column;
@@ -69,19 +72,28 @@ const SearchUserInput = styled.input`
 
 const Admin = () => {
 
+  const user = useSelector((state) => state.user);
+  const navigate = useNavigate();
+
   useEffect(() => {
+    checkPermission();
     getUList();
     getRList();
   }, []);
 
   const [userList, setUserList] = useState([]);
   const [reportList, setReportList] = useState([]);
-  const [searchInput, setSearchInput] = useState("");
+
+  const checkPermission = async () => {
+    if(user.data.userRole !== "ROLE_ADMIN"){
+      FailAlert("관리자만 접근 가능합니다.");
+      navigate("/");
+    }
+  }
 
   const getUList = async () => {
     const uList = await getUserInfoList();
     setUserList([...uList.data]);
-    console.log(uList);
   }
 
   const getRList = async () => {

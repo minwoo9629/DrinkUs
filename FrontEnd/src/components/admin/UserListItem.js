@@ -32,10 +32,6 @@ const UserListItem = ({
   onHandlePermitUser,
   onHandleRemoveUser
 }) => {
-
-  const now = new Date();
-  console.log(now);
-  console.log(userStopDate);
   return (
     <div
       style={{
