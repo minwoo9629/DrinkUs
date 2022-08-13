@@ -6,6 +6,7 @@ import com.ssafy.drinkus.common.NotExistException;
 import com.ssafy.drinkus.common.NotFoundException;
 import com.ssafy.drinkus.dailyboard.domain.DailyBoard;
 import com.ssafy.drinkus.dailyboard.domain.DailyBoardRepository;
+import com.ssafy.drinkus.dailyboard.query.DailyBoardQueryRepository;
 import com.ssafy.drinkus.dailyboard.request.DailyBoardCreateRequest;
 import com.ssafy.drinkus.dailyboard.request.DailyBoardUpdateRequest;
 import com.ssafy.drinkus.dailyboard.response.DailyBoardResponse;
@@ -29,7 +30,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class DailyBoardService {
-
+    private final DailyBoardQueryRepository dailyBoardQueryRepository;
     private final DailyBoardRepository dailyBoardRepository;
 
     // 총 데일리 게시판 페이지 개수 반환
@@ -113,6 +114,8 @@ public class DailyBoardService {
 
         DailyBoard dailyBoard = DailyBoard.createDailyBoard(user, user, request.getBoardContent(), parentId);
         dailyBoardRepository.save(dailyBoard);
+
+
     }
 
     // 글 수정
