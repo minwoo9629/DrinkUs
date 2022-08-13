@@ -67,6 +67,7 @@ const ContentWrapper = styled(BaseFlexWrapper)`
   background: ${(props) => props.background};
   height: ${(props) => props.height};
   width: 100vw;
+  &.gradientBackground{}
 `;
 
 const Letter = styled.p`
@@ -88,8 +89,8 @@ const Home = () => {
       <ContentWrapper background={"#000"} height={"100vh"}>
         <NeonSignTitle>OPEN DRINKUS</NeonSignTitle>
       </ContentWrapper>
-      <ContentWrapper height={"20vh"}/>
-      <ContentWrapper background={"#FFF"} height={"70vh"}>
+      <ContentWrapper background={"#000"} height={"20vh"}/>
+      <ContentWrapper className="gradientBackground" background={"#FFF"} height={"70vh"}>
         <img src={process.env.PUBLIC_URL + '/assets/room.png'} width="30%" height="55%"/>
         <BaseFlexColWrapper>
           <Letter size={"2rem"} weight={"bold"}>
