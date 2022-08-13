@@ -98,6 +98,16 @@ export default class ToolbarComponent extends Component {
     this.switchCamera = this.switchCamera.bind(this);
     this.leaveSession = this.leaveSession.bind(this);
     this.toggleChat = this.toggleChat.bind(this);
+    this.randomDrink = this.randomDrink.bind(this);
+    this.recommendTopics = this.recommendTopics.bind(this);
+  }
+
+  recommendTopics() {
+    this.props.recommendTopics();
+  }
+
+  randomDrink() {
+    this.props.randomDrink();
   }
 
   micStatusChanged() {
@@ -196,6 +206,8 @@ export default class ToolbarComponent extends Component {
               </RoomContentButton>
             </RoomContentButtonWrapper>
           </RoomContentWrapper>
+          <button onClick={this.randomDrink}>randomDrink</button>
+          <button onClick={this.recommendTopics}>대화주제추천</button>
           {/* <div className="buttonsContent">
             <button
               color="inherit"
