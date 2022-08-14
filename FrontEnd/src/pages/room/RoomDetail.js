@@ -249,19 +249,94 @@ const RoomDetail = () => {
               }
               onClick={() => navigate(`/rooms/${roomId}`)}
             />
-          ) : data.placeTheme === "펍" ? (
+          ) 
+          : data.placeTheme === "펍" ? (
             <ImageWrapper
               src={process.env.PUBLIC_URL + "/assets/RoomBackground/pub.jpg"}
               onClick={() => navigate(`/rooms/${roomId}`)}
             />
-          ) : data.placeTheme === "칵테일바" ? (
+          ) 
+          : data.placeTheme === "칵테일바" ? (
             <ImageWrapper
               src={
                 process.env.PUBLIC_URL + "/assets/RoomBackground/cocktail.jpg"
               }
               onClick={() => navigate(`/rooms/${roomId}`)}
             />
-          ) : (
+          )
+          : data.placeTheme === "야구장" ? (
+            <ImageWrapper
+              src={
+                process.env.PUBLIC_URL + "/assets/RoomBackground/baseball.jpg"
+              }
+              onClick={() => navigate(`/rooms/${roomId}`)}
+            />
+          )
+          : data.placeTheme === "축구장" ? (
+            <ImageWrapper
+              src={
+                process.env.PUBLIC_URL + "/assets/RoomBackground/soccer.jpg"
+              }
+              onClick={() => navigate(`/rooms/${roomId}`)}
+            />
+          )
+          : data.placeTheme === "페스티벌" ? (
+            <ImageWrapper
+              src={
+                process.env.PUBLIC_URL + "/assets/RoomBackground/festival.jpg"
+              }
+              onClick={() => navigate(`/rooms/${roomId}`)}
+            />
+          )
+          : data.placeTheme === "클럽" ? (
+            <ImageWrapper
+              src={
+                process.env.PUBLIC_URL + "/assets/RoomBackground/club.jpg"
+              }
+              onClick={() => navigate(`/rooms/${roomId}`)}
+            />
+          )
+          : data.placeTheme === "편의점" ? (
+            <ImageWrapper
+              src={
+                process.env.PUBLIC_URL + "/assets/RoomBackground/convenience.jpg"
+              }
+              onClick={() => navigate(`/rooms/${roomId}`)}
+            />
+          )
+          : data.placeTheme === "한강공원" ? (
+            <ImageWrapper
+              src={
+                process.env.PUBLIC_URL + "/assets/RoomBackground/river.jpg"
+              }
+              onClick={() => navigate(`/rooms/${roomId}`)}
+            />
+          )
+          : data.placeTheme === "미술관" ? (
+            <ImageWrapper
+              src={
+                process.env.PUBLIC_URL + "/assets/RoomBackground/art.jpg"
+              }
+              onClick={() => navigate(`/rooms/${roomId}`)}
+            />
+          )
+          : data.placeTheme === "영화관" ? (
+            <ImageWrapper
+              src={
+                process.env.PUBLIC_URL + "/assets/RoomBackground/movie.jpg"
+              }
+              onClick={() => navigate(`/rooms/${roomId}`)}
+            />
+          )
+          : data.placeTheme === "도서관" ? (
+            <ImageWrapper
+              src={
+                process.env.PUBLIC_URL + "/assets/RoomBackground/livrary.jpg"
+              }
+              onClick={() => navigate(`/rooms/${roomId}`)}
+            />
+          )
+          : (
             <ImageWrapper
               src={
                 process.env.PUBLIC_URL + "/assets/RoomBackground/outside.jpg"
