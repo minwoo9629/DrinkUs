@@ -142,7 +142,7 @@ const ListWrapper = styled.div`
 const PageNationWrapper = styled.div`
   position: absolute;
   top: 1230px;
-  left: 42%;
+  margin-left: 30%;
 `
 
 const RoomList = () => {

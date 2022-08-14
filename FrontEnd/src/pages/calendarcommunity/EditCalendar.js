@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import Header from "../../components/layout/Header";
 import FetchProfile from "../../components/room/FetchProfile";
 import { Wrapper } from "../../components/styled/Wrapper";
 import { client } from "../../utils/client";
 import moment from "moment";
-import { FailAlert, SuccessAlert } from "../../utils/sweetAlert";
+import { SuccessAlert } from "../../utils/sweetAlert";
 import { useNavigate } from "react-router-dom";
+import { BackButton } from "../../components/common/buttons/BackButton";
 
 // 스타일
 const CreateCalendarBlock = styled.div`
@@ -16,6 +16,7 @@ const CreateCalendarBlock = styled.div`
   background-color: #6F92BF;
   border-radius: 30px;
   padding: 30px;
+  box-shadow: inset 0px 0px 4px 4px #BDCFF2;
 `
 
 const InputBlock = styled.div`
@@ -253,7 +254,7 @@ const EditCalendar = () => {
 
   return (
     <>
-      <Header location={'lightzone'}/>
+      <BackButton/>
       <Wrapper color={'#fff'}>
         <CreateCalendarBlock>
           <FetchProfile/>
