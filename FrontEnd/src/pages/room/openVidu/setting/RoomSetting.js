@@ -63,7 +63,7 @@ const RoomSetting = ({ settingDisplay, roomSettingTitle }) => {
           <p>{roomInfoState.ages70}</p>
         </div>
         <div style={{ color: "white" }}>
-          {roomInfoState.category.categoryName}
+          {/* {roomInfoState.category.categoryName} */}
         </div>
       </StyledRoomSettingComponent>
     </StyledRoomSettingContainer>
