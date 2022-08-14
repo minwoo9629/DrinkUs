@@ -38,8 +38,49 @@ const StyeldRoomSettingTittle = styled.div`
   color: black;
 `;
 
+const StyeldTitle = styled.p`
+  padding: 8px 0px;
+  margin: 50px 10px 10px 10px;
+  border-bottom: 1px solid #bdcff2;
+  color: white;
+`;
+const StyledAgeListWrapper = styled.div`
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+`;
+
+const StyeldAgeWrapper = styled.div`
+  margin-left: 4px;
+  margin-bottom: 8px;
+  text-align: center;
+  background-color: white;
+  width: 30px;
+  padding: 8px 16px;
+  border-radius: 10px;
+  color: black;
+  &.active {
+    background-color: #bdcff2;
+  }
+`;
+
+const StyeldCategoryNameWrapper = styled.div`
+  background-color: #bdcff2;
+  text-align: center;
+  margin: 0px 10px;
+  padding: 8px 20px;
+  border-radius: 10px;
+  color: black;
+`;
+
 const RoomSetting = ({ settingDisplay, roomSettingTitle }) => {
-  const [roomInfoState, setRoomInfoState] = useState({});
+  const [roomInfoState, setRoomInfoState] = useState({
+    ages: [],
+    categoryName: "",
+    roomName: "",
+  });
+  const ages = ["20", "30", "40", "50", "60", "70↑"];
   const roomInfo = useSelector((state) => state.room);
   const fetchRoomData = async (roomId) => {
     const result = await getRoomInfo(roomId);
@@ -48,22 +89,31 @@ const RoomSetting = ({ settingDisplay, roomSettingTitle }) => {
   useEffect(() => {
     fetchRoomData(roomInfo.roomId);
   }, []);
+  console.log(roomInfoState);
   return (
     <StyledRoomSettingContainer display={settingDisplay}>
       <StyledRoomSettingComponent>
         <StyeldRoomSettingTittle>
-          <span>{roomInfoState.placeTheme}</span>
+          <span>{roomInfoState.roomName}</span>
         </StyeldRoomSettingTittle>
-        <div style={{ color: "white" }}>
-          <p>{roomInfoState.ages20}</p>
-          <p>{roomInfoState.ages30}</p>
-          <p>{roomInfoState.ages40}</p>
-          <p>{roomInfoState.ages50}</p>
-          <p>{roomInfoState.ages60}</p>
-          <p>{roomInfoState.ages70}</p>
+        <div>
+          <StyeldTitle>방 연령대</StyeldTitle>
+          <StyledAgeListWrapper>
+            {roomInfoState.ages.map((item, idx) => (
+              <StyeldAgeWrapper
+                key={idx}
+                className={item === "Y" ? "active" : ""}
+              >
+                {ages[idx]}
+              </StyeldAgeWrapper>
+            ))}
+          </StyledAgeListWrapper>
         </div>
-        <div style={{ color: "white" }}>
-          {/* {roomInfoState.category.categoryName} */}
+        <div>
+          <StyeldTitle>관심사</StyeldTitle>
+          <StyeldCategoryNameWrapper>
+            {roomInfoState.categoryName}
+          </StyeldCategoryNameWrapper>
         </div>
       </StyledRoomSettingComponent>
     </StyledRoomSettingContainer>
