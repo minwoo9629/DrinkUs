@@ -5,26 +5,31 @@ export const getUserProfile = async (userNo) => {
   const result = await client
     .get(`/users/profile/${userNo}`)
     .then((response) => response);
-    console.log(userNo)
   return result;
 };
 
 // 인기도 수정
-export const plusPopularity = async ({userNo}, {data}) => {
+export const plusPopularity = async (userNo) => {
+  const data = {
+    popularNum: +1,
+  };
   const result = await client
-    .patch(`/users/popularity/${userNo}`, {data})
+    .patch(`/users/popularity/${userNo}`, { data })
     .then((response) => response)
     .catch((error) => error.response);
   return result;
-}
+};
 
-export const minusPopularity = async (data) => {
+export const minusPopularity = async (userNo) => {
+  const data = {
+    popularNum: -1,
+  };
   const result = await client
-    .patch(`/users/popularity/16`, data)
+    .patch(`/users/popularity/${userNo}`, data)
     .then((response) => response)
     .catch((error) => error.response);
   return result;
-}
+};
 
 // 관심사 조회
 export const getUserCategory = async (userNo) => {
@@ -32,7 +37,7 @@ export const getUserCategory = async (userNo) => {
     .get(`/categories/subcategory/${userNo}`)
     .then((response) => response);
   return result;
-}
+};
 
 // 유저 신고
 export const reportsSubmit = async (data) => {
@@ -41,4 +46,4 @@ export const reportsSubmit = async (data) => {
     .then((response) => response)
     .catch((error) => error.response);
   return result;
-}
+};
