@@ -1,5 +1,4 @@
 import { useState } from "react";
-// import Header from "../../components/layout/Header";
 import styled from "styled-components";
 import { client } from "../../utils/client";
 import { FailAlert, SuccessAlert } from "../../utils/sweetAlert";
@@ -61,16 +60,19 @@ const ReportsButton = styled.button`
 
 const Reports = () => {
   const [state, setState] = useState({
+    toUserId: "",
     reportType: "",
     reportReason: "",
     reportReasonCheck: false,
   })
   
+  // 유저 정보 요청
+
+
   // 신고 대분류
   const onReportTypeSelect = (e) => {
     setState({...state, [e.target.name]: e.target.value})
   };
-
 
   // 신고 입력
   const onReportReasonInput = (e) => {
@@ -80,12 +82,13 @@ const Reports = () => {
   // 신고 제출
   const onReportsSubmit = async (e) => {
     const data = {
-      toUserId: 7,
+      toUserId: state.toUserId,
       reportType: state.reportType,
       reportReason: state.reportReason
     };
     const response = await reportsSubmit(data);
     console.log(response)
+    console.log(data)
     if (response.status === 200) {
       SuccessAlert("신고가 접수됐습니다")
     }
@@ -102,7 +105,7 @@ const Reports = () => {
     <>
       <Wrapper>
         <ReportsWrapper>
-            (프로필 선택한 유저 닉네임)유저를 신고합니다.
+            {state.toUserId}유저를 신고합니다.
             <ReportsSelect
               value={state.reportType}
               name="reportType"

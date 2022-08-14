@@ -9,6 +9,7 @@ import {
   postDailyArticle,
 } from "../api/DailyAPI";
 import DailyList from "../components/daily/DailyList";
+import PageNation from "../components/common/buttons/PageNation";
 
 // 전체 배경
 const Wrapper = styled.div`
@@ -181,7 +182,6 @@ align-items: center;
 `;
 
 const Daily = () => {
-  // 상태 저장
   const [state, setState] = useState({
     // 받아온 정보
     content: [],
@@ -195,16 +195,20 @@ const Daily = () => {
   const navigate = useNavigate();
 
   // 전체 글 fetch
-  const fetchArticle = async () => {
-    const response = await getDailyArticle();
+  const fetchArticle = async (pageNum) => {
+    const response = await getDailyArticle(pageNum);
     setState({...response.data});
-    console.log(response.data.content)
+  };
+
+  // 페이지 선택
+  const onHandlePageButton = (pageNum) => {
+    fetchArticle(pageNum);
   };
 
   // useEffect를 이용하여 전체 게시글 fetch 하기
   useEffect(() => {
-    fetchArticle()
-  }, []);
+    fetchArticle(state.number);
+  }, [state.numberOfElements]);
 
   // 입력
   const onHandleInput = (e) => {
@@ -247,8 +251,16 @@ const Daily = () => {
             </DailyArticlePostButton>
           </DailyArticleInputWrapper>
           <div>
-            <DailyList dailyList={state.content}/>
+            <DailyList dailyList={state.content.reverse()}/>
           </div>
+          <>
+            <PageNation
+              onClick={onHandlePageButton}
+              number={state.number + 1}
+              size={state.size}
+              totalPages={state.totalPages}
+            />
+          </>
         </BaseFlexColWrapper>
       </Wrapper>
     </>

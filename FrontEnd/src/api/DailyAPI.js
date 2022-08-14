@@ -1,9 +1,9 @@
 import { client } from "../utils/client";
 
 // 전체 게시글 조회
-export const getDailyArticle = async () => {
+export const getDailyArticle = async (page) => {
   const result = await client
-    .get(`/daily`)
+    .get(`/daily?page=${page}`)
     .then((response) => response);
   return result;
 };
