@@ -31,6 +31,9 @@ const ProfileImageGridWrapper = styled.div`
 const ProfileImageListContent = ({ onClcik, profileImageState }) => {
   return (
     <>
+      <button>
+        <i class="fas fa-times"></i>
+      </button>
       <ProfileImageGridWrapper>
         {pictureArray.map((item, idx) => (
           <ProfileImageWrapper key={item}>

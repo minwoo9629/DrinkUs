@@ -5,50 +5,55 @@ import 'slick-carousel/slick/slick-theme.css';
 
 const Container = styled.div`
   width: 1200px;
-  overflow:hidden;
-`;
-
-const StyledSlider = styled(Slider)`
-    .slick-slide div{
-      outline: none;
+  height: 278px;
+  .slick-dots {
+    .slick-active {
+      button::before {
+        color: #c1c1c1;
+      }
     }
+    button::before {
+      color: #e9e9e9;
+    }
+  }
+  margin-top: 20px;
+  overflow: hidden;
 `;
 
 const ImageContainer = styled.img `
-  height: 270px;
+  height: 200px;
   width: 1200px;
   background-color: #EAF1FF;
-  margin-bottom: 100px;
 `
 
-const items = [
-  { id: 1, url: 'imgUrl' },
-  { id: 2, url: 'imgUrl' },
-  { id: 3, url: 'imgUrl' },
-];
-
-const Banner = () => {
+export default function Banner() {
   const settings = {
     dots: true,
     infinite: true,
-    speed: 500,
     slidesToShow: 1,
-    focusOnSelect: true,
+    slidesToScroll: 1,
+    autoplay: true,
+    speed: 2500,
+    autoplaySpeed: 5000,
+    arrow: false
   };
+
   return (
     <Container>
-      <StyledSlider {...settings}>
-        {items.map((item) => (
-            <>
-              <ImageContainer 
-              src={item.url}
-              key={item.id}
-              />
-            </>
-        ))}
-      </StyledSlider>
+      <Slider {...settings}>
+        <ImageContainer
+          src={process.env.PUBLIC_URL + '/assets/banner/001.png'}
+        />
+        <ImageContainer
+          src={process.env.PUBLIC_URL + '/assets/banner/002.png'}
+        />
+        <ImageContainer
+          src={process.env.PUBLIC_URL + '/assets/banner/003.png'}
+        />
+        <ImageContainer
+          src={process.env.PUBLIC_URL + '/assets/banner/004.png'}
+        />
+      </Slider>
     </Container>
   );
-  }
-
-export default Banner
+}
