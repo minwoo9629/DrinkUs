@@ -29,6 +29,7 @@ const ModalContentWrapper = styled.div`
   opacity: 1;
   background-color: #eaf1ff;
   border: 5px solid #6f92bf;
+  position: relative;
 `;
 
 const ModalHeader = styled.div`
@@ -52,7 +53,7 @@ const ModalContent = styled.div`
   align-items: center;
   padding: 20px;
 `;
-const Modal = ({ isOpen, modalContent, width, height }) => {
+const Modal = ({ isOpen, close, modalContent, width, height }) => {
   return (
     <ModalWrapper className={isOpen ? "active" : ""}>
       <ModalContentWrapper width={width} heigth={height}>
