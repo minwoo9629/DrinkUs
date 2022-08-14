@@ -5,7 +5,6 @@ import com.ssafy.drinkus.category.domain.CategoryRepository;
 import com.ssafy.drinkus.category.query.CategoryQueryRepository;
 import com.ssafy.drinkus.common.NotFoundException;
 import com.ssafy.drinkus.common.NotMatchException;
-import com.ssafy.drinkus.common.RoomException;
 import com.ssafy.drinkus.common.type.YN;
 import com.ssafy.drinkus.room.domain.Room;
 import com.ssafy.drinkus.room.domain.RoomRepository;
@@ -78,22 +77,22 @@ public class RoomService {
         List<Room> list;
         switch (age / 10) {
             case 2:
-                list = roomRepository.findTop8ByAges20OrderByCreatedDateDesc(YN.Y).orElseThrow(() -> new NotFoundException("해당 나이대의 방이 없습니다."));
+                list = roomRepository.findTop4ByAges20OrderByCreatedDateDesc(YN.Y).orElseThrow(() -> new NotFoundException("해당 나이대의 방이 없습니다."));
                 break;
             case 3:
-                list = roomRepository.findTop8ByAges30OrderByCreatedDateDesc(YN.Y).orElseThrow(() -> new NotFoundException("해당 나이대의 방이 없습니다."));
+                list = roomRepository.findTop4ByAges30OrderByCreatedDateDesc(YN.Y).orElseThrow(() -> new NotFoundException("해당 나이대의 방이 없습니다."));
                 break;
             case 4:
-                list = roomRepository.findTop8ByAges40OrderByCreatedDateDesc(YN.Y).orElseThrow(() -> new NotFoundException("해당 나이대의 방이 없습니다."));
+                list = roomRepository.findTop4ByAges40OrderByCreatedDateDesc(YN.Y).orElseThrow(() -> new NotFoundException("해당 나이대의 방이 없습니다."));
                 break;
             case 5:
-                list = roomRepository.findTop8ByAges50OrderByCreatedDateDesc(YN.Y).orElseThrow(() -> new NotFoundException("해당 나이대의 방이 없습니다."));
+                list = roomRepository.findTop4ByAges50OrderByCreatedDateDesc(YN.Y).orElseThrow(() -> new NotFoundException("해당 나이대의 방이 없습니다."));
                 break;
             case 6:
-                list = roomRepository.findTop8ByAges60OrderByCreatedDateDesc(YN.Y).orElseThrow(() -> new NotFoundException("해당 나이대의 방이 없습니다."));
+                list = roomRepository.findTop4ByAges60OrderByCreatedDateDesc(YN.Y).orElseThrow(() -> new NotFoundException("해당 나이대의 방이 없습니다."));
                 break;
             default:
-                list = roomRepository.findTop8ByAges70OrderByCreatedDateDesc(YN.Y).orElseThrow(() -> new NotFoundException("해당 나이대의 방이 없습니다."));
+                list = roomRepository.findTop4ByAges70OrderByCreatedDateDesc(YN.Y).orElseThrow(() -> new NotFoundException("해당 나이대의 방이 없습니다."));
                 break;
         }
         List<RoomListResponse> response = new ArrayList<>();
@@ -114,7 +113,7 @@ public class RoomService {
         Category findCategory = categoryRepository.findById(findCategoryId)
                 .orElseThrow(() -> new NotFoundException(CATEGORY_NOT_FOUND));
 
-        List<Room> findRoomList = roomRepository.findByCategory(findCategory);
+        List<Room> findRoomList = roomRepository.findTop4ByCategory(findCategory);
         return findRoomList.stream()
                 .map(RoomListResponse::from)
                 .collect(Collectors.toList());
@@ -124,7 +123,7 @@ public class RoomService {
     public List<RoomListResponse> findRandomRooms() {
         List<Room> currentRoomList = roomRepository.findAllByCreatedDateAfter(LocalDateTime.now().minusHours(12))
                 .orElseThrow(() -> new NotFoundException(ROOM_NOT_FOUND));
-        int size = currentRoomList.size() < 8 ? currentRoomList.size() : 8;
+        int size = currentRoomList.size() < 4 ? currentRoomList.size() : 4;
 
         Set<Room> roomSet = new HashSet<>();
         while (roomSet.size() < size) {
