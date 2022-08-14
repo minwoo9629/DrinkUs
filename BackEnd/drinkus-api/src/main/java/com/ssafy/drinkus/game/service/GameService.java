@@ -39,6 +39,13 @@ public class GameService {
     private final Map<String, Long> SESSION_USER_ID = new HashMap<>(); // 해당 세션 ID에 해당하는 USER_ID
     private final Map<String, Long> SESSION_ROOM_ID = new HashMap<>(); // 해당 세션 ID가 참여해있는 방 정보
 
+    public Integer countByRoomId(Long roomId){
+        if(!ROOMS.containsKey(roomId)){
+            throw new NotFoundException("존재하지 않는 화상방 번호입니다.");
+        }
+        return ROOMS.get(roomId).size();
+    }
+
     public String findByCategoryId(Long categoryId) {
         List<Topic> findTopicList = topicQueryRepository.findByCategoryId(categoryId);
         List<String> topicList = findTopicList.stream()
@@ -81,8 +88,6 @@ public class GameService {
             ROOMS.put(roomId, new HashMap<>());
         }
         ROOMS.get(roomId).put(sessionId, sessionId);
-        System.out.println("roomId = " + roomId);
-        System.out.println("ROOMS.get(roomId).size() = " + ROOMS.get(roomId).size());
         SESSION_USER_ID.put(sessionId, userId);
         SESSION_ROOM_ID.put(sessionId, roomId);
     }
@@ -94,8 +99,6 @@ public class GameService {
             ROOMS.get(roomId).remove(sessionId); // 방에서 사용자 제거
             if (ROOMS.get(roomId).size() == 0) {
                 ROOMS.remove(roomId);  // 남아있는 사용자가 한 명도 없으면 방도 제거
-                System.out.println("roomId = " + roomId);
-                System.out.println("방 왜안없앰?");
                 roomRepository.deleteById(roomId);
             }
         }
