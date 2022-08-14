@@ -145,7 +145,22 @@ const LinkWrapper = styled.div`
   box-shadow: none;
 `;
 
+const ConfirmWrapper = styled.div`
+  float: left;
+  display: block;
+  justify-content: space-between;
+  align-items: center;
+  width: 280px;
+  height: 64px;
+  border-radius: 36px;
+  border: 1px solid black;
+  background-color: #676775;
+  margin: 10px;
+  position: relative;
+`;
+
 const Join = () => {
+
   const [state, setState] = useState({
     // 회원가입 인풋
     userName: "",
@@ -229,7 +244,7 @@ const Join = () => {
     // 비밀번호 확인 체크
     const userPwCheck = state.userPwCheck;
     if (userPwCheck !== state.userPw) {
-      // setState({ ...state, userPwCheckValid: false });
+      setState({ ...state, userPwCheckValid: false });
       FailAlert("비밀번호가 일치하지 않습니다");
     } else {
       setState({ ...state, userPwCheckValid: true });
@@ -240,7 +255,7 @@ const Join = () => {
       FailAlert("이름은 필수 입력 항목입니다");
     }
 
-    // 생년월일 유효 체크  나중에 8자리 됐을 때 20살 이상인지 체크하는거 추가하자
+    // 생년월일 유효 체크
     if (state.userBirthday.length === 0) {
       FailAlert("생년월일은 필수 입력 항목입니다");
     }
@@ -301,7 +316,12 @@ const Join = () => {
       FailAlert("중복된 회원이거나 유효하지 않은 이메일 형식입니다")
     }
   };
-  
+
+
+  const [timer, setTimer] = useState([]);
+  const showTimer = () => {
+    setTimer(timer.concat(<Timer />));
+  }
 
   return (
     <div>
@@ -325,23 +345,41 @@ const Join = () => {
               <CheckButton onClick={onDoubleCheck}>
                   중복확인
                 </CheckButton>
-                <CheckButton onClick={onSendEmail}>
+                {/* <CheckButton onClick={onSendEmail}>
+                  이메일 인증
+                </CheckButton> */}
+                <CheckButton
+                  onClick={() => {
+                    onSendEmail(),
+                    showTimer();
+                  }}
+                >
                   이메일 인증
                 </CheckButton>
               </ChekWrapper>
-              <InputWrapper>
-              <i className="fas fa-lock"></i>
-                <AuthInput
-                  type="string"
-                  value={state.authToken}
-                  name="authToken"
-                  placeholder="인증번호"
-                  onChange={onHandleInput}
-                />
-                <ConfirmButton onClick={onConfirmEmail}>
-                  확인
-                </ConfirmButton>
-              </InputWrapper>
+              <div>
+                <InputWrapper>
+                  <i className="fas fa-lock"></i>
+                    <AuthInput
+                      type="string"
+                      value={state.authToken}
+                      name="authToken"
+                      placeholder="인증번호"
+                      onChange={onHandleInput}
+                    />
+                </InputWrapper>
+                <TimerWrapper>
+                  <ConfirmButton onClick={onConfirmEmail}>
+                    확인
+                  </ConfirmButton>
+                  {/* <CheckButton
+                    onClick={onHandleTimer}
+                    name={content.name}
+                    key={content.id}
+                  >
+                </CheckButton> */}
+                </TimerWrapper>
+              </div>
               <InputWrapper>
               <i className="fas fa-lock"></i>
                 <AuthInput
