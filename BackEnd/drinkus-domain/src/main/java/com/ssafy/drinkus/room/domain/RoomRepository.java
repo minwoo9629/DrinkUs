@@ -18,12 +18,12 @@ public interface RoomRepository extends JpaRepository<Room,Long> {
     Optional<List<Room>> findRoomList();
 
     // 같은 나잇대의 방
-    Optional<List<Room>> findTop8ByAges20OrderByCreatedDateDesc(YN ages20);
-    Optional<List<Room>> findTop8ByAges30OrderByCreatedDateDesc(YN ages30);
-    Optional<List<Room>> findTop8ByAges40OrderByCreatedDateDesc(YN ages40);
-    Optional<List<Room>> findTop8ByAges50OrderByCreatedDateDesc(YN ages50);
-    Optional<List<Room>> findTop8ByAges60OrderByCreatedDateDesc(YN ages60);
-    Optional<List<Room>> findTop8ByAges70OrderByCreatedDateDesc(YN ages70);
+    Optional<List<Room>> findTop4ByAges20OrderByCreatedDateDesc(YN ages20);
+    Optional<List<Room>> findTop4ByAges30OrderByCreatedDateDesc(YN ages30);
+    Optional<List<Room>> findTop4ByAges40OrderByCreatedDateDesc(YN ages40);
+    Optional<List<Room>> findTop4ByAges50OrderByCreatedDateDesc(YN ages50);
+    Optional<List<Room>> findTop4ByAges60OrderByCreatedDateDesc(YN ages60);
+    Optional<List<Room>> findTop4ByAges70OrderByCreatedDateDesc(YN ages70);
 
     // 1시간 이내 생성된 방
     Optional<List<Room>> findTop8ByCreatedDateAfterOrderByCreatedDateDesc(LocalDateTime createdDate);
@@ -33,5 +33,5 @@ public interface RoomRepository extends JpaRepository<Room,Long> {
     Boolean existsByRoomId(Long roomId);
 
     // 카테고리 ID로 방 리스트 조회
-    List<Room> findByCategory(Category category);
+    List<Room> findTop4ByCategory(Category category);
 }

@@ -1,7 +1,6 @@
 package com.ssafy.drinkus;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ssafy.drinkus.auth.service.AuthService;
 import com.ssafy.drinkus.config.LoginUserArgumentResolver;
 import com.ssafy.drinkus.security.filter.JwtAuthenticationFilter;
 import com.ssafy.drinkus.security.handler.CustomAccessDeniedHandler;
