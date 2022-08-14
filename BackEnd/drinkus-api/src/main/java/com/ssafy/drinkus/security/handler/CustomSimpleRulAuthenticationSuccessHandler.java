@@ -19,7 +19,8 @@ import java.io.IOException;
 @Component
 public class CustomSimpleRulAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    private final String AUTHENTICATION_REDIRECT_URI = "https://i7b306.p.ssafy.io/oauth2/redirect";
+//    private final String AUTHENTICATION_REDIRECT_URI = "https://i7b306.p.ssafy.io/oauth2/redirect";
+    private final String AUTHENTICATION_REDIRECT_URI = "https://i7b306.p.ssafy.io/";
     private final JwtUtil jwtUtil;
 
     @Override
