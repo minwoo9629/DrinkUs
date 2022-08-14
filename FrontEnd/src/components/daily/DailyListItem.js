@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { getDailyArticle, deleteDailyArticle } from "../../api/DailyAPI";
 import CommentList from "./CommentList";
+import CommentListItem from "./CommentListItem";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { client } from "../../utils/client";
@@ -193,15 +194,15 @@ const DailyListItem = (
 
   return (
     <div>
-      <Modal
-        width={"800px"}
-        height={"600px"}
-        isOpen={modalState}
-        closeModal={closeModal}
-        modalContent={
-          <UserProfileContent userId={createrId} close={closeModal} />
-        }
-      />
+        <Modal
+          width={"800px"}
+          height={"600px"}
+          isOpen={modalState}
+          closeModal={closeModal}
+          modalContent={
+            <UserProfileContent userId={createrId} close={closeModal} />
+          }
+        />
       <DailyContent>
         <div style={{ width: "20%" }}>
           <ProfileImg onClick={openModal}>{boardId}</ProfileImg>
