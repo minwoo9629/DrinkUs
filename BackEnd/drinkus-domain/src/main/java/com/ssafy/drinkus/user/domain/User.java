@@ -85,7 +85,6 @@ public class User extends BaseEntity {
         userPoint = 0L;
         userSoju = 0;
         userBeer = 0;
-
     }
 
     // 로컬 회원가입
@@ -100,7 +99,6 @@ public class User extends BaseEntity {
         user.userEmail = userEmail;
         user.userRole = UserRole.ROLE_USER;
         user.userProvider = UserProvider.local;
-        user.userImg = String.valueOf((int) (Math.random() * 25) + 1);
         return user;
     }
 
@@ -114,7 +112,6 @@ public class User extends BaseEntity {
         user.userProviderId = userProviderId;
         user.userName = userName;
         user.userEmail = userEmail;
-        user.userImg = String.valueOf((int) (Math.random() * 25) + 1);
         return user;
     }
 
