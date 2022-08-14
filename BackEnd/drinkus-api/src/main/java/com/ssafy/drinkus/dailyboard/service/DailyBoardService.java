@@ -45,8 +45,8 @@ public class DailyBoardService {
     }
 
     // 데일리 게시판 원글 조회
-    public Page<DailyBoardResponse> findByParentIdIsNull(Pageable page) {
-        List<DailyBoard> results = dailyBoardRepository.findByParentIdIsNull(page);
+    public Page<DailyBoardResponse> findByParentIdIsNullOrderByCreatedDateDesc(Pageable page) {
+        List<DailyBoard> results = dailyBoardRepository.findByParentIdIsNullOrderByCreatedDateDesc(page);
         if (results.size() == 0) {
             throw new NotExistException("해당 페이지에 게시물이 존재하지 않습니다.");
         }
@@ -60,8 +60,8 @@ public class DailyBoardService {
     }
 
     // 댓글 조회
-    public List<DailyBoardResponse> findByParentId(Long parentId) {
-        List<DailyBoard> results = dailyBoardRepository.findByParentId(parentId);
+    public List<DailyBoardResponse> findByParentIdOrderByCreatedDateDesc(Long parentId) {
+        List<DailyBoard> results = dailyBoardRepository.findByParentIdOrderByCreatedDateDesc(parentId);
         if (results.size() == 0) {
             throw new NotExistException("해당 게시물에 댓글이 존재하지 않습니다.");
         }
