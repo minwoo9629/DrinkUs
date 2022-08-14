@@ -1,4 +1,3 @@
-import Header from "../../components/layout/Header";
 import { Wrapper } from "../../components/styled/Wrapper";
 import styled from "styled-components";
 import FetchProfile from "../../components/room/FetchProfile";
