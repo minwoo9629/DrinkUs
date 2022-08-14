@@ -22,14 +22,13 @@ const ReportList = React.memo(({ reportList, onHandleProcessReport }) => {
           height: "20px",
         }}
       >
-        <div style={{ width: "5%" }}>번호</div>
-        <div style={{ width: "5%" }}>신고자</div>
-        <div style={{ width: "5%" }}>대상</div>
-        <div style={{ width: "20%" }}>유형</div>
-        <div style={{ width: "25%" }}>신고 사유</div>
-        <div style={{ width: "10%" }}>처리여부</div>
-        <div style={{ width: "20%" }}>처리결과 (정지일)</div>
-        <div style={{ width: "5%" }}></div>
+        <div style={{ width: "3%" }}>번호</div>
+        <div style={{ width: "20%" }}>신고자</div>
+        <div style={{ width: "20%" }}>대상</div>
+        <div style={{ width: "12%" }}>유형</div>
+        <div style={{ width: "22%" }}>신고 사유</div>
+        <div style={{ width: "8%" }}>처리여부</div>
+        <div style={{ width: "13%" }}>처리결과 (정지일)</div>
       </div>
     {reportList.length !== 0 ? (
       <>

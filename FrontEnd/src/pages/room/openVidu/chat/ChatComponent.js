@@ -1,15 +1,11 @@
 import React, { Component } from "react";
 import styled from "styled-components";
 import "./ChatComponent.css";
-// import IconButton from "@material-ui/core/IconButton";
-// import Fab from "@material-ui/core/Fab";
-// import HighlightOff from "@material-ui/icons/HighlightOff";
-// import Send from "@material-ui/icons/Send";
-// import { Tooltip } from "@material-ui/core";
 
 const StyledChatContainer = styled.div`
   width: 100%;
   height: 100%;
+  display: ${(props) => props.display};
 `;
 
 const StyledChatComponent = styled.div`
@@ -25,7 +21,6 @@ const StyledChatComponent = styled.div`
   width: 100%;
   border-radius: 20px;
   box-shadow: 10px 10px 15px 6px rgba(0, 0, 0, 0.3);
-  display: ${(props) => props.display};
 `;
 
 const StyeldChatToolbar = styled.div`
@@ -173,8 +168,8 @@ export default class ChatComponent extends Component {
 
   render() {
     return (
-      <StyledChatContainer>
-        <StyledChatComponent display={this.props.chatDisplay}>
+      <StyledChatContainer display={this.props.chatDisplay}>
+        <StyledChatComponent>
           <StyeldChatToolbar>
             <span>
               {/* {this.props.user.getStreamManager().stream.session.sessionId} - */}

@@ -26,7 +26,7 @@ const permitUser = async(userId) => {
 
 const removeUser = async(userId) => {
   const result = await client
-    .delete(`/users/${userId}`)
+    .delete(`/admin/${userId}`)
     .then((response) => response)
     .catch((error) => error.response);
   return result;
