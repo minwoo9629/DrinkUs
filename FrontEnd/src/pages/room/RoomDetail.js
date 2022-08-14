@@ -126,6 +126,7 @@ const RoomInfoWrapper = styled.div`
   color: ${(props) => props.color};
   font-size: ${(props) => props.fontSize};
   font-weight: ${(props) => props.fontWeight};
+  font-family: ${(props) => props.fontFamily};
   padding-top: ${(props) => props.paddingTop};
   padding-bottom: ${(props) => props.paddingBottom};
   padding-left: ${(props) => props.paddingLeft};
@@ -261,7 +262,13 @@ const RoomDetail = () => {
       <BackButton />
       <Wrapper color={"#0a0a0a"}>
         <RoomDetailWrapper>
-          <RoomInfoWrapper fontSize="45px" fontWeight="bold" marginLeft="80px">
+          <RoomInfoWrapper
+            fontSize="40px"
+            fontWeight="bolder"
+            marginLeft="100px"
+            color="#2e2e2e"
+            fontFamily="Do Hyeon"
+          >
             {data.roomName}
           </RoomInfoWrapper>
           <RoomInfoWrapper marginLeft="15px">
@@ -270,7 +277,7 @@ const RoomDetail = () => {
           <RoomInfoWrapper
             position="absolute"
             right="90px"
-            top="65px"
+            top="45px"
             fontWeight="bold"
             fontSize="15px"
           >
