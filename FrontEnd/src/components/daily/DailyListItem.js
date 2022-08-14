@@ -237,6 +237,7 @@ const DailyListItem = (
           </DailyBoardEditButton>
         </div>
       </DailyContent>
+      <DailyContent>
       <div>
         <div
           style={{
@@ -297,6 +298,7 @@ const DailyListItem = (
         }
       </div>
     </DailyContent>
+    </div>
   );
 };
 
