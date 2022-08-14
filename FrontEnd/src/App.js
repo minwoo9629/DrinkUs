@@ -54,6 +54,7 @@ function App() {
               <Route path="/profile" element={<Profile />} />
               <Route path="/reports" element={<Reports />} />
               <Route path="/oauth2/redirect" element={<SocialLogin />} />
+              <Route path="/social/redirect" element={<SocialLogin />} />
               <Route
                 path="/live"
                 element={<PrivateRoute component={<DrinkLive />} />}
