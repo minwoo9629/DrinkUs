@@ -1,32 +1,18 @@
 import { client } from "../utils/client";
 
-// // 유저 정보 fetch
-// export const getUserProfile = async (userId) => {
-//   const result = await client
-//     .get(`/users/profile/${userId}`)
-//     .then((response) => response);
-//   return result;
-// };
-
 // 유저 정보 fetch
-export const getUserProfile = async () => {
+export const getUserProfile = async (userNo) => {
   const result = await client
-    .get(`/users/profile/4`)
+    .get(`/users/profile/${userNo}`)
     .then((response) => response);
+    console.log(userNo)
   return result;
 };
 
-// // 인기도 수정
-// export const patchUserPopularity = async (data) => {
-//   const result = await client
-//     .patch(`/users/popularity/6`, data)
-//     .then((response) => response);
-//   return result;
-// };
-
-export const plusPopularity = async (data) => {
+// 인기도 수정
+export const plusPopularity = async ({userNo}, {data}) => {
   const result = await client
-    .patch(`/users/popularity/4`, data)
+    .patch(`/users/popularity/${userNo}`, {data})
     .then((response) => response)
     .catch((error) => error.response);
   return result;
@@ -34,16 +20,16 @@ export const plusPopularity = async (data) => {
 
 export const minusPopularity = async (data) => {
   const result = await client
-    .patch(`/users/popularity/4`, data)
+    .patch(`/users/popularity/16`, data)
     .then((response) => response)
     .catch((error) => error.response);
   return result;
 }
 
 // 관심사 조회
-export const getUserCategory = async () => {
+export const getUserCategory = async (userNo) => {
   const result = await client
-    .get(`/categories/subcategory/4`)
+    .get(`/categories/subcategory/${userNo}`)
     .then((response) => response);
   return result;
 }
