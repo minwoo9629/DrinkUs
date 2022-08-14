@@ -254,17 +254,15 @@ const CreateRoom = () => {
                   <option>술집</option>
                   <option>펍</option>
                   <option>칵테일바</option>
-                  {/* <option>야구장</option>
+                  <option>야구장</option>
                   <option>축구장</option>
                   <option>페스티벌</option>
                   <option>클럽</option>
-                  <option>엘리니아</option>
                   <option>편의점</option>
                   <option>한강공원</option>
                   <option>미술관</option>
                   <option>영화관</option>
-                  <option>협곡</option>
-                  <option>독서실</option> */}
+                  <option>도서관</option>
                 </SelectBox>
               </InputRightWrap>
             </InputBlock>
