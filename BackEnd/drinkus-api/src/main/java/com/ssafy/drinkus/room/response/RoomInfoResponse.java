@@ -16,7 +16,6 @@ public class RoomInfoResponse {
     private Long roomId;
     private String roomName;
     private UserMyInfoResponse user;
-    private String roomPw;
     private String placeTheme;
     private Integer peopleLimit;
     private LocalDateTime createdDate;
@@ -31,7 +30,6 @@ public class RoomInfoResponse {
         roomInfoResponse.roomId = room.getRoomId();
         roomInfoResponse.roomName = room.getRoomName();
         roomInfoResponse.user = UserMyInfoResponse.from(room.getUser());
-        roomInfoResponse.roomPw = room.getRoomPw();
         roomInfoResponse.placeTheme = room.getPlaceTheme();
         roomInfoResponse.peopleLimit = room.getPeopleLimit();
         roomInfoResponse.createdDate = room.getCreatedDate();
