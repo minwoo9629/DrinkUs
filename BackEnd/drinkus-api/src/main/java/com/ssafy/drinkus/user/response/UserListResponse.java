@@ -23,7 +23,6 @@ public class UserListResponse {
     private String userIntroduce;
     private String userImg;
     private UserRole userRole;
-    private String userGrade;
     private Long userPoint;
     private LocalDateTime userStopDate;
     private Integer userSoju;
@@ -42,7 +41,6 @@ public class UserListResponse {
                 user.getUserIntroduce(),
                 user.getUserImg(),
                 user.getUserRole(),
-                user.getUserGrade(),
                 user.getUserPoint(),
                 user.getUserStopDate(),
                 user.getUserSoju(),
