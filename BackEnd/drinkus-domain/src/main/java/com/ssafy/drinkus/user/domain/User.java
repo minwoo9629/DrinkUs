@@ -57,8 +57,6 @@ public class User extends BaseEntity {
 
     private String userProviderId;
 
-    private String userGrade;
-
     private Long userPoint;
 
     private LocalDateTime userStopDate; // 정지기한 -> 추가기능
@@ -76,14 +74,14 @@ public class User extends BaseEntity {
     private List<UserSubCategory> userSubCategoryList = new ArrayList<>();
 
     private void defaultUserSettings() {
-        try{
+        try {
             userNickname = RandomNickname.makeRandomNickname();
-        }catch (IOException e){
+        } catch (IOException e) {
             throw new NicknameFailException(NicknameFailException.MAKE_FAIL);
         }
         userPopularity = 0;
         userPopularityLimit = 5;
-        userImg = Integer.toString((int)(Math.random() * 25) + 1);
+        userImg = Integer.toString((int) (Math.random() * 25) + 1);
         userPoint = 0L;
         userSoju = 0;
         userBeer = 0;
@@ -102,6 +100,7 @@ public class User extends BaseEntity {
         user.userEmail = userEmail;
         user.userRole = UserRole.ROLE_USER;
         user.userProvider = UserProvider.local;
+        user.userImg = String.valueOf((int) (Math.random() * 25) + 1);
         return user;
     }
 
@@ -115,6 +114,7 @@ public class User extends BaseEntity {
         user.userProviderId = userProviderId;
         user.userName = userName;
         user.userEmail = userEmail;
+        user.userImg = String.valueOf((int) (Math.random() * 25) + 1);
         return user;
     }
 
@@ -135,12 +135,12 @@ public class User extends BaseEntity {
     }
 
     //인기도 수정
-    public void updatePopularity(Integer popularNum){
+    public void updatePopularity(Integer popularNum) {
         this.userPopularity += popularNum;
     }
 
     //인기도 제한횟수 수정
-    public void updatePopularityLimit(){
+    public void updatePopularityLimit() {
         this.userPopularityLimit -= 1;
     }
 

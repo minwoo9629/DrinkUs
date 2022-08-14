@@ -36,7 +36,7 @@ public class CategoryController {
     //타회원의 관심사 조회
     @GetMapping("/subcategory/{user_id}")
     public ResponseEntity<List<SubCategoryResponse>> findByUserId(@LoginUser User user, @PathVariable("user_id")Long userId) {
-        List<SubCategoryResponse> body = categoryService.findByUserId(user.getUserId());
+        List<SubCategoryResponse> body = categoryService.findByUserId(userId);
         return ResponseEntity.ok().body(body);
     }
 
