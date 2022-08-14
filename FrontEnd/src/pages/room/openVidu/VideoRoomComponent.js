@@ -20,6 +20,7 @@ import RoomGame from "./game/RoomGame";
 import * as StompJs from "@stomp/stompjs";
 import * as SockJS from "sockjs-client";
 import {
+  gameResult,
   randomDrink,
   randomTopik,
   recommendToasts,
@@ -34,12 +35,8 @@ const ButtonContentComponentWrapper = styled.div`
 
 const StyledLayoutBounds = styled.div`
   background-color: rgba(0, 0, 0, 0.3);
-  overflow: hidden;
-
   display: flex;
   flex-wrap: wrap;
-  /* position: absolute; */
-  /* left: 0; */
   right: 0;
   height: 100%;
   min-width: 400px !important;
@@ -47,7 +44,8 @@ const StyledLayoutBounds = styled.div`
 `;
 
 var localUser = new UserModel();
-
+let missionFailedUser = [];
+let userCnt = 0;
 // 게임 서버와 연결할 클라이언트
 let ROOM_ID = 0;
 // const ROOM_ID = Math.ceil(Math.random() * 5);
@@ -57,8 +55,16 @@ function withNavigation(Component) {
   return (props) => <Component navigate={useNavigate()} {...props} />;
 }
 
+const StyeldBombCount = styled.div`
+  position: absolute;
+  font-size: 100px;
+  transform: translate(-140%, -25%);
+  color: white;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+`;
 const BombGame = ({ clickCount, toggleBombGame, display, onDecreaseCount }) => {
-  console.log(clickCount, "클릭 카운트 확인하기");
   useEffect(() => {
     if (clickCount === 0) {
       toggleBombGame("none");
@@ -69,16 +75,18 @@ const BombGame = ({ clickCount, toggleBombGame, display, onDecreaseCount }) => {
       style={{
         position: "absolute",
         zIndex: 1000000,
-        top: "500px",
-        left: "500px",
-        width: "100px",
-        height: "100px",
-        backgroundColor: "blue",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
         display: display,
       }}
     >
-      <button onClick={onDecreaseCount}>-</button>
-      폭탄돌리기 Count : {clickCount}
+      <div onClick={onDecreaseCount} style={{ position: "relative" }}>
+        <img src="/assets/game/bomb.png" />
+        <StyeldBombCount style={{ position: "absolute" }}>
+          {clickCount}
+        </StyeldBombCount>
+      </div>
     </div>
   );
 };
@@ -100,7 +108,6 @@ class VideoRoomComponent extends Component {
     let sessionName = this.props.sessionInfo
       ? this.props.sessionInfo.sessionName
       : "SessionA";
-    console.log(this.props.user);
     let userName = this.props.user
       ? this.props.user.userNickName
       : "OpenVidu_User" + Math.floor(Math.random() * 100);
@@ -158,7 +165,7 @@ class VideoRoomComponent extends Component {
 
     this.layout.initLayoutContainer(
       document.getElementById("layout"),
-      openViduLayoutOptions,
+      openViduLayoutOptions
     );
     window.addEventListener("beforeunload", this.onbeforeunload);
     window.addEventListener("resize", this.updateLayout);
@@ -190,7 +197,7 @@ class VideoRoomComponent extends Component {
       () => {
         this.subscribeToStreamCreated();
         this.connectToSession();
-      },
+      }
     );
   }
 
@@ -245,7 +252,7 @@ class VideoRoomComponent extends Component {
       {
         AccessToken: `Bearer ${this.accessToken}`,
         roomId: ROOM_ID,
-      },
+      }
     );
   }
 
@@ -268,7 +275,7 @@ class VideoRoomComponent extends Component {
       {
         AccessToken: `Bearer ${this.accessToken}`,
         roomId: ROOM_ID,
-      },
+      }
     );
   }
 
@@ -290,13 +297,11 @@ class VideoRoomComponent extends Component {
       {
         AccessToken: `Bearer ${this.accessToken}`,
         roomId: ROOM_ID,
-      },
+      }
     );
   }
 
   pubStartBombGame() {
-    console.log(ROOM_ID);
-    console.log("폭탄돌리기");
     gameClient.current.publish({
       destination: `/pub/bomb/start`,
       body: JSON.stringify({
@@ -306,56 +311,40 @@ class VideoRoomComponent extends Component {
   }
 
   subStartBombGame() {
-    console.log("ss");
     gameClient.current.subscribe(
       `/sub/bomb/start/${ROOM_ID}`,
       ({ body }) => {
         // 여기에 화면에 띄우는 로직 작성
-        console.log("폭탄 돌리기 시작: ", body);
         const obj = JSON.parse(body);
-        console.log("cc: " + obj.clickCount);
 
         this.setState(
           { second: obj.second, clickCount: obj.clickCount },
           () => {
             this.toggleBombGame("block");
-          },
+          }
         );
 
         let second = obj.second;
         let leftClickCount = obj.clickCount;
 
         let interval = setInterval(() => {
-          console.log(second);
           second--;
-
-          // 뭔가 띄우기
-          // 그것의 onClick = leftClickCount--
-          // if(leftClickCount <= 0) : 뭔가 띄웠던 것 숨기기, 성공 표시
 
           if (second < 0) {
             this.pubEndBombGame();
             this.toggleBombGame("none");
-            if (this.state.clickCount > 0) {
-              alert("실패");
-            }
-            if (this.state.clickCount === 0) {
-              alert("성공");
-            }
             clearInterval(interval);
-            console.log("시간끝");
           }
         }, 1000);
       },
       {
         AccessToken: `Bearer ${this.accessToken}`,
         roomId: ROOM_ID,
-      },
+      }
     );
   }
 
   pubEndBombGame() {
-    console.log("폭탄돌리기 결과 pub");
     gameClient.current.publish({
       destination: `/pub/bomb/result`,
       headers: {
@@ -369,21 +358,39 @@ class VideoRoomComponent extends Component {
   }
 
   subEndBombGame() {
-    console.log("폭탄돌리기 결과 sub");
+    console.log(this.state.subscribers.length);
     gameClient.current.subscribe(
       `/sub/bomb/result/${ROOM_ID}`,
       ({ body }) => {
+        console.log(this.state.subscribers.length);
         // 여기에 화면에 띄우는 로직 작성
-        console.log(body);
+        const resultObj = JSON.parse(body);
+        if (!resultObj.result) {
+          missionFailedUser.push(resultObj.nickname);
+        }
+        userCnt++;
+        if (userCnt === this.state.subscribers.length + 1) {
+          let title = "";
+          let subTitle = "";
+          if (missionFailedUser.length === 0) {
+            title = "모두 성공하셨습니다.";
+            subTitle = "잠시 후 또 도전해 보세요";
+          } else {
+            title = missionFailedUser.join("\n");
+            subTitle = "마시세요!!!!!!";
+          }
+          gameResult(title, subTitle);
+          userCnt = 0;
+          missionFailedUser = [];
+        }
       },
       {
         AccessToken: `Bearer ${this.accessToken}`,
         roomId: ROOM_ID,
-      },
+      }
     );
   }
   onDecreaseCount() {
-    console.log("숫자 감소시키기");
     this.setState({
       clickCount: this.state.clickCount >= 1 ? this.state.clickCount - 1 : 0,
     });
@@ -393,12 +400,10 @@ class VideoRoomComponent extends Component {
 
   connectToSession() {
     if (this.props.token !== undefined) {
-      console.log("token received: ", this.props.token);
       this.connect(this.props.token);
     } else {
       this.getToken()
         .then((token) => {
-          console.log(token);
           this.connect(token);
         })
         .catch((error) => {
@@ -413,7 +418,7 @@ class VideoRoomComponent extends Component {
           console.log(
             "There was an error getting the token:",
             error.code,
-            error.message,
+            error.message
           );
           alert("There was an error getting the token:", error.message);
         });
@@ -439,7 +444,7 @@ class VideoRoomComponent extends Component {
         console.log(
           "There was an error connecting to the session:",
           error.code,
-          error.message,
+          error.message
         );
       });
   }
@@ -485,10 +490,10 @@ class VideoRoomComponent extends Component {
         this.state.localUser.getStreamManager().on("streamPlaying", (e) => {
           this.updateLayout();
           publisher.videos[0].video.parentElement.classList.remove(
-            "custom-class",
+            "custom-class"
           );
         });
-      },
+      }
     );
   }
 
@@ -508,7 +513,7 @@ class VideoRoomComponent extends Component {
           });
         }
         this.updateLayout();
-      },
+      }
     );
   }
 
@@ -559,7 +564,7 @@ class VideoRoomComponent extends Component {
   deleteSubscriber(stream) {
     const remoteUsers = this.state.subscribers;
     const userStream = remoteUsers.filter(
-      (user) => user.getStreamManager().stream === stream,
+      (user) => user.getStreamManager().stream === stream
     )[0];
     let index = remoteUsers.indexOf(userStream, 0);
     if (index > -1) {
@@ -577,7 +582,7 @@ class VideoRoomComponent extends Component {
       subscriber.on("streamPlaying", (e) => {
         this.checkSomeoneShareScreen();
         subscriber.videos[0].video.parentElement.classList.remove(
-          "custom-class",
+          "custom-class"
         );
       });
       const newUser = new UserModel();
@@ -631,7 +636,7 @@ class VideoRoomComponent extends Component {
         {
           subscribers: remoteUsers,
         },
-        () => this.checkSomeoneShareScreen(),
+        () => this.checkSomeoneShareScreen()
       );
     });
   }
@@ -685,13 +690,12 @@ class VideoRoomComponent extends Component {
     try {
       const devices = await this.OV.getDevices();
       var videoDevices = devices.filter(
-        (device) => device.kind === "videoinput",
+        (device) => device.kind === "videoinput"
       );
 
       if (videoDevices && videoDevices.length > 1) {
         var newVideoDevice = videoDevices.filter(
-          (device) =>
-            device.deviceId !== this.state.currentVideoDevice.deviceId,
+          (device) => device.deviceId !== this.state.currentVideoDevice.deviceId
         );
 
         if (newVideoDevice.length > 0) {
@@ -707,7 +711,7 @@ class VideoRoomComponent extends Component {
 
           //newPublisher.once("accessAllowed", () => {
           await this.state.session.unpublish(
-            this.state.localUser.getStreamManager(),
+            this.state.localUser.getStreamManager()
           );
           await this.state.session.publish(newPublisher);
           this.state.localUser.setStreamManager(newPublisher);
@@ -743,7 +747,7 @@ class VideoRoomComponent extends Component {
         } else if (error && error.name === "SCREEN_CAPTURE_DENIED") {
           alert("You need to choose a window or application to share");
         }
-      },
+      }
     );
 
     publisher.once("accessAllowed", () => {
@@ -802,8 +806,6 @@ class VideoRoomComponent extends Component {
       display = this.state.chatDisplay === "none" ? "block" : "none";
     }
     if (display === "block") {
-      console.log("채팅창 열기");
-      console.log(this.state.settingDisplay);
       this.setState({
         chatDisplay: display,
         messageReceived: false,
@@ -1005,7 +1007,7 @@ class VideoRoomComponent extends Component {
 
   getToken() {
     return this.createSession(this.state.mySessionId).then((sessionId) =>
-      this.createToken(sessionId),
+      this.createToken(sessionId)
     );
   }
 
@@ -1032,7 +1034,7 @@ class VideoRoomComponent extends Component {
             console.log(error);
             console.warn(
               "No connection to OpenVidu Server. This may be a certificate error at " +
-                this.OPENVIDU_SERVER_URL,
+                this.OPENVIDU_SERVER_URL
             );
             if (
               window.confirm(
@@ -1041,11 +1043,11 @@ class VideoRoomComponent extends Component {
                   '"\n\nClick OK to navigate and accept it. ' +
                   'If no certificate warning is shown, then check that your OpenVidu Server is up and running at "' +
                   this.OPENVIDU_SERVER_URL +
-                  '"',
+                  '"'
               )
             ) {
               window.location.assign(
-                this.OPENVIDU_SERVER_URL + "/accept-certificate",
+                this.OPENVIDU_SERVER_URL + "/accept-certificate"
               );
             }
           }
@@ -1069,7 +1071,7 @@ class VideoRoomComponent extends Component {
                 "Basic " + btoa("OPENVIDUAPP:" + this.OPENVIDU_SERVER_SECRET),
               "Content-Type": "application/json",
             },
-          },
+          }
         )
         .then((response) => {
           console.log("TOKEN", response);

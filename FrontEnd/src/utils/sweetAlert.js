@@ -68,8 +68,6 @@ export const randomDrink = (title) => {
 };
 
 export const randomTopik = (title) => {
-  const a = title.split("vs");
-  console.log(a);
   Swal.fire({
     title: title,
     width: "70em",
@@ -85,18 +83,23 @@ export const randomTopik = (title) => {
 };
 
 export const recommendToasts = (title) => {
-  const a = title.split("vs");
-  console.log(a);
   Swal.fire({
     title: `<h1 className="animate__jello">${title}</h1>`,
     width: "70em",
     showConfirmButton: false,
-    // showClass: {
-    //   popup: "animate__rubberBand",
-    // },
-    // hideClass: {
-    //   popup: "animate__animated animate__fadeOutUp",
-    // },
     timer: 4000,
+  });
+};
+
+export const gameResult = (title, subTitle) => {
+  let timerInterval;
+  MySwal.fire({
+    title,
+    html: subTitle,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: () => {
+      Swal.showLoading();
+    },
   });
 };
