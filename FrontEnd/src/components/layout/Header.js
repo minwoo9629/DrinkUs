@@ -4,6 +4,8 @@ import { NavLink, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import {
   BASIC_MENU,
+  LOGINED_MENU,
+  LOGINED_MENU_ADMIN,
   UNLOGINED_MENU,
 } from "../../constants/HeaderConstant";
 import { logOut } from "../../store/actions/user";
@@ -156,6 +158,23 @@ const Header = ({ position, location }) => {
               >
                 <i className="far fa-heart" />
               </LogOutButton>
+              {
+                user.data.userRole === "ROLE_ADMIN" ? (
+                  <>
+                    {LOGINED_MENU_ADMIN.map((item, idx) => (
+                      <HeaderMenuLink
+                        key={idx}
+                        to={item.link}
+                        className={location === 'lightzone' ? "" : ( HeaderStatus ? "" : "light" )}
+                      >
+                        <i className={item.className} />
+                      </HeaderMenuLink>
+                    ))}
+                  </>
+                ) : (
+                  <></>
+                )
+              }
               <LogOutButton
                 onClick={onHandleLogout}
                 className={location === 'lightzone' ? "" : ( HeaderStatus ? "" : "light" )}
