@@ -19,8 +19,8 @@ const ModalWrapper = styled.div`
 `;
 
 const ModalContentWrapper = styled.div`
-  width: 620px;
-  height: 480px;
+  width: ${(props) => props.width};
+  height: ${(props) => props.height};
   background-color: #fff;
   border-radius: 10px;
   display: flex;
@@ -52,10 +52,10 @@ const ModalContent = styled.div`
   align-items: center;
   padding: 20px;
 `;
-const Modal = ({ isOpen, close, modalContent }) => {
+const Modal = ({ isOpen, modalContent, width, height }) => {
   return (
     <ModalWrapper className={isOpen ? "active" : ""}>
-      <ModalContentWrapper>
+      <ModalContentWrapper width={width} heigth={height}>
         <ModalContent>{modalContent}</ModalContent>
       </ModalContentWrapper>
     </ModalWrapper>
@@ -63,3 +63,8 @@ const Modal = ({ isOpen, close, modalContent }) => {
 };
 
 export default Modal;
+
+Modal.defaultProps = {
+  width: "620px",
+  height: "480px",
+};
