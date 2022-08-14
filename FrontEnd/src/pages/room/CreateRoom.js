@@ -1,4 +1,3 @@
-import Header from "../../components/layout/Header";
 import { Wrapper } from "../../components/styled/Wrapper";
 import styled from "styled-components";
 import FetchProfile from "../../components/room/FetchProfile";
@@ -141,7 +140,6 @@ const CreateRoom = () => {
   // Room 입장을 위한 세션설정
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
   // 방 입장 세션 정보
   const onHandleEnterRoom = (roomId) => {
     const sessionData = {
@@ -187,6 +185,7 @@ const CreateRoom = () => {
       .then(function (response) {
         console.log(response.data.message);
         SuccessAlert("방이 생성되었습니다!");
+        // setRoomIdState(response.data)
         onHandleEnterRoom(response.data);
       })
       .catch(function (error) {
