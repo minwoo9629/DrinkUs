@@ -50,6 +50,7 @@ const RoomGame = ({
   randomDrink,
   recommendTopics,
   recommendToasts,
+  bombGame,
 }) => {
   return (
     <StyledRoomGameContainer display={gameDisplay}>
@@ -62,7 +63,7 @@ const RoomGame = ({
             <GameButton onClick={randomDrink} text={"랜덤 마시기"} />
           </div>
           <div style={{ color: "white" }}>
-            <GameButton onClick={() => console.log("")} text={"폭탄 돌리기"} />
+            <GameButton onClick={bombGame} text={"폭탄 돌리기"} />
           </div>
           <div style={{ color: "white" }}>
             <GameButton onClick={recommendTopics} text={"대화주제 추천"} />
