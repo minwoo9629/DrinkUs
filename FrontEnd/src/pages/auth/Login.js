@@ -145,7 +145,7 @@ const Login = () => {
               <a href="https://i7b306.p.ssafy.io/oauth2/authorization/kakao">
                 <SocialButton src="assets/kakao_icon.png" color="yellow" />
               </a>
-              <a href="http://i7b306.p.ssafy.io:8081/oauth2/authorization/google">
+              <a href="https://i7b306.p.ssafy.io/oauth2/authorization/google">
                 <SocialButton src="assets/google_icon.png" color="white" />
               </a>
             </SocialWrapper>
