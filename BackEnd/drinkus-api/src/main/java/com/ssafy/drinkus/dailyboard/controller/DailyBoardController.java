@@ -26,15 +26,15 @@ public class DailyBoardController {
 
     // 원글 조회
     @GetMapping
-    public ResponseEntity<Page<DailyBoardResponse>> findByParentIdIsNull(@PageableDefault Pageable page) {
-        Page<DailyBoardResponse> body = dailyBoardService.findByParentIdIsNull(page);
+    public ResponseEntity<Page<DailyBoardResponse>> findByParentIdIsNullOrderByCreatedDateDesc(@PageableDefault Pageable page) {
+        Page<DailyBoardResponse> body = dailyBoardService.findByParentIdIsNullOrderByCreatedDateDesc(page);
         return ResponseEntity.ok().body(body);
     }
 
     // 댓글 조회
     @GetMapping("/comment/{parent_id}")
-    public ResponseEntity<List<DailyBoardResponse>> findByParentId( @PathVariable("parent_id") Long parentId) {
-        List<DailyBoardResponse> body = dailyBoardService.findByParentId(parentId);
+    public ResponseEntity<List<DailyBoardResponse>> findByParentIdOrderByCreatedDateDesc( @PathVariable("parent_id") Long parentId) {
+        List<DailyBoardResponse> body = dailyBoardService.findByParentIdOrderByCreatedDateDesc(parentId);
         return ResponseEntity.ok().body(body);
     }
 
