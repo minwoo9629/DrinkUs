@@ -2,7 +2,9 @@ package com.ssafy.drinkus.game.service;
 
 import com.ssafy.drinkus.common.NotFoundException;
 import com.ssafy.drinkus.game.query.TopicQueryRepository;
+import com.ssafy.drinkus.game.request.BombResultRequest;
 import com.ssafy.drinkus.game.response.BombResponse;
+import com.ssafy.drinkus.game.response.BombResultResponse;
 import com.ssafy.drinkus.room.domain.RoomRepository;
 import com.ssafy.drinkus.room.domain.Toast;
 import com.ssafy.drinkus.room.domain.ToastRepository;
@@ -58,10 +60,10 @@ public class GameService {
         return new BombResponse(second, clickCount);
     }
 
-    public UserMyInfoResponse findByUserId(Long userId) {
+    public BombResultResponse findByUserId(Long userId, BombResultRequest request) {
         User findUser = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
-        return UserMyInfoResponse.from(findUser);
+        return new BombResultResponse(findUser.getUserNickname(), request.getClickCount() <= 0);
     }
 
     public String findUserByRoomId(Long roomId) {
