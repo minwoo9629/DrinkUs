@@ -217,6 +217,7 @@ const DailyListItem = ({
         width={"800px"}
         height={"600px"}
         isOpen={modalState}
+        closeModal={closeModal}
         modalContent={
           <UserProfileContent userId={createrId} close={closeModal} />
         }
