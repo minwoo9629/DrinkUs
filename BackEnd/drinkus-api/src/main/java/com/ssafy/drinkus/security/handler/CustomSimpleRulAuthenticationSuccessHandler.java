@@ -6,7 +6,6 @@ import com.ssafy.drinkus.security.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -20,18 +19,20 @@ import java.io.IOException;
 @Component
 public class CustomSimpleRulAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    private final String AUTHENTICATION_REDIRECT_URI = "http://localhost:3000/oauth2/redirect";
+    private final String AUTHENTICATION_REDIRECT_URI = "https://i7b306.p.ssafy.io/oauth2/redirect";
     private final JwtUtil jwtUtil;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
-        String token = jwtUtil.createToken(userPrincipal.getUserId(), TokenType.ACCESS_TOKEN);
+        String accessToken = jwtUtil.createToken(userPrincipal.getUserId(), TokenType.ACCESS_TOKEN);
+        String refreshToken = jwtUtil.createToken(userPrincipal.getUserId(), TokenType.REFRESH_TOKEN);
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        response.addHeader("Authorization", token);
+        response.addHeader("AccessToken", accessToken);
+        response.addHeader("RefreshToken", refreshToken);
 
         String target = UriComponentsBuilder.fromUriString(AUTHENTICATION_REDIRECT_URI)
-                .queryParam("token", token)
+                .queryParam("token", accessToken)
                 .build().toString();
 
         getRedirectStrategy().sendRedirect(request, response, target);

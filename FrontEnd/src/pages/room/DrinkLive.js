@@ -103,10 +103,8 @@ const DrinkLive = () => {
     className: "center",
     centerMode: true,
     dots: true,
-    infinite: true,
     speed: 1800,
     slidesToShow: 3,
-    slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 3000,
     pauseOnHover: true,
@@ -122,7 +120,6 @@ const DrinkLive = () => {
     .get('/rooms/recommend/ages')
     .then((response) => response)
     setAgeList([...result.data]);
-    return result.data
   }
 
   // 카테고리 요청
@@ -133,7 +130,6 @@ const DrinkLive = () => {
     .get('/rooms/recommend/category')
     .then((response) => response)
     setCategoryList([...result.data]);
-    return result.data
   }
 
   // 최근생성 요청
@@ -144,14 +140,13 @@ const DrinkLive = () => {
     .get('/rooms/recommend/current')
     .then((response) => response)
     setCurrentList([...result.data]);
-    return result.data
   }
 
   // 호출
   useEffect(() => {
     onMakeAgeList();
     onCategoryList();
-    onCurrentList();    
+    onCurrentList();
   },[])
 
   return (
@@ -243,12 +238,12 @@ const DrinkLive = () => {
           <>
           <Container>
             <StyledSlider {...settings}>
-              {currentList.map((content, index) => (
-              <LiveListItem
-              {...content}
-                key={index}
-              >
-              </LiveListItem>
+          {currentList.map((content, index) => (
+            <LiveListItem
+            {...content}
+              key={index}
+            > 
+            </LiveListItem>
           ))}
           </StyledSlider>
           </Container>

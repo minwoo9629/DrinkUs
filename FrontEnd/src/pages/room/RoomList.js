@@ -1,6 +1,4 @@
 import Header from "../../components/layout/Header";
-import { GoToButton } from "../../components/common/buttons/GoToButton";
-import { Wrapper } from "../../components/styled/Wrapper";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useState, useEffect } from "react";
@@ -8,44 +6,144 @@ import { client } from "../../utils/client"
 import RoomListItem from "../../components/room/RoomListItem"
 import PageNation from "../../components/common/buttons/PageNation";
 
+// 필터
+const FilterWrapper = styled.div`
+  display: flex;
+  background-color: black;
+  width: 100vw;
+  color: ${(props) => props.color};
+  justify-content: center;
+`
 
+const FilterInnerWrapper = styled.div`
+  width: ${(props) => props.width};
+`
+
+const Line = styled.hr`
+  margin: 30px;
+`
+
+const LiveButton = styled.button`
+  width: 160px;
+  height: 48px;
+  margin-right: 20px;
+  border-radius: 30px;
+  background-color: #EAF1FF;
+  color: #676775;
+  font-size: 18px;
+  margin-top: 40px;
+  line-height: 3px;
+  border: 3px solid #BDCFF2;
+  box-shadow: inset 0px 0px 4px 4px rgba(189, 207, 242, 0.5);
+  cursor: pointer;
+`
+
+// 필터 안 박스 / 버튼
 const SearchBox = styled.input`
   display: flex;
   width: 800px;
-  height: 100px;
-`
-
-const FilterButton = styled.button `
-  color: #6f92bf;
-  width: 80px;
   height: 30px;
+  border-radius: 30px;
+  border: 3px solid #BDCFF2;
+  box-shadow: inset 0px 0px 4px 4px rgba(189, 207, 242, 0.5);
 `
 
-const LetterColorChange = styled.div`
-  color: white;
+const OptionWrapper = styled.div`
+  width: 1000px;
+  margin-left: 100px;
+  margin-right: 100px;
+  justify-content: space-between;
+  align-items: center;
+  display: flex;
 `
+
+const OptionInnerWrapper = styled.div`
+  justify-content: space-between;
+`
+
+const SearchButton = styled.button `
+  color: #6f92bf;
+  width: 150px;
+  height: 40px;
+  border-radius: 30px;
+  margin-top: 22px;
+  border: 3px solid #BDCFF2;
+  box-shadow: inset 0px 0px 4px 4px rgba(189, 207, 242, 0.5);
+  font-size: 16px;
+  cursor: pointer;
+`
+
+const SearchInnerWrapper = styled.div `
+  margin-left: 100px;
+  margin-right: 100px;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`
+
+// 또래만 체크박스
+const AgesWrapper = styled.div`
+  display: inline-block;
+  height: 36px;
+  line-height: 32px;
+  width: 160px;
+  color: black;
+  margin: 4px 4px 4px 24px;
+  background-color: #ffffff;
+  border-radius: 30px;
+  border: 3px solid #eaf1ff;
+  text-align: center;
+  overflow: hidden;
+
+  & input:checked + span {
+    background-color: #BDCFF2;
+  }
+  & span {
+    cursor: pointer;
+    display: block;
+    padding: 2px 16px;
+  }
+`;
 
 const CheckBoxForm = styled.input`
-  background-color: white;
-  width: 30px;
-  height: 30px;
+  display: none;
+  cursor: pointer;
 `
 
 const SelectBox = styled.select`
- width: 200px;
- background-color: white;
- border: 3px solid #BDCFF2;
- height: 56px;
- border-radius: 20px;
- font-size: 16px;
+  width: 300px;
+  height: 40px;
+  background-color: white;
+  border-radius: 20px;
+  font-size: 16px;
+  margin-left: 30px;
+  border: 3px solid #BDCFF2;
+  box-shadow: inset 0px 0px 4px 4px rgba(189, 207, 242, 0.5);
+  cursor: pointer;
 `
 
 // 방 목록용 스타일
-const GlobalStyle = styled.div`
-  body {
-    margin: 0;
-  }
+const ListWrapper = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  padding: 24px 12px 100px 24px;
+  gap: 30px;
+  width: 1000px;
+  height: 680px;
+  margin-top: 50px;
+  margin-bottom: 200px;
+  border-radius: 20px;
+  background-color: #6F92BF;
+  box-shadow: inset 0px 0px 4px 4px rgba(189, 207, 242, 0.5);
 `;
+
+// 페이지네이션
+const PageNationWrapper = styled.div`
+  position: absolute;
+  top: 1230px;
+  left: 42%;
+`
 
 const RoomList = () => {
   
@@ -54,7 +152,7 @@ const RoomList = () => {
   // 검색
   const [filter, setFilter] = useState({
     searchKeyword: '',
-    sortOrder: '0',
+    sortOrder: '1',
     categoryId: null
   });
 
@@ -116,23 +214,20 @@ const RoomList = () => {
   return (
     <>
       <Header />
-      <Wrapper>
-        <LetterColorChange>
+      <FilterWrapper>
+        <FilterInnerWrapper width={'1200px'}>
           <div>
-            <GoToButton onClick={() => navigate("/createroom")} color={"cornflowerblue"}>방 만들기</GoToButton>
-            <GoToButton onClick={() => navigate("/live")} color={"#EAF1FF"}>추천 방 보기</GoToButton>
+            <LiveButton onClick={() => navigate("/createroom")} color={"cornflowerblue"}>방 만들기</LiveButton>
+            <LiveButton onClick={() => navigate("/live")} color={"#EAF1FF"}>추천 방 보기</LiveButton>
           </div>
-          <div>
-            검색창
-            <SearchBox
-              type="text"
-              value={filter.searchKeyword}
-              name="searchKeyword"
-              onChange={onFilterInput} 
-            ></SearchBox>
-          </div>
-          <div>
-          관심사 선택
+        </FilterInnerWrapper>
+      </FilterWrapper>
+      <FilterWrapper color={'white'}>
+        <FilterInnerWrapper width={'1200px'}>
+        <Line/>
+        <OptionWrapper>
+          <OptionInnerWrapper>
+            관심사 선택
             <SelectBox 
               type="selectbox"
               name="categoryId" 
@@ -144,52 +239,72 @@ const RoomList = () => {
               <option value="4">문화</option>
               <option value="5">기타</option>
             </SelectBox>
-          </div>
-          <div>
-            또래만 만날래요
-            <CheckBoxForm
-              type="checkbox"
-              name="sameAge"
-              onChange={onSameAgeCheck}
-            />
-          </div>
-          <div>
+          </OptionInnerWrapper>
+          <OptionInnerWrapper>
             <SelectBox 
               type="selectbox"
               name="sortOrder"
               onChange={onFilterInput}
               >
-              <option value="0">오래된 순</option>
               <option value="1">최신순</option>
+              <option value="0">오래된 순</option>
             </SelectBox>
-          </div>
-          <FilterButton onClick={()=>fetchFilterState(0)}>검색하기</FilterButton>
-        </LetterColorChange>
-      </Wrapper>
+          </OptionInnerWrapper>
+          <AgesWrapper>
+            <label>
+              <CheckBoxForm
+              type="checkbox"
+              name="sameAge"
+              onChange={onSameAgeCheck}
+              />
+            <span>또래만 만날래요</span>
+            </label>
+          </AgesWrapper>
+        </OptionWrapper>
+        </FilterInnerWrapper>        
+      </FilterWrapper>
+      <FilterWrapper>
+        <FilterInnerWrapper width={'1200px'}>
+          <SearchInnerWrapper width={'1200px'}>
+            <div>
+              검색창
+            <SearchBox
+              type="text"
+              value={filter.searchKeyword}
+              name="searchKeyword"
+              onChange={onFilterInput} 
+            ></SearchBox>
+            </div>
+              <SearchButton onClick={()=>{fetchFilterState(0), onHandleReset()}}>검색하기</SearchButton>
+            </SearchInnerWrapper>
+          <Line/>
+        </FilterInnerWrapper>
+      </FilterWrapper>
       {/* 방 목록 */}
-      <Wrapper color={'#fff'}>
-        <GlobalStyle />
-        {filterState.content.length <= 0 ? (
-          <div>딱 맞는 방이 없어요. 다른 조건으로 검색해 보세요!</div>
-        ): (
-          <>
-            {filterState.content.map((room, index) => (
-            <RoomListItem
-            {...room}
-            key={index}
+      <FilterWrapper color={'black'}>
+        <ListWrapper>
+          {filterState.content.length <= 0 ? 
+          ( <div>딱 맞는 방이 없어요. 다른 조건으로 검색해 보세요!</div> ) : (
+            <>
+              {filterState.content.map((room, index) => (
+              <RoomListItem
+              {...room}
+              key={index}
+              />
+              ))}
+            </>
+          )}
+          <PageNationWrapper>
+            <PageNation
+              onClick={onHandlePageButton}
+              number={filterState.number + 1}
+              size={filterState.size}
+              totalPages={filterState.totalPages}
             />
-            ))}
-          </>
-        )}
-      </Wrapper>
-      <div>
-      <PageNation
-        onClick={onHandlePageButton}
-        number={filterState.number + 1}
-        size={filterState.size}
-        totalPages={filterState.totalPages}
-      />
-      </div>
+          </PageNationWrapper>
+        </ListWrapper>
+      </FilterWrapper>
+      
     </>
   );
 };

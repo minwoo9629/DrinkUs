@@ -1,4 +1,8 @@
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
+import { getRoomInfo } from "../../../../api/RoomAPI";
+import { client } from "../../../../utils/client";
 
 const StyledRoomSettingContainer = styled.div`
   width: 100%;
@@ -35,16 +39,32 @@ const StyeldRoomSettingTittle = styled.div`
 `;
 
 const RoomSetting = ({ settingDisplay, roomSettingTitle }) => {
+  const [roomInfoState, setRoomInfoState] = useState({});
+  const roomInfo = useSelector((state) => state.room);
+  const fetchRoomData = async (roomId) => {
+    const result = await getRoomInfo(roomId);
+    setRoomInfoState({ ...result });
+  };
+  useEffect(() => {
+    fetchRoomData(roomInfo.roomId);
+  }, []);
   return (
     <StyledRoomSettingContainer display={settingDisplay}>
       <StyledRoomSettingComponent>
         <StyeldRoomSettingTittle>
-          <span>{roomSettingTitle}</span>
+          <span>{roomInfoState.placeTheme}</span>
         </StyeldRoomSettingTittle>
-        <div style={{ color: "white" }}>방연령대 표시하기</div>
-        <div style={{ color: "white" }}>관심사 표시하기</div>
-        <div style={{ color: "white" }}>인원 표시하기</div>
-        <div style={{ color: "white" }}>비밀번호</div>
+        <div style={{ color: "white" }}>
+          <p>{roomInfoState.ages20}</p>
+          <p>{roomInfoState.ages30}</p>
+          <p>{roomInfoState.ages40}</p>
+          <p>{roomInfoState.ages50}</p>
+          <p>{roomInfoState.ages60}</p>
+          <p>{roomInfoState.ages70}</p>
+        </div>
+        <div style={{ color: "white" }}>
+          {/* {roomInfoState.category.categoryName} */}
+        </div>
       </StyledRoomSettingComponent>
     </StyledRoomSettingContainer>
   );

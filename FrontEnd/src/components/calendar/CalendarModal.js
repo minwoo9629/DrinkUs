@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { client } from "../../utils/client"
 import { useNavigate } from "react-router-dom";
 import { FailAlert, SuccessAlert } from "../../utils/sweetAlert";
+import { GetPopularlityPercent } from "../../utils/GetPopularlityPercent";
 
 // 모달 스타일
 const ModalWrapper = styled.div`
@@ -83,13 +84,12 @@ const Nickname = styled.div`
   height: 30px;
   line-height: 30px;
   font-size: 20px;
-  font-weight: bold;
   color: #000;
 `;
 
 const Popularity = styled.div`
   display: inline-block;
-  display: block;
+  display: flex;
   height: 30px;
   line-height: 30px;
   font-weight: bold;
@@ -215,6 +215,9 @@ const CalendarModal = ({ isOpen, close, calendarId }) => {
 
   const userId = calendar.createrId
 
+  // 인기도 아이콘으로 변환
+  const popularlityPercent = GetPopularlityPercent(calendar.createrPopularity);
+
   return (
     <ModalWrapper className={isOpen ? "active" : ""} top={ScrollY}>
       <ModalContentWrapper>
@@ -224,10 +227,19 @@ const CalendarModal = ({ isOpen, close, calendarId }) => {
         <ModalContent>
           <ProfileBlock>
             <ProfileImageWrapper>
-              <ProfileImageThumbnail src={calendar.createrImg} onClick={()=>navigate("/profile")}/>
+              <ProfileImageThumbnail src={`/assets/profileImage/profile${calendar.createrImg}.png`} onClick={()=>navigate("/profile")}/>
             </ProfileImageWrapper>
             <Nickname>{calendar.createrNickname}</Nickname>
-            <Popularity>{calendar.createrPopularity}</Popularity>
+            <Popularity>
+              인기도 {calendar.createrPopularity}° 
+              <img
+                style={{ width: "30px", height: "30px", marginLeft: "20px" }}
+                src={
+                  process.env.PUBLIC_URL +
+                  `/assets/alcoholImage/${popularlityPercent}.png`
+                }
+              />
+            </Popularity>
           </ProfileBlock>
           <ContentBlock>
             방 내용: {calendar.calendarContent}
