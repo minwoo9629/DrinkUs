@@ -5,6 +5,7 @@ import {
 } from "../../api/DailyAPI";
 import CommentList from "./CommentList";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { client } from "../../utils/client";
 
 const DailyWrapper = styled.div`
@@ -58,18 +59,6 @@ const DailyBoardEditButton = styled.button`
   text-align: flex;
 `
 
-// 댓글 인풋 감쌀 div
-const DailyCommentInputWrapper = styled.div`
-  justify-content: space-between;
-  width: 64vw;
-  height: 10vh;
-  border-radius: 4px;
-  border: #6f92bf;
-  background-color: #eaf1ff;
-  margin: 4px;
-  position: relative;
-`
-
 // 댓글 인풋
 const DailyCommentInput = styled.input`
   justify-content: space-between;
@@ -104,12 +93,14 @@ const DailyListItem = (
     boardArticle: "",
     showEditArticle: false,
     userId: "",
-  })
+    userNickname: "",
+    userImg: "",
+  });
   const [comment, setComment] = useState({
     isComment: false,
     showComment: false,
     boardComment: "",
-  })
+  });
 
   // 접속한 유저 정보 가져오기
   const fetchUser = async () => {
@@ -118,7 +109,9 @@ const DailyListItem = (
       .then(function(response) {
         const data = response.data;
         setState({...state,
-          userId: data.userId})
+          userId: data.userId,
+          userNickname: data.userNickname
+        })
     })
   };
 
@@ -126,17 +119,19 @@ const DailyListItem = (
     fetchUser();
   }, []);
    
+
+  const navigate = useNavigate();
+
   // 수정 글 입력
   const onEditArticleInput = (e) => {
     setState({...state, [e.target.name]: e.target.value });
   };
 
-  // 전체 글 fetch
-  const fetchArticle = async () => {
-    const response = await getDailyArticle();
-    setState({...response.data});
-    console.log(response.data.content)
-  };
+  // // 전체 글 fetch
+  // const fetchArticle = async () => {
+  //   const response = await getDailyArticle();
+  //   setState({...response.data});
+  // };
 
   // 글 수정
   const onArticleEdit = (boardId) => {
@@ -173,6 +168,7 @@ const DailyListItem = (
         boardContent: comment.boardComment
       })
       .then((response) => response)
+      console.log(parent_id)
   };
 
 
@@ -196,11 +192,14 @@ const DailyListItem = (
   }
 
 
-
   return (
     <div>
       <DailyContent>
-        <div style={{ width: "20%" }}>{createrId}: 작성자 id<ProfileImg></ProfileImg></div>
+        <div style={{ width: "20%" }}>
+          <ProfileImg onClick={() => navigate(`/users/profile/${createrId}`)}>
+            {createrId}
+          </ProfileImg>
+        </div>
         <div style={{ width: "60%" }}>{boardContent}</div>
         <div style={{ width: "10%" }}>
           <div style = {{ display: state.userId === createrId ? "block" : "none"}}>
