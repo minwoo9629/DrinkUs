@@ -57,20 +57,13 @@ function withNavigation(Component) {
   return (props) => <Component navigate={useNavigate()} {...props} />;
 }
 
-const BombGame = ({ clickCount, toggleBombGame, display }) => {
+const BombGame = ({ clickCount, toggleBombGame, display, onDecreaseCount }) => {
   console.log(clickCount, "클릭 카운트 확인하기");
-  const [clickCountState, setClickCountState] = useState(clickCount);
   useEffect(() => {
-    setClickCountState(clickCount);
-  }, [clickCount]);
-  useEffect(() => {
-    if (clickCountState === 0) {
-      alert("미션성공");
-      console.log("폭탄 돌리기 끝내기");
-      // 폭탄게임에대한 pub -> 완료함수
+    if (clickCount === 0) {
       toggleBombGame("none");
     }
-  }, [clickCountState]);
+  }, [clickCount]);
   return (
     <div
       style={{
@@ -84,12 +77,8 @@ const BombGame = ({ clickCount, toggleBombGame, display }) => {
         display: display,
       }}
     >
-      <button
-        onClick={() => setClickCountState((prevState) => clickCountState - 1)}
-      >
-        -
-      </button>
-      폭탄돌리기 Count : {clickCountState}
+      <button onClick={onDecreaseCount}>-</button>
+      폭탄돌리기 Count : {clickCount}
     </div>
   );
 };
@@ -150,6 +139,7 @@ class VideoRoomComponent extends Component {
     this.toggleSetting = this.toggleSetting.bind(this);
     this.toggleGame = this.toggleGame.bind(this);
     this.toggleBombGame = this.toggleBombGame.bind(this);
+    this.onDecreaseCount = this.onDecreaseCount.bind(this);
   }
 
   componentDidMount() {
@@ -344,6 +334,13 @@ class VideoRoomComponent extends Component {
           // if(leftClickCount <= 0) : 뭔가 띄웠던 것 숨기기, 성공 표시
 
           if (second < 0) {
+            this.toggleBombGame("none");
+            if (this.state.clickCount > 0) {
+              alert("실패");
+            }
+            if (this.state.clickCount === 0) {
+              alert("성공");
+            }
             clearInterval(interval);
             console.log("시간끝");
           }
@@ -383,6 +380,12 @@ class VideoRoomComponent extends Component {
         roomId: ROOM_ID,
       },
     );
+  }
+  onDecreaseCount() {
+    console.log("숫자 감소시키기");
+    this.setState({
+      clickCount: this.state.clickCount >= 1 ? this.state.clickCount - 1 : 0,
+    });
   }
 
   // Spring Boot Server와 Stomp 소켓 연동 끝
@@ -890,7 +893,7 @@ class VideoRoomComponent extends Component {
     return (
       <>
         <BombGame
-          second={this.state.second}
+          onDecreaseCount={this.onDecreaseCount}
           clickCount={this.state.clickCount}
           toggleBombGame={this.toggleBombGame}
           display={this.state.bombGameDisplay}
