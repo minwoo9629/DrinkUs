@@ -7,11 +7,10 @@ import { reportsSubmit } from "../../api/ProfileAPI";
 // 배경
 const Wrapper = styled.div`
   background-color: #eaf2ff;
-  width: 100vw;
-  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 20px 0px;
 `;
 
 // 화면 가운데 창
@@ -23,7 +22,7 @@ const ReportsWrapper = styled.div`
 
 // 셀렉트 박스
 const ReportsSelect = styled.select`
-  width: 400px;
+  width: 450px;
   height: 40px;
   border-radius: 8px;
   border: 4px white;
@@ -36,15 +35,15 @@ const ReportsSelect = styled.select`
 // 신고 사유 입력 칸
 const ReportsInput = styled.input`
   position: relative;
-  height: 400px;
-  width: 400px;
+  height: 330px;
+  width: 450px;
   top: 7px;
   font-size: 18px;
   background-color: white;
   border: 12px;
   margin: 14px;
   color: black;
-`
+`;
 
 // 신고하기 버튼
 const ReportsButton = styled.button`
@@ -56,22 +55,21 @@ const ReportsButton = styled.button`
   margin: 14px;
   font-size: 20px;
   color: #676775;
-`
+`;
 
-const Reports = () => {
+const Reports = ({ modalClose }) => {
   const [state, setState] = useState({
     toUserId: "",
     reportType: "",
     reportReason: "",
     reportReasonCheck: false,
-  })
-  
-  // 유저 정보 요청
+  });
 
+  // 유저 정보 요청
 
   // 신고 대분류
   const onReportTypeSelect = (e) => {
-    setState({...state, [e.target.name]: e.target.value})
+    setState({ ...state, [e.target.name]: e.target.value });
   };
 
   // 신고 입력
@@ -84,53 +82,51 @@ const Reports = () => {
     const data = {
       toUserId: state.toUserId,
       reportType: state.reportType,
-      reportReason: state.reportReason
+      reportReason: state.reportReason,
     };
     const response = await reportsSubmit(data);
-    console.log(response)
-    console.log(data)
+    console.log(response);
+    console.log(data);
     if (response.status === 200) {
-      SuccessAlert("신고가 접수됐습니다")
+      SuccessAlert("신고가 접수됐습니다");
+      modalClose();
     }
-    if (state.reportReason.length === 0){
-      e.preventDefault()
-      FailAlert("신고 사유를 기입해 주세요")
+    if (state.reportReason.length === 0) {
+      e.preventDefault();
+      FailAlert("신고 사유를 기입해 주세요");
+    } else {
+      FailAlert("아직 처리되지 않은 동일한 유저를 재신고 할 수 없습니다.");
     }
-    else{
-      FailAlert("아직 처리되지 않은 동일한 유저를 재신고 할 수 없습니다.")
-    };
-    }
+  };
 
-  return(
+  return (
     <>
       <Wrapper>
         <ReportsWrapper>
-            {state.toUserId}유저를 신고합니다.
-            <ReportsSelect
-              value={state.reportType}
-              name="reportType"
-              onChange={onReportTypeSelect}
-              defaultValue={"폭언 및 욕설"}
-            >
-              <option>폭언 및 욕설</option>
-              <option>개인정보노출</option>
-              <option>음란성</option>
-              <option>명예훼손</option>
-              <option>기타</option>
-            </ReportsSelect>
-            <ReportsInput
-              placeholder="신고 사유를 입력해 주세요."
-              value={state.reportReason}
-              name="reportReason"
-              onChange={onReportReasonInput}
-            />
-          <ReportsButton onClick={onReportsSubmit}>
-            유저신고
-          </ReportsButton>
+          {state.toUserId}유저를 신고합니다.
+          <ReportsSelect
+            value={state.reportType}
+            name="reportType"
+            onChange={onReportTypeSelect}
+            defaultValue={"폭언 및 욕설"}
+          >
+            <option>폭언 및 욕설</option>
+            <option>개인정보노출</option>
+            <option>음란성</option>
+            <option>명예훼손</option>
+            <option>기타</option>
+          </ReportsSelect>
+          <ReportsInput
+            placeholder="신고 사유를 입력해 주세요."
+            value={state.reportReason}
+            name="reportReason"
+            onChange={onReportReasonInput}
+          />
+          <ReportsButton onClick={onReportsSubmit}>유저신고</ReportsButton>
         </ReportsWrapper>
       </Wrapper>
     </>
-    )
+  );
 };
 
 export default Reports;

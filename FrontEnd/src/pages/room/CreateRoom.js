@@ -1,24 +1,22 @@
-import Header from "../../components/layout/Header";
 import { Wrapper } from "../../components/styled/Wrapper";
 import styled from "styled-components";
 import FetchProfile from "../../components/room/FetchProfile";
 import { useState } from "react";
-import { client } from "../../utils/client"
+import { client } from "../../utils/client";
 import { useNavigate } from "react-router-dom";
 import { SuccessAlert } from "../../utils/sweetAlert";
 import { BackButton } from "../../components/common/buttons/BackButton";
 import { setRoomSession } from "../../store/actions/room";
 import { useDispatch } from "react-redux";
 
-
 const CreateRoomBlock = styled.div`
   width: 800px;
   margin-bottom: 20px;
   color: white;
-  background-color: #6F92BF;
+  background-color: #6f92bf;
   border-radius: 30px;
   padding: 30px;
-`
+`;
 
 const InputBlock = styled.div`
   display: block;
@@ -47,37 +45,37 @@ const InputRightWrap = styled.div`
   padding: 17px 0;
 `;
 
-const CreateButton = styled.button `
+const CreateButton = styled.button`
   float: right;
   margin-right: 4%;
-  background-color: #EAF1FF;
+  background-color: #eaf1ff;
   color: #676775;
   width: 120px;
   height: 50px;
   font-size: 20px;
   font-weight: bold;
-  border: 4px solid #BDCFF2;
+  border: 4px solid #bdcff2;
   border-radius: 5px;
-  box-shadow: 0px 4px 6px rgba(0,0,0,0.25);
-`
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.25);
+`;
 
 const InputForm = styled.input`
   background-color: white;
   width: 95%;
   height: 30px;
   line-height: 30px;
-  border: 1px solid #BDCFF2;
+  border: 1px solid #bdcff2;
   border-radius: 10px;
-`
+`;
 
 const SelectBox = styled.select`
- width: 200px;
- background-color: white;
- border: 3px solid #BDCFF2;
- height: 36px;
- border-radius: 20px;
- font-size: 16px;
-`
+  width: 200px;
+  background-color: white;
+  border: 3px solid #bdcff2;
+  height: 36px;
+  border-radius: 20px;
+  font-size: 16px;
+`;
 
 const PeopleLimitWrapper = styled.div`
   display: flex;
@@ -98,7 +96,7 @@ const StyledButton = styled.button`
 const StyledAmountWrapper = styled.div`
   width: 28px;
   height: 28px;
-  border: 3px solid #BDCFF2;
+  border: 3px solid #bdcff2;
   border-radius: 10px;
   font-size: 16px;
   margin: 0px 18px;
@@ -124,7 +122,7 @@ const AgesWrapper = styled.div`
   overflow: hidden;
 
   & input:checked + span {
-    background-color: #BDCFF2;
+    background-color: #bdcff2;
   }
   & span {
     cursor: pointer;
@@ -139,28 +137,25 @@ const CheckBoxStyled = styled.input`
 `;
 
 const CreateRoom = () => {
-
   // Room 입장을 위한 세션설정
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const [roomIdState, setRoomIdState] = useState('')
-  
   // 방 입장 세션 정보
-  const onHandleEnterRoom = () => {
+  const onHandleEnterRoom = (roomId) => {
     const sessionData = {
-      sessionName: `Session${roomIdState}`,
+      sessionName: `Session${roomId}`,
+      roomId,
     };
     dispatch(setRoomSession(sessionData));
     navigate("/room/detail");
   };
 
   const [roomInfo, setRoomInfo] = useState({
-    roomname: '',
+    roomname: "",
     peoplelimit: 2,
-    placetheme: '술집',
-    roompw: '',
-    categoryId: '',
+    placetheme: "술집",
+    roompw: "",
+    categoryId: "",
   });
 
   const onRoomInfoInput = (e) => {
@@ -171,25 +166,27 @@ const CreateRoom = () => {
     e.preventDefault();
     // 이름 유효 체크
     if (roomInfo.roomname.length === 0) {
-      console.log(roomInfo.placetheme)
-      alert(`방 이름을 입력해 주세요. '${roomInfo.placetheme}에서 같이 마셔요~' 는 어때요?`);
+      console.log(roomInfo.placetheme);
+      alert(
+        `방 이름을 입력해 주세요. '${roomInfo.placetheme}에서 같이 마셔요~' 는 어때요?`
+      );
     }
 
     client
       .post("rooms", {
-        roomName:roomInfo.roomname,
-        roomAdminId:null,
-        roomPw:roomInfo.roompw,
-        placeTheme:roomInfo.placetheme,
-        peopleLimit:roomInfo.peoplelimit,
-        ages:ageCheckedItems,
-        categoryId:roomInfo.categoryId
+        roomName: roomInfo.roomname,
+        roomAdminId: null,
+        roomPw: roomInfo.roompw,
+        placeTheme: roomInfo.placetheme,
+        peopleLimit: roomInfo.peoplelimit,
+        ages: ageCheckedItems,
+        categoryId: roomInfo.categoryId,
       })
       .then(function (response) {
         console.log(response.data.message);
-        SuccessAlert("방이 생성되었습니다!")
-        setRoomIdState(response.data)
-        onHandleEnterRoom()
+        SuccessAlert("방이 생성되었습니다!");
+        // setRoomIdState(response.data)
+        onHandleEnterRoom(response.data);
       })
       .catch(function (error) {
         console.log(error);
@@ -197,86 +194,95 @@ const CreateRoom = () => {
   };
 
   // Age 관련 체크 로직
-  const [ageCheckedItems, setAgeCheckedItems] = useState(['N','N','N','N','N','N']);
+  const [ageCheckedItems, setAgeCheckedItems] = useState([
+    "N",
+    "N",
+    "N",
+    "N",
+    "N",
+    "N",
+  ]);
 
   const onCheckedAgeItemHandler = (id, isChecked) => {
     const newageCheckedItems = [...ageCheckedItems];
-    newageCheckedItems[id] = (isChecked? 'Y':'N');
+    newageCheckedItems[id] = isChecked ? "Y" : "N";
     setAgeCheckedItems([...newageCheckedItems]);
-  }
+  };
 
   const [CheckedAges, setIsCheckedAges] = useState(false);
-  
 
-  const onAgeCheckbox = ({target}) => {
+  const onAgeCheckbox = ({ target }) => {
     setIsCheckedAges(!CheckedAges);
-    onCheckedAgeItemHandler(target.id, target.checked)
+    onCheckedAgeItemHandler(target.id, target.checked);
   };
 
   const onHandleIncrease = () => {
-    const amount = roomInfo["peoplelimit"] + 1 > 8 ? 8 : roomInfo["peoplelimit"] + 1;
+    const amount =
+      roomInfo["peoplelimit"] + 1 > 8 ? 8 : roomInfo["peoplelimit"] + 1;
     setRoomInfo({ ...roomInfo, ["peoplelimit"]: amount });
   };
 
   const onHandleDecrease = () => {
-    const amount = roomInfo["peoplelimit"] - 1 < 2 ? 2 : roomInfo["peoplelimit"] - 1;
+    const amount =
+      roomInfo["peoplelimit"] - 1 < 2 ? 2 : roomInfo["peoplelimit"] - 1;
     setRoomInfo({ ...roomInfo, ["peoplelimit"]: amount });
   };
 
   return (
     <>
-      <BackButton/>
+      <BackButton />
       <Wrapper>
         <CreateRoomBlock>
           <div>
-            <FetchProfile/>
+            <FetchProfile />
             <InputBlock>
               <InputLeftWrap>방 이름</InputLeftWrap>
               <InputRightWrap>
-                <InputForm 
-                type="text"
-                value={roomInfo.roomname}
-                name="roomname"
-                placeholder="방 이름을 입력하세요."
-                onChange={onRoomInfoInput}
-                required
+                <InputForm
+                  type="text"
+                  value={roomInfo.roomname}
+                  name="roomname"
+                  placeholder="방 이름을 입력하세요."
+                  onChange={onRoomInfoInput}
+                  required
                 />
               </InputRightWrap>
             </InputBlock>
             <InputBlock>
               <InputLeftWrap>장소</InputLeftWrap>
               <InputRightWrap>
-                <SelectBox 
+                <SelectBox
                   type="selectbox"
                   value={roomInfo.placetheme}
-                  name="placetheme" 
-                  onChange={onRoomInfoInput}>
+                  name="placetheme"
+                  onChange={onRoomInfoInput}
+                >
                   <option>술집</option>
                   <option>펍</option>
                   <option>칵테일바</option>
-                  {/* <option>야구장</option>
+                  <option>야구장</option>
                   <option>축구장</option>
                   <option>페스티벌</option>
                   <option>클럽</option>
-                  <option>엘리니아</option>
                   <option>편의점</option>
                   <option>한강공원</option>
                   <option>미술관</option>
                   <option>영화관</option>
-                  <option>협곡</option>
-                  <option>독서실</option> */}
+                  <option>도서관</option>
                 </SelectBox>
               </InputRightWrap>
             </InputBlock>
             <InputBlock>
               <InputLeftWrap>인원</InputLeftWrap>
-              
+
               <InputRightWrap>
                 <PeopleLimitWrapper>
                   <StyledButton onClick={() => onHandleDecrease()}>
                     <i className="fas fa-minus"></i>
                   </StyledButton>
-                  <StyledAmountWrapper>{roomInfo.peoplelimit}</StyledAmountWrapper>
+                  <StyledAmountWrapper>
+                    {roomInfo.peoplelimit}
+                  </StyledAmountWrapper>
                   <StyledButton onClick={() => onHandleIncrease()}>
                     <i className="fas fa-plus"></i>
                   </StyledButton>
@@ -286,10 +292,11 @@ const CreateRoom = () => {
             <InputBlock>
               <InputLeftWrap>관심사</InputLeftWrap>
               <InputRightWrap>
-                <SelectBox 
+                <SelectBox
                   type="selectbox"
-                  name="categoryId" 
-                  onChange={onRoomInfoInput}>
+                  name="categoryId"
+                  onChange={onRoomInfoInput}
+                >
                   <option value="null">관심사 없음</option>
                   <option value="1">스포츠</option>
                   <option value="2">음악</option>
@@ -368,8 +375,8 @@ const CreateRoom = () => {
             <InputBlock>
               <InputLeftWrap>비밀번호</InputLeftWrap>
               <InputRightWrap>
-                <InputForm 
-                  type="integer" 
+                <InputForm
+                  type="integer"
                   value={roomInfo.roompw}
                   name="roompw"
                   placeholder="비밀번호를 입력하면 비밀방으로 설정됩니다."
@@ -378,17 +385,13 @@ const CreateRoom = () => {
               </InputRightWrap>
             </InputBlock>
             <InputBlock>
-              <CreateButton 
-                onClick={onRoomInfoSubmit}
-              >
-                생성하기
-              </CreateButton>
+              <CreateButton onClick={onRoomInfoSubmit}>생성하기</CreateButton>
             </InputBlock>
           </div>
-          </CreateRoomBlock>
+        </CreateRoomBlock>
       </Wrapper>
     </>
   );
 };
 
-export default CreateRoom
+export default CreateRoom;

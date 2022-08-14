@@ -26,7 +26,7 @@ const ModalWrapper = styled.div`
 
 const ModalContentWrapper = styled.div`
   width: 800px;
-  min-height: 600px;
+  min-height: 500px;
   background-color: #EAF1FF;
   border-radius: 30px;
   display: flex;
@@ -34,21 +34,20 @@ const ModalContentWrapper = styled.div`
   overflow: hidden;
   opacity: 1;
   padding: 30px;
+  box-shadow: inset 0px 0px 4px 4px #BDCFF2;
 `;
 
 const ModalHeader = styled.div`
   width: 100%;
   box-sizing: border-box;
-  border-bottom: 1px solid gray;
   text-align: right;
-  padding: 8px 12px;
 `;
 
 const ModalCloseButton = styled.button`
-  padding: 8px 10px;
   border: none;
-  background-color: white;
+  background-color: transparent;
   cursor: pointer;
+  font-size: 20px;
 `;
 
 const ModalContent = styled.div`
@@ -98,15 +97,6 @@ const Popularity = styled.div`
 `;
 
 // 모달 내부 스타일
-const StyledButton = styled.button`
-  adding: 4px;
-  border: none;
-  background-color: black;
-  font-size: 16px;
-  color: white;
-  cursor: pointer;
-`;
-
 const InnerWrapper = styled.div`
   display: flex;
   justify-content: center;
@@ -118,24 +108,26 @@ const InnerWrapper = styled.div`
 const ContentBlock = styled.div`
   display: flex;
   background-color: white;
-  border: 1px solid #6F92BF;
-  margin: 24px 0px 0px 20px;
+  border: 2px solid #6F92BF;
+  margin: 24px 0px 10px 60px;
   border-radius: 20px;
   height: 80px;
   width: 680px;
   padding: 20px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 `
 
 const PlaceBlock = styled.div`
   display: flex;
   background-color: white;
-  border: 1px solid #6F92BF;
-  margin: 12px 0px 0px 20px;
+  border: 2px solid #6F92BF;
+  margin: 12px 0px 10px 20px;
   border-radius: 20px;
   height: 40px;
   width: 200px;
   align-items: center;
   justify-content: center;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 `
 
 const TImeWrapper = styled.div`
@@ -148,13 +140,14 @@ const TImeWrapper = styled.div`
 const TimeBlock = styled.div`
   display: flex;
   background-color: white;
-  border: 1px solid #6F92BF;
-  margin: 12px 0px 0px 20px;
+  border: 2px solid #6F92BF;
+  margin: 12px 0px 10px 20px;
   border-radius: 20px;
   height: 40px;
   width: 200px;
   align-items: center;
   justify-content: center;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 `
 
 const LetterBlock = styled.p`
@@ -162,34 +155,52 @@ const LetterBlock = styled.p`
   margin: 12px 0px 0px 20px;
 `
 
-const AgesWrapper = styled.div`
-  display: inline-block;
-  height: 28px;
-  line-height: 28px;
-  width: 80px;
-  color: black;
-  margin: 4px 12px 4px 4px;
-  background-color: #ffffff;
-  border-radius: 4px;
-  border: 3px solid #eaf1ff;
-  text-align: center;
-  overflow: hidden;
+const AgeBlock = styled.div`
+  display: flex;
+  width: 700px;
+  align-items: center;
+  justify-content: center;
+`
 
-  & input:checked + span {
-    background-color: #BDCFF2;
-  }
-  & span {
-    cursor: pointer;
-    display: block;
-    padding: 2px 16px;
-  }
-`;
+const AgeLetter = styled.div`
+  display: flex;
+  background-color: white;
+  border: 2px solid #6F92BF;
+  margin: 12px 0px 10px 20px;
+  border-radius: 20px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  padding: 0px 30px 0px 30px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+`
 
-const CheckBoxStyled = styled.div`
-  display: none;
+const ParticipantBlock = styled.div`
+  display: flex;
+  width: 60px;
+  height: 60px;
+  border-radius: 100px;
+  justify-content: center;
+  align-items: center;
+  background: #FFFFFF;
+  border: 2px solid #6F92BF;
+  margin: 12px 0px 10px 20px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+`
+
+const Button = styled.button `
+  float: right;
+  margin-right: 2%;
+  background-color: white;
+  color: #676775;
+  width: 100px;
+  height: 40px;
+  font-size: 16px;
+  border: 2px solid #6F92BF;
+  border-radius: 20px;
+  box-shadow: 0px 4px 6px rgba(0,0,0,0.25);
   cursor: pointer;
-`;
-
+`
 
 const CalendarModal = ({ isOpen, close, calendarId }) => {
 
@@ -248,9 +259,9 @@ const CalendarModal = ({ isOpen, close, calendarId }) => {
     for (let i = 0; i < 6; i++) {
       if (ageState[i] === 'Y') {
         result.push(
-        <p key={i}>
-          {i+2 + '0' + '대'}
-        </p>
+        <AgeLetter key={i}>
+          {i+2 + '0대'}
+        </AgeLetter>
         )
       }
     }
@@ -298,19 +309,30 @@ const CalendarModal = ({ isOpen, close, calendarId }) => {
   const day = moment(calendar.time).format('YYYY.MM.DD')
   const time = moment(calendar.time).format('hh:mm')
 
-  console.log(rendering())
-
   return (
     <ModalWrapper className={isOpen ? "active" : ""} top={ScrollY}>
       <ModalContentWrapper>
         <ModalHeader>
-          <ModalCloseButton onClick={close}>X</ModalCloseButton>
+          <ModalCloseButton onClick={close}>
+          <i className="fas fa-times"></i>
+          </ModalCloseButton>
         </ModalHeader>
         <ModalContent>
           <ProfileBlock>
             <ProfileImageWrapper>
               <ProfileImageThumbnail src={`/assets/profileImage/profile${calendar.createrImg}.png`} onClick={()=>navigate("/profile")}/>
             </ProfileImageWrapper>
+              <>
+                {
+                  user.data.userId === calendar.createrId ?
+                  <>
+                  <Button onClick={() => navigate(`/calendar/${calendar.calendarId}/edit`)}>수정하기</Button>
+                  <Button onClick={onDeleteCalendar}>삭제하기</Button>
+                  </> : (calendar.isParticipate === true ?
+                  <Button onClick={ () => {onDelete(), onHandleParticipate()} }>취소</Button> : 
+                  <Button onClick={ () => {onPost(), onHandleParticipate()} }>참가</Button>)
+                }
+              </>
             <Nickname>{calendar.createrNickname}</Nickname>
             <Popularity>
               인기도 {calendar.createrPopularity}° 
@@ -320,7 +342,7 @@ const CalendarModal = ({ isOpen, close, calendarId }) => {
                   process.env.PUBLIC_URL +
                   `/assets/alcoholImage/${popularlityPercent}.png`
                 }
-              />
+                />
             </Popularity>
           </ProfileBlock>
           <InnerWrapper>
@@ -346,27 +368,19 @@ const CalendarModal = ({ isOpen, close, calendarId }) => {
               에 만나요
             </LetterBlock>
           </TImeWrapper>
-          <AgesWrapper>
-            {rendering().map((age, index) => (
-              <CheckBoxStyled key={index}>
-                {age.props.children}
-              </CheckBoxStyled>
-            ))}
-          </AgesWrapper>  
+          { rendering().length === 0 ? 
+          <AgeLetter>
+            아무나 다 참여할 수 있어요
+          </AgeLetter> : 
+          <AgeBlock>
+            {rendering()}
+          </AgeBlock>
+          }
+          <ParticipantBlock>
             {calendar.participant} / {calendar.peopleLimit}
+          </ParticipantBlock>
           </InnerWrapper>
       
-          <>
-            {
-              user.data.userId === calendar.createrId ?
-              <>
-              <StyledButton onClick={() => navigate(`/calendar/${calendar.calendarId}/edit`)}>수정하기</StyledButton>/
-              <StyledButton onClick={onDeleteCalendar}>삭제하기</StyledButton>
-              </> : (calendar.isParticipate === true ?
-              <StyledButton onClick={ () => {onDelete(), onHandleParticipate()} }>취소</StyledButton> : 
-              <StyledButton onClick={ () => {onPost(), onHandleParticipate()} }>참가</StyledButton>)
-            }
-          </>
         </ModalContent>
       </ModalContentWrapper>
     </ModalWrapper>
