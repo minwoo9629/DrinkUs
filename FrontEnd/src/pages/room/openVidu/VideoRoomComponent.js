@@ -334,6 +334,7 @@ class VideoRoomComponent extends Component {
           // if(leftClickCount <= 0) : 뭔가 띄웠던 것 숨기기, 성공 표시
 
           if (second < 0) {
+            this.pubEndBombGame();
             this.toggleBombGame("none");
             if (this.state.clickCount > 0) {
               alert("실패");
@@ -362,7 +363,7 @@ class VideoRoomComponent extends Component {
       },
       body: JSON.stringify({
         roomId: ROOM_ID,
-        clickCount: 3,
+        clickCount: this.state.clickCount,
       }),
     });
   }
