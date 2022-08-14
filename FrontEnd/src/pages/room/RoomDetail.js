@@ -133,10 +133,24 @@ const RoomDetail = () => {
   // 방 정보 state
   const [data, setData] = useState([]);
 
+  // 현재 인원 수 체크
+  const [curParticipant, setCurParticipant] = useState();
+
   const dataRefineFunc = async () => {
     const result = await onRoomDetail();
     setData(result.data);
     setAgeState(result.data.ages);
+
+    await client
+      .get(`/games/participants/${result.data.roomId}`)
+      .then(function (response) {
+        setCurParticipant(parseInt(response.data));
+      })
+      .catch(function (error) {
+        FailAlert(error);
+        navigate("/rooms");
+      });
+
     return data;
   };
 
@@ -149,6 +163,19 @@ const RoomDetail = () => {
 
   // 방 입장 세션 정보
   const onHandleEnterRoom = () => {
+    const participants = client
+      .get(`/games/participants/${data.roomId}`)
+      .then(function (response) {
+        if (response.data >= data.peopleLimit) {
+          FailAlert("방 인원 제한을 초과했습니다!");
+          navigate("/rooms");
+        }
+      })
+      .catch(function (error) {
+        FailAlert(error.response.data.message);
+        navigate("/rooms");
+      });
+
     const sessionData = {
       sessionName: `Session${data.roomId}`,
       roomId: data.roomId,
@@ -215,7 +242,7 @@ const RoomDetail = () => {
             <ButtonNicknameWrapper>
               <Nickname>{createdUser.userNickname}</Nickname>
               <div>
-                x/{data.peopleLimit}
+                {curParticipant}/{data.peopleLimit}
                 {data.roomPw !== null ? (
                   <Button
                     onClick={() => {
@@ -248,94 +275,73 @@ const RoomDetail = () => {
               }
               onClick={() => navigate(`/rooms/${roomId}`)}
             />
-          ) 
-          : data.placeTheme === "펍" ? (
+          ) : data.placeTheme === "펍" ? (
             <ImageWrapper
               src={process.env.PUBLIC_URL + "/assets/RoomBackground/pub.jpg"}
               onClick={() => navigate(`/rooms/${roomId}`)}
             />
-          ) 
-          : data.placeTheme === "칵테일바" ? (
+          ) : data.placeTheme === "칵테일바" ? (
             <ImageWrapper
               src={
                 process.env.PUBLIC_URL + "/assets/RoomBackground/cocktail.jpg"
               }
               onClick={() => navigate(`/rooms/${roomId}`)}
             />
-          )
-          : data.placeTheme === "야구장" ? (
+          ) : data.placeTheme === "야구장" ? (
             <ImageWrapper
               src={
                 process.env.PUBLIC_URL + "/assets/RoomBackground/baseball.jpg"
               }
               onClick={() => navigate(`/rooms/${roomId}`)}
             />
-          )
-          : data.placeTheme === "축구장" ? (
+          ) : data.placeTheme === "축구장" ? (
             <ImageWrapper
-              src={
-                process.env.PUBLIC_URL + "/assets/RoomBackground/soccer.jpg"
-              }
+              src={process.env.PUBLIC_URL + "/assets/RoomBackground/soccer.jpg"}
               onClick={() => navigate(`/rooms/${roomId}`)}
             />
-          )
-          : data.placeTheme === "페스티벌" ? (
+          ) : data.placeTheme === "페스티벌" ? (
             <ImageWrapper
               src={
                 process.env.PUBLIC_URL + "/assets/RoomBackground/festival.jpg"
               }
               onClick={() => navigate(`/rooms/${roomId}`)}
             />
-          )
-          : data.placeTheme === "클럽" ? (
+          ) : data.placeTheme === "클럽" ? (
+            <ImageWrapper
+              src={process.env.PUBLIC_URL + "/assets/RoomBackground/club.jpg"}
+              onClick={() => navigate(`/rooms/${roomId}`)}
+            />
+          ) : data.placeTheme === "편의점" ? (
             <ImageWrapper
               src={
-                process.env.PUBLIC_URL + "/assets/RoomBackground/club.jpg"
+                process.env.PUBLIC_URL +
+                "/assets/RoomBackground/convenience.jpg"
               }
               onClick={() => navigate(`/rooms/${roomId}`)}
             />
-          )
-          : data.placeTheme === "편의점" ? (
+          ) : data.placeTheme === "한강공원" ? (
             <ImageWrapper
-              src={
-                process.env.PUBLIC_URL + "/assets/RoomBackground/convenience.jpg"
-              }
+              src={process.env.PUBLIC_URL + "/assets/RoomBackground/river.jpg"}
               onClick={() => navigate(`/rooms/${roomId}`)}
             />
-          )
-          : data.placeTheme === "한강공원" ? (
+          ) : data.placeTheme === "미술관" ? (
             <ImageWrapper
-              src={
-                process.env.PUBLIC_URL + "/assets/RoomBackground/river.jpg"
-              }
+              src={process.env.PUBLIC_URL + "/assets/RoomBackground/art.jpg"}
               onClick={() => navigate(`/rooms/${roomId}`)}
             />
-          )
-          : data.placeTheme === "미술관" ? (
+          ) : data.placeTheme === "영화관" ? (
             <ImageWrapper
-              src={
-                process.env.PUBLIC_URL + "/assets/RoomBackground/art.jpg"
-              }
+              src={process.env.PUBLIC_URL + "/assets/RoomBackground/movie.jpg"}
               onClick={() => navigate(`/rooms/${roomId}`)}
             />
-          )
-          : data.placeTheme === "영화관" ? (
-            <ImageWrapper
-              src={
-                process.env.PUBLIC_URL + "/assets/RoomBackground/movie.jpg"
-              }
-              onClick={() => navigate(`/rooms/${roomId}`)}
-            />
-          )
-          : data.placeTheme === "도서관" ? (
+          ) : data.placeTheme === "도서관" ? (
             <ImageWrapper
               src={
                 process.env.PUBLIC_URL + "/assets/RoomBackground/livrary.jpg"
               }
               onClick={() => navigate(`/rooms/${roomId}`)}
             />
-          )
-          : (
+          ) : (
             <ImageWrapper
               src={
                 process.env.PUBLIC_URL + "/assets/RoomBackground/outside.jpg"
