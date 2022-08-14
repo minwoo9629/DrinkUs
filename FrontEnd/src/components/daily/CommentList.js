@@ -18,8 +18,10 @@ const DailyBoard = styled.div`
 const CommentList = React.memo(({ parentId }) => {
   const [commentList, setCommentList] = useState([])
   const fetchComment = async (parentId) =>{
-    const response = await getDailyComment(parentId)
-    setCommentList([...response.data.reverse()])
+    if(!parentId) {
+      const response = await getDailyComment(parentId)
+      setCommentList([...response.data])
+    }
   }
   useEffect(()=>{
       fetchComment(parentId);
