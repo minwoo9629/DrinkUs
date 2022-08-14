@@ -7,6 +7,7 @@ import { client } from "../../utils/client";
 import moment from "moment";
 import { FailAlert, SuccessAlert } from "../../utils/sweetAlert";
 import { useNavigate } from "react-router-dom";
+import { BackButton } from "../../components/common/buttons/BackButton";
 
 const CreateCalendarBlock = styled.div`
   width: 800px;
@@ -238,7 +239,7 @@ const CreateCalendar = () => {
 
   return (
     <>
-      <Header location={'lightzone'}/>
+      <BackButton/>
       <Wrapper color={'#fff'}>
         <CreateCalendarBlock>
           <FetchProfile/>

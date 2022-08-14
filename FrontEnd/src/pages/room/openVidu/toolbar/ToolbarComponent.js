@@ -98,9 +98,8 @@ export default class ToolbarComponent extends Component {
     this.switchCamera = this.switchCamera.bind(this);
     this.leaveSession = this.leaveSession.bind(this);
     this.toggleChat = this.toggleChat.bind(this);
-    this.randomDrink = this.randomDrink.bind(this);
-    this.recommendTopics = this.recommendTopics.bind(this);
-    this.recommendToasts = this.recommendToasts.bind(this);
+    this.toggleGame = this.toggleGame.bind(this);
+    this.toggleSetting = this.toggleSetting.bind(this);
   }
 
   recommendToasts() {
@@ -113,6 +112,8 @@ export default class ToolbarComponent extends Component {
 
   randomDrink() {
     this.props.randomDrink();
+    this.toggleSetting = this.toggleSetting.bind(this);
+    this.toggleGame = this.toggleGame.bind(this);
   }
 
   micStatusChanged() {
@@ -147,6 +148,13 @@ export default class ToolbarComponent extends Component {
   toggleChat() {
     this.props.toggleChat();
   }
+  toggleSetting() {
+    this.props.toggleSetting();
+  }
+
+  toggleGame() {
+    this.props.toggleGame();
+  }
 
   render() {
     const mySessionId = this.props.sessionId;
@@ -165,12 +173,13 @@ export default class ToolbarComponent extends Component {
           </div> */}
           <RoomContentWrapper>
             <RoomContentButtonWrapper>
-              <RoomContentButton>
+              <RoomContentButton onClick={this.toggleSetting}>
                 <FontAwesomeStyled className="fas fa-cog" />
               </RoomContentButton>
             </RoomContentButtonWrapper>
             <RoomContentButtonWrapper>
-              <RoomContentButton onClick={() => randomDrink("~~님 마셔요!!!!")}>
+              <RoomContentButton onClick={this.toggleGame}>
+                {/* onClick={() => randomDrink("~~님 마셔요!!!!")} */}
                 <FontAwesomeStyled className="fas fa-gamepad" />
               </RoomContentButton>
             </RoomContentButtonWrapper>
@@ -211,9 +220,6 @@ export default class ToolbarComponent extends Component {
               </RoomContentButton>
             </RoomContentButtonWrapper>
           </RoomContentWrapper>
-          <button onClick={this.randomDrink}>랜덤마시기k</button>
-          <button onClick={this.recommendTopics}>대화주제추천</button>
-          <button onClick={this.recommendToasts}>건배사 추천</button>
           {/* <div className="buttonsContent">
             <button
               color="inherit"

@@ -1,49 +1,78 @@
 import styled from "styled-components";
-import { useState } from "react";
-import RoomModal from "./RoomModal";
 import { TimeGap } from "../../utils/TimeGap";
+import { useNavigate } from "react-router-dom";
 
 const RoomBox = styled.div`
-  display: flex;
+  padding: 10px 20px 20px 10px;
+  flex-direction: row;
   background-color: white;
-  width: 400px;
-  height: 300px;
-  border-radius: 30px;
+  width: 268px;
+  height: 180px;
+  border-radius: 34px;
+  margin-right: 10px;
+  box-shadow: inset 0px 0px 4px 4px #BDCFF2;
+`
+
+const ImageWrapper = styled.img`
+  margin: 0px 0px 0px 4px;
+  background-color: gray;
+  width: 268px;
+  height: 140px;
+  border-radius: 32px;
+`
+
+const InfoWrapper = styled.div`
+  margin: 0px 8px 4px 16px;
+  justify-content: space-between;
+  display: flex;
+`
+
+const InfoInnerWrapper = styled.div`
+  height: 20px;
+  font-size: 16px;
+`
+
+const TimeBox = styled.div`
+  margin-left: 16px;
+  font-size: 14px;
+  color: gray;
 `
 
 const RoomListItem = ({
   roomId,
   roomName,
   peopleLimit,
-  categoryId,
+  placeTheme,
   createdDate
 }) => {
 
-  // 모달
-  const [isOpen, setIsOpen] = useState(false)
-
-  const modalOpen = () =>{
-    setIsOpen(true);
-  }
-
-  const modalClose = () =>{
-    setIsOpen(false);
-  }
+  const navigate = useNavigate();
 
   const timeGap = TimeGap(createdDate)
 
   return (
-    <>
-    <RoomModal close={modalClose}
-      isOpen={isOpen}
-      roomId={roomId}
-    />
-    <RoomBox onClick={modalOpen}>
-      {timeGap}시간 전
-      {roomId}
-      {roomName}
-      {peopleLimit}
-      {categoryId}
+  <>
+  <RoomBox>
+    {
+      placeTheme === '술집' ?
+      <ImageWrapper src={process.env.PUBLIC_URL + '/assets/RoomBackground/publichouse.jpg'} onClick={() => navigate(`/rooms/${roomId}`)}/> :
+      placeTheme === '펍' ?
+      <ImageWrapper src={process.env.PUBLIC_URL + '/assets/RoomBackground/pub.jpg'} onClick={() => navigate(`/rooms/${roomId}`)}/> :
+      placeTheme === '칵테일바' ?
+      <ImageWrapper src={process.env.PUBLIC_URL + '/assets/RoomBackground/cocktail.jpg'} onClick={() => navigate(`/rooms/${roomId}`)}/> :
+      <ImageWrapper src={process.env.PUBLIC_URL + '/assets/RoomBackground/outside.jpg'} onClick={() => navigate(`/rooms/${roomId}`)}/>
+    }
+    <InfoWrapper>
+      <InfoInnerWrapper>
+        {roomName}
+      </InfoInnerWrapper>
+      <InfoInnerWrapper>
+        {peopleLimit}
+      </InfoInnerWrapper>
+    </InfoWrapper>
+      <TimeBox>
+        {timeGap}시간 전
+      </TimeBox>
     </RoomBox>
     </>
   )
