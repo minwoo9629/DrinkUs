@@ -19,21 +19,29 @@ const CommentList = React.memo(({ parentId }) => {
   const [commentList, setCommentList] = useState([])
   const fetchComment = async (parentId) =>{
     const response = await getDailyComment(parentId)
-    setCommentList([...response.data])
+    setCommentList([...response.data.reverse()])
   }
   useEffect(()=>{
       fetchComment(parentId);
   },[])
   return (
     <div>
-      {commentList.map((content) => (
-        <CommentListItem
-          {...content}
-          key={content.parentId}
-        />
-      ))}
+      {commentList.length !== 0 ? (
+        <>
+          {commentList.map((content) => (
+            <CommentListItem
+              {...content}
+              key={content.parentId}
+            />
+          ))}
+        </>
+      ) : (
+        <>
+          <p>해당 게시글에 댓글이 없습니다.</p>
+        </>
+      )}
     </div>
-  )
+  );
 });
 
 export default CommentList;

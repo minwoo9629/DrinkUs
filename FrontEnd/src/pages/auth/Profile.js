@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import styled from "styled-components";
-import { client } from "../../utils/client";
 import { getUserCategory, getUserProfile, plusPopularity, minusPopularity } from "../../api/ProfileAPI";
 import { FailAlert } from "../../utils/sweetAlert";
 
@@ -103,9 +102,11 @@ const Profile = () => {
     userBeer: "",
   });
 
+  // App.js의 변수명 지정해주기
+  const {userNo} = useParams()
   const [popular, setPopular] = useState({
     popularityNumber: 0,
-  })
+  });
 
   const [category, setCategory] = useState([]);
   // 인기도 수정 횟수 5회 제한 + 5회 넘을 시 alert 창
@@ -114,12 +115,11 @@ const Profile = () => {
   };
   
   // // 인기도 더하기
-  // const onPopularityPlus = (userId) => {
+  // const onPopularityPlus = (userNo) => {
   //   client
-  //     .patch(`/users/popularity/${userId}`, {
+  //     .patch(`/users/popularity/${userNo}`, {
   //       popularNum: 1
   //     })
-  //     .then((response) => resopnse)
   // }
 
   // // 인기도 내리기
@@ -132,7 +132,7 @@ const Profile = () => {
   // }
 
   // 인기도 더하기
-  const onPopularityPlus = async () => {
+  const onPopularityPlus = async (userNo) => {
     const data = {
       popularNum: 1
     }
@@ -161,24 +161,25 @@ const Profile = () => {
 
 
   // 유저 정보 요청
-  const fetchUsers = async() => {
-    const response = await getUserProfile();
+  const fetchUsers = async (userNo) => {
+    const response = await getUserProfile(userNo);
     setState({...response.data});
   };
 
   // 유저 관심사 요청
-  const fetchCategory = async() => {
-    const response = await getUserCategory();
+  const fetchCategory = async(userNo) => {
+    const response = await getUserCategory(userNo);
     setCategory([...response.data]);
   };
 
   useEffect(() => {
-    fetchUsers();
-    fetchCategory();
+    fetchUsers(userNo);
+    fetchCategory(userNo);
   }, []);
 
   return (
   <div>
+    {/* <Reports userId={userNo} /> */}
       <Wrapper>
           닉네임: {state.userNickname}
         <ProfileWrapper>
