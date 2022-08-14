@@ -12,58 +12,55 @@ import { FailAlert } from "../../utils/sweetAlert";
 import { GetPopularlityPercent } from "../../utils/GetPopularlityPercent";
 
 const RoomDetailWrapper = styled.div`
+  position: relative;
   width: 800px;
+  height: 630px;
   margin-bottom: 20px;
   color: white;
-  background-color: #6f92bf;
-  border-radius: 30px;
-  padding: 20px 0px 20px 0px;
-  box-shadow: inset 0px 0px 4px 4px rgba(189, 207, 242, 0.5);
-  border: 3px solid #bdcff2;
-`;
-
-const RoomInfoWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-  width: 640px;
-  margin: 10px 0px 0px 80px;
-  color: ${(props) => props.color};
+  background-color: #8ea4bf;
+  border-radius: 10px;
+  box-shadow: inset 0px 0px 20px 1px rgba(62, 71, 82, 0.5);
+  border: 2px solid rgba(62, 71, 82, 0.8);
+  padding-top: 25px;
 `;
 
 const ImageWrapper = styled.img`
   display: flex;
-  margin: 0px 0px 0px 80px;
   background-color: gray;
   width: 640px;
   height: 400px;
-  border-radius: 30px;
+  border-radius: 20px;
+
+  margin-top: 10px;
+  margin-left: 80px;
+
+  box-shadow: 1px 1px 20px 1px rgba(0, 0, 0, 0.35);
 `;
 
 const Button = styled.button`
   width: 100px;
-  height: 48px;
-  margin: 6px 20px 0px 10px;
-  border-radius: 20px;
-  background-color: #eaf1ff;
-  color: #676775;
-  font-size: 18px;
-  line-height: 3px;
-  border: 3px solid #bdcff2;
-  box-shadow: inset 0px 0px 4px 4px rgba(189, 207, 242, 0.5);
-  margin-right: 80px;
+  height: 40px;
+  margin: 0 5px;
+  border-radius: 10px;
+  background-color: ${(props) => props.background};
+  color: ${(props) => props.color};
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  box-shadow: 2px 2px 5px 0.1px rgba(0, 0, 0, 0.3);
+
   cursor: pointer;
 `;
 
 // 프로필 스타일
 const ProfileBlock = styled.div`
-  line-height: 1;
-  display: block;
   align-items: center;
-  margin-bottom: 20px;
   margin-left: 60px;
+  margin-top: 20px;
 `;
 
 const ProfileImageWrapper = styled.div`
+  display: inline-block;
   float: left;
   width: 60px;
   height: 60px;
@@ -79,39 +76,67 @@ const ProfileImageThumbnail = styled.img`
 `;
 
 const Nickname = styled.div`
-  display: inline-block;
-  display: block;
+  padding-top: 5px;
   margin-bottom: 4px;
-  height: 30px;
-  line-height: 30px;
-  font-size: 20px;
-  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
 `;
 
 const ButtonNicknameWrapper = styled.div`
-  display: flex;
+  position: absolute;
+  right: 90px;
   justify-content: space-between;
-  height: 30px;
+  margin-top: -5px;
 `;
 
 const Popularity = styled.div`
-  display: inline-block;
   display: flex;
-  width: 130px;
-  justify-content: space-between;
-  height: 30px;
+  width: 100px;
   line-height: 30px;
   color: #fff;
+  font-size: 14px;
 `;
 
 // 비밀번호
 const PwInput = styled.input`
-  display: flex;
-  width: 200px;
-  height: 20px;
-  border-radius: 10px;
-  border: 3px solid #bdcff2;
-  box-shadow: inset 0px 0px 4px 4px rgba(189, 207, 242, 0.5);
+  padding-left: 10px;
+  display: bolck;
+  width: 140px;
+  height: 35px;
+  border-radius: 3px;
+  border: 1px solid #bdcff2;
+  outline: none;
+  color: #2d2d2d;
+
+  &::placeholder {
+    font-size: 13px;
+    color: #b1b1b1;
+  }
+`;
+
+const RoomInfoWrapper = styled.div`
+  display: ${(props) => props.display || "inline"};
+  position: ${(props) => props.position};
+  width: ${(props) => props.width};
+  height: ${(props) => props.height};
+  margin-top: ${(props) => props.marginTop};
+  margin-bottom: ${(props) => props.marginBottom};
+  margin-left: ${(props) => props.marginLeft};
+  margin-right: ${(props) => props.marginRight};
+  color: ${(props) => props.color};
+  font-size: ${(props) => props.fontSize};
+  font-weight: ${(props) => props.fontWeight};
+  padding-top: ${(props) => props.paddingTop};
+  padding-bottom: ${(props) => props.paddingBottom};
+  padding-left: ${(props) => props.paddingLeft};
+  padding-right: ${(props) => props.paddingRight};
+
+  left: ${(props) => props.left};
+  right: ${(props) => props.right};
+  top: ${(props) => props.top};
+  bottom: ${(props) => props.bottom};
+
+  float: ${(props) => props.float};
 `;
 
 const RoomDetail = () => {
@@ -133,10 +158,24 @@ const RoomDetail = () => {
   // 방 정보 state
   const [data, setData] = useState([]);
 
+  // 현재 인원 수 체크
+  const [curParticipant, setCurParticipant] = useState();
+
   const dataRefineFunc = async () => {
     const result = await onRoomDetail();
     setData(result.data);
     setAgeState(result.data.ages);
+
+    await client
+      .get(`/games/participants/${result.data.roomId}`)
+      .then(function (response) {
+        setCurParticipant(parseInt(response.data));
+      })
+      .catch(function (error) {
+        FailAlert(error);
+        navigate("/rooms");
+      });
+
     return data;
   };
 
@@ -149,6 +188,19 @@ const RoomDetail = () => {
 
   // 방 입장 세션 정보
   const onHandleEnterRoom = () => {
+    const participants = client
+      .get(`/games/participants/${data.roomId}`)
+      .then(function (response) {
+        if (response.data >= data.peopleLimit) {
+          FailAlert("방 인원 제한을 초과했습니다!");
+          navigate("/rooms");
+        }
+      })
+      .catch(function (error) {
+        FailAlert(error.response.data.message);
+        navigate("/rooms");
+      });
+
     const sessionData = {
       sessionName: `Session${data.roomId}`,
       roomId: data.roomId,
@@ -168,7 +220,11 @@ const RoomDetail = () => {
     const result = [];
     for (let i = 0; i < 6; i++) {
       if (ageState[i] === "Y") {
-        result.push(<span key={i}>{i + 2 + "0" + "대" + "   "}</span>);
+        result.push(
+          <RoomInfoWrapper marginRight="7px" key={i}>
+            {i + 2 + "0" + "대" + "  "}
+          </RoomInfoWrapper>,
+        );
       }
     }
     return result;
@@ -203,21 +259,151 @@ const RoomDetail = () => {
   return (
     <>
       <BackButton />
-      <Wrapper>
+      <Wrapper color={"#0a0a0a"}>
         <RoomDetailWrapper>
+          <RoomInfoWrapper fontSize="45px" fontWeight="bold" marginLeft="80px">
+            {data.roomName}
+          </RoomInfoWrapper>
+          <RoomInfoWrapper marginLeft="15px">
+            {data.categoryName}
+          </RoomInfoWrapper>
+          <RoomInfoWrapper
+            position="absolute"
+            right="90px"
+            top="65px"
+            fontWeight="bold"
+            fontSize="15px"
+          >
+            {timeGap}
+          </RoomInfoWrapper>
+          {data.placeTheme === "술집" ? (
+            <ImageWrapper
+              src={
+                process.env.PUBLIC_URL +
+                "/assets/RoomBackground/publichouse.jpg"
+              }
+              onClick={() => navigate(`/rooms/${roomId}`)}
+            />
+          ) : data.placeTheme === "펍" ? (
+            <ImageWrapper
+              src={process.env.PUBLIC_URL + "/assets/RoomBackground/pub.jpg"}
+              onClick={() => navigate(`/rooms/${roomId}`)}
+            />
+          ) : data.placeTheme === "칵테일바" ? (
+            <ImageWrapper
+              src={
+                process.env.PUBLIC_URL + "/assets/RoomBackground/cocktail.jpg"
+              }
+              onClick={() => navigate(`/rooms/${roomId}`)}
+            />
+          ) : data.placeTheme === "야구장" ? (
+            <ImageWrapper
+              src={
+                process.env.PUBLIC_URL + "/assets/RoomBackground/baseball.jpg"
+              }
+              onClick={() => navigate(`/rooms/${roomId}`)}
+            />
+          ) : data.placeTheme === "축구장" ? (
+            <ImageWrapper
+              src={process.env.PUBLIC_URL + "/assets/RoomBackground/soccer.jpg"}
+              onClick={() => navigate(`/rooms/${roomId}`)}
+            />
+          ) : data.placeTheme === "페스티벌" ? (
+            <ImageWrapper
+              src={
+                process.env.PUBLIC_URL + "/assets/RoomBackground/festival.jpg"
+              }
+              onClick={() => navigate(`/rooms/${roomId}`)}
+            />
+          ) : data.placeTheme === "클럽" ? (
+            <ImageWrapper
+              src={process.env.PUBLIC_URL + "/assets/RoomBackground/club.jpg"}
+              onClick={() => navigate(`/rooms/${roomId}`)}
+            />
+          ) : data.placeTheme === "편의점" ? (
+            <ImageWrapper
+              src={
+                process.env.PUBLIC_URL +
+                "/assets/RoomBackground/convenience.jpg"
+              }
+              onClick={() => navigate(`/rooms/${roomId}`)}
+            />
+          ) : data.placeTheme === "한강공원" ? (
+            <ImageWrapper
+              src={process.env.PUBLIC_URL + "/assets/RoomBackground/river.jpg"}
+              onClick={() => navigate(`/rooms/${roomId}`)}
+            />
+          ) : data.placeTheme === "미술관" ? (
+            <ImageWrapper
+              src={process.env.PUBLIC_URL + "/assets/RoomBackground/art.jpg"}
+              onClick={() => navigate(`/rooms/${roomId}`)}
+            />
+          ) : data.placeTheme === "영화관" ? (
+            <ImageWrapper
+              src={process.env.PUBLIC_URL + "/assets/RoomBackground/movie.jpg"}
+              onClick={() => navigate(`/rooms/${roomId}`)}
+            />
+          ) : data.placeTheme === "도서관" ? (
+            <ImageWrapper
+              src={
+                process.env.PUBLIC_URL + "/assets/RoomBackground/livrary.jpg"
+              }
+              onClick={() => navigate(`/rooms/${roomId}`)}
+            />
+          ) : (
+            <ImageWrapper
+              src={
+                process.env.PUBLIC_URL + "/assets/RoomBackground/outside.jpg"
+              }
+              onClick={() => navigate(`/rooms/${roomId}`)}
+            />
+          )}
+
           <ProfileBlock>
+            <RoomInfoWrapper position="absolute" right="100px" fontSize="18px">
+              {rendering()}
+            </RoomInfoWrapper>
+
             <ProfileImageWrapper>
               <ProfileImageThumbnail
                 src={`/assets/profileImage/profile${createdUser.userImg}.png`}
                 onClick={() => navigate("/profile")}
               />
             </ProfileImageWrapper>
-            <ButtonNicknameWrapper>
-              <Nickname>{createdUser.userNickname}</Nickname>
-              <div>
-                x/{data.peopleLimit}
-                {data.roomPw !== null ? (
+
+            <Nickname>{createdUser.userNickname}</Nickname>
+
+            <Popularity>
+              인기도 {createdUser.userPopularity}°
+              <img
+                style={{ width: "25px", height: "25px" }}
+                src={
+                  process.env.PUBLIC_URL +
+                  `/assets/alcoholImage/${popularlityPercent}.png`
+                }
+              />
+            </Popularity>
+          </ProfileBlock>
+
+          <ButtonNicknameWrapper>
+            {data.roomPw ? (
+              <PwInput
+                type="password"
+                onChange={onPwInput}
+                value={inputPw.roomPw}
+                name="roomPw"
+                placeholder="비밀번호를 입력하세요."
+              />
+            ) : (
+              <></>
+            )}
+
+            {curParticipant < data.peopleLimit ? (
+              <>
+                {data.roomPw ? (
                   <Button
+                    color="white"
+                    background="#3d68a1"
                     onClick={() => {
                       onRoomPw();
                     }}
@@ -227,138 +413,24 @@ const RoomDetail = () => {
                 ) : (
                   <Button onClick={onHandleEnterRoom}>참여하기</Button>
                 )}
-              </div>
-            </ButtonNicknameWrapper>
-            <Popularity>
-              인기도 {createdUser.userPopularity}°
-              <img
-                style={{ width: "30px", height: "30px" }}
-                src={
-                  process.env.PUBLIC_URL +
-                  `/assets/alcoholImage/${popularlityPercent}.png`
-                }
-              />
-            </Popularity>
-          </ProfileBlock>
-          {data.placeTheme === "술집" ? (
-            <ImageWrapper
-              src={
-                process.env.PUBLIC_URL +
-                "/assets/RoomBackground/publichouse.jpg"
-              }
-              onClick={() => navigate(`/rooms/${roomId}`)}
-            />
-          ) 
-          : data.placeTheme === "펍" ? (
-            <ImageWrapper
-              src={process.env.PUBLIC_URL + "/assets/RoomBackground/pub.jpg"}
-              onClick={() => navigate(`/rooms/${roomId}`)}
-            />
-          ) 
-          : data.placeTheme === "칵테일바" ? (
-            <ImageWrapper
-              src={
-                process.env.PUBLIC_URL + "/assets/RoomBackground/cocktail.jpg"
-              }
-              onClick={() => navigate(`/rooms/${roomId}`)}
-            />
-          )
-          : data.placeTheme === "야구장" ? (
-            <ImageWrapper
-              src={
-                process.env.PUBLIC_URL + "/assets/RoomBackground/baseball.jpg"
-              }
-              onClick={() => navigate(`/rooms/${roomId}`)}
-            />
-          )
-          : data.placeTheme === "축구장" ? (
-            <ImageWrapper
-              src={
-                process.env.PUBLIC_URL + "/assets/RoomBackground/soccer.jpg"
-              }
-              onClick={() => navigate(`/rooms/${roomId}`)}
-            />
-          )
-          : data.placeTheme === "페스티벌" ? (
-            <ImageWrapper
-              src={
-                process.env.PUBLIC_URL + "/assets/RoomBackground/festival.jpg"
-              }
-              onClick={() => navigate(`/rooms/${roomId}`)}
-            />
-          )
-          : data.placeTheme === "클럽" ? (
-            <ImageWrapper
-              src={
-                process.env.PUBLIC_URL + "/assets/RoomBackground/club.jpg"
-              }
-              onClick={() => navigate(`/rooms/${roomId}`)}
-            />
-          )
-          : data.placeTheme === "편의점" ? (
-            <ImageWrapper
-              src={
-                process.env.PUBLIC_URL + "/assets/RoomBackground/convenience.jpg"
-              }
-              onClick={() => navigate(`/rooms/${roomId}`)}
-            />
-          )
-          : data.placeTheme === "한강공원" ? (
-            <ImageWrapper
-              src={
-                process.env.PUBLIC_URL + "/assets/RoomBackground/river.jpg"
-              }
-              onClick={() => navigate(`/rooms/${roomId}`)}
-            />
-          )
-          : data.placeTheme === "미술관" ? (
-            <ImageWrapper
-              src={
-                process.env.PUBLIC_URL + "/assets/RoomBackground/art.jpg"
-              }
-              onClick={() => navigate(`/rooms/${roomId}`)}
-            />
-          )
-          : data.placeTheme === "영화관" ? (
-            <ImageWrapper
-              src={
-                process.env.PUBLIC_URL + "/assets/RoomBackground/movie.jpg"
-              }
-              onClick={() => navigate(`/rooms/${roomId}`)}
-            />
-          )
-          : data.placeTheme === "도서관" ? (
-            <ImageWrapper
-              src={
-                process.env.PUBLIC_URL + "/assets/RoomBackground/livrary.jpg"
-              }
-              onClick={() => navigate(`/rooms/${roomId}`)}
-            />
-          )
-          : (
-            <ImageWrapper
-              src={
-                process.env.PUBLIC_URL + "/assets/RoomBackground/outside.jpg"
-              }
-              onClick={() => navigate(`/rooms/${roomId}`)}
-            />
-          )}
-          <RoomInfoWrapper>
-            <h2>{data.roomName}</h2>
-            <h4>{timeGap}</h4>
-          </RoomInfoWrapper>
-          <RoomInfoWrapper>
-            {data.categoryName}
-            <div>{rendering()}</div>
-            {data.roomPw !== null ? (
-              <PwInput
-                onChange={onPwInput}
-                value={inputPw.roomPw}
-                name="roomPw"
-                placeholder="비밀번호를 입력하세요."
-              />
-            ) : null}
-          </RoomInfoWrapper>
+              </>
+            ) : (
+              <>
+                <Button color="#c4c4c4" background="#919191">
+                  참여불가
+                </Button>
+              </>
+            )}
+
+            <RoomInfoWrapper
+              color={curParticipant < data.peopleLimit ? "black" : "#b03535"}
+              marginLeft="3px"
+              fontSize="16px"
+              fontWeight="bold"
+            >
+              {curParticipant}/{data.peopleLimit}
+            </RoomInfoWrapper>
+          </ButtonNicknameWrapper>
         </RoomDetailWrapper>
       </Wrapper>
     </>
