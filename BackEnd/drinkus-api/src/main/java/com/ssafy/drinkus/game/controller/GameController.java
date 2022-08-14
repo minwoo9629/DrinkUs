@@ -9,13 +9,17 @@ import com.ssafy.drinkus.game.response.BombResultResponse;
 import com.ssafy.drinkus.game.service.GameService;
 import com.ssafy.drinkus.security.util.JwtUtil;
 import com.ssafy.drinkus.user.response.UserMyInfoResponse;
+import com.ssafy.drinkus.user.response.UserProfileResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.socket.messaging.SessionConnectEvent;
@@ -71,10 +75,11 @@ public class GameController {
         messagingTemplate.convertAndSend("/sub/random/" + request.getRoomId(), userNickname);
     }
 
-    @MessageMapping("/chat") // /pub/chat
-    public void test(ChatMessage chatMessage) {
-        System.out.println(chatMessage.getRoomId() + " " + chatMessage.getMessage());
-        messagingTemplate.convertAndSend("/sub/chat/" + chatMessage.getRoomId(), chatMessage);
+    // 해당 방에 있는 유저의 수 반환
+    @GetMapping("/participants/{room_id}")
+    public ResponseEntity<Integer> countByRoomId(@PathVariable("room_id") Long roomId){
+        Integer body = gameService.countByRoomId(roomId);
+        return ResponseEntity.ok().body(body);
     }
 
     @EventListener(SessionConnectEvent.class)
