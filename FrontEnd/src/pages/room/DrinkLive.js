@@ -74,41 +74,7 @@ const RecommendInnerWrapper = styled.div`
   width: 1200px;
 `
 
-// 캐러셀
-const Container = styled.div`
-  width: 1200px;
-  overflow:hidden;
-  .slick-dots {
-    .slick-active {
-      button::before {
-        color: #c1c1c1;
-      }
-    }
-    button::before {
-      color: #e9e9e9;
-    }
-  }
-`;
-
-const StyledSlider = styled(Slider)`
-    .slick-slide div{
-      outline: none;
-    }
-`;
-
 const DrinkLive = () => {
-
-  // 캐러셀 설정
-  const settings = {
-    className: "center",
-    centerMode: true,
-    dots: true,
-    speed: 1800,
-    slidesToShow: 3,
-    autoplay: true,
-    autoplaySpeed: 3000,
-    pauseOnHover: true,
-  };
 
   const navigate = useNavigate();
   
@@ -176,19 +142,15 @@ const DrinkLive = () => {
           </RecommendLetter>
         ) : (
           <>
-          <Container>
-            <StyledSlider {...settings}>
-              {ageList.map((content, index) => (
-                <>
-              <LiveListItem
-              {...content}
-                key={index}
-              > 
-              </LiveListItem>
-              </>
-              ))}
-            </StyledSlider>
-          </Container>
+            {ageList.map((content, index) => (
+              <>
+            <LiveListItem
+            {...content}
+              key={index}
+            > 
+            </LiveListItem>
+            </>
+            ))}
           </>
         )}
       </RecommendInnerWrapper>
@@ -207,8 +169,6 @@ const DrinkLive = () => {
           </RecommendLetter>
         ):(
           <>
-          <Container>
-            <StyledSlider {...settings}>
           {categoryList.map((content, index) => (
             <LiveListItem
             {...content}
@@ -216,8 +176,6 @@ const DrinkLive = () => {
             > 
             </LiveListItem>
           ))}
-          </StyledSlider>
-          </Container>
           </>
         )}
       </RecommendInnerWrapper>
@@ -236,8 +194,6 @@ const DrinkLive = () => {
           </RecommendLetter>
         ) : (
           <>
-          <Container>
-            <StyledSlider {...settings}>
           {currentList.map((content, index) => (
             <LiveListItem
             {...content}
@@ -245,8 +201,6 @@ const DrinkLive = () => {
             > 
             </LiveListItem>
           ))}
-          </StyledSlider>
-          </Container>
           </>
         )}
       </RecommendInnerWrapper>

@@ -6,17 +6,17 @@ const RoomBox = styled.div`
   padding: 10px 20px 20px 10px;
   flex-direction: row;
   background-color: white;
-  width: 300px;
+  width: 260px;
   height: 188px;
   border-radius: 30px;
-  margin-right: 10px;
+  margin-right: 16px;
   box-shadow: inset 0px 0px 4px 4px #BDCFF2;
 `
 
 const ImageWrapper = styled.img`
   margin: 0px 0px 0px 4px;
   background-color: gray;
-  width: 300px;
+  width: 260px;
   height: 140px;
   border-radius: 30px;
 `
