@@ -45,7 +45,12 @@ const StyeldRoomGameButtonWrapper = styled.div`
   flex-direction: column;
 `;
 
-const RoomGame = ({ gameDisplay }) => {
+const RoomGame = ({
+  gameDisplay,
+  randomDrink,
+  recommendTopics,
+  recommendToasts,
+}) => {
   return (
     <StyledRoomGameContainer display={gameDisplay}>
       <StyledRoomGameComponent>
@@ -54,19 +59,16 @@ const RoomGame = ({ gameDisplay }) => {
         </StyeldRoomGameTittle>
         <StyeldRoomGameButtonWrapper>
           <div style={{ color: "white" }}>
-            <GameButton onClick={() => console.log("")} text={"랜덤 마시기"} />
+            <GameButton onClick={randomDrink} text={"랜덤 마시기"} />
           </div>
           <div style={{ color: "white" }}>
             <GameButton onClick={() => console.log("")} text={"폭탄 돌리기"} />
           </div>
           <div style={{ color: "white" }}>
-            <GameButton
-              onClick={() => console.log("")}
-              text={"대화주제 추천"}
-            />
+            <GameButton onClick={recommendTopics} text={"대화주제 추천"} />
           </div>
           <div style={{ color: "white" }}>
-            <GameButton onClick={() => console.log("")} text={"건배사 추천"} />
+            <GameButton onClick={recommendToasts} text={"건배사 추천"} />
           </div>
         </StyeldRoomGameButtonWrapper>
       </StyledRoomGameComponent>

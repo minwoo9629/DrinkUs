@@ -15,12 +15,12 @@ const RoomDetailWrapper = styled.div`
   width: 800px;
   margin-bottom: 20px;
   color: white;
-  background-color: #6F92BF;
+  background-color: #6f92bf;
   border-radius: 30px;
   padding: 20px 0px 20px 0px;
   box-shadow: inset 0px 0px 4px 4px rgba(189, 207, 242, 0.5);
-  border: 3px solid #BDCFF2;
-`
+  border: 3px solid #bdcff2;
+`;
 
 const RoomInfoWrapper = styled.div`
   display: flex;
@@ -28,7 +28,7 @@ const RoomInfoWrapper = styled.div`
   width: 640px;
   margin: 10px 0px 0px 80px;
   color: ${(props) => props.color};
-`
+`;
 
 const ImageWrapper = styled.img`
   display: flex;
@@ -37,22 +37,22 @@ const ImageWrapper = styled.img`
   width: 640px;
   height: 400px;
   border-radius: 30px;
-`
+`;
 
 const Button = styled.button`
   width: 100px;
   height: 48px;
   margin: 6px 20px 0px 10px;
   border-radius: 20px;
-  background-color: #EAF1FF;
+  background-color: #eaf1ff;
   color: #676775;
   font-size: 18px;
   line-height: 3px;
-  border: 3px solid #BDCFF2;
+  border: 3px solid #bdcff2;
   box-shadow: inset 0px 0px 4px 4px rgba(189, 207, 242, 0.5);
   margin-right: 80px;
   cursor: pointer;
-`
+`;
 
 // 프로필 스타일
 const ProfileBlock = styled.div`
@@ -92,7 +92,7 @@ const ButtonNicknameWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   height: 30px;
-`
+`;
 
 const Popularity = styled.div`
   display: inline-block;
@@ -110,14 +110,15 @@ const PwInput = styled.input`
   width: 200px;
   height: 20px;
   border-radius: 10px;
-  border: 3px solid #BDCFF2;
+  border: 3px solid #bdcff2;
   box-shadow: inset 0px 0px 4px 4px rgba(189, 207, 242, 0.5);
-`
+  height: 600px;
+`;
 
 const RoomDetail = () => {
   // Room 입장을 위한 세션설정
   const dispatch = useDispatch();
-  const navigate = useNavigate();  
+  const navigate = useNavigate();
 
   const location = useLocation();
 
@@ -126,7 +127,7 @@ const RoomDetail = () => {
     const result = await client
       .get(`${location.pathname}`)
       .then((response) => response);
-      setCreatedUser(result.data.user)
+    setCreatedUser(result.data.user);
     return result;
   };
 
@@ -136,7 +137,7 @@ const RoomDetail = () => {
   const dataRefineFunc = async () => {
     const result = await onRoomDetail();
     setData(result.data);
-    setAgeState(result.data.ages)
+    setAgeState(result.data.ages);
     return data;
   };
 
@@ -151,6 +152,7 @@ const RoomDetail = () => {
   const onHandleEnterRoom = () => {
     const sessionData = {
       sessionName: `Session${data.roomId}`,
+      roomId: data.roomId,
     };
     dispatch(setRoomSession(sessionData));
     navigate("/room/detail");
@@ -160,72 +162,76 @@ const RoomDetail = () => {
 
   const [ageState, setAgeState] = useState([]);
 
-  const timeGap = TimeGap(data.createdDate)
+  const timeGap = TimeGap(data.createdDate);
 
   // 나이대 값 ~대 로 변경
   const rendering = () => {
     const result = [];
     for (let i = 0; i < 6; i++) {
-      if (ageState[i] === 'Y') {
-        result.push(
-        <span key={i}>
-          {i+2 + '0' + '대' + '   '}
-        </span>
-        )
+      if (ageState[i] === "Y") {
+        result.push(<span key={i}>{i + 2 + "0" + "대" + "   "}</span>);
       }
     }
-    return result
-  }
+    return result;
+  };
 
   // 비밀번호 체크
   const [inputPw, setInputPw] = useState({
-    roomPw: ''
+    roomPw: "",
   });
 
   const onPwInput = (e) => {
-    setInputPw({ ...inputPw, [e.target.name]: e.target.value})
-  }
+    setInputPw({ ...inputPw, [e.target.name]: e.target.value });
+  };
 
   const onRoomPw = async () => {
     const result = await client
-    .post('/rooms/pwcheck', {
-      roomId: data.roomId,
-      roomPw: inputPw.roomPw
-    })
-    .then(function (response) {
-      onHandleEnterRoom()
-    })
-    .catch(function (error) {
-      FailAlert('비밀번호가 틀렸습니다!')
-    })
-  }
-
+      .post("/rooms/pwcheck", {
+        roomId: data.roomId,
+        roomPw: inputPw.roomPw,
+      })
+      .then(function (response) {
+        onHandleEnterRoom();
+      })
+      .catch(function (error) {
+        FailAlert("비밀번호가 틀렸습니다!");
+      });
+  };
 
   // 인기도 아이콘으로 변환
   const popularlityPercent = GetPopularlityPercent(createdUser.userPopularity);
 
   return (
     <>
-      <BackButton/>
+      <BackButton />
       <Wrapper>
         <RoomDetailWrapper>
           <ProfileBlock>
             <ProfileImageWrapper>
-              <ProfileImageThumbnail src={`/assets/profileImage/profile${createdUser.userImg}.png`} onClick={()=>navigate("/profile")}/>
+              <ProfileImageThumbnail
+                src={`/assets/profileImage/profile${createdUser.userImg}.png`}
+                onClick={() => navigate("/profile")}
+              />
             </ProfileImageWrapper>
             <ButtonNicknameWrapper>
-            <Nickname>
-              {createdUser.userNickname}
-            </Nickname>
-            <div>
-              x/{data.peopleLimit}
-              { data.roomPw !== null ? 
-              <Button onClick={() => {onRoomPw()}}>참여하기</Button>
-              : <Button onClick={onHandleEnterRoom}>참여하기</Button> }
-            </div>
+              <Nickname>{createdUser.userNickname}</Nickname>
+              <div>
+                x/{data.peopleLimit}
+                {data.roomPw !== null ? (
+                  <Button
+                    onClick={() => {
+                      onRoomPw();
+                    }}
+                  >
+                    참여하기
+                  </Button>
+                ) : (
+                  <Button onClick={onHandleEnterRoom}>참여하기</Button>
+                )}
+              </div>
             </ButtonNicknameWrapper>
             <Popularity>
-              인기도 {createdUser.userPopularity}° 
+              인기도 {createdUser.userPopularity}°
               <img
                 style={{ width: "30px", height: "30px" }}
                 src={
@@ -235,36 +241,49 @@ const RoomDetail = () => {
               />
             </Popularity>
           </ProfileBlock>
-          {
-            data.placeTheme === '술집' ?
-            <ImageWrapper src={process.env.PUBLIC_URL + '/assets/RoomBackground/publichouse.jpg'} onClick={() => navigate(`/rooms/${roomId}`)}/> :
-            data.placeTheme === '펍' ?
-            <ImageWrapper src={process.env.PUBLIC_URL + '/assets/RoomBackground/pub.jpg'} onClick={() => navigate(`/rooms/${roomId}`)}/> :
-            data.placeTheme === '칵테일바' ?
-            <ImageWrapper src={process.env.PUBLIC_URL + '/assets/RoomBackground/cocktail.jpg'} onClick={() => navigate(`/rooms/${roomId}`)}/> :
-            <ImageWrapper src={process.env.PUBLIC_URL + '/assets/RoomBackground/outside.jpg'} onClick={() => navigate(`/rooms/${roomId}`)}/>
-          }
+          {data.placeTheme === "술집" ? (
+            <ImageWrapper
+              src={
+                process.env.PUBLIC_URL +
+                "/assets/RoomBackground/publichouse.jpg"
+              }
+              onClick={() => navigate(`/rooms/${roomId}`)}
+            />
+          ) : data.placeTheme === "펍" ? (
+            <ImageWrapper
+              src={process.env.PUBLIC_URL + "/assets/RoomBackground/pub.jpg"}
+              onClick={() => navigate(`/rooms/${roomId}`)}
+            />
+          ) : data.placeTheme === "칵테일바" ? (
+            <ImageWrapper
+              src={
+                process.env.PUBLIC_URL + "/assets/RoomBackground/cocktail.jpg"
+              }
+              onClick={() => navigate(`/rooms/${roomId}`)}
+            />
+          ) : (
+            <ImageWrapper
+              src={
+                process.env.PUBLIC_URL + "/assets/RoomBackground/outside.jpg"
+              }
+              onClick={() => navigate(`/rooms/${roomId}`)}
+            />
+          )}
           <RoomInfoWrapper>
-            <h2>
-              {data.roomName}
-            </h2>
-            <h4>
-              {timeGap}시간 전
-            </h4>
+            <h2>{data.roomName}</h2>
+            <h4>{timeGap}시간 전</h4>
           </RoomInfoWrapper>
           <RoomInfoWrapper>
-          {data.categoryName}
-          <div>
-          {rendering()}
-          </div>
-          { data.roomPw !== null ? 
-          <PwInput
-          onChange={onPwInput}
-          value={inputPw.roomPw}
-          name="roomPw"
-          placeholder="비밀번호를 입력하세요."
-          />
-          : null}
+            {data.categoryName}
+            <div>{rendering()}</div>
+            {data.roomPw !== null ? (
+              <PwInput
+                onChange={onPwInput}
+                value={inputPw.roomPw}
+                name="roomPw"
+                placeholder="비밀번호를 입력하세요."
+              />
+            ) : null}
           </RoomInfoWrapper>
         </RoomDetailWrapper>
       </Wrapper>
