@@ -7,6 +7,7 @@ import {
   BaseFlexColWrapper,
 } from "../../../components/styled/Wrapper";
 import { BackButton } from "../../../components/common/buttons/BackButton";
+import { AuthButton } from "../../../components/common/buttons/AuthButton";
 
 const neon_text_color = "#5904de";
 const neon_border_color = "#08f";
@@ -150,6 +151,10 @@ const JoinAgree = ({ history }) => {
     }
   };
 
+  const nextButtonHandler = (e) => {
+    if(!isAllChecked) e.preventDefault();
+  }
+
   return (
     <>
       <BackButton />
@@ -209,24 +214,22 @@ const JoinAgree = ({ history }) => {
                 </Button>
               </AgreeWrapper>
             </AgreeForm>
-            <ButtonWrapper>
-              <Link to="/" style={{textDecoration:"none"}}>
-                <LinkWrapper>MAIN</LinkWrapper>
-              </Link>
-              <Link to="/join/type" style={{textDecoration:"none"}}>
-                <LinkWrapper
-                  disabled={disabled}
-                  onClick={() => history.push("/join/type")}
-                  style={
-                    disabled
-                      ? { color: "#545454",animation:"none" }
-                      : { color: "#fff" }
-                  }
-                >
-                  NEXT
-                </LinkWrapper>
-              </Link>
-            </ButtonWrapper>
+            <Link
+              to="/join/type"
+              onClick={nextButtonHandler}
+              style={{  textDecoration: "none" }}
+            >
+              <AuthButton
+              disabled={disabled}
+              style={
+                disabled ? 
+                  ({ backgroundColor: "#545454", animation:"none", color: "black"}) :  
+                  ({ backgroundColor: "#bdcff2", animation:"none", color: "black"}) // 체크 완료 시
+              }
+              >
+                다음
+              </AuthButton>
+            </Link>
           </BaseFlexColWrapper>
         </RoundedWrapper>
       </Wrapper>
