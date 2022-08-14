@@ -6,6 +6,7 @@ import { client } from "../../utils/client";
 import LiveListItem from "../../components/room/LiveListItem";
 import Banner from "../../components/room/Banner";
 import { useSelector } from "react-redux";
+import { getAllByPlaceholderText } from "@testing-library/react";
 
 // 버튼, 배너
 const LiveWrapper = styled.div`
@@ -73,9 +74,19 @@ const RecommendInnerWrapper = styled.div`
 
 const DrinkLive = () => {
   const navigate = useNavigate();
-  const user = useSelector((state) => state.user);
+  const user = useSelector((state) => state.user.data);
   // 나이대 요청
   const [ageList, setAgeList] = useState([]);
+
+  useEffect(() => {
+    if (user.userBirthday === null) {
+      alert("생년월일 설정해야해!@!!!!");
+      navigate("/user/edit/profile");
+    }
+    onMakeAgeList();
+    onCategoryList();
+    onCurrentList();
+  }, []);
 
   const onMakeAgeList = async () => {
     const result = await client
@@ -103,17 +114,6 @@ const DrinkLive = () => {
       .then((response) => response);
     setCurrentList([...result.data]);
   };
-
-  // 호출
-  useEffect(() => {
-    if (user.userBirthDay === null) {
-      alert("생년월일을 수정해주세요");
-      navigate("/edit/profile");
-    }
-    onMakeAgeList();
-    onCategoryList();
-    onCurrentList();
-  }, []);
 
   return (
     <>

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import styled from "styled-components";
-import Header from "../../components/layout/Header";
 import FetchProfile from "../../components/room/FetchProfile";
 import { Wrapper } from "../../components/styled/Wrapper";
 import { client } from "../../utils/client";
@@ -16,6 +15,7 @@ const CreateCalendarBlock = styled.div`
   background-color: #6F92BF;
   border-radius: 30px;
   padding: 30px;
+  box-shadow: inset 0px 0px 4px 4px #BDCFF2;
 `
 
 const InputBlock = styled.div`
@@ -57,6 +57,7 @@ const CreateButton = styled.button `
   border: 4px solid #BDCFF2;
   border-radius: 5px;
   box-shadow: 0px 4px 6px rgba(0,0,0,0.25);
+  cursor: pointer;
 `
 
 const InputForm = styled.input`

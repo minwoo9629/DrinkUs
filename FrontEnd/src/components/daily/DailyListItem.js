@@ -6,26 +6,16 @@ import { useNavigate } from "react-router-dom";
 import { client } from "../../utils/client";
 import Modal from "../modals/Modal";
 import UserProfileContent from "../modals/contents/UserProfileContent";
-
-const DailyWrapper = styled.div`
-  justify-content: space-between;
-  width: 68vw;
-  height: 8vh;
-  border-radius: 4px;
-  border: 1px solid #6f92bf;
-  background-color: white;
-  margin: 12px;
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
+import { getDailyComment } from "../../api/DailyAPI";
+import React from "react";;
 
 const DailyContent = styled.div`
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-`;
+  margin: 20px 0;
+`
 
 const ProfileWrapper = styled.div`
   display: column;
@@ -81,12 +71,14 @@ const DailyCommentPostButton = styled.button`
   border: 1px #eaf1ff;
 `;
 
-const DailyListItem = ({
-  // userImg,
-  createrId,
-  boardId,
-  boardContent,
-}) => {
+const DailyListItem = (
+  {
+    // userImg,
+    createrId,
+    boardId,
+    boardContent
+  }) => {
+  const [commentList, setCommentList] = useState([])
   const [state, setState] = useState({
     boardArticle: "",
     showEditArticle: false,
@@ -118,11 +110,12 @@ const DailyListItem = ({
     fetchUser();
   }, []);
 
+
   const navigate = useNavigate();
 
   // 수정 글 입력
   const onEditArticleInput = (e) => {
-    setState({ ...state, [e.target.name]: e.target.value });
+    setState({  ...state, [e.target.name]: e.target.value });
   };
 
   // // 전체 글 fetch
@@ -144,17 +137,9 @@ const DailyListItem = ({
   // 글 수정 창 여닫기
   const onHandleArticleEdit = (e) => {
     if (!state.showEditArticle) {
-      setState({
-        ...state,
-        showEditArticle: !state.showEditArticle,
-        boardArticle: "",
-      });
+      setState({ ...state, showEditArticle: !state.showEditArticle, boardArticle: "" })
     } else {
-      setState({
-        ...state,
-        showEditArticle: !state.showEditArticle,
-        boardArticle: "",
-      });
+      setState({ ...state, showEditArticle: !state.showEditArticle, boardArticle: "" })
     }
   };
 
@@ -178,28 +163,23 @@ const DailyListItem = ({
   };
 
   // 댓글 목록 여닫기
-  const onHandleCommentList = (e) => {
+  const onHandleCommentList = async (parentId) => {
     if (!comment.showComment) {
-      setComment({ ...comment, showComment: !comment.showComment });
+      setComment({ ...comment, showComment: !comment.showComment })
+      const response = await getDailyComment(parentId)
+      console.log(response.data)
+      setCommentList([...response.data])
     } else {
-      setComment({ ...comment, showComment: !comment.showComment });
+      setComment({ ...comment, showComment: !comment.showComment })
     }
   };
 
   // 댓글 창 여닫기
   const onHandleComment = (e) => {
     if (!comment.isComment) {
-      setComment({
-        ...comment,
-        isComment: !comment.isComment,
-        boardComment: "",
-      });
+      setComment({ ...comment, isComment: !comment.isComment, boardComment: "" })
     } else {
-      setComment({
-        ...comment,
-        isComment: !comment.isComment,
-        boardComment: "",
-      });
+      setComment({ ...comment, isComment: !comment.isComment, boardComment: "" })
     }
   };
 
@@ -224,7 +204,7 @@ const DailyListItem = ({
       />
       <DailyContent>
         <div style={{ width: "20%" }}>
-          <ProfileImg onClick={openModal}>{createrId}</ProfileImg>
+          <ProfileImg onClick={openModal}>{boardId}</ProfileImg>
         </div>
         <div style={{ width: "60%" }}>{boardContent}</div>
         <div style={{ width: "10%" }}>
@@ -247,7 +227,7 @@ const DailyListItem = ({
           </DailyBoardEditButton>
         </div>
         <div style={{ width: "10%" }}>
-          <DailyBoardEditButton onClick={onHandleCommentList}>
+          <DailyBoardEditButton onClick={() => onHandleCommentList(boardId)}>
             {comment.showComment === true ? "댓글닫기" : "댓글보기"}
           </DailyBoardEditButton>
         </div>
@@ -257,6 +237,7 @@ const DailyListItem = ({
           </DailyBoardEditButton>
         </div>
       </DailyContent>
+      <DailyContent>
       <div>
         <div
           style={{
@@ -296,6 +277,27 @@ const DailyListItem = ({
       >
         <CommentList parentId={boardId} />
       </div>
+      <div style={{ display: comment.showComment === false ? "none" : "block" }}>
+        {commentList.length !== 0 ?
+          <>
+            {commentList.map((item, idx) => (
+              <React.Fragment key={idx}>
+                {console.log("여기 댓글있음")}
+                <CommentListItem
+                  {...item}
+                  key={item.parentId}
+                />
+              </React.Fragment>
+            ))}
+          </>
+          :
+          <>
+            {console.log("여기 댓글없음")}
+            <p>해당 게시글에 댓글이 없습니다.</p>
+          </>
+        }
+      </div>
+    </DailyContent>
     </div>
   );
 };
