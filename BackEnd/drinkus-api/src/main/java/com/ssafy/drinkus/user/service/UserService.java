@@ -158,6 +158,14 @@ public class UserService {
         return UserProfileResponse.from(user);
     }
 
+    // 닉네임으로 회원 프로필 조회
+    public UserProfileResponse findUserByUserNickname(String userNickname) {
+        User user = userRepository.findUserByUserNickname(userNickname);
+
+        return UserProfileResponse.from(user);
+    }
+
+
     // 회원 내정보 조회
     public UserMyInfoResponse findUserMyInfo(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
