@@ -226,6 +226,7 @@ class VideoRoomComponent extends Component {
         this.subRandomDrink();
         this.subRecommendToasts();
         this.subStartBombGame();
+        this.subEndBombGame();
       },
     });
 
@@ -328,7 +329,7 @@ class VideoRoomComponent extends Component {
           { second: obj.second, clickCount: obj.clickCount },
           () => {
             this.toggleBombGame("block");
-          }
+          },
         );
 
         let second = obj.second;
@@ -356,17 +357,21 @@ class VideoRoomComponent extends Component {
   }
 
   pubEndBombGame() {
-    console.log("폭탄돌리기 결과");
+    console.log("폭탄돌리기 결과 pub");
     gameClient.current.publish({
       destination: `/pub/bomb/result`,
-      body: JSON.stringify({
+      headers: {
         Authorization: `Bearer ${this.accessToken}`,
+      },
+      body: JSON.stringify({
         roomId: ROOM_ID,
+        clickCount: 3,
       }),
     });
   }
 
   subEndBombGame() {
+    console.log("폭탄돌리기 결과 sub");
     gameClient.current.subscribe(
       `/sub/bomb/result/${ROOM_ID}`,
       ({ body }) => {
