@@ -62,9 +62,9 @@ public class DailyBoardService {
     // 댓글 조회
     public List<DailyBoardResponse> findByParentIdOrderByCreatedDateDesc(Long parentId) {
         List<DailyBoard> results = dailyBoardRepository.findByParentIdOrderByCreatedDateDesc(parentId);
-        if (results.size() == 0) {
-            throw new NotExistException("해당 게시물에 댓글이 존재하지 않습니다.");
-        }
+//        if (results.size() == 0) {
+//            throw new NotExistException("해당 게시물에 댓글이 존재하지 않습니다.");
+//        }
 
         List<DailyBoardResponse> response = new ArrayList<>();
         for (DailyBoard dailyBoard : results) {
