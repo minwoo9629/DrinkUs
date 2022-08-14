@@ -63,7 +63,7 @@ const BombGame = ({ second, clickCount, toggleBombGame, display }) => {
     if (clickCountState === 0) {
       alert("미션성공");
       console.log("폭탄 돌리기 끝내기");
-      // 폭탄게임에대한 pub -> 완료
+      // 폭탄게임에대한 pub -> 완료함수
       toggleBombGame("none");
     }
   }, [clickCountState]);
@@ -121,10 +121,10 @@ class VideoRoomComponent extends Component {
       subscribers: [],
       chatDisplay: "none",
       gameDisplay: "none",
-      bombGameDisplay: "",
+      bombGameDisplay: "none",
       settingDisplay: "none",
       currentVideoDevice: undefined,
-      clickCount: 0,
+      clickCount: 100,
       second: 0,
     };
 
@@ -317,6 +317,7 @@ class VideoRoomComponent extends Component {
         const obj = JSON.parse(body);
 
         this.setState({ second: obj.second, clickCount: obj.clickCount });
+        this.toggleBombGame("block");
         let second = obj.second;
         let leftClickCount = obj.clickCount;
 
@@ -846,8 +847,8 @@ class VideoRoomComponent extends Component {
     return (
       <>
         <BombGame
-          second={5000}
-          clickCount={10}
+          second={this.state.second}
+          clickCount={this.state.clickCount}
           toggleBombGame={this.toggleBombGame}
           display={this.state.bombGameDisplay}
         />
