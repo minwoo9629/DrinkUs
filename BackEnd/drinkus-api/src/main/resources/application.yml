@@ -20,7 +20,6 @@ spring:
           facebook:
             client-id: 1129306567796641
             client-secret: 906862fcf400aec6f0e4b28452eb0be6
-            redirect-uri: https://i7b306.p.ssafy.io/oauth2/code/facebook
             scope:
               - email
               - public_profile
