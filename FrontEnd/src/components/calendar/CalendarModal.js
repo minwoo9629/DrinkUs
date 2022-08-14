@@ -5,6 +5,7 @@ import { client } from "../../utils/client"
 import { useNavigate } from "react-router-dom";
 import { FailAlert, SuccessAlert } from "../../utils/sweetAlert";
 import { GetPopularlityPercent } from "../../utils/GetPopularlityPercent";
+import moment from "moment";
 
 // 모달 스타일
 const ModalWrapper = styled.div`
@@ -97,14 +98,6 @@ const Popularity = styled.div`
 `;
 
 // 모달 내부 스타일
-const ContentBlock = styled.div`
-  display: block;
-  line-height: 1;
-  margin-top: 5px;
-  margin-bottom: 5px;
-  height: 60px;
-`;
-
 const StyledButton = styled.button`
   adding: 4px;
   border: none;
@@ -113,6 +106,90 @@ const StyledButton = styled.button`
   color: white;
   cursor: pointer;
 `;
+
+const InnerWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 700px;
+`
+
+const ContentBlock = styled.div`
+  display: flex;
+  background-color: white;
+  border: 1px solid #6F92BF;
+  margin: 24px 0px 0px 20px;
+  border-radius: 20px;
+  height: 80px;
+  width: 680px;
+  padding: 20px;
+`
+
+const PlaceBlock = styled.div`
+  display: flex;
+  background-color: white;
+  border: 1px solid #6F92BF;
+  margin: 12px 0px 0px 20px;
+  border-radius: 20px;
+  height: 40px;
+  width: 200px;
+  align-items: center;
+  justify-content: center;
+`
+
+const TImeWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 700px;
+`
+
+const TimeBlock = styled.div`
+  display: flex;
+  background-color: white;
+  border: 1px solid #6F92BF;
+  margin: 12px 0px 0px 20px;
+  border-radius: 20px;
+  height: 40px;
+  width: 200px;
+  align-items: center;
+  justify-content: center;
+`
+
+const LetterBlock = styled.p`
+  display: flex;
+  margin: 12px 0px 0px 20px;
+`
+
+const AgesWrapper = styled.div`
+  display: inline-block;
+  height: 28px;
+  line-height: 28px;
+  width: 80px;
+  color: black;
+  margin: 4px 12px 4px 4px;
+  background-color: #ffffff;
+  border-radius: 4px;
+  border: 3px solid #eaf1ff;
+  text-align: center;
+  overflow: hidden;
+
+  & input:checked + span {
+    background-color: #BDCFF2;
+  }
+  & span {
+    cursor: pointer;
+    display: block;
+    padding: 2px 16px;
+  }
+`;
+
+const CheckBoxStyled = styled.div`
+  display: none;
+  cursor: pointer;
+`;
+
 
 const CalendarModal = ({ isOpen, close, calendarId }) => {
 
@@ -159,7 +236,7 @@ const CalendarModal = ({ isOpen, close, calendarId }) => {
   const onHandleData = async () => {
     const result = await onCalendarDetail()
     setCalendar(result.data);
-    setAgeState(result.data.ages)
+    setAgeState(result.data.ages);
     return calendar, ageState
   }
 
@@ -171,9 +248,9 @@ const CalendarModal = ({ isOpen, close, calendarId }) => {
     for (let i = 0; i < 6; i++) {
       if (ageState[i] === 'Y') {
         result.push(
-        <span key={i}>
+        <p key={i}>
           {i+2 + '0' + '대'}
-        </span>
+        </p>
         )
       }
     }
@@ -218,6 +295,11 @@ const CalendarModal = ({ isOpen, close, calendarId }) => {
   // 인기도 아이콘으로 변환
   const popularlityPercent = GetPopularlityPercent(calendar.createrPopularity);
 
+  const day = moment(calendar.time).format('YYYY.MM.DD')
+  const time = moment(calendar.time).format('hh:mm')
+
+  console.log(rendering())
+
   return (
     <ModalWrapper className={isOpen ? "active" : ""} top={ScrollY}>
       <ModalContentWrapper>
@@ -241,21 +323,39 @@ const CalendarModal = ({ isOpen, close, calendarId }) => {
               />
             </Popularity>
           </ProfileBlock>
+          <InnerWrapper>
           <ContentBlock>
-            방 내용: {calendar.calendarContent}
+            {calendar.calendarContent}
           </ContentBlock>
-          <ContentBlock>
-            참가자: {calendar.participant} / {calendar.peopleLimit}
-          </ContentBlock>
-          <ContentBlock>
-            장소: {calendar.place} 에서
-          </ContentBlock>
-          <ContentBlock>
-            시간: {calendar.time} 에 만나요
-          </ContentBlock>
-          <ContentBlock>
-            나이대: {rendering()}
-          </ContentBlock>
+          <TImeWrapper>
+            <PlaceBlock>
+              {calendar.place}
+            </PlaceBlock>
+            <LetterBlock>
+              에서
+            </LetterBlock>
+          </TImeWrapper>
+          <TImeWrapper>
+            <TimeBlock>
+              {day}
+            </TimeBlock>
+            <TimeBlock>
+              {time}
+            </TimeBlock>
+            <LetterBlock>
+              에 만나요
+            </LetterBlock>
+          </TImeWrapper>
+          <AgesWrapper>
+            {rendering().map((age, index) => (
+              <CheckBoxStyled key={index}>
+                {age.props.children}
+              </CheckBoxStyled>
+            ))}
+          </AgesWrapper>  
+            {calendar.participant} / {calendar.peopleLimit}
+          </InnerWrapper>
+      
           <>
             {
               user.data.userId === calendar.createrId ?

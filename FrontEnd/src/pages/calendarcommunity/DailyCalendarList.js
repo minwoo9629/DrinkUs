@@ -77,7 +77,6 @@ const DailyCalendarList = () => {
   const month = location.pathname.split('/')[3]
   const day = location.pathname.split('/')[4]
 
-  const [curDate, setCurDate] = useState(new Date());
   const [dailyCalendar, setDailyCalendar] = useState([]);
   const dailyCalendarTitle = `
     ${year}.
@@ -101,7 +100,7 @@ const DailyCalendarList = () => {
 
   useEffect(() => {
     fetchData();
-  }, [curDate]);
+  }, []);
 
   const nextDay = parseInt(day) + 1;
 
@@ -115,9 +114,9 @@ const DailyCalendarList = () => {
         <CalendarButton onClick={() => navigate("/daily")} color={"#ffffff"} textColor={"#6F92BF"}>일간</CalendarButton>
         </div>
         <ButtonWrapper>
-          <NextDayButton onClick={() => {navigate(`/calendar/${year}/${month}/${day-1}`), fetchData()}}>&#60;</NextDayButton>
+          <NextDayButton onClick={() => {window.location.replace(`/calendar/${year}/${month}/${day-1}`)}}>&#60;</NextDayButton>
           <Title>{dailyCalendarTitle}</Title>
-          <NextDayButton onClick={() => {navigate(`/calendar/${year}/${month}/${nextDay}`), fetchData()}}>&#62;</NextDayButton>
+          <NextDayButton onClick={() => {window.location.replace(`/calendar/${year}/${month}/${nextDay}`)}}>&#62;</NextDayButton>
         </ButtonWrapper>
         <CalendarButton onClick={() => navigate("/calendar/create")} color={"#bdcff2"} textColor={"#fff"}>글쓰기</CalendarButton>
       </TopMenuWrap>
