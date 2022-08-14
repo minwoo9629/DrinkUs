@@ -33,7 +33,8 @@ public class CustomSimpleRulAuthenticationSuccessHandler extends SimpleUrlAuthen
         response.addHeader("RefreshToken", refreshToken);
 
         String target = UriComponentsBuilder.fromUriString(AUTHENTICATION_REDIRECT_URI)
-                .queryParam("token", accessToken)
+                .queryParam("accesstoken", accessToken)
+                .queryParam("refreshtoken", refreshToken)
                 .build().toString();
 
         getRedirectStrategy().sendRedirect(request, response, target);
