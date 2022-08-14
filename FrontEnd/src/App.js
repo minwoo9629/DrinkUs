@@ -53,7 +53,6 @@ function App() {
               <Route path="/join/type" element={<JoinType />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/reports" element={<Reports />} />
-              <Route path="/oauth2/redirect" element={<SocialLogin />} />
               <Route path="/social/redirect" element={<SocialLogin />} />
               <Route
                 path="/live"

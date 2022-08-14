@@ -148,9 +148,6 @@ const Login = () => {
               <a href="http://i7b306.p.ssafy.io:8081/oauth2/authorization/google">
                 <SocialButton src="assets/google_icon.png" color="white" />
               </a>
-              <a href="https://i7b306.p.ssafy.io/oauth2/authorization/google">
-                구글
-              </a>
             </SocialWrapper>
           </BaseFlexColWrapper>
         </RoundedWrapper>
