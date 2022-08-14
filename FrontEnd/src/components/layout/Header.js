@@ -4,12 +4,12 @@ import { NavLink, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import {
   BASIC_MENU,
-  LOGINED_MENU,
   UNLOGINED_MENU,
 } from "../../constants/HeaderConstant";
 import { logOut } from "../../store/actions/user";
 import { SuccessAlert } from "../../utils/sweetAlert";
 import { BaseFlexWrapper } from "../styled/Wrapper";
+import AlarmModal from "../modals/AlarmModal";
 
 const DrinkUsHeader = styled(BaseFlexWrapper)`
   position: ${({ position }) => position};
@@ -102,6 +102,17 @@ const Header = ({ position, location }) => {
     };
   });
 
+  // 모달
+  const [isOpen, setIsOpen] = useState(false)
+
+  const modalOpen = () =>{
+    setIsOpen(true);
+  }
+
+  const modalClose = () =>{
+    setIsOpen(false);
+  }
+
   const user = useSelector((state) => state.user);
   return (
     <DrinkUsHeader
@@ -113,6 +124,8 @@ const Header = ({ position, location }) => {
       ) : '1'}
       position={position}
     >
+      <AlarmModal close={modalClose}
+      isOpen={isOpen}/>
       <HeaderMenu width={100} justify={"space-between"}>
         <HeaderMenuLinkWrapper width={"60"} justify={"space-between"}>
           {BASIC_MENU.map((item, idx) => (
@@ -137,15 +150,12 @@ const Header = ({ position, location }) => {
               >
                 {user.data.userNickname}님
               </HeaderMenuLink>
-              {LOGINED_MENU.map((item, idx) => (
-                <HeaderMenuLink
-                  key={idx}
-                  to={item.link}
-                  className={location === 'lightzone' ? "" : ( HeaderStatus ? "" : "light" )}
-                >
-                  <i className={item.className} />
-                </HeaderMenuLink>
-              ))}
+              <LogOutButton
+                className={location === 'lightzone' ? "" : ( HeaderStatus ? "" : "light" )}
+                onClick={modalOpen}
+              >
+                <i className="far fa-heart" />
+              </LogOutButton>
               <LogOutButton
                 onClick={onHandleLogout}
                 className={location === 'lightzone' ? "" : ( HeaderStatus ? "" : "light" )}
