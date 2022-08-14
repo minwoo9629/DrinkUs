@@ -386,7 +386,7 @@ const RoomDetail = () => {
           </ProfileBlock>
 
           <ButtonNicknameWrapper>
-            {data.roomPw ? (
+            {data.roomPw && curParticipant < data.peopleLimit ? (
               <PwInput
                 type="password"
                 onChange={onPwInput}
