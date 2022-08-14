@@ -5,10 +5,12 @@ import { getUserProfile } from "../../store/actions/user";
 
 const SocialLogin = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const jwtToken = searchParams.get("token");
+  const accessToken = searchParams.get("accesstoken");
+  const refreshToken = searchParams.get("refreshtoken");
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  sessionStorage.setItem("ACCESS_TOKEN", jwtToken);
+  sessionStorage.setItem("ACCESS_TOKEN", accessToken);
+  sessionStorage.setItem("REFRESH_TOKEN", refreshToken);
   dispatch(getUserProfile());
   SuccessAlert("로그인되었습니다", navigate);
   return <></>;

@@ -6,6 +6,9 @@ import { useState } from "react";
 import { client } from "../../utils/client"
 import { useNavigate } from "react-router-dom";
 import { SuccessAlert } from "../../utils/sweetAlert";
+import { BackButton } from "../../components/common/buttons/BackButton";
+import { setRoomSession } from "../../store/actions/room";
+import { useDispatch } from "react-redux";
 
 
 const CreateRoomBlock = styled.div`
@@ -143,7 +146,18 @@ const CheckBoxStyled = styled.input`
 
 const CreateRoom = () => {
 
+  // Room 입장을 위한 세션설정
+  // const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  // 방 입장 세션 정보
+  // const onHandleEnterRoom = () => {
+  //   const sessionData = {
+  //     sessionName: `Session${data.roomId}`,
+  //   };
+  //   dispatch(setRoomSession(sessionData));
+  //   navigate("/room/detail");
+  // };
   
   const [roomInfo, setRoomInfo] = useState({
     roomname: '',
@@ -178,8 +192,7 @@ const CreateRoom = () => {
       .then(function (response) {
         console.log(response.data.message);
         SuccessAlert("방이 생성되었습니다!")
-        // 방 내부 router 작성되면 내부로 보내기
-        navigate("/");
+        // onHandleEnterRoom()
       })
       .catch(function (error) {
         console.log(error);
@@ -215,7 +228,7 @@ const CreateRoom = () => {
 
   return (
     <>
-      <Header/>
+      <BackButton/>
       <Wrapper>
         <CreateRoomBlock>
           <div>

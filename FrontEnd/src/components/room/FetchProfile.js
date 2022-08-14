@@ -1,7 +1,6 @@
-import { useState } from "react";
 import styled from "styled-components";
-import { client } from "../../utils/client"
-import testimagesrc from './v.jpeg';
+import { useSelector } from "react-redux";
+import { GetPopularlityPercent } from "../../utils/GetPopularlityPercent";
 
 
 const ProfileBlock = styled.div`
@@ -47,37 +46,30 @@ const Popularity = styled.div`
 `;
 
 
+
 const FetchProfile = () => {
 
-  const [userProfile, setUserProfile] = useState({
-    userNickname: '',
-    userPopularity: 0
-  });
+  const user = useSelector((state) => state.user);
 
-  const [profileImage, setProfileImage] = useState('');
-
-  client
-    .get("users")
-    .then(function(response){
-      const data = response.data;
-      setUserProfile({...userProfile, 
-        ["userNickname"]: data.userNickname,
-        ["userPopularity"]: data.userPopularity
-      });
-    })
-    .catch(function(error){
-      console.log(error);
-    });
+  const popularlityPercent = GetPopularlityPercent(user.data.userPopularity);
 
   return (
-    /* 프로필 이미지, 주류 아이콘 이미지는 임시로 설정해놨으니 수정 부탁해요 */
     <ProfileBlock>
       <ProfileImageWrapper>
-        <ProfileImageThumbnail src={testimagesrc}></ProfileImageThumbnail>
+        <ProfileImageThumbnail src={`/assets/profileImage/profile${user.data.userImg}.png`}></ProfileImageThumbnail>
       </ProfileImageWrapper>
       
-      <Nickname>{userProfile.userNickname}</Nickname>
-      <Popularity>인기도 {userProfile.userPopularity}° <img height="20px" src="/assets/beer.png"/></Popularity>
+      <Nickname>{user.data.userNickname}</Nickname>
+      <Popularity>
+        인기도 {user.data.userPopularity}° 
+        <img
+          style={{ width: "40px", height: "40px", marginLeft: "20px" }}
+          src={
+            process.env.PUBLIC_URL +
+            `/assets/alcoholImage/${popularlityPercent}.png`
+          }
+        />
+      </Popularity>
     </ProfileBlock>
   );
 };

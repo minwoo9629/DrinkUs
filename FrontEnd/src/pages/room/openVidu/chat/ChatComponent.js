@@ -1,15 +1,11 @@
 import React, { Component } from "react";
 import styled from "styled-components";
 import "./ChatComponent.css";
-// import IconButton from "@material-ui/core/IconButton";
-// import Fab from "@material-ui/core/Fab";
-// import HighlightOff from "@material-ui/icons/HighlightOff";
-// import Send from "@material-ui/icons/Send";
-// import { Tooltip } from "@material-ui/core";
 
 const StyledChatContainer = styled.div`
   width: 100%;
   height: 100%;
+  display: ${(props) => props.display};
 `;
 
 const StyledChatComponent = styled.div`
@@ -25,7 +21,6 @@ const StyledChatComponent = styled.div`
   width: 100%;
   border-radius: 20px;
   box-shadow: 10px 10px 15px 6px rgba(0, 0, 0, 0.3);
-  display: ${(props) => props.display};
 `;
 
 const StyeldChatToolbar = styled.div`
@@ -109,6 +104,7 @@ export default class ChatComponent extends Component {
       .stream.session.on("signal:chat", (event) => {
         const data = JSON.parse(event.data);
         let messageList = this.state.messageList;
+        console.log(data, "데이터 알려주세요");
         messageList.push({
           connectionId: event.from.connectionId,
           nickname: data.nickname,
@@ -121,7 +117,9 @@ export default class ChatComponent extends Component {
           );
           const video = document.getElementById("video-" + data.streamId);
           const avatar = userImg.getContext("2d");
-          avatar.drawImage(video, 200, 120, 285, 285, 0, 0, 60, 60);
+          const img = new Image();
+          img.src = `/assets/profileImage/profile${data.userImg}.png`;
+          avatar.drawImage(img, 0, 0, 60, 60);
           this.props.messageReceived();
         }, 50);
         this.setState({ messageList: messageList });
@@ -148,6 +146,7 @@ export default class ChatComponent extends Component {
           message: message,
           nickname: this.props.user.getNickname(),
           streamId: this.props.user.getStreamManager().stream.streamId,
+          userImg: this.props.userImg,
         };
         this.props.user.getStreamManager().stream.session.signal({
           data: JSON.stringify(data),
@@ -173,8 +172,8 @@ export default class ChatComponent extends Component {
 
   render() {
     return (
-      <StyledChatContainer>
-        <StyledChatComponent display={this.props.chatDisplay}>
+      <StyledChatContainer display={this.props.chatDisplay}>
+        <StyledChatComponent>
           <StyeldChatToolbar>
             <span>
               {/* {this.props.user.getStreamManager().stream.session.sessionId} - */}

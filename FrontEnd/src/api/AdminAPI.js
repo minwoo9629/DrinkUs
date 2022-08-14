@@ -16,8 +16,34 @@ const getReportList = async () => {
   return result;
 }
 
+const permitUser = async(userId) => {
+  const result = await client
+    .patch(`/admin/permission/${userId}`)
+    .then((response) => response)
+    .catch((error) => error.response);
+  return result;
+}
+
+const removeUser = async(userId) => {
+  const result = await client
+    .delete(`/users/${userId}`)
+    .then((response) => response)
+    .catch((error) => error.response);
+  return result;
+}
+
+const processReport = async(data) => {
+  const result = await client
+    .put(`/admin/report`, data)
+    .then((response) => response)
+    .catch((error) => error);
+  return result;
+}
 
 export {
   getUserInfoList,
-  getReportList
+  getReportList,
+  permitUser,
+  removeUser,
+  processReport,
 };

@@ -183,7 +183,7 @@ const Calendar = () => {
         <InnerWrapper>
           <TopMenuWrap>
             <div>
-              <CalendarButton onClick={() => navigate("/calendar/create")} color={"#bdcff2"} textColor={"#fff"}>월간</CalendarButton>
+              <CalendarButton onClick={() => navigate("/calendar")} color={"#bdcff2"} textColor={"#fff"}>월간</CalendarButton>
               <CalendarButton onClick={() => navigate("/daily")} color={"#ffffff"} textColor={"#6F92BF"}>일간</CalendarButton>
             </div>
             <TopMenuWrap>

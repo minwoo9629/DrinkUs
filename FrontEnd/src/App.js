@@ -15,6 +15,7 @@ import SocialLogin from "./pages/auth/SocialLogin";
 import MyPage from "./pages/auth/MyPage";
 import DrinkLive from "./pages/room/DrinkLive";
 import CreateRoom from "./pages/room/CreateRoom";
+import RoomDetail from "./pages/room/RoomDetail";
 import RoomList from "./pages/room/RoomList";
 import Daily from "./pages/Daily";
 import Calendar from "./pages/calendarcommunity/Calendar";
@@ -52,7 +53,7 @@ function App() {
               <Route path="/join/type" element={<JoinType />} />
               <Route path="/users/profile/:userNo" element={<Profile />} />
               <Route path="/reports" element={<Reports />} />
-              <Route path="/oauth2/redirect" element={<SocialLogin />} />
+              <Route path="/social/redirect" element={<SocialLogin />} />
               <Route
                 path="/live"
                 element={<PrivateRoute component={<DrinkLive />} />}
@@ -64,6 +65,10 @@ function App() {
               <Route
                 path="/rooms"
                 element={<PrivateRoute component={<RoomList />} />}
+              />
+              <Route
+                path="/rooms/:roomId"
+                element={<PrivateRoute component={<RoomDetail />} />}
               />
               <Route
                 path="/daily"
