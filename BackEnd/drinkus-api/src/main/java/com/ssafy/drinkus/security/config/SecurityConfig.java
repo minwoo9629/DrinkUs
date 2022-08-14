@@ -62,7 +62,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션, 쿠키를 만들지 않고 stateless한 서버를 만들겠다
                 .and()
                 .authorizeRequests()
-                .antMatchers("/ws-stomp/**", "/api/port", "/actuator/health", "/api/oauth2/**").permitAll()
+                .antMatchers("/ws-stomp/**", "/api/port", "/actuator/health", "**/oauth2/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/auth/refreshToken").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/users/join", "/api/users/login", "/api/users/join/id", "/api/users/id", "/api/users/pw", "/api/users/sendConfirmEmail").permitAll()
                 .antMatchers(HttpMethod.PATCH, "/api/users/confirmToken").permitAll()
