@@ -104,12 +104,11 @@ class VideoRoomComponent extends Component {
       : "DRINKUS";
     this.hasBeenUpdated = false;
     this.layout = new OpenViduLayout();
-
     let sessionName = this.props.sessionInfo
       ? this.props.sessionInfo.sessionName
       : "SessionA";
     let userName = this.props.user
-      ? this.props.user.userNickName
+      ? this.props.user.userNickname
       : "OpenVidu_User" + Math.floor(Math.random() * 100);
     this.remotes = [];
     this.localUserAccessAllowed = false;
@@ -891,6 +890,7 @@ class VideoRoomComponent extends Component {
   }
 
   render() {
+    console.log(this.props.user.userImg);
     const mySessionId = this.state.mySessionId;
     const localUser = this.state.localUser;
     return (
@@ -936,6 +936,7 @@ class VideoRoomComponent extends Component {
                   user={localUser}
                   chatDisplay={this.state.chatDisplay}
                   close={this.toggleChat}
+                  userImg={this.props.user.userImg}
                   messageReceived={this.checkNotification}
                 />
               )}
