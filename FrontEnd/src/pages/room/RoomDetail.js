@@ -112,7 +112,6 @@ const PwInput = styled.input`
   border-radius: 10px;
   border: 3px solid #bdcff2;
   box-shadow: inset 0px 0px 4px 4px rgba(189, 207, 242, 0.5);
-  height: 600px;
 `;
 
 const RoomDetail = () => {
@@ -346,7 +345,7 @@ const RoomDetail = () => {
           )}
           <RoomInfoWrapper>
             <h2>{data.roomName}</h2>
-            <h4>{timeGap}시간 전</h4>
+            <h4>{timeGap}</h4>
           </RoomInfoWrapper>
           <RoomInfoWrapper>
             {data.categoryName}

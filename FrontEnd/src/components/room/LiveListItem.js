@@ -88,7 +88,7 @@ const LiveListItem = ({
         </InfoInnerWrapper>
       </InfoWrapper>
         <TimeBox>
-          {timeGap}시간 전
+          {timeGap}
         </TimeBox>
     </RoomBox>
     </>
