@@ -84,7 +84,7 @@ const Login = () => {
     };
 
     const response = await login(data);
-    if (response.status === 400) {
+    if (response.status === 400 || response.status === 500) {
       FailAlert(response.data.message);
       return;
     }

@@ -70,12 +70,6 @@ const InputForm = styled.input`
   border-radius: 10px;
 `
 
-const CheckBoxForm = styled.input`
-  background-color: white;
-  width: 30px;
-  height: 30px;
-`
-
 const SelectBox = styled.select`
  width: 200px;
  background-color: white;
@@ -147,18 +141,20 @@ const CheckBoxStyled = styled.input`
 const CreateRoom = () => {
 
   // Room 입장을 위한 세션설정
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // 방 입장 세션 정보
-  // const onHandleEnterRoom = () => {
-  //   const sessionData = {
-  //     sessionName: `Session${data.roomId}`,
-  //   };
-  //   dispatch(setRoomSession(sessionData));
-  //   navigate("/room/detail");
-  // };
+  const [roomIdState, setRoomIdState] = useState('')
   
+  // 방 입장 세션 정보
+  const onHandleEnterRoom = () => {
+    const sessionData = {
+      sessionName: `Session${roomIdState}`,
+    };
+    dispatch(setRoomSession(sessionData));
+    navigate("/room/detail");
+  };
+
   const [roomInfo, setRoomInfo] = useState({
     roomname: '',
     peoplelimit: 2,
@@ -192,7 +188,8 @@ const CreateRoom = () => {
       .then(function (response) {
         console.log(response.data.message);
         SuccessAlert("방이 생성되었습니다!")
-        // onHandleEnterRoom()
+        setRoomIdState(response.data)
+        onHandleEnterRoom()
       })
       .catch(function (error) {
         console.log(error);
