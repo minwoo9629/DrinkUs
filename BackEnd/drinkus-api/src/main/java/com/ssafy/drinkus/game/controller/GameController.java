@@ -1,9 +1,11 @@
 package com.ssafy.drinkus.game.controller;
 
+import com.ssafy.drinkus.game.request.BombResultRequest;
 import com.ssafy.drinkus.game.request.ChatMessage;
 import com.ssafy.drinkus.game.request.GameIdRequest;
 import com.ssafy.drinkus.game.request.TopicRequest;
 import com.ssafy.drinkus.game.response.BombResponse;
+import com.ssafy.drinkus.game.response.BombResultResponse;
 import com.ssafy.drinkus.game.service.GameService;
 import com.ssafy.drinkus.security.util.JwtUtil;
 import com.ssafy.drinkus.user.response.UserMyInfoResponse;
@@ -55,10 +57,10 @@ public class GameController {
     // 해당 user_id의 회원 정보를 모든 사람들에게 뿌려주기
     @MessageMapping("/bomb/result")
     public void findByUserId(@Header(HttpHeaders.AUTHORIZATION) String bearerToken
-            , GameIdRequest request) {
+            , BombResultRequest request) {
         Long userId = jwtUtil.getUserId(bearerToken.substring(7));
-        UserMyInfoResponse userMyInfoResponse = gameService.findByUserId(userId);
-        messagingTemplate.convertAndSend("/sub/bomb/result/" + request.getRoomId(), userMyInfoResponse);
+        BombResultResponse bombResultResponse = gameService.findByUserId(userId, request);
+        messagingTemplate.convertAndSend("/sub/bomb/result/" + request.getRoomId(), bombResultResponse);
     }
 
     // 랜덤 마시기 : 랜덤 마시기가 시작됐다는 요청 받으면(room_id)

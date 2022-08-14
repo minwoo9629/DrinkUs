@@ -66,9 +66,9 @@ public class RoomController {
 
     //화상방 생성
     @PostMapping
-    public ResponseEntity<Void> createRoom(@LoginUser User user, @RequestBody @Valid RoomCreateRequest request) {
-        roomService.createRoom(user, request);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Long> createRoom(@LoginUser User user, @RequestBody @Valid RoomCreateRequest request) {
+        Long roomId = roomService.createRoom(user, request);
+        return ResponseEntity.ok().body(roomId);
     }
 
     //화상방 수정

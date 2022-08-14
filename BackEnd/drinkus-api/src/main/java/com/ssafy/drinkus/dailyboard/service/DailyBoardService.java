@@ -108,7 +108,9 @@ public class DailyBoardService {
     // 댓글 작성
     @Transactional
     public void createComment(User user, DailyBoardCreateRequest request, Long parentId) {
-        DailyBoard parentBoard = dailyBoardQueryRepository.findDailyAndUserById(parentId)
+//        DailyBoard parentBoard = dailyBoardQueryRepository.findDailyAndUserById(parentId)
+//                .orElseThrow(() -> new NotFoundException(NotFoundException.BOARD_DAILY_NOT_FOUND));
+        DailyBoard parentBoard = dailyBoardRepository.findById(parentId)
                 .orElseThrow(() -> new NotFoundException(NotFoundException.BOARD_DAILY_NOT_FOUND));
         if (parentBoard.getParentId() != null) {
             throw new InvalidException("답글에는 답글을 작성할 수 없습니다.");
@@ -118,9 +120,9 @@ public class DailyBoardService {
         dailyBoardRepository.save(dailyBoard);
 
         //유저 아이디와 해당 유저의 fcm토큰을 가져옴
-        String fcmToken = parentBoard.getCreater().getFcmToken();
-        String userNickname = parentBoard.getCreater().getUserNickname();
-        firebaseClient.send(fcmToken,userNickname + "님의 글에 댓글이 달렸습니다.");
+//        String fcmToken = parentBoard.getCreater().getFcmToken();
+//        String userNickname = parentBoard.getCreater().getUserNickname();
+//        firebaseClient.send(fcmToken,userNickname + "님의 글에 댓글이 달렸습니다.");
     }
 
     // 글 수정

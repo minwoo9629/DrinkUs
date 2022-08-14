@@ -142,7 +142,7 @@ public class RoomService {
 
     //화상방 생성
     @Transactional
-    public void createRoom(User user, RoomCreateRequest request) {
+    public Long createRoom(User user, RoomCreateRequest request) {
         Category findCategory = null;
         User findUser = userRepository.findById(user.getUserId())
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
@@ -162,6 +162,7 @@ public class RoomService {
                 findCategory
         );
         roomRepository.save(room);
+        return room.getRoomId();
     }
 
     //화상방 수정
