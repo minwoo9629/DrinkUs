@@ -49,7 +49,7 @@ const StyledLayoutBounds = styled.div`
 var localUser = new UserModel();
 
 // 게임 서버와 연결할 클라이언트
-const ROOM_ID = 4;
+const ROOM_ID = 2;
 // const ROOM_ID = Math.ceil(Math.random() * 5);
 const gameClient = React.createRef({});
 //
@@ -57,32 +57,33 @@ function withNavigation(Component) {
   return (props) => <Component navigate={useNavigate()} {...props} />;
 }
 
-const BombGame = ({ second, clickCount, toggleBombGame }) => {
+const BombGame = ({ second, clickCount, toggleBombGame, display }) => {
   const [clickCountState, setClickCountState] = useState(clickCount);
-  const [displayState, setDisplayState] = useState("");
   useEffect(() => {
     if (clickCountState === 0) {
-      toggleBombGame("none");
+      alert("미션성공");
       console.log("폭탄 돌리기 끝내기");
+      // 폭탄게임에대한 pub -> 완료
+      toggleBombGame("none");
     }
-    // const interval = setInterval(() => {
-    //   console.log(second);
-    // }, second);
-    // return () => clearInterval(interval);
   }, [clickCountState]);
   return (
     <div
       style={{
         position: "absolute",
+        zIndex: 1000000,
+        top: "500px",
+        left: "500px",
         width: "100px",
         height: "100px",
         backgroundColor: "blue",
+        display: display,
       }}
     >
       <button
         onClick={() => setClickCountState((prevState) => clickCountState - 1)}
       >
-        +
+        -
       </button>
       폭탄돌리기 Count : {clickCountState}
     </div>
@@ -120,7 +121,7 @@ class VideoRoomComponent extends Component {
       subscribers: [],
       chatDisplay: "none",
       gameDisplay: "none",
-      bombGameDisplay: "none",
+      bombGameDisplay: "",
       settingDisplay: "none",
       currentVideoDevice: undefined,
       clickCount: 0,
@@ -298,6 +299,7 @@ class VideoRoomComponent extends Component {
   }
 
   pubStartBombGame() {
+    console.log("폭탄돌리기");
     gameClient.current.publish({
       destination: `/pub/bomb/start`,
       body: JSON.stringify({
@@ -306,6 +308,7 @@ class VideoRoomComponent extends Component {
     });
   }
   subStartBombGame() {
+    console.log("ss");
     gameClient.current.subscribe(
       `/sub/bomb/start/${ROOM_ID}`,
       ({ body }) => {
@@ -803,16 +806,14 @@ class VideoRoomComponent extends Component {
   toggleBombGame(property) {
     let display = property;
     if (display === undefined) {
-      display = this.state.gameDisplay === "none" ? "block" : "none";
+      display = this.bombGameDisplay === "none" ? "block" : "none";
     }
     if (display === "block") {
       this.setState({
-        gameDisplay: display,
-        settingDisplay: "none",
-        chatDisplay: "none",
+        bombGameDisplay: display,
       });
     } else {
-      this.setState({ gameDisplay: display });
+      this.setState({ bombGameDisplay: display });
     }
     this.updateLayout();
   }
@@ -842,14 +843,13 @@ class VideoRoomComponent extends Component {
     const mySessionId = this.state.mySessionId;
     const localUser = this.state.localUser;
     // var chatDisplay = { display: this.state.chatDisplay };
-
     return (
       <>
         <BombGame
           second={5000}
           clickCount={10}
           toggleBombGame={this.toggleBombGame}
-          style={{ display: this.bombGameDisplay }}
+          display={this.state.bombGameDisplay}
         />
         <div
           style={{ height: "100vh", width: "100vw", display: "flex" }}
@@ -901,6 +901,7 @@ class VideoRoomComponent extends Component {
                 <RoomGame
                   gameDisplay={this.state.gameDisplay}
                   close={this.toggleGame}
+                  bombGame={this.pubStartBombGame}
                   recommendTopics={this.pubRecommendTopics}
                   randomDrink={this.pubRandomDrink}
                   recommendToasts={this.pubRecommendToasts}
