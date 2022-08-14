@@ -152,7 +152,7 @@ const RoomList = () => {
   // 검색
   const [filter, setFilter] = useState({
     searchKeyword: '',
-    sortOrder: '1',
+    sortOrder: '0',
     categoryId: null
   });
 
@@ -246,8 +246,8 @@ const RoomList = () => {
               name="sortOrder"
               onChange={onFilterInput}
               >
-              <option value="1">최신순</option>
-              <option value="0">오래된 순</option>
+              <option value="0">최신순</option>
+              <option value="1">오래된 순</option>
             </SelectBox>
           </OptionInnerWrapper>
           <AgesWrapper>
