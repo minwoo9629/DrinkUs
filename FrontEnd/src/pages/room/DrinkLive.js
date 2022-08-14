@@ -5,9 +5,7 @@ import { useState, useEffect, useCallback } from "react";
 import { client } from "../../utils/client";
 import LiveListItem from '../../components/room/LiveListItem'
 import Banner from "../../components/room/Banner";
-import Slider from "react-slick";
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
+import { useSelector } from "react-redux";
 
 // 버튼, 배너
 const LiveWrapper = styled.div`
@@ -77,6 +75,7 @@ const RecommendInnerWrapper = styled.div`
 const DrinkLive = () => {
 
   const navigate = useNavigate();
+  const user = useSelector((state) => state.user);
   
   // 나이대 요청
   const [ageList, setAgeList] = useState([]);
@@ -110,6 +109,10 @@ const DrinkLive = () => {
 
   // 호출
   useEffect(() => {
+    if (user.userBirthDay === null) {
+      alert("생년월일을 수정해주세요");
+      navigate("/edit/profile");
+    }
     onMakeAgeList();
     onCategoryList();
     onCurrentList();
