@@ -35,9 +35,8 @@ const StyeldRoomGameTittle = styled.div`
   color: black;
 `;
 
-const StyeldRoomGameButtonWrapper = styled.div`
+const StyeldRoomGameButtonsWrapper = styled.div`
   height: 90%;
-  background-color: cornflowerblue;
   box-sizing: border-box;
   display: flex;
   justify-content: center;
@@ -45,30 +44,45 @@ const StyeldRoomGameButtonWrapper = styled.div`
   flex-direction: column;
 `;
 
-const RoomGame = ({ gameDisplay }) => {
+const StyeldGameButtonWrapper = styled.div`
+  width: 90%;
+  justify-content: space-between;
+  padding: 8px 20px;
+  align-items: center;
+  display: flex;
+`;
+
+const RoomGame = ({
+  gameDisplay,
+  randomDrink,
+  recommendTopics,
+  recommendToasts,
+  bombGame,
+}) => {
   return (
     <StyledRoomGameContainer display={gameDisplay}>
       <StyledRoomGameComponent>
         <StyeldRoomGameTittle>
           <span>게임설정</span>
         </StyeldRoomGameTittle>
-        <StyeldRoomGameButtonWrapper>
-          <div style={{ color: "white" }}>
-            <GameButton onClick={() => console.log("")} text={"랜덤 마시기"} />
-          </div>
-          <div style={{ color: "white" }}>
-            <GameButton onClick={() => console.log("")} text={"폭탄 돌리기"} />
-          </div>
-          <div style={{ color: "white" }}>
-            <GameButton
-              onClick={() => console.log("")}
-              text={"대화주제 추천"}
-            />
-          </div>
-          <div style={{ color: "white" }}>
-            <GameButton onClick={() => console.log("")} text={"건배사 추천"} />
-          </div>
-        </StyeldRoomGameButtonWrapper>
+        <StyeldRoomGameButtonsWrapper>
+          <StyeldGameButtonWrapper>
+            <div>랜덤 마시기</div>
+            <GameButton onClick={randomDrink} text={"go"} />
+          </StyeldGameButtonWrapper>
+          <StyeldGameButtonWrapper>
+            <div>폭탄 돌리기</div>
+            <GameButton onClick={bombGame} text={"go"} />
+          </StyeldGameButtonWrapper>
+          <StyeldGameButtonWrapper>
+            <div>대화주제 추천</div>
+            <GameButton onClick={recommendTopics} text={"go"} />
+          </StyeldGameButtonWrapper>
+          <StyeldGameButtonWrapper>
+            <div>건배사 추천</div>
+            <GameButton onClick={recommendToasts} text={"go"} />
+          </StyeldGameButtonWrapper>
+        </StyeldRoomGameButtonsWrapper>
       </StyledRoomGameComponent>
     </StyledRoomGameContainer>
   );

@@ -46,8 +46,8 @@ export const randomDrink = (title) => {
   let timerInterval;
   MySwal.fire({
     title,
-    html: "빨리빨리! <b></b> milliseconds.",
-    timer: 2000,
+    html: "마시세요 빨리빨리! <b></b> milliseconds.",
+    timer: 3000,
     timerProgressBar: true,
     didOpen: () => {
       Swal.showLoading();
@@ -64,5 +64,42 @@ export const randomDrink = (title) => {
     if (result.dismiss === Swal.DismissReason.timer) {
       console.log("I was closed by the timer");
     }
+  });
+};
+
+export const randomTopik = (title) => {
+  Swal.fire({
+    title: title,
+    width: "70em",
+    confirmButtonText: "대화시작하기",
+    showClass: {
+      popup: "animate__animated animate__fadeInDown",
+    },
+    hideClass: {
+      popup: "animate__animated animate__fadeOutUp",
+    },
+    timer: 4000,
+  });
+};
+
+export const recommendToasts = (title) => {
+  Swal.fire({
+    title: `<h1 className="animate__jello">${title}</h1>`,
+    width: "70em",
+    showConfirmButton: false,
+    timer: 4000,
+  });
+};
+
+export const gameResult = (title, subTitle) => {
+  let timerInterval;
+  MySwal.fire({
+    title,
+    html: subTitle,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: () => {
+      Swal.showLoading();
+    },
   });
 };

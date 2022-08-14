@@ -1,4 +1,4 @@
-import React, { Component, useRef, useState } from "react";
+import React, { Component, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import "./VideoRoomComponent.css";
 import { OpenVidu } from "openvidu-browser";
@@ -19,6 +19,12 @@ import RoomGame from "./game/RoomGame";
 
 import * as StompJs from "@stomp/stompjs";
 import * as SockJS from "sockjs-client";
+import {
+  gameResult,
+  randomDrink,
+  randomTopik,
+  recommendToasts,
+} from "../../../utils/sweetAlert";
 
 const ButtonContentComponentWrapper = styled.div`
   width: 330px;
@@ -29,12 +35,8 @@ const ButtonContentComponentWrapper = styled.div`
 
 const StyledLayoutBounds = styled.div`
   background-color: rgba(0, 0, 0, 0.3);
-  overflow: hidden;
-
   display: flex;
   flex-wrap: wrap;
-  /* position: absolute; */
-  /* left: 0; */
   right: 0;
   height: 100%;
   min-width: 400px !important;
@@ -42,9 +44,10 @@ const StyledLayoutBounds = styled.div`
 `;
 
 var localUser = new UserModel();
-
+let missionFailedUser = [];
+let userCnt = 0;
 // 게임 서버와 연결할 클라이언트
-const ROOM_ID = 4;
+let ROOM_ID = 0;
 // const ROOM_ID = Math.ceil(Math.random() * 5);
 const gameClient = React.createRef({});
 //
@@ -52,17 +55,38 @@ function withNavigation(Component) {
   return (props) => <Component navigate={useNavigate()} {...props} />;
 }
 
-const BombGame = () => {
+const StyeldBombCount = styled.div`
+  position: absolute;
+  font-size: 100px;
+  transform: translate(-140%, -25%);
+  color: white;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+`;
+const BombGame = ({ clickCount, toggleBombGame, display, onDecreaseCount }) => {
+  useEffect(() => {
+    if (clickCount === 0) {
+      toggleBombGame("none");
+    }
+  }, [clickCount]);
   return (
     <div
       style={{
         position: "absolute",
-        width: "100px",
-        height: "100px",
-        backgroundColor: "blue",
+        zIndex: 1000000,
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        display: display,
       }}
     >
-      폭탄돌리기
+      <div onClick={onDecreaseCount} style={{ position: "relative" }}>
+        <img src="/assets/game/bomb.png" />
+        <StyeldBombCount style={{ position: "absolute" }}>
+          {clickCount}
+        </StyeldBombCount>
+      </div>
     </div>
   );
 };
@@ -70,6 +94,7 @@ const BombGame = () => {
 class VideoRoomComponent extends Component {
   constructor(props) {
     super(props);
+    ROOM_ID = this.props.sessionInfo.roomId;
     this.accessToken = sessionStorage.getItem("ACCESS_TOKEN");
     this.OPENVIDU_SERVER_URL = this.props.openviduServerUrl
       ? this.props.openviduServerUrl
@@ -79,14 +104,11 @@ class VideoRoomComponent extends Component {
       : "DRINKUS";
     this.hasBeenUpdated = false;
     this.layout = new OpenViduLayout();
-    console.log(this.props.sessionInfo);
-    console.log(this.props.sessionInfo.sessionName);
     let sessionName = this.props.sessionInfo
       ? this.props.sessionInfo.sessionName
       : "SessionA";
-    console.log(this.props.user);
     let userName = this.props.user
-      ? this.props.user.userNickName
+      ? this.props.user.userNickname
       : "OpenVidu_User" + Math.floor(Math.random() * 100);
     this.remotes = [];
     this.localUserAccessAllowed = false;
@@ -98,9 +120,10 @@ class VideoRoomComponent extends Component {
       subscribers: [],
       chatDisplay: "none",
       gameDisplay: "none",
+      bombGameDisplay: "none",
       settingDisplay: "none",
       currentVideoDevice: undefined,
-      clickCount: 0,
+      clickCount: 10,
       second: 0,
     };
 
@@ -121,6 +144,8 @@ class VideoRoomComponent extends Component {
     this.checkSize = this.checkSize.bind(this);
     this.toggleSetting = this.toggleSetting.bind(this);
     this.toggleGame = this.toggleGame.bind(this);
+    this.toggleBombGame = this.toggleBombGame.bind(this);
+    this.onDecreaseCount = this.onDecreaseCount.bind(this);
   }
 
   componentDidMount() {
@@ -196,6 +221,8 @@ class VideoRoomComponent extends Component {
         this.subRecommendTopics();
         this.subRandomDrink();
         this.subRecommendToasts();
+        this.subStartBombGame();
+        this.subEndBombGame();
       },
     });
 
@@ -219,8 +246,7 @@ class VideoRoomComponent extends Component {
     gameClient.current.subscribe(
       `/sub/random/${ROOM_ID}`,
       ({ body }) => {
-        // 여기에 화면에 띄우는 로직 작성
-        console.log("#랜덤 마시기: ", body);
+        randomDrink(body);
       },
       {
         AccessToken: `Bearer ${this.accessToken}`,
@@ -243,8 +269,7 @@ class VideoRoomComponent extends Component {
     gameClient.current.subscribe(
       `/sub/topic/${ROOM_ID}`,
       ({ body }) => {
-        // 여기에 화면에 띄우는 로직 작성
-        console.log("#대화주제 추천: ", body);
+        randomTopik(body);
       },
       {
         AccessToken: `Bearer ${this.accessToken}`,
@@ -266,7 +291,7 @@ class VideoRoomComponent extends Component {
     gameClient.current.subscribe(
       `/sub/toast/${ROOM_ID}`,
       ({ body }) => {
-        console.log("#건배사 추천: ", body);
+        recommendToasts(body);
       },
       {
         AccessToken: `Bearer ${this.accessToken}`,
@@ -275,29 +300,39 @@ class VideoRoomComponent extends Component {
     );
   }
 
+  pubStartBombGame() {
+    gameClient.current.publish({
+      destination: `/pub/bomb/start`,
+      body: JSON.stringify({
+        roomId: ROOM_ID,
+      }),
+    });
+  }
+
   subStartBombGame() {
     gameClient.current.subscribe(
       `/sub/bomb/start/${ROOM_ID}`,
       ({ body }) => {
         // 여기에 화면에 띄우는 로직 작성
-        console.log("폭탄 돌리기 시작: ", body);
         const obj = JSON.parse(body);
 
-        this.setState({ second: obj.second, clickCount: obj.clickCount });
+        this.setState(
+          { second: obj.second, clickCount: obj.clickCount },
+          () => {
+            this.toggleBombGame("block");
+          }
+        );
+
         let second = obj.second;
         let leftClickCount = obj.clickCount;
 
         let interval = setInterval(() => {
-          console.log(second);
           second--;
 
-          // 뭔가 띄우기
-          // 그것의 onClick = leftClickCount--
-          // if(leftClickCount <= 0) : 뭔가 띄웠던 것 숨기기, 성공 표시
-
           if (second < 0) {
+            this.pubEndBombGame();
+            this.toggleBombGame("none");
             clearInterval(interval);
-            console.log("시간끝");
           }
         }, 1000);
       },
@@ -308,16 +343,66 @@ class VideoRoomComponent extends Component {
     );
   }
 
+  pubEndBombGame() {
+    gameClient.current.publish({
+      destination: `/pub/bomb/result`,
+      headers: {
+        Authorization: `Bearer ${this.accessToken}`,
+      },
+      body: JSON.stringify({
+        roomId: ROOM_ID,
+        clickCount: this.state.clickCount,
+      }),
+    });
+  }
+
+  subEndBombGame() {
+    console.log(this.state.subscribers.length);
+    gameClient.current.subscribe(
+      `/sub/bomb/result/${ROOM_ID}`,
+      ({ body }) => {
+        console.log(this.state.subscribers.length);
+        // 여기에 화면에 띄우는 로직 작성
+        const resultObj = JSON.parse(body);
+        if (!resultObj.result) {
+          missionFailedUser.push(resultObj.nickname);
+        }
+        userCnt++;
+        if (userCnt === this.state.subscribers.length + 1) {
+          let title = "";
+          let subTitle = "";
+          if (missionFailedUser.length === 0) {
+            title = "모두 성공하셨습니다.";
+            subTitle = "잠시 후 또 도전해 보세요";
+          } else {
+            title = missionFailedUser.join("\n");
+            subTitle = "마시세요!!!!!!";
+          }
+          gameResult(title, subTitle);
+          userCnt = 0;
+          missionFailedUser = [];
+        }
+      },
+      {
+        AccessToken: `Bearer ${this.accessToken}`,
+        roomId: ROOM_ID,
+      }
+    );
+  }
+  onDecreaseCount() {
+    this.setState({
+      clickCount: this.state.clickCount >= 1 ? this.state.clickCount - 1 : 0,
+    });
+  }
+
   // Spring Boot Server와 Stomp 소켓 연동 끝
 
   connectToSession() {
     if (this.props.token !== undefined) {
-      console.log("token received: ", this.props.token);
       this.connect(this.props.token);
     } else {
       this.getToken()
         .then((token) => {
-          console.log(token);
           this.connect(token);
         })
         .catch((error) => {
@@ -720,8 +805,6 @@ class VideoRoomComponent extends Component {
       display = this.state.chatDisplay === "none" ? "block" : "none";
     }
     if (display === "block") {
-      console.log("채팅창 열기");
-      console.log(this.state.settingDisplay);
       this.setState({
         chatDisplay: display,
         messageReceived: false,
@@ -770,6 +853,21 @@ class VideoRoomComponent extends Component {
     this.updateLayout();
   }
 
+  toggleBombGame(property) {
+    let display = property;
+    if (display === undefined) {
+      display = this.bombGameDisplay === "none" ? "block" : "none";
+    }
+    if (display === "block") {
+      this.setState({
+        bombGameDisplay: display,
+      });
+    } else {
+      this.setState({ bombGameDisplay: display });
+    }
+    this.updateLayout();
+  }
+
   checkNotification(event) {
     this.setState({
       messageReceived: this.state.chatDisplay === "none",
@@ -792,13 +890,17 @@ class VideoRoomComponent extends Component {
   }
 
   render() {
+    console.log(this.props.user.userImg);
     const mySessionId = this.state.mySessionId;
     const localUser = this.state.localUser;
-    // var chatDisplay = { display: this.state.chatDisplay };
-
     return (
       <>
-        {setInterval(BombGame, this.second)}
+        <BombGame
+          onDecreaseCount={this.onDecreaseCount}
+          clickCount={this.state.clickCount}
+          toggleBombGame={this.toggleBombGame}
+          display={this.state.bombGameDisplay}
+        />
         <div
           style={{ height: "100vh", width: "100vw", display: "flex" }}
           className="container"
@@ -816,9 +918,6 @@ class VideoRoomComponent extends Component {
             switchCamera={this.switchCamera}
             leaveSession={this.leaveSession}
             toggleChat={this.toggleChat}
-            recommendTopics={this.pubRecommendTopics}
-            randomDrink={this.pubRandomDrink}
-            recommendToasts={this.pubRecommendToasts}
             toggleSetting={this.toggleSetting}
             toggleGame={this.toggleGame}
           />
@@ -837,6 +936,7 @@ class VideoRoomComponent extends Component {
                   user={localUser}
                   chatDisplay={this.state.chatDisplay}
                   close={this.toggleChat}
+                  userImg={this.props.user.userImg}
                   messageReceived={this.checkNotification}
                 />
               )}
@@ -852,10 +952,13 @@ class VideoRoomComponent extends Component {
                 <RoomGame
                   gameDisplay={this.state.gameDisplay}
                   close={this.toggleGame}
+                  bombGame={this.pubStartBombGame}
+                  recommendTopics={this.pubRecommendTopics}
+                  randomDrink={this.pubRandomDrink}
+                  recommendToasts={this.pubRecommendToasts}
                 />
               )}
           </ButtonContentComponentWrapper>
-
           <DialogExtensionComponent
             showDialog={this.state.showExtensionDialog}
             cancelClicked={this.closeDialogExtension}

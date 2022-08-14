@@ -1,4 +1,8 @@
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
+import { getRoomInfo } from "../../../../api/RoomAPI";
+import { client } from "../../../../utils/client";
 
 const StyledRoomSettingContainer = styled.div`
   width: 100%;
@@ -34,17 +38,83 @@ const StyeldRoomSettingTittle = styled.div`
   color: black;
 `;
 
+const StyeldTitle = styled.p`
+  padding: 8px 0px;
+  margin: 50px 10px 10px 10px;
+  border-bottom: 1px solid #bdcff2;
+  color: white;
+`;
+const StyledAgeListWrapper = styled.div`
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+`;
+
+const StyeldAgeWrapper = styled.div`
+  margin-left: 4px;
+  margin-bottom: 8px;
+  text-align: center;
+  background-color: white;
+  width: 30px;
+  padding: 8px 16px;
+  border-radius: 10px;
+  color: black;
+  &.active {
+    background-color: #bdcff2;
+  }
+`;
+
+const StyeldCategoryNameWrapper = styled.div`
+  background-color: #bdcff2;
+  text-align: center;
+  margin: 0px 10px;
+  padding: 8px 20px;
+  border-radius: 10px;
+  color: black;
+`;
+
 const RoomSetting = ({ settingDisplay, roomSettingTitle }) => {
+  const [roomInfoState, setRoomInfoState] = useState({
+    ages: [],
+    categoryName: "",
+    roomName: "",
+  });
+  const ages = ["20", "30", "40", "50", "60", "70↑"];
+  const roomInfo = useSelector((state) => state.room);
+  const fetchRoomData = async (roomId) => {
+    const result = await getRoomInfo(roomId);
+    setRoomInfoState({ ...result });
+  };
+  useEffect(() => {
+    fetchRoomData(roomInfo.roomId);
+  }, []);
+  console.log(roomInfoState);
   return (
     <StyledRoomSettingContainer display={settingDisplay}>
       <StyledRoomSettingComponent>
         <StyeldRoomSettingTittle>
-          <span>{roomSettingTitle}</span>
+          <span>{roomInfoState.roomName}</span>
         </StyeldRoomSettingTittle>
-        <div style={{ color: "white" }}>방연령대 표시하기</div>
-        <div style={{ color: "white" }}>관심사 표시하기</div>
-        <div style={{ color: "white" }}>인원 표시하기</div>
-        <div style={{ color: "white" }}>비밀번호</div>
+        <div>
+          <StyeldTitle>방 연령대</StyeldTitle>
+          <StyledAgeListWrapper>
+            {roomInfoState.ages.map((item, idx) => (
+              <StyeldAgeWrapper
+                key={idx}
+                className={item === "Y" ? "active" : ""}
+              >
+                {ages[idx]}
+              </StyeldAgeWrapper>
+            ))}
+          </StyledAgeListWrapper>
+        </div>
+        <div>
+          <StyeldTitle>관심사</StyeldTitle>
+          <StyeldCategoryNameWrapper>
+            {roomInfoState.categoryName}
+          </StyeldCategoryNameWrapper>
+        </div>
       </StyledRoomSettingComponent>
     </StyledRoomSettingContainer>
   );

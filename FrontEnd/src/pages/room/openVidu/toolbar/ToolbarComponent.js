@@ -31,7 +31,7 @@ const RoomContentWrapper = styled.div`
   align-items: center;
   margin-bottom: 200px;
 `;
-const RoomContentButtonWrapper = styled.div`
+export const RoomContentButtonWrapper = styled.div`
   width: 60px;
   height: 60px;
 `;
@@ -98,9 +98,8 @@ export default class ToolbarComponent extends Component {
     this.switchCamera = this.switchCamera.bind(this);
     this.leaveSession = this.leaveSession.bind(this);
     this.toggleChat = this.toggleChat.bind(this);
-    this.randomDrink = this.randomDrink.bind(this);
-    this.recommendTopics = this.recommendTopics.bind(this);
-    this.recommendToasts = this.recommendToasts.bind(this);
+    this.toggleGame = this.toggleGame.bind(this);
+    this.toggleSetting = this.toggleSetting.bind(this);
   }
 
   recommendToasts() {
@@ -180,7 +179,6 @@ export default class ToolbarComponent extends Component {
             </RoomContentButtonWrapper>
             <RoomContentButtonWrapper>
               <RoomContentButton onClick={this.toggleGame}>
-                {/* onClick={() => randomDrink("~~님 마셔요!!!!")} */}
                 <FontAwesomeStyled className="fas fa-gamepad" />
               </RoomContentButton>
             </RoomContentButtonWrapper>
@@ -221,9 +219,6 @@ export default class ToolbarComponent extends Component {
               </RoomContentButton>
             </RoomContentButtonWrapper>
           </RoomContentWrapper>
-          <button onClick={this.randomDrink}>랜덤마시기k</button>
-          <button onClick={this.recommendTopics}>대화주제추천</button>
-          <button onClick={this.recommendToasts}>건배사 추천</button>
           {/* <div className="buttonsContent">
             <button
               color="inherit"
