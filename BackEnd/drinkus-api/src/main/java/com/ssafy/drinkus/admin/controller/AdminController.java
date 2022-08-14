@@ -8,7 +8,6 @@ import com.ssafy.drinkus.report.request.ReportUpdateRequest;
 import com.ssafy.drinkus.report.response.ReportInfoResponse;
 import com.ssafy.drinkus.user.domain.User;
 import com.ssafy.drinkus.user.response.UserListResponse;
-import com.ssafy.drinkus.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
