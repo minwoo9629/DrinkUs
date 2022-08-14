@@ -53,7 +53,11 @@ const ProfileImgWrapper = styled.div`
   background-color: white;
 `;
 
-const ProfileImg = styled.img``;
+const ProfileImg = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+`;
 
 const EditButton = styled.button`
   width: 40px;
@@ -117,29 +121,9 @@ const Profile = ({ userId, changeTypeState }) => {
     FailAlert("인기도 수정횟수는 1일 최대 5회입니다");
   }
 
-  // // 인기도 더하기
-  // const onPopularityPlus = (userNo) => {
-  //   client
-  //     .patch(`/users/popularity/${userNo}`, {
-  //       popularNum: 1
-  //     })
-  // }
-
-  // // 인기도 내리기
-  // const onPopularityMinus = (userId) => {
-  //   client
-  //     .patch(`/users/popularity/${userId}`, {
-  //       popularNum: -1
-  //     })
-  //     .then((response) => resopnse)
-  // }
-
   // 인기도 더하기
   const onPopularityPlus = async (userNo) => {
-    const data = {
-      popularNum: 1,
-    };
-    const result = await plusPopularity(data);
+    const result = await plusPopularity(userNo);
     if (result.status === 400) {
       FailAlert("오늘의 인기도 수정 횟수를 모두 사용했습니다.");
     } else {
@@ -152,11 +136,8 @@ const Profile = ({ userId, changeTypeState }) => {
   };
 
   // 인기도 내리기
-  const onPopularityMinus = async () => {
-    const data = {
-      popularNum: -1,
-    };
-    const result = await minusPopularity(data);
+  const onPopularityMinus = async (userNo) => {
+    const result = await minusPopularity(userNo);
     if (result.status === 400) {
       FailAlert("오늘의 인기도 수정 횟수를 모두 사용했습니다.");
     } else {
@@ -184,9 +165,6 @@ const Profile = ({ userId, changeTypeState }) => {
     fetchUsers(userId);
     fetchCategory(userId);
   }, []);
-
-  console.log(state);
-
   return (
     <div>
       <Wrapper>
@@ -199,7 +177,7 @@ const Profile = ({ userId, changeTypeState }) => {
           </ProfileImgWrapper>
           인기도: {state.userPopularity}°
           <EditButton
-            onClick={onPopularityPlus}
+            onClick={() => onPopularityPlus(userId)}
             name="plus"
             disabled={popular.popularityNumber === 5}
           >
@@ -207,7 +185,7 @@ const Profile = ({ userId, changeTypeState }) => {
             +{" "}
           </EditButton>
           <EditButton
-            onClick={onPopularityMinus}
+            onClick={() => onPopularityMinus(userId)}
             name="minus"
             disabled={popular.popularityNumber === 5}
           >
