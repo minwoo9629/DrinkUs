@@ -164,7 +164,7 @@ class VideoRoomComponent extends Component {
 
     this.layout.initLayoutContainer(
       document.getElementById("layout"),
-      openViduLayoutOptions
+      openViduLayoutOptions,
     );
     window.addEventListener("beforeunload", this.onbeforeunload);
     window.addEventListener("resize", this.updateLayout);
@@ -196,7 +196,7 @@ class VideoRoomComponent extends Component {
       () => {
         this.subscribeToStreamCreated();
         this.connectToSession();
-      }
+      },
     );
   }
 
@@ -204,8 +204,8 @@ class VideoRoomComponent extends Component {
   connectGameServer() {
     // STOMP 서버에 연결
     gameClient.current = new StompJs.Client({
-      brokerURL: "wss://i7b306.p.ssafy.io/ws-stomp/websocket",
-      //   brokerURL: "ws://localhost:8080/ws-stomp/websocket",
+      //   brokerURL: "wss://i7b306.p.ssafy.io/ws-stomp/websocket",
+      brokerURL: "ws://localhost:8080/ws-stomp/websocket",
       connectHeaders: {
         roomId: ROOM_ID,
         AccessToken: `Bearer ${this.accessToken}`,
@@ -221,6 +221,7 @@ class VideoRoomComponent extends Component {
         this.subRecommendTopics();
         this.subRandomDrink();
         this.subRecommendToasts();
+        this.subStartBombGame();
       },
     });
 
@@ -249,7 +250,7 @@ class VideoRoomComponent extends Component {
       {
         AccessToken: `Bearer ${this.accessToken}`,
         roomId: ROOM_ID,
-      }
+      },
     );
   }
 
@@ -272,7 +273,7 @@ class VideoRoomComponent extends Component {
       {
         AccessToken: `Bearer ${this.accessToken}`,
         roomId: ROOM_ID,
-      }
+      },
     );
   }
 
@@ -294,7 +295,7 @@ class VideoRoomComponent extends Component {
       {
         AccessToken: `Bearer ${this.accessToken}`,
         roomId: ROOM_ID,
-      }
+      },
     );
   }
 
@@ -307,6 +308,7 @@ class VideoRoomComponent extends Component {
       }),
     });
   }
+
   subStartBombGame() {
     console.log("ss");
     gameClient.current.subscribe(
@@ -315,8 +317,12 @@ class VideoRoomComponent extends Component {
         // 여기에 화면에 띄우는 로직 작성
         console.log("폭탄 돌리기 시작: ", body);
         const obj = JSON.parse(body);
+        console.log("cc: " + obj.clickCount);
 
-        this.setState({ second: obj.second, clickCount: obj.clickCount });
+        this.setState((prevState) => {
+          return { ...prevState, clickCount: obj.clickCount };
+        });
+        // this.setState({ second: obj.second, clickCount: obj.clickCount });
         this.toggleBombGame("block");
         let second = obj.second;
         let leftClickCount = obj.clickCount;
@@ -338,7 +344,32 @@ class VideoRoomComponent extends Component {
       {
         AccessToken: `Bearer ${this.accessToken}`,
         roomId: ROOM_ID,
-      }
+      },
+    );
+  }
+
+  pubEndBombGame() {
+    console.log("폭탄돌리기 결과");
+    gameClient.current.publish({
+      destination: `/pub/bomb/result`,
+      body: JSON.stringify({
+        Authorization: `Bearer ${this.accessToken}`,
+        roomId: ROOM_ID,
+      }),
+    });
+  }
+
+  subEndBombGame() {
+    gameClient.current.subscribe(
+      `/sub/bomb/result/${ROOM_ID}`,
+      ({ body }) => {
+        // 여기에 화면에 띄우는 로직 작성
+        console.log(body);
+      },
+      {
+        AccessToken: `Bearer ${this.accessToken}`,
+        roomId: ROOM_ID,
+      },
     );
   }
 
@@ -366,7 +397,7 @@ class VideoRoomComponent extends Component {
           console.log(
             "There was an error getting the token:",
             error.code,
-            error.message
+            error.message,
           );
           alert("There was an error getting the token:", error.message);
         });
@@ -392,7 +423,7 @@ class VideoRoomComponent extends Component {
         console.log(
           "There was an error connecting to the session:",
           error.code,
-          error.message
+          error.message,
         );
       });
   }
@@ -438,10 +469,10 @@ class VideoRoomComponent extends Component {
         this.state.localUser.getStreamManager().on("streamPlaying", (e) => {
           this.updateLayout();
           publisher.videos[0].video.parentElement.classList.remove(
-            "custom-class"
+            "custom-class",
           );
         });
-      }
+      },
     );
   }
 
@@ -461,7 +492,7 @@ class VideoRoomComponent extends Component {
           });
         }
         this.updateLayout();
-      }
+      },
     );
   }
 
@@ -512,7 +543,7 @@ class VideoRoomComponent extends Component {
   deleteSubscriber(stream) {
     const remoteUsers = this.state.subscribers;
     const userStream = remoteUsers.filter(
-      (user) => user.getStreamManager().stream === stream
+      (user) => user.getStreamManager().stream === stream,
     )[0];
     let index = remoteUsers.indexOf(userStream, 0);
     if (index > -1) {
@@ -530,7 +561,7 @@ class VideoRoomComponent extends Component {
       subscriber.on("streamPlaying", (e) => {
         this.checkSomeoneShareScreen();
         subscriber.videos[0].video.parentElement.classList.remove(
-          "custom-class"
+          "custom-class",
         );
       });
       const newUser = new UserModel();
@@ -584,7 +615,7 @@ class VideoRoomComponent extends Component {
         {
           subscribers: remoteUsers,
         },
-        () => this.checkSomeoneShareScreen()
+        () => this.checkSomeoneShareScreen(),
       );
     });
   }
@@ -638,12 +669,13 @@ class VideoRoomComponent extends Component {
     try {
       const devices = await this.OV.getDevices();
       var videoDevices = devices.filter(
-        (device) => device.kind === "videoinput"
+        (device) => device.kind === "videoinput",
       );
 
       if (videoDevices && videoDevices.length > 1) {
         var newVideoDevice = videoDevices.filter(
-          (device) => device.deviceId !== this.state.currentVideoDevice.deviceId
+          (device) =>
+            device.deviceId !== this.state.currentVideoDevice.deviceId,
         );
 
         if (newVideoDevice.length > 0) {
@@ -659,7 +691,7 @@ class VideoRoomComponent extends Component {
 
           //newPublisher.once("accessAllowed", () => {
           await this.state.session.unpublish(
-            this.state.localUser.getStreamManager()
+            this.state.localUser.getStreamManager(),
           );
           await this.state.session.publish(newPublisher);
           this.state.localUser.setStreamManager(newPublisher);
@@ -695,7 +727,7 @@ class VideoRoomComponent extends Component {
         } else if (error && error.name === "SCREEN_CAPTURE_DENIED") {
           alert("You need to choose a window or application to share");
         }
-      }
+      },
     );
 
     publisher.once("accessAllowed", () => {
@@ -843,6 +875,8 @@ class VideoRoomComponent extends Component {
   render() {
     const mySessionId = this.state.mySessionId;
     const localUser = this.state.localUser;
+
+    console.log("cliclcici: " + this.state.clickCount);
     // var chatDisplay = { display: this.state.chatDisplay };
     return (
       <>
@@ -958,7 +992,7 @@ class VideoRoomComponent extends Component {
 
   getToken() {
     return this.createSession(this.state.mySessionId).then((sessionId) =>
-      this.createToken(sessionId)
+      this.createToken(sessionId),
     );
   }
 
@@ -985,7 +1019,7 @@ class VideoRoomComponent extends Component {
             console.log(error);
             console.warn(
               "No connection to OpenVidu Server. This may be a certificate error at " +
-                this.OPENVIDU_SERVER_URL
+                this.OPENVIDU_SERVER_URL,
             );
             if (
               window.confirm(
@@ -994,11 +1028,11 @@ class VideoRoomComponent extends Component {
                   '"\n\nClick OK to navigate and accept it. ' +
                   'If no certificate warning is shown, then check that your OpenVidu Server is up and running at "' +
                   this.OPENVIDU_SERVER_URL +
-                  '"'
+                  '"',
               )
             ) {
               window.location.assign(
-                this.OPENVIDU_SERVER_URL + "/accept-certificate"
+                this.OPENVIDU_SERVER_URL + "/accept-certificate",
               );
             }
           }
@@ -1022,7 +1056,7 @@ class VideoRoomComponent extends Component {
                 "Basic " + btoa("OPENVIDUAPP:" + this.OPENVIDU_SERVER_SECRET),
               "Content-Type": "application/json",
             },
-          }
+          },
         )
         .then((response) => {
           console.log("TOKEN", response);
