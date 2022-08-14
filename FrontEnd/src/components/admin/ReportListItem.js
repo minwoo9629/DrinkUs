@@ -23,10 +23,17 @@ const InputForm = styled.input`
   border-radius: 10px;
 `
 
+const ReportElement = styled.div`
+  width: ${({ width }) => width};
+  word-wrap: break-word;
+`;
+
 const ReportListItem = ({
   reportId,
   fromUserId,
+  fromUserName,
   toUserId,
+  toUserName,
   reportType,
   reportReason,
   reportCompleted,
@@ -54,23 +61,23 @@ const ReportListItem = ({
         height: "20px",
       }}
     >
-      <div style={{ width: "5%" }}>{reportId}</div>
-      <div style={{ width: "5%" }}>{fromUserId}</div>
-      <div style={{ width: "5%" }}>{toUserId}</div>
-      <div style={{ width: "20%" }}>{reportType}</div>
-      <div style={{ width: "25%" }}>{reportReason}</div>
+      <ReportElement width="3%">{reportId}</ReportElement>
+      <ReportElement width="20%">{fromUserName}</ReportElement>
+      <ReportElement width="20%">{toUserName}</ReportElement>
+      <ReportElement width="12%">{reportType}</ReportElement>
+      <ReportElement width="22%">{reportReason}</ReportElement>
       {
         reportCompleted === 'Y' ? (
-          <div style={{ width: "10%", color: "blue"}}>O</div>
+          <ReportElement style={{ width: "8%", color: "blue"}}>O</ReportElement>
         ) : (
-          <div style={{ width: "10%", color: "red"}}>X</div>
+          <ReportElement style={{ width: "8%", color: "red"}}>X</ReportElement>
         )
       }
       
       {
         reportCompleted === 'N' ? (
           <InputForm
-            width="20%"
+            width="10%"
             type="number"
             min="0"
             value={state.stopPeriod}
@@ -80,10 +87,10 @@ const ReportListItem = ({
             required
           />
         ) : (
-          <div style={{ width: "20%" }}>{reportResult}</div>
+          <ReportElement width="10%">{reportResult}</ReportElement>
         )
       }
-      <div style={{ width: "2%" }}></div>
+      <ReportElement width="2%"></ReportElement>
       {
         reportCompleted === 'N' ? (
           <CustomButton
@@ -97,7 +104,7 @@ const ReportListItem = ({
           <CustomButton
             bg="darkgrey"
             width="3%" >
-            -
+              -
           </CustomButton>
         )
       }
