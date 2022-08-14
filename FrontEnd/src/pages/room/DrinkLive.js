@@ -5,9 +5,7 @@ import { useState, useEffect, useCallback } from "react";
 import { client } from "../../utils/client";
 import LiveListItem from '../../components/room/LiveListItem'
 import Banner from "../../components/room/Banner";
-import Slider from "react-slick";
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
+import { useSelector } from "react-redux";
 
 // 버튼, 배너
 const LiveWrapper = styled.div`
@@ -74,43 +72,10 @@ const RecommendInnerWrapper = styled.div`
   width: 1200px;
 `
 
-// 캐러셀
-const Container = styled.div`
-  width: 1200px;
-  overflow:hidden;
-  .slick-dots {
-    .slick-active {
-      button::before {
-        color: #c1c1c1;
-      }
-    }
-    button::before {
-      color: #e9e9e9;
-    }
-  }
-`;
-
-const StyledSlider = styled(Slider)`
-    .slick-slide div{
-      outline: none;
-    }
-`;
-
 const DrinkLive = () => {
 
-  // 캐러셀 설정
-  const settings = {
-    className: "center",
-    centerMode: true,
-    dots: true,
-    speed: 1800,
-    slidesToShow: 3,
-    autoplay: true,
-    autoplaySpeed: 3000,
-    pauseOnHover: true,
-  };
-
   const navigate = useNavigate();
+  const user = useSelector((state) => state.user);
   
   // 나이대 요청
   const [ageList, setAgeList] = useState([]);
@@ -144,6 +109,10 @@ const DrinkLive = () => {
 
   // 호출
   useEffect(() => {
+    if (user.userBirthDay === null) {
+      alert("생년월일을 수정해주세요");
+      navigate("/edit/profile");
+    }
     onMakeAgeList();
     onCategoryList();
     onCurrentList();
@@ -176,19 +145,15 @@ const DrinkLive = () => {
           </RecommendLetter>
         ) : (
           <>
-          <Container>
-            <StyledSlider {...settings}>
-              {ageList.map((content, index) => (
-                <>
-              <LiveListItem
-              {...content}
-                key={index}
-              > 
-              </LiveListItem>
-              </>
-              ))}
-            </StyledSlider>
-          </Container>
+            {ageList.map((content, index) => (
+              <>
+            <LiveListItem
+            {...content}
+              key={index}
+            > 
+            </LiveListItem>
+            </>
+            ))}
           </>
         )}
       </RecommendInnerWrapper>
@@ -207,8 +172,6 @@ const DrinkLive = () => {
           </RecommendLetter>
         ):(
           <>
-          <Container>
-            <StyledSlider {...settings}>
           {categoryList.map((content, index) => (
             <LiveListItem
             {...content}
@@ -216,8 +179,6 @@ const DrinkLive = () => {
             > 
             </LiveListItem>
           ))}
-          </StyledSlider>
-          </Container>
           </>
         )}
       </RecommendInnerWrapper>
@@ -236,8 +197,6 @@ const DrinkLive = () => {
           </RecommendLetter>
         ) : (
           <>
-          <Container>
-            <StyledSlider {...settings}>
           {currentList.map((content, index) => (
             <LiveListItem
             {...content}
@@ -245,8 +204,6 @@ const DrinkLive = () => {
             > 
             </LiveListItem>
           ))}
-          </StyledSlider>
-          </Container>
           </>
         )}
       </RecommendInnerWrapper>

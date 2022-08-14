@@ -31,7 +31,7 @@ const RoomContentWrapper = styled.div`
   align-items: center;
   margin-bottom: 200px;
 `;
-const RoomContentButtonWrapper = styled.div`
+export const RoomContentButtonWrapper = styled.div`
   width: 60px;
   height: 60px;
 `;
@@ -179,7 +179,6 @@ export default class ToolbarComponent extends Component {
             </RoomContentButtonWrapper>
             <RoomContentButtonWrapper>
               <RoomContentButton onClick={this.toggleGame}>
-                {/* onClick={() => randomDrink("~~님 마셔요!!!!")} */}
                 <FontAwesomeStyled className="fas fa-gamepad" />
               </RoomContentButton>
             </RoomContentButtonWrapper>
