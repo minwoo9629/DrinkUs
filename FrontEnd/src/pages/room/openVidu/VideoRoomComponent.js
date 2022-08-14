@@ -49,7 +49,7 @@ const StyledLayoutBounds = styled.div`
 var localUser = new UserModel();
 
 // 게임 서버와 연결할 클라이언트
-const ROOM_ID = 2;
+let ROOM_ID = 0;
 // const ROOM_ID = Math.ceil(Math.random() * 5);
 const gameClient = React.createRef({});
 //
@@ -59,6 +59,9 @@ function withNavigation(Component) {
 
 const BombGame = ({ second, clickCount, toggleBombGame, display }) => {
   const [clickCountState, setClickCountState] = useState(clickCount);
+  useEffect(() => {
+    setClickCountState(clickCount);
+  }, []);
   useEffect(() => {
     if (clickCountState === 0) {
       alert("미션성공");
@@ -93,6 +96,7 @@ const BombGame = ({ second, clickCount, toggleBombGame, display }) => {
 class VideoRoomComponent extends Component {
   constructor(props) {
     super(props);
+    ROOM_ID = this.props.sessionInfo.roomId;
     this.accessToken = sessionStorage.getItem("ACCESS_TOKEN");
     this.OPENVIDU_SERVER_URL = this.props.openviduServerUrl
       ? this.props.openviduServerUrl
@@ -102,8 +106,7 @@ class VideoRoomComponent extends Component {
       : "DRINKUS";
     this.hasBeenUpdated = false;
     this.layout = new OpenViduLayout();
-    console.log(this.props.sessionInfo);
-    console.log(this.props.sessionInfo.sessionName);
+
     let sessionName = this.props.sessionInfo
       ? this.props.sessionInfo.sessionName
       : "SessionA";
@@ -124,7 +127,7 @@ class VideoRoomComponent extends Component {
       bombGameDisplay: "none",
       settingDisplay: "none",
       currentVideoDevice: undefined,
-      clickCount: 100,
+      clickCount: 10,
       second: 0,
     };
 
@@ -204,8 +207,8 @@ class VideoRoomComponent extends Component {
   connectGameServer() {
     // STOMP 서버에 연결
     gameClient.current = new StompJs.Client({
-      //   brokerURL: "wss://i7b306.p.ssafy.io/ws-stomp/websocket",
-      brokerURL: "ws://localhost:8080/ws-stomp/websocket",
+      brokerURL: "wss://i7b306.p.ssafy.io/ws-stomp/websocket",
+      //   brokerURL: "ws://localhost:8080/ws-stomp/websocket",
       connectHeaders: {
         roomId: ROOM_ID,
         AccessToken: `Bearer ${this.accessToken}`,
@@ -300,6 +303,7 @@ class VideoRoomComponent extends Component {
   }
 
   pubStartBombGame() {
+    console.log(ROOM_ID);
     console.log("폭탄돌리기");
     gameClient.current.publish({
       destination: `/pub/bomb/start`,
@@ -319,11 +323,10 @@ class VideoRoomComponent extends Component {
         const obj = JSON.parse(body);
         console.log("cc: " + obj.clickCount);
 
-        this.setState((prevState) => {
-          return { ...prevState, clickCount: obj.clickCount };
+        this.setState({ clickCount: obj.clickCount }, () => {
+          this.toggleBombGame("block");
         });
-        // this.setState({ second: obj.second, clickCount: obj.clickCount });
-        this.toggleBombGame("block");
+
         let second = obj.second;
         let leftClickCount = obj.clickCount;
 
@@ -875,9 +878,6 @@ class VideoRoomComponent extends Component {
   render() {
     const mySessionId = this.state.mySessionId;
     const localUser = this.state.localUser;
-
-    console.log("cliclcici: " + this.state.clickCount);
-    // var chatDisplay = { display: this.state.chatDisplay };
     return (
       <>
         <BombGame
