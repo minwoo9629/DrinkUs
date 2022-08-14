@@ -57,11 +57,12 @@ function withNavigation(Component) {
   return (props) => <Component navigate={useNavigate()} {...props} />;
 }
 
-const BombGame = ({ second, clickCount, toggleBombGame, display }) => {
+const BombGame = ({ clickCount, toggleBombGame, display }) => {
+  console.log(clickCount, "클릭 카운트 확인하기");
   const [clickCountState, setClickCountState] = useState(clickCount);
   useEffect(() => {
     setClickCountState(clickCount);
-  }, []);
+  }, [clickCount]);
   useEffect(() => {
     if (clickCountState === 0) {
       alert("미션성공");
@@ -323,9 +324,12 @@ class VideoRoomComponent extends Component {
         const obj = JSON.parse(body);
         console.log("cc: " + obj.clickCount);
 
-        this.setState({ clickCount: obj.clickCount }, () => {
-          this.toggleBombGame("block");
-        });
+        this.setState(
+          { second: obj.second, clickCount: obj.clickCount },
+          () => {
+            this.toggleBombGame("block");
+          }
+        );
 
         let second = obj.second;
         let leftClickCount = obj.clickCount;
