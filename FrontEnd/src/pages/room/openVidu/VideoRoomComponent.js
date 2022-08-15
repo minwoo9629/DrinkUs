@@ -5,7 +5,6 @@ import { OpenVidu } from "openvidu-browser";
 import StreamComponent from "./stream/StreamComponent";
 import DialogExtensionComponent from "./dialog-extension/DialogExtension";
 import ChatComponent from "./chat/ChatComponent";
-
 import OpenViduLayout from "./layout/openvidu-layout";
 import UserModel from "./models/user-model";
 import ToolbarComponent from "./toolbar/ToolbarComponent";
@@ -16,15 +15,17 @@ import { useNavigate } from "react-router-dom";
 import { isCompositeComponent } from "react-dom/test-utils";
 import RoomSetting from "./setting/RoomSetting";
 import RoomGame from "./game/RoomGame";
-
 import * as StompJs from "@stomp/stompjs";
 import * as SockJS from "sockjs-client";
+import Modal from "../../../components/modals/Modal";
+import UserProfileContent from "../../../components/modals/contents/UserProfileContent";
 import {
   gameResult,
   randomDrink,
   randomTopik,
   recommendToasts,
 } from "../../../utils/sweetAlert";
+import { getTargetUserId } from "../../../api/ProfileAPI";
 
 const ButtonContentComponentWrapper = styled.div`
   width: 330px;
@@ -125,6 +126,8 @@ class VideoRoomComponent extends Component {
       currentVideoDevice: undefined,
       clickCount: 10,
       second: 0,
+      modalState: false,
+      targetUserId: "",
     };
 
     this.joinSession = this.joinSession.bind(this);
@@ -146,6 +149,8 @@ class VideoRoomComponent extends Component {
     this.toggleGame = this.toggleGame.bind(this);
     this.toggleBombGame = this.toggleBombGame.bind(this);
     this.onDecreaseCount = this.onDecreaseCount.bind(this);
+    this.openModal = this.openModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
   }
 
   componentDidMount() {
@@ -888,13 +893,42 @@ class VideoRoomComponent extends Component {
       this.hasBeenUpdated = false;
     }
   }
+  async openModal(userNickname) {
+    const data = {
+      userNickname,
+    };
+    const result = await getTargetUserId(data);
+    console.log(result);
+    this.setState({ targetUserId: result.data });
+    this.setState({ modalState: true });
+  }
+
+  closeModal() {
+    this.setState({ modalState: false });
+  }
 
   render() {
-    console.log(this.props.user.userImg);
     const mySessionId = this.state.mySessionId;
     const localUser = this.state.localUser;
     return (
       <>
+        {this.state.targetUserId !== "" ? (
+          <>
+            {console.log("모달을 열자")}
+            <Modal
+              modalContent={
+                <UserProfileContent
+                  userId={this.state.targetUserId}
+                  close={this.closeModal}
+                />
+              }
+              isOpen={this.state.modalState}
+            />
+          </>
+        ) : (
+          <></>
+        )}
+
         <BombGame
           onDecreaseCount={this.onDecreaseCount}
           clickCount={this.state.clickCount}
@@ -977,16 +1011,19 @@ class VideoRoomComponent extends Component {
                 </div>
               )}
             {this.state.subscribers.map((sub, i) => (
-              <div
-                key={i}
-                className="OT_root OT_publisher custom-class"
-                id="remoteUsers"
-              >
-                <StreamComponent
-                  user={sub}
-                  streamId={sub.streamManager.stream.streamId}
-                />
-              </div>
+              <>
+                <div
+                  key={i}
+                  className="OT_root OT_publisher custom-class"
+                  id="remoteUsers"
+                >
+                  <StreamComponent
+                    user={sub}
+                    openModal={this.openModal}
+                    streamId={sub.streamManager.stream.streamId}
+                  />
+                </div>
+              </>
             ))}
           </StyledLayoutBounds>
         </div>
