@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
-import {
-  deleteDailyComment,
-} from "../../api/DailyAPI";
+import { deleteDailyComment } from "../../api/DailyAPI";
 import { client } from "../../utils/client";
 
 const DailyWrapper = styled.div`
@@ -119,22 +117,34 @@ const fetchUser = async () => {
     setState({...state, [e.target.name]: e.target.value});
   };
 
+  // 댓글 화살표
+  const CommentArrow = styled.div`
+    width: 4vw;
+    /* border: 1px solid #bdcff2; */
+    padding: 11px 12px;
+    background-color: white;
+    position: relative;
+    font-size: 24px;
+    color: #6f92bf;
+  `
+
   return (
     <div>
       <DailyWrapper>
-        <ProfileWrapper style={{ width: "20%" }}>{createrId}: 작성자 id</ProfileWrapper>
-          <div style={{ width: "60%" }}>{boardContent}</div>
-          <div style = {{ display: state.userId === createrId ? "block" : "none"}}>
+      <CommentArrow><i class="fa fa-arrow-right" aria-hidden="true"></i></CommentArrow>
+      <DailyWrapper>
 
-            <DailyBoardEditButton
-            onClick={() => onHandleCommentEdit()}
-            >
-                수정
-            </DailyBoardEditButton>
-            <DailyBoardEditButton onClick={() => onCommentDelete(boardId)}>
-                삭제
-            </DailyBoardEditButton>
-          </div>
+          <ProfileWrapper style={{ width: "20%" }}>{createrId}: 작성자 id</ProfileWrapper>
+            <div style={{ width: "60%" }}>{boardContent}</div>
+            <div style = {{ display: state.userId === createrId ? "block" : "none"}}>
+              <DailyBoardEditButton onClick={() => onHandleCommentEdit()}>
+                  수정
+              </DailyBoardEditButton>
+              <DailyBoardEditButton onClick={() => onCommentDelete(boardId)}>
+                  삭제
+              </DailyBoardEditButton>
+            </div>
+      </DailyWrapper>
       </DailyWrapper>
           <div>
             <div style = {{ display: state.showCommentEdit === false ? "none" : "block"}}>
