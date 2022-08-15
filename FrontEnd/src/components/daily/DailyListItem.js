@@ -87,25 +87,6 @@ const DailyBoardCommentButton = styled.button`
   border: 1px white;
   text-align: flex;
 `
-// 글 수정 쪽
-const DailyModifyWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  height: 9vh;
-  background-color: white;
-`
-
-const ProfileEditRowWapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: ${(props) => props.alignItems};
-  padding: ${(props) => props.padding};
-  border: ${(props) => props.border};
-  border-radius: ${(props) => props.borderRadius};
-  margin-left: ${(props) => props.marginLeft};
-`;
 
 // 글 수정 인풋
 const DailyModifyInput = styled.input`
@@ -203,7 +184,7 @@ const DailyListItem = (
   }) => {
   const [commentList, setCommentList] = useState([])
   const [state, setState] = useState({
-    boardArticle: "",
+    boardArticle: boardContent,
     showEditArticle: false,
     userId: "",
     userNickname: "",
@@ -335,7 +316,6 @@ const DailyListItem = (
             <BoardContent style={{ display: state.showEditArticle === true ? "none" : "block" }}>{boardContent}</BoardContent>
             <BoardContent style={{ display: state.showEditArticle === false ? "none" : "block" }}>
               <DailyModifyInput
-                placeholder="수정칸 입력"
                 type="string"
                 value={state.boardArticle}
                 name="boardArticle"

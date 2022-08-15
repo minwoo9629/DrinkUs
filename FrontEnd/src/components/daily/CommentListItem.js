@@ -27,13 +27,6 @@ const CommentContentWrapper = styled.div`
   
 `
 
-// 수정, 삭제 감싸는 div
-const DailyEditWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`
-
 // 글 수정 삭제 버튼
 const DailyBoardEditButton = styled.button`
   padding: 4px 8px;
@@ -51,16 +44,28 @@ justify-content: space-between;
 align-items: center;
 `;
 
-// 댓글 인풋
-const DailyCommentInput = styled.input`
-  justify-content: space-between;
-  width: 64vw;
-  height: 11vh;
+// 댓글 수정 인풋
+const DailyModifyInput = styled.input`
+  width: 100%;
+  height: 100%;
   border-radius: 1px;
-  border: #6f92bf;
-  background-color: #eaf1ff;
-  margin: 4px;
+  border: solid #6F92BF 0.1em;
+  background-color: white;
   position: relative;
+  padding-left: 20px;
+`
+
+// 댓글 수정 버튼
+const DailyModifyButton = styled.button`
+  float: right;
+  padding: 6px 24px;
+  border-radius: 1px;
+  height: 102%;
+  background-color: #bdcff2;
+  border: solid #bdcff2 0.1em;
+  color: white;
+  font-size: 16px;
+  margin: 16px;
 `
 
 const ProfileImg = styled.img`
@@ -94,11 +99,13 @@ const CommentListItem = ({
   boardId,
   boardContent,
   userNickname,
-  createrId
+  createrId,
+  userImg
 }) => {
   const [state, setState] = useState({
     boardComment: "",
     showCommentEdit: false,
+    userImg: "",
   })
 
   // 접속한 유저 정보 가져오기
@@ -132,17 +139,6 @@ const CommentListItem = ({
       .then((response) => response)
   }
 
-  // 댓글 수정하기 버튼
-  const DailyCommentEditButton = styled.button`
-    padding: 12px 24px;
-    border-radius: 3px;
-    background-color: #bdcff2;
-    color: white;
-    font-size: 16px;
-    margin: 4px;
-    border: 1px #eaf1ff;
-  `
-
   // 댓글 수정 창 여닫기
   const onHandleCommentEdit = (e) => {
     if (!state.showCommentEdit) {
@@ -160,7 +156,6 @@ const CommentListItem = ({
   // 댓글 화살표
   const CommentArrow = styled.img`
     width: 4vw;
-    /* border: 1px solid #bdcff2; */
     padding: 11px 12px;
     background-color: white;
     position: relative;
@@ -176,15 +171,26 @@ const CommentListItem = ({
         <CommentContentWrapper>
           <ProfileWrapper>
             <div>
-              <ProfileImg onClick={() => navigate(`/users/profile/${createrId}`)} src="assets/google_icon.png">
+              <ProfileImg onClick={() => navigate(`/users/profile/${createrId}`)} src={`assets/profileImage/profile${userImg}.png`}>
               </ProfileImg>
             </div>
             <ContentWrapper>
               <Nickname>{userNickname}</Nickname>
-              <BoardContent>{boardContent}</BoardContent>
+              <div style={{ display: state.showCommentEdit === true ? "none" : "block" }}>
+                <BoardContent>{boardContent}</BoardContent>
+              </div>
+                <div style={{ display: state.showCommentEdit === false ? "none" : "block" }}>
+                  <DailyModifyInput
+                    placeholder=""
+                    type="string"
+                    value={state.boardComment}
+                    name="boardComment"
+                    onChange={onHandleInput}
+                  />
+              </div>
             </ContentWrapper>
           </ProfileWrapper>
-          <div style={{ display: state.userId === createrId ? "block" : "none" }}>
+          <div style={{ display: (state.userId === createrId) && (state.showCommentEdit === false) ? "block" : "none" }}>
             <DailyBoardEditButton onClick={() => onHandleCommentEdit()}>
               수정
             </DailyBoardEditButton>
@@ -192,20 +198,12 @@ const CommentListItem = ({
               삭제
             </DailyBoardEditButton>
           </div>
+          <div style={{ display: state.showCommentEdit === false ? "none" : "block"}}>
+            <DailyModifyButton onClick={onHandleCommentEdit}>수정 취소</DailyModifyButton>
+            <DailyModifyButton onClick={() => onCommentEdit(boardId)}>수정하기</DailyModifyButton>
+          </div>
         </CommentContentWrapper>
       </CommentWrapper>
-      <div>
-        <div style={{ display: state.showCommentEdit === false ? "none" : "block" }}>
-          <DailyCommentInput
-            placeholder="댓글 수정 인풋"
-            type="string"
-            value={state.boardComment}
-            name="boardComment"
-            onChange={onHandleInput}
-          />
-          <DailyCommentEditButton onClick={() => onCommentEdit(boardId)}>댓글 수정하기</DailyCommentEditButton>
-        </div>
-      </div>
     </div>
   )
 };
