@@ -21,13 +21,15 @@ public class AuthController {
     // 리프레시 토큰 재발급
     @GetMapping("/refreshToken")
     public ResponseEntity<TokenResponse> reissueRefreshToken(
-            @RequestHeader(value="Authorization") String accessToken,
-            @RequestHeader(value = "RefreshToken") String refreshToken){
+            @RequestHeader(value="authorization") String accessToken,
+            @RequestHeader(value = "refreshtoken") String refreshToken){
+        System.out.println("accesstoken => " + accessToken);
+        System.out.println("refreshtoken => " + refreshToken);
         TokenRequest request = new TokenRequest(accessToken.substring(7), refreshToken);
         TokenResponse token = authService.reissue(request);
         return ResponseEntity.ok()
-                .header("AccessToken", token.getAccessToken())
-                .header("RefreshToken", token.getRefreshToken())
+                .header("accesstoken", token.getAccessToken())
+                .header("refreshtoken", token.getRefreshToken())
                 .build();
     }
 
