@@ -224,7 +224,7 @@ export default class ChatComponent extends Component {
               id="sendButton"
               onClick={this.sendMessage}
             >
-              <i class="fas fa-seedling"></i>
+              <i className="fas fa-seedling"></i>
             </StyeldSendButton>
             {/* <Tooltip title="Send message"></Tooltip> */}
           </MessageInputWrapper>
