@@ -5,7 +5,6 @@ export const TimeGap = (createdDate) => {
   const then = moment(createdDate);
 
   const handleTimeGap = moment.duration(now.diff(then)).asHours()
-  console.log(handleTimeGap)
   if (handleTimeGap < 1) {
     const timeGap = '1시간 이내'
     return timeGap
