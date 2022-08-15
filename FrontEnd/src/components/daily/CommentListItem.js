@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
-import {
-  deleteDailyComment,
-} from "../../api/DailyAPI";
+import { deleteDailyComment } from "../../api/DailyAPI";
 import { client } from "../../utils/client";
 
 const DailyWrapper = styled.div`
@@ -57,7 +55,7 @@ const DailyCommentInput = styled.input`
 const CommentListItem = ({
   boardId,
   boardContent,
-  parentId,
+  userNickname,
   createrId
   }) => {
   const [state, setState] = useState({
@@ -119,16 +117,26 @@ const fetchUser = async () => {
     setState({...state, [e.target.name]: e.target.value});
   };
 
+  // 댓글 화살표
+  const CommentArrow = styled.img`
+    width: 4vw;
+    /* border: 1px solid #bdcff2; */
+    padding: 11px 12px;
+    background-color: white;
+    position: relative;
+    font-size: 24px;
+    color: #6f92bf;
+  `
+
   return (
     <div>
       <DailyWrapper>
-        <ProfileWrapper style={{ width: "20%" }}>{createrId}: 작성자 id</ProfileWrapper>
+        <CommentArrow src="assets/commentarrow.png">
+        </CommentArrow>
+        <ProfileWrapper style={{ width: "20%" }}>{userNickname}</ProfileWrapper>
           <div style={{ width: "60%" }}>{boardContent}</div>
           <div style = {{ display: state.userId === createrId ? "block" : "none"}}>
-
-            <DailyBoardEditButton
-            onClick={() => onHandleCommentEdit()}
-            >
+            <DailyBoardEditButton onClick={() => onHandleCommentEdit()}>
                 수정
             </DailyBoardEditButton>
             <DailyBoardEditButton onClick={() => onCommentDelete(boardId)}>
