@@ -33,6 +33,10 @@ import VideoRoomComponent from "./pages/room/openVidu/VideoRoomComponent";
 import PrivateRoute from "./routes/PrivateRoute";
 import NotFound from "./pages/error/NotFound";
 
+
+import Community from "./pages/community/Community";
+
+
 function App() {
   return (
     <Provider store={store}>
@@ -40,6 +44,7 @@ function App() {
         <BrowserRouter>
           <div className="App">
             <Routes>
+              <Route path="/community" element={<Community />} />
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/join/agree" element={<JoinAgree />} />
