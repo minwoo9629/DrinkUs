@@ -20,7 +20,7 @@ import RoomList from "./pages/room/RoomList";
 import Daily from "./pages/Daily";
 import Calendar from "./pages/calendarcommunity/Calendar";
 import DailyCalendarList from "./pages/calendarcommunity/DailyCalendarList";
-import CreateCalendar from "./pages/calendarcommunity/CreateCalendar";
+import CreateCalendar from "./pages/community/calendarContents/CreateCalendar";
 import EditCalendar from "./pages/calendarcommunity/EditCalendar";
 import EditProfile from "./pages/auth/mypage/EditProfile";
 import EditPassword from "./pages/auth/mypage/EditPassword";
@@ -33,9 +33,7 @@ import VideoRoomComponent from "./pages/room/openVidu/VideoRoomComponent";
 import PrivateRoute from "./routes/PrivateRoute";
 import NotFound from "./pages/error/NotFound";
 
-
 import Community from "./pages/community/Community";
-
 
 function App() {
   return (
