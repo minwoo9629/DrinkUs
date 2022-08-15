@@ -22,6 +22,9 @@ public class DailyBoardResponse {
     // 작성자 닉네임
     String userNickname;
 
+    // 작성자 이미지
+    String userImg;
+
     // 작성일
     LocalDateTime createdDate;
 
@@ -36,6 +39,7 @@ public class DailyBoardResponse {
         dailyBoardResponse.boardId = dailyBoard.getBoardId();
         dailyBoardResponse.createrId = dailyBoard.getCreater().getUserId();
         dailyBoardResponse.userNickname = dailyBoard.getCreater().getUserNickname();
+        dailyBoardResponse.userImg = dailyBoard.getCreater().getUserImg();
         dailyBoardResponse.createdDate = dailyBoard.getCreatedDate();
         dailyBoardResponse.modifiedDate = dailyBoard.getModifiedDate();
         dailyBoardResponse.boardContent = dailyBoard.getBoardContent();
