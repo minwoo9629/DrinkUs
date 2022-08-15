@@ -1,10 +1,11 @@
 import styled from "styled-components";
 export const CalendarButton = styled.button`
-  padding: 12px 24px;
+  padding: 10px 13px;
   background-color: ${({ color }) => color};
   color: ${({ textColor }) => textColor};
-  font-size: 18px;
-  margin: auto 0;
-  border: 1px solid #bdcff2;
+  font-size: 15px;
+  font-weight: bold;
+  margin-right: 10px;
   cursor: pointer;
+  border-radius: 4px;
 `;

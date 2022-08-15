@@ -2,12 +2,8 @@ import styled from "styled-components";
 import { client } from "../../../utils/client";
 import { useEffect, useState } from "react";
 import CalendarListItem from "../../../components/calendar/CalendarListItem";
-import { useLocation, useNavigate } from "react-router-dom";
-import { CalendarButton } from "../../../components/common/buttons/CalendarButton";
 import Modal from "../../../components/modals/Modal";
 import CreateCalendar from "./CreateCalendar";
-
-const CalendarWrapper = styled.div``;
 
 const TopMenuWrap = styled.div`
   margin: 20px;
@@ -18,6 +14,7 @@ const TopMenuWrap = styled.div`
 `;
 
 const NextDayButton = styled.button`
+  display: inline;
   width: 20px;
   height: 30px;
   background-color: white;
@@ -29,40 +26,65 @@ const NextDayButton = styled.button`
   margin: 0px 8px 5px 8px;
 `;
 
-const ButtonWrapper = styled.div`
-  width: 300px;
+const TitleWrapper = styled.div`
+  margin-left: 200px;
+  text-align: center;
+`;
+
+const ButtonWrapper = styled.span`
   display: flex;
+  float: right;
 `;
 
 const Title = styled.h2`
-  display: flex;
+  display: inline;
   color: #6f92bf;
   margin: 0px 8px 0px 8px;
 `;
 
-const HrStyle = styled.hr`
-  width: 1100px;
-  margin-bottom: 10px;
+const ContentWrapper = styled.div`
+  border-bottom: 5px solid rgb(228, 228, 228);
 `;
 
-const MenuWrap = styled.div`
-  display: flex;
-  justify-content: space-between;
-  width: 500px;
+const CalendarWrapper = styled.div``;
+const ContentTitle = styled.div`
+  height: 30px;
+  margin-top: 15px;
+  padding: 15px 0;
+  border-top: 5px solid rgb(228, 228, 228);
+  border-bottom: 3px solid rgb(228, 228, 228);
+`;
+const ContentListWrapper = styled.div``;
+const Content = styled.div`
+  width: ${(props) => props.width};
+  font-weight: bold;
+  font-size: 17px;
+  margin-left: ${(props) => props.marginLeft || "30px"};
+  text-align: ${(props) => props.textAlign || "center"};
+  float: left;
 `;
 
-const ContentWrapper = styled.div``;
+const CalendarButton = styled.button`
+  padding: 10px 13px;
+  width: 100px;
+  font-size: 15px;
+  font-weight: bold;
+  margin-right: 10px;
+  cursor: pointer;
+  border-radius: 7px;
+  background-color: ${(props) => props.background};
+  color: ${(props) => props.color};
+  border: 2px solid ${(props) => props.borderColor};
 
-const PromiseLetter = styled.p`
-  display: flex;
-  justify-content: center;
-  margin-top: 10px;
+  &:hover {
+    background-color: ${(props) => props.hoverBackground};
+    color: ${(props) => props.hoverColor};
+    transition: all 0.2s linear;
+    border: 2px solid ${(props) => props.hoverBorderColor};
+  }
 `;
 
 const DailyCalendar = ({ year, month, day, monthly }) => {
-  const location = useLocation();
-  const navigate = useNavigate();
-
   const [dailyCalendar, setDailyCalendar] = useState([]);
   const dailyCalendarTitle = `
     ${year}.
@@ -83,13 +105,13 @@ const DailyCalendar = ({ year, month, day, monthly }) => {
       .catch(function (error) {});
   };
 
-  const [modalState, setModalState] = useState(false);
-  const openModal = () => {
-    setModalState(true);
+  const [modalState, setModalState] = useState({ write: false, list: false });
+  const openWriteModal = () => {
+    setModalState({ write: true, list: modalState.list });
   };
 
-  const closeModal = () => {
-    setModalState(false);
+  const closeWriteModal = () => {
+    setModalState({ write: false, list: modalState.list });
   };
 
   useEffect(() => {
@@ -102,83 +124,84 @@ const DailyCalendar = ({ year, month, day, monthly }) => {
     <>
       <CalendarWrapper>
         <Modal
-          isOpen={modalState}
+          isOpen={modalState.write}
           modalContent={
             <CreateCalendar
               calendarDate={{ y: year, m: month, d: day }}
-              close={closeModal}
+              close={closeWriteModal}
               successHandler={fetchData}
             />
           }
           width="800px"
           height="500px"
         />
-        <TopMenuWrap>
-          <ButtonWrapper>
-            <NextDayButton
-              onClick={() => {
-                window.location.replace(
-                  `/calendar/${year}/${month}/${day - 1}`,
-                );
-              }}
-            >
-              &#60;
-            </NextDayButton>
-            <Title>{dailyCalendarTitle}</Title>
-            <NextDayButton
-              onClick={() => {
-                window.location.replace(
-                  `/calendar/${year}/${month}/${nextDay}`,
-                );
-              }}
-            >
-              &#62;
-            </NextDayButton>
-          </ButtonWrapper>
-          <CalendarButton
-            onClick={() => {
-              monthly();
-            }}
-            color={"#bdcff2"}
-            textColor={"#fff"}
-          >
-            뒤로가기
-          </CalendarButton>
 
-          <CalendarButton
-            onClick={openModal}
-            color={"#bdcff2"}
-            textColor={"#fff"}
+        <TitleWrapper>
+          <NextDayButton
+            onClick={() => {
+              window.location.replace(`/calendar/${year}/${month}/${day - 1}`);
+            }}
           >
-            글쓰기
-          </CalendarButton>
-        </TopMenuWrap>
+            &#60;
+          </NextDayButton>
+          <Title>{dailyCalendarTitle}</Title>
+          <NextDayButton
+            onClick={() => {
+              window.location.replace(`/calendar/${year}/${month}/${nextDay}`);
+            }}
+          >
+            &#62;
+          </NextDayButton>
+
+          <ButtonWrapper>
+            <CalendarButton
+              onClick={openWriteModal}
+              background="#bdcff2"
+              color="#fff"
+              borderColor="#bdcff2"
+              hoverBackground="#5d81c9"
+              hoverColor="#fff"
+              hoverBorderColor="#5d81c9"
+            >
+              일정 생성
+            </CalendarButton>
+            <CalendarButton
+              onClick={() => {
+                monthly();
+              }}
+              background="#fff"
+              color="#bdcff2"
+              borderColor="#bdcff2"
+              hoverBackground="#c4c4c4"
+              hoverColor="#fff"
+              hoverBorderColor="#c4c4c4"
+            >
+              달력으로
+            </CalendarButton>
+          </ButtonWrapper>
+        </TitleWrapper>
       </CalendarWrapper>
-      <CalendarWrapper>
-        <TopMenuWrap>
-          <div>내용</div>
-          <MenuWrap>
-            <div>시간</div>
-            <div>장소</div>
-            <div>인원</div>
-          </MenuWrap>
-        </TopMenuWrap>
-      </CalendarWrapper>
-      <CalendarWrapper>
-        <HrStyle />
-      </CalendarWrapper>
+
       <ContentWrapper>
-        {dailyCalendar.length === 0 ? (
-          <PromiseLetter>
-            오늘 잡힌 약속이 없어요. 약속을 잡아보세요!
-          </PromiseLetter>
-        ) : (
-          <>
-            {dailyCalendar.map((content, index) => (
-              <CalendarListItem {...content} key={index} />
-            ))}
-          </>
-        )}
+        <ContentTitle>
+          <Content width="600px" textAlign="left" marginLeft="50px">
+            내용
+          </Content>
+          <Content width="150px">시간</Content>
+          <Content width="200px">장소</Content>
+          <Content width="100px">인원</Content>
+        </ContentTitle>
+        <ContentListWrapper>
+          {dailyCalendar.length == 0 ? (
+            <>오늘 잡힌 약속이 없어요. 약속을 잡아보세요!</>
+          ) : (
+            <>
+              {dailyCalendar.map((content, index) => (
+                <CalendarListItem {...content} key={index} />
+              ))}
+            </>
+          )}
+        </ContentListWrapper>
       </ContentWrapper>
     </>
   );
