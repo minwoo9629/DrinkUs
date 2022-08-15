@@ -5,7 +5,8 @@ import { GetPopularlityPercent } from "../../utils/GetPopularlityPercent";
 
 const ProfileBlock = styled.div`
   line-height: 1;
-  display: block;
+  display: flex;
+  justify-content: left;
   align-items: center;
   margin-bottom: 10px;
 `;
@@ -17,6 +18,10 @@ const ProfileImageWrapper = styled.div`
   margin: 0px 20px 0px 20px;
 `;
 
+const ProfileInfo = styled.div`
+  align-items: center;
+`
+
 const ProfileImageThumbnail = styled.img`
   width: 100%;
   height: 100%;
@@ -26,23 +31,21 @@ const ProfileImageThumbnail = styled.img`
 `;
 
 const Nickname = styled.div`
-  display: inline-block;
-  display: block;
-  margin-bottom: 4px;
   height: 30px;
   line-height: 30px;
-  font-size: 20px;
+  font-size: 15px;
   font-weight: bold;
-  color: #FFFFFF;
+  color: #000000;
 `;
 
 const Popularity = styled.div`
-  display: inline-block;
-  display: block;
+  text-align: center;
+  align-items: center;
   height: 30px;
+  font-size: 15px;
   line-height: 30px;
   font-weight: bold;
-  color: #D9D9D9;
+  color: #484D59;
 `;
 
 
@@ -58,18 +61,19 @@ const FetchProfile = () => {
       <ProfileImageWrapper>
         <ProfileImageThumbnail src={`/assets/profileImage/profile${user.data.userImg}.png`}></ProfileImageThumbnail>
       </ProfileImageWrapper>
-      
+      <ProfileInfo>
       <Nickname>{user.data.userNickname}</Nickname>
       <Popularity>
         인기도 {user.data.userPopularity}° 
         <img
-          style={{ width: "40px", height: "40px", marginLeft: "20px" }}
+          style={{ width: "30px", height: "30px", marginLeft: "10px" }}
           src={
             process.env.PUBLIC_URL +
             `/assets/alcoholImage/${popularlityPercent}.png`
           }
         />
       </Popularity>
+      </ProfileInfo>
     </ProfileBlock>
   );
 };

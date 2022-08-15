@@ -7,17 +7,26 @@ import { FailAlert, SuccessAlert } from "../../../utils/sweetAlert";
 import ModalCloseButton from "../../../components/common/buttons/ModalCloseButton";
 
 const CreateCalendarBlock = styled.div`
-  width: 800px;
-  margin-bottom: 20px;
+  margin: auto 100px;
   color: black;
 `;
 
+const CreateHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`
+
 const InputBlock = styled.div`
   display: block;
-  line-height: 1;
-  margin-top: 5px;
-  margin-bottom: 5px;
+  margin: auto;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 100%;
   height: 60px;
+  margin: auto;
+  width: 90%;
 `;
 
 const InputLeftWrap = styled.div`
@@ -32,11 +41,11 @@ const InputLeftWrap = styled.div`
 `;
 
 const InputRightWrap = styled.div`
-  float: left;
-  width: 80%;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  width: 100%;
   height: 30px;
-  line-height: 30px;
-  padding: 17px 0;
 `;
 
 const CreateButton = styled.button`
@@ -56,21 +65,45 @@ const CreateButton = styled.button`
 
 const InputForm = styled.input`
   background-color: white;
-  width: 95%;
+  width: 90%;
   height: 30px;
   line-height: 30px;
   border: 1px solid #bdcff2;
   border-radius: 10px;
+  padding: 20px;
+  margin:  20px 0;
+`;
+
+const InputDateBlock = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px auto;
+  width: 90%;
+  height: 60px;
+`;
+
+const DateInput = styled.div`
+  margin-left: ${({ ml }) => ml};
+  margin-right: 4px;
+  background-color: white;
+  padding: 0 50px;
+  height: 30px;
+  line-height: 30px;
+  border: 1px solid #676775;
+  border-radius: 10px;
+  text-align: center;
 `;
 
 const DateInputForm = styled.input`
   margin-left: ${({ ml }) => ml};
   margin-right: 4px;
   background-color: white;
-  width: 10%;
+  width: 15%;
   height: 30px;
   line-height: 30px;
   border: 1px solid #bdcff2;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
   text-align: center;
 `;
@@ -79,27 +112,36 @@ const SelectBox = styled.select`
   width: 200px;
   background-color: white;
   border: 3px solid #bdcff2;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   height: 36px;
   border-radius: 20px;
   font-size: 16px;
-  margin-right: 4px;
+  margin: auto 10px;
+  text-align: center;
 `;
+
+const InputAgesBlock = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`
 
 const AgesWrapper = styled.div`
   display: inline-block;
   height: 28px;
-  line-height: 28px;
-  width: 80px;
+  width: 12%;
   color: black;
-  margin: 4px 12px 4px 4px;
+  margin: auto;
   background-color: #ffffff;
-  border-radius: 4px;
-  border: 3px solid #eaf1ff;
+  border: 1px solid #bdcff2;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
   text-align: center;
   overflow: hidden;
 
   & input:checked + span {
     background-color: #bdcff2;
+    border: 1px solid #bdcff2;
   }
   & span {
     cursor: pointer;
@@ -113,11 +155,31 @@ const CheckBoxStyled = styled.input`
   cursor: pointer;
 `;
 
+const InputWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 90%;
+  margin: 20px;
+`
+const SelectBoxBlock = styled.div`
+  width: 70%;
+`
+
+const PeopleLimitWrapper = styled.div`
+  display: flex;
+  width: 30%;
+  color: #000000;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+`;
+
 const StyledAmountWrapper = styled.div`
-  width: 28px;
-  height: 28px;
+  width: 50px;
+  height: 50px;
   border: 3px solid #bdcff2;
-  border-radius: 10px;
+  border-radius: 50%;
   font-size: 16px;
   margin: 0px 18px;
   background-color: white;
@@ -128,8 +190,7 @@ const StyledAmountWrapper = styled.div`
   box-sizing: border-box;
 `;
 
-const StyledButton = styled.button`
-  adding: 4px;
+const StyledMinusButton = styled.button`
   border: none;
   background-color: transparent;
   font-size: 16px;
@@ -137,11 +198,13 @@ const StyledButton = styled.button`
   cursor: pointer;
 `;
 
-const PeopleLimitWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: baseline;
-  padding: 8px;
+const StyledPlusButton = styled.button`
+  border: none;
+  background-color: transparent;
+  font-size: 16px;
+  color: white;
+  cursor: pointer;
+  margin-right: 10px;
 `;
 
 const CreateCalendar = ({ calendarDate, close, successHandler }) => {
@@ -242,49 +305,113 @@ const CreateCalendar = ({ calendarDate, close, successHandler }) => {
     <>
       <CreateCalendarBlock>
         <ModalCloseButton close={close} />
-        <FetchProfile />
-        <InputBlock>
-          <InputLeftWrap>방 설명</InputLeftWrap>
-          <InputRightWrap>
-            <InputForm
-              type="text"
-              value={calendarInfo.calendarContent}
-              name="calendarContent"
-              placeholder="방 설명을 써주세요"
-              onChange={onCalendarInfoInput}
-              required
-            ></InputForm>
-          </InputRightWrap>
-        </InputBlock>
-        <InputBlock>
-          <InputLeftWrap>일시</InputLeftWrap>
-          <InputRightWrap>
-            {calendarDate.y}년 {calendarDate.m}월 {calendarDate.d}일
-            <DateInputForm
-              type="number"
-              ml={"20px"}
-              value={dateState.hour}
-              name="hour"
-              placeholder="ex)22"
-              onChange={onDaterInfoInput}
-              required
-            ></DateInputForm>
-            시
-            <DateInputForm
-              type="number"
-              ml={"20px"}
-              value={dateState.minute}
-              name="minute"
-              placeholder="ex)30"
-              onChange={onDaterInfoInput}
-              required
-            ></DateInputForm>
-            분
-          </InputRightWrap>
-        </InputBlock>
-        <InputBlock>
-          <InputLeftWrap>장소</InputLeftWrap>
-          <InputRightWrap>
+        <CreateHeader>
+          <FetchProfile />
+          <CreateButton onClick={onCalendarInfoSubmit}>생성하기</CreateButton>
+        </CreateHeader>
+
+        <InputForm
+          type="text"
+          value={calendarInfo.calendarContent}
+          name="calendarContent"
+          placeholder="방 설명을 써주세요"
+          onChange={onCalendarInfoInput}
+          required
+        ></InputForm>
+        <InputAgesBlock>
+          <AgesWrapper>
+            <label>
+              <CheckBoxStyled
+                type="checkbox"
+                id="0"
+                name="ages"
+                value={CheckedAges.roomage}
+                onChange={onAgeCheckbox}
+              />
+              <span>20대</span>
+            </label>
+          </AgesWrapper>
+          <AgesWrapper>
+            <label>
+              <CheckBoxStyled
+                type="checkbox"
+                id="1"
+                name="ages"
+                onChange={onAgeCheckbox}
+              />
+              <span>30대</span>
+            </label>
+          </AgesWrapper>
+          <AgesWrapper>
+            <label>
+              <CheckBoxStyled
+                type="checkbox"
+                id="2"
+                name="ages"
+                onChange={onAgeCheckbox}
+              />
+              <span>40대</span>
+            </label>
+          </AgesWrapper>
+          <AgesWrapper>
+            <label>
+              <CheckBoxStyled
+                type="checkbox"
+                id="3"
+                name="ages"
+                onChange={onAgeCheckbox}
+              />
+              <span>50대</span>
+            </label>
+          </AgesWrapper>
+          <AgesWrapper>
+            <label>
+              <CheckBoxStyled
+                type="checkbox"
+                id="4"
+                name="ages"
+                onChange={onAgeCheckbox}
+              />
+              <span>60대</span>
+            </label>
+          </AgesWrapper>
+          <AgesWrapper>
+            <label>
+              <CheckBoxStyled
+                type="checkbox"
+                id="5"
+                name="ages"
+                onChange={onAgeCheckbox}
+              />
+              <span>70대</span>
+            </label>
+          </AgesWrapper>
+        </InputAgesBlock>
+        <InputDateBlock>
+          <DateInput>{calendarDate.y}년 {calendarDate.m}월 {calendarDate.d}일</DateInput>
+          <DateInputForm
+            type="number"
+            ml={"20px"}
+            value={dateState.hour}
+            name="hour"
+            placeholder="ex)22"
+            onChange={onDaterInfoInput}
+            required
+          ></DateInputForm>
+          시
+          <DateInputForm
+            type="number"
+            ml={"20px"}
+            value={dateState.minute}
+            name="minute"
+            placeholder="ex)30"
+            onChange={onDaterInfoInput}
+            required
+          ></DateInputForm>
+          분
+        </InputDateBlock>
+        <InputWrapper>
+          <SelectBoxBlock>
             <SelectBox
               type="selectbox"
               value={calendarInfo.place}
@@ -306,99 +433,20 @@ const CreateCalendar = ({ calendarDate, close, successHandler }) => {
               <option>도서관</option>
             </SelectBox>
             에서 만나요!
-          </InputRightWrap>
-        </InputBlock>
-        <InputBlock>
-          <InputLeftWrap>연령대</InputLeftWrap>
-          <InputRightWrap>
-            <AgesWrapper>
-              <label>
-                <CheckBoxStyled
-                  type="checkbox"
-                  id="0"
-                  name="ages"
-                  value={CheckedAges.roomage}
-                  onChange={onAgeCheckbox}
-                />
-                <span>20대</span>
-              </label>
-            </AgesWrapper>
-            <AgesWrapper>
-              <label>
-                <CheckBoxStyled
-                  type="checkbox"
-                  id="1"
-                  name="ages"
-                  onChange={onAgeCheckbox}
-                />
-                <span>30대</span>
-              </label>
-            </AgesWrapper>
-            <AgesWrapper>
-              <label>
-                <CheckBoxStyled
-                  type="checkbox"
-                  id="2"
-                  name="ages"
-                  onChange={onAgeCheckbox}
-                />
-                <span>40대</span>
-              </label>
-            </AgesWrapper>
-            <AgesWrapper>
-              <label>
-                <CheckBoxStyled
-                  type="checkbox"
-                  id="3"
-                  name="ages"
-                  onChange={onAgeCheckbox}
-                />
-                <span>50대</span>
-              </label>
-            </AgesWrapper>
-            <AgesWrapper>
-              <label>
-                <CheckBoxStyled
-                  type="checkbox"
-                  id="4"
-                  name="ages"
-                  onChange={onAgeCheckbox}
-                />
-                <span>60대</span>
-              </label>
-            </AgesWrapper>
-            <AgesWrapper>
-              <label>
-                <CheckBoxStyled
-                  type="checkbox"
-                  id="5"
-                  name="ages"
-                  onChange={onAgeCheckbox}
-                />
-                <span>70대↑</span>
-              </label>
-            </AgesWrapper>
-          </InputRightWrap>
-        </InputBlock>
-        <InputBlock>
-          <InputLeftWrap>인원</InputLeftWrap>
-          <InputRightWrap>
-            <PeopleLimitWrapper>
-              <StyledButton onClick={() => onHandleDecrease("peopleLimit")}>
-                <i className="fas fa-minus"></i>
-              </StyledButton>
-              <StyledAmountWrapper>
-                {calendarInfo.peopleLimit}
-              </StyledAmountWrapper>
-              <StyledButton onClick={() => onHandleIncrease("peopleLimit")}>
-                <i className="fas fa-plus"></i>
-              </StyledButton>
-            </PeopleLimitWrapper>
-          </InputRightWrap>
-        </InputBlock>
-        <InputBlock>
-          <CreateButton onClick={onCalendarInfoSubmit}>생성하기</CreateButton>
-        </InputBlock>
+          </SelectBoxBlock>
+          <PeopleLimitWrapper>
+            <StyledMinusButton onClick={() => onHandleDecrease("peopleLimit")}>
+              <i className="fas fa-minus"></i>
+            </StyledMinusButton>
+            <StyledAmountWrapper>
+              {calendarInfo.peopleLimit}
+            </StyledAmountWrapper>
+            <StyledPlusButton onClick={() => onHandleIncrease("peopleLimit")}>
+              <i className="fas fa-plus"></i>
+            </StyledPlusButton>
+            명
+          </PeopleLimitWrapper>
+        </InputWrapper>
       </CreateCalendarBlock>
     </>
   );
