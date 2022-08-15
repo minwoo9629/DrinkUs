@@ -36,9 +36,13 @@ const MonthlyCalendar = ({ year, month, daily, setYearAndMonth }) => {
     const diffLast = (7 - ((lastDay + diffFirst) % 7)) % 7; // 달력에 마지막 채워지는 칸들
 
     const first = new Array(diffFirst);
-    first.fill(0);
+    for (let i = 0; i < diffFirst; i++) {
+      first[i] = new Date(year, month - 1, -diffFirst + i + 1).getDate();
+    }
     const last = new Array(diffLast);
-    last.fill(0);
+    for (let i = 0; i < diffLast; i++) {
+      last[i] = new Date(year, month - 1, i + 1).getDate();
+    }
 
     setFirst([...first]);
     setLast([...last]);
@@ -76,9 +80,10 @@ const MonthlyCalendar = ({ year, month, daily, setYearAndMonth }) => {
 
   const CalendarTitle = styled.div`
     display: inline;
-    font-size: 35px;
+    font-size: 50px;
     font-weight: bold;
-    color: #6f92bf;
+    color: #778fbd;
+    font-family: Bebas Neue;
   `;
 
   const CalendarWeek = styled.div`
@@ -88,20 +93,17 @@ const MonthlyCalendar = ({ year, month, daily, setYearAndMonth }) => {
   `;
 
   const DayOfWeek = styled.div`
-    background: cornflowerblue;
     color: white;
     text-align: center;
-    font-size: 20px;
+    font-size: 22px;
     line-height: 50px;
     height: 50px;
     width: 100%;
+    font-family: Bebas Neue;
 
-    border-right: 1px solid white;
     border-left: 1px solid white;
 
-    border-collapse: collapse;
-
-    font-family: Bebas Neue;
+    background-color: #3a578c;
   `;
 
   const DayOfMonth = styled.div`
@@ -117,14 +119,10 @@ const MonthlyCalendar = ({ year, month, daily, setYearAndMonth }) => {
     line-height: 40px;
     height: 126px;
     width: 100%;
-    border: 1px #bdcff2 solid;
     display: inline-block;
     border-collapse: collapse;
 
-    &:hover {
-      background-color: red;
-      transition: all 0.3s linear;
-    }
+    border: 1px solid #eaf1ff;
 
     :nth-child(even) {
       background-color: #eaf1ff;
@@ -134,8 +132,9 @@ const MonthlyCalendar = ({ year, month, daily, setYearAndMonth }) => {
     }
 
     &:hover {
-      background-color: #11335c;
-      color: #ffeb57;
+      background-color: #2f64a3;
+      color: white;
+      transition: all 0.2s linear;
     }
   `;
 
@@ -144,14 +143,16 @@ const MonthlyCalendar = ({ year, month, daily, setYearAndMonth }) => {
     line-height: 40px;
     height: 126px;
     width: 100%;
-    border: 1px #bdcff2 solid;
     border-collapse: collapse;
+    border: 1px solid #eaf1ff;
 
     :nth-child(even) {
-      background-color: #eaf1ff;
+      background-color: #f7f7f7;
+      color: #e3e3e3;
     }
     :nth-child(odd) {
-      background-color: #fff;
+      background-color: #f7f7f7;
+      color: #e3e3e3;
     }
   `;
 
@@ -161,15 +162,15 @@ const MonthlyCalendar = ({ year, month, daily, setYearAndMonth }) => {
       ${(props) => (props.direction == "left" ? props.color : "transparent")}
       transparent
       ${(props) => (props.direction == "right" ? props.color : "transparent")};
-    border-width: 10px
-      ${(props) => (props.direction == "left" ? "15px" : "0px")} 10px
+    border-width: 13px
+      ${(props) => (props.direction == "left" ? "15px" : "0px")} 13px
       ${(props) => (props.direction == "right" ? "15px" : "0px")};
     height: 0;
     width: 0;
-    margin: 0 10px;
+    margin: 0 25px;
     border-style: solid;
 
-    vertical-align: 12px;
+    vertical-align: 15px;
 
     &: hover {
       border-color: transparent
@@ -195,10 +196,13 @@ const MonthlyCalendar = ({ year, month, daily, setYearAndMonth }) => {
   const CalendarDate = styled.div`
     display: flex;
     float: right;
-    margin-right: 10px;
+    margin-top: 3px;
+    margin-right: 13px;
     font-family: Aboreto;
     font-weight: bold;
-    font-size: 12px;
+    font-size: 16px;
+
+    color: ${(props) => props.color};
   `;
 
   const SojuImg = styled.div`
@@ -214,19 +218,22 @@ const MonthlyCalendar = ({ year, month, daily, setYearAndMonth }) => {
         <NextButton
           onClick={onHandleDecreaseMonth}
           direction="left"
-          color="red"
-          hoverColor="blue"
-          activeColor="orange"
+          color="#3a578c"
+          hoverColor="#2b4169"
+          activeColor="#1a2740"
         />
         <CalendarTitle>
-          {curDate.getFullYear()}년 {curDate.getMonth() + 1}월
+          {curDate.getFullYear()}.{" "}
+          {curDate.getMonth() + 1 < 10
+            ? "0" + (curDate.getMonth() + 1)
+            : curDate.getMonth() + 1}
         </CalendarTitle>
         <NextButton
           onClick={onHandleIncreaseMonth}
           direction="right"
-          color="red"
-          hoverColor="blue"
-          activeColor="orange"
+          color="#3a578c"
+          hoverColor="#2b4169"
+          activeColor="#1a2740"
         />
         <CalendarWeek className="grid date_form date_head">
           {dayOfWeek.map((item, index) => {
@@ -236,7 +243,11 @@ const MonthlyCalendar = ({ year, month, daily, setYearAndMonth }) => {
 
         <DayOfMonth>
           {first.map((index) => {
-            return <OffDay key={index} background="lightgrey"></OffDay>;
+            return (
+              <OffDay key={index}>
+                <CalendarDate>{index}</CalendarDate>
+              </OffDay>
+            );
           })}
           {calendar.map((item, index) => {
             if (index > 0) {
@@ -262,7 +273,11 @@ const MonthlyCalendar = ({ year, month, daily, setYearAndMonth }) => {
             }
           })}
           {last.map((index) => {
-            return <OffDay key={index} background="lightgrey"></OffDay>;
+            return (
+              <OffDay key={index}>
+                <CalendarDate>{index}</CalendarDate>
+              </OffDay>
+            );
           })}
         </DayOfMonth>
       </CalendarWrapper>

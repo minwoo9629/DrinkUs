@@ -1,8 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
 import Header from "../../components/layout/Header";
-import { client } from "../../utils/client";
 
 import CalendarCommunity from "./calendarContents/CalendarCommunity";
 import DailyCommunity from "./dailyContents/DailyCommunity";
@@ -25,10 +23,13 @@ const Community = () => {
     padding: 12px 24px;
     background-color: ${({ color }) => color};
     color: ${({ textColor }) => textColor};
-    font-size: 18px;
+    font-size: 15px;
     margin: auto 0;
     border: 1px solid #bdcff2;
     cursor: pointer;
+
+    border-radius: 1px;
+    font-weight: bold;
   `;
 
   const ContentWrapper = styled.div`
