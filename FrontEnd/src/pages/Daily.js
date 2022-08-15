@@ -26,7 +26,7 @@ const DailyArticleInputWrapper = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  height: 9vh;
+  height: 11vh;
   background-color: white;
 `
 

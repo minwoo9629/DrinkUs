@@ -100,6 +100,7 @@ const ReportsButton = styled.button`
   color: #676775;
 `;
 
+// console.log(result);
 const Profile = ({ userId, changeTypeState }) => {
   const [state, setState] = useState({
     userNickname: "",
@@ -150,21 +151,23 @@ const Profile = ({ userId, changeTypeState }) => {
   };
 
   // 유저 정보 요청
-  const fetchUsers = async (userNo) => {
-    const response = await getUserProfile(userNo);
-    setState({ ...response.data });
+  const fetchUsers = async () => {
+    const result = await getUserProfile(userId);
+    setState({ ...result.data });
   };
 
   // 유저 관심사 요청
-  const fetchCategory = async (userNo) => {
-    const response = await getUserCategory(userNo);
+  const fetchCategory = async () => {
+    const response = await getUserCategory(userId);
     setCategory([...response.data]);
   };
 
   useEffect(() => {
-    fetchUsers(userId);
-    fetchCategory(userId);
+    fetchUsers();
+    fetchCategory();
   }, []);
+
+  console.log(state);
   return (
     <div>
       <Wrapper>
@@ -172,7 +175,7 @@ const Profile = ({ userId, changeTypeState }) => {
         <ProfileWrapper>
           <ProfileImgWrapper>
             <ProfileImg
-              src={`assets/profileImage/profile${state.userImg}.png`}
+              src={`/assets/profileImage/profile${state.userImg}.png`}
             />
           </ProfileImgWrapper>
           인기도: {state.userPopularity}°

@@ -12,6 +12,7 @@ import React from "react";
 
 const DailyContent = styled.div`
   width: 100%;
+  height: 11vh;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -23,9 +24,10 @@ const DailyContent = styled.div`
 const ProfileImg = styled.img`
   padding: 8px;
   border-radius: 24px;
-  width: 40px;
-  height: 40px;
-  margin: 12px;
+  width: 24px;
+  height: 24px;
+  margin: auto 10px;
+  background-color: #6f92bf;
 `;
 
 const DailyContentWrapper = styled.div`
@@ -35,7 +37,20 @@ align-items: center;
 `
 
 const ContentWrapper = styled.div`
-margin-left: 40px;
+margin-left: 5px;
+`
+
+
+const Nickname = styled.div`
+  font-size: 13px;
+  font-weight: 700;
+  color: #6f92bf;
+`
+
+const BoardContent = styled.div`
+  font-size: 15px;
+  font-weight: 500;
+  padding : 10px 0;
 `
 
 // 수정, 삭제, 댓글달기 감싸는 div
@@ -135,6 +150,13 @@ const DailyCommentPostButton = styled.button`
   font-size: 16px;
   margin: 4px;
   border: 1px #eaf1ff;
+`
+
+const NoCommentItem = styled.div`
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: #6f92bf;
 `
 
 const DailyListItem = (
@@ -275,8 +297,8 @@ const DailyListItem = (
             </ProfileImg>
           </div>
           <ContentWrapper>
-            <div style={{ color: "#6f92bf" }}>{userNickname}</div>
-            <div style={{ display: state.showEditArticle === true ? "none" : "block" }}>{boardContent}</div>
+            <Nickname style={{ color: "#6f92bf" }}>{userNickname}</Nickname>
+            <BoardContent style={{ display: state.showEditArticle === true ? "none" : "block" }}>{boardContent}
             <div style={{ display: state.showEditArticle === false ? "none" : "block" }}>
                   <DailyModifyInput
                     placeholder="수정칸 입력"
@@ -287,7 +309,8 @@ const DailyListItem = (
                     onKeyPress={onEnterPress}
                   />
                   <DailyModifyButton onClick={() => onArticleEdit(boardId)}>글수정</DailyModifyButton>
-            </div>
+              </div>
+            </BoardContent>
           </ContentWrapper>
         </DailyContentWrapper>
         <DailyEditWrapper>
@@ -355,7 +378,7 @@ const DailyListItem = (
           </>
           :
           <>
-            <p>해당 게시글에 댓글이 없습니다.</p>
+            <NoCommentItem>해당 게시글에 댓글이 없습니다.</NoCommentItem>
           </>
         }
       </div>
