@@ -237,6 +237,7 @@ const EditProfile = () => {
           <ProfileImageListContent
             profileImageState={profileImageState}
             onClcik={onHandleChangeProfileImage}
+            close={closeModal}
           />
         }
       />

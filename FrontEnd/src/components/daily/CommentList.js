@@ -3,10 +3,10 @@ import CommentListItem from "./CommentListItem";
 import styled from "styled-components";
 import { getDailyComment } from "../../api/DailyAPI";
 
-const DailyBoard = styled.div`
+const CommentBoard = styled.div`
   justify-content: space-between;
   width: 72vw;
-  height: 64vh;
+  height: 8vh;
   border-radius: 4px;
   border: solid #eaf1ff;
   background-color: white;
@@ -18,8 +18,10 @@ const DailyBoard = styled.div`
 const CommentList = React.memo(({ parentId }) => {
   const [commentList, setCommentList] = useState([])
   const fetchComment = async (parentId) =>{
-    const response = await getDailyComment(parentId)
-    setCommentList([...response.data.reverse()])
+    if(!parentId) {
+      const response = await getDailyComment(parentId)
+      setCommentList([...response.data])
+    }
   }
   useEffect(()=>{
       fetchComment(parentId);
@@ -37,7 +39,6 @@ const CommentList = React.memo(({ parentId }) => {
         </>
       ) : (
         <>
-          <p>해당 게시글에 댓글이 없습니다.</p>
         </>
       )}
     </div>

@@ -91,7 +91,7 @@ const DrinkLive = () => {
   useEffect(() => {
     if (user.userBirthday === null) {
       alert("생년월일 설정해야해!@!!!!");
-      navigate("/edit/profile");
+      navigate("/user/edit/profile");
     }
     onMakeAgeList();
     onCategoryList();

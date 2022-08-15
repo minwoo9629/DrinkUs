@@ -2,6 +2,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import Profile from "../../../pages/auth/Profile";
 import Reports from "../../../pages/auth/Reports";
+import ModalCloseButton from "../../common/buttons/ModalCloseButton";
 
 const CategoryWrapper = styled.div`
   display: flex;
@@ -90,8 +91,7 @@ const ReportsButton = styled.button`
   font-size: 20px;
   color: #676775;
 `;
-
-const UserProfileContent = ({ userId }) => {
+const UserProfileContent = ({ userId, close, userNickname }) => {
   const [typeState, setTypeState] = useState("read");
 
   const changeTypeState = (type) => {
@@ -99,16 +99,22 @@ const UserProfileContent = ({ userId }) => {
   };
   return (
     <>
-      <button>
-        <i class="fas fa-times"></i>
-      </button>
+      <ModalCloseButton close={close} />
       {typeState === "read" ? (
         <>
-          <Profile changeTypeState={changeTypeState} userId={userId} />
+          <Profile
+            changeTypeState={changeTypeState}
+            userId={userId}
+            userNickname={userNickname}
+          />
         </>
       ) : (
         <>
-          <Reports changeTypeState={changeTypeState} userId={userId} />
+          <Reports
+            changeTypeState={changeTypeState}
+            userId={userId}
+            userNickname={userNickname}
+          />
         </>
       )}
     </>
