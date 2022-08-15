@@ -1,12 +1,8 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
 import { client } from "../../../utils/client";
 
 const MonthlyCalendar = ({ year, month, daily, setYearAndMonth }) => {
-  console.log("### year: " + year + ", month: " + month);
-  const navigate = useNavigate();
-
   const dayOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 
   const [curDate, setCurDate] = useState(new Date(year, month - 1));
@@ -71,26 +67,17 @@ const MonthlyCalendar = ({ year, month, daily, setYearAndMonth }) => {
   };
 
   // 스타일 지정
-  const TopMenuWrap = styled.div`
-    justify-content: space-between;
-    display: flex;
-    align-items: center;
-  `;
 
-  const NextMonthButton = styled.button`
-    width: 20px;
-    height: ;30px
-    background-color: white;
-    color: #495f7c;
-    text-transform: uppercase;
-    font-size: 25px;
-    font-weight: 800;
-    border: none;
-    margin: auto 10px;
+  const CalendarWrapper = styled.div`
+    max-width: 1200px;
+    margin: auto;
+    padding-bottom: 60px;
   `;
 
   const CalendarTitle = styled.div`
-    font-size: 25px;
+    display: inline;
+    font-size: 35px;
+    font-weight: bold;
     color: #6f92bf;
   `;
 
@@ -101,21 +88,20 @@ const MonthlyCalendar = ({ year, month, daily, setYearAndMonth }) => {
   `;
 
   const DayOfWeek = styled.div`
-    background: darkblue;
-    color: #495f7c;
+    background: cornflowerblue;
+    color: white;
     text-align: center;
-    font-size: 15px;
-    line-height: 40px;
+    font-size: 20px;
+    line-height: 50px;
     height: 50px;
     width: 100%;
-    border: 1px solid #bdcff2;
 
-    :nth-child(even) {
-      background-color: #eaf1ff;
-    }
-    :nth-child(odd) {
-      background-color: #fff;
-    }
+    border-right: 1px solid white;
+    border-left: 1px solid white;
+
+    border-collapse: collapse;
+
+    font-family: Bebas Neue;
   `;
 
   const DayOfMonth = styled.div`
@@ -126,18 +112,18 @@ const MonthlyCalendar = ({ year, month, daily, setYearAndMonth }) => {
   `;
 
   const OnDay = styled.div`
-    background: tomato;
     color: #495f7c;
     text-align: center;
-    font-size: 15px;
     line-height: 40px;
-    height: 100px;
+    height: 126px;
     width: 100%;
     border: 1px #bdcff2 solid;
     display: inline-block;
+    border-collapse: collapse;
+
     &:hover {
       background-color: red;
-      transition: all 0.4s linear;
+      transition: all 0.3s linear;
     }
 
     :nth-child(even) {
@@ -147,21 +133,17 @@ const MonthlyCalendar = ({ year, month, daily, setYearAndMonth }) => {
       background-color: #fff;
     }
 
-    :hover {
+    &:hover {
       background-color: #11335c;
       color: #ffeb57;
     }
   `;
 
   const OffDay = styled.div`
-    background: ${(props) => props.background};
     color: #495f7c;
-    text-align: center;
-    font-size: 15px;
     line-height: 40px;
-    height: 100px;
+    height: 126px;
     width: 100%;
-    display: table-cell;
     border: 1px #bdcff2 solid;
     border-collapse: collapse;
 
@@ -173,69 +155,117 @@ const MonthlyCalendar = ({ year, month, daily, setYearAndMonth }) => {
     }
   `;
 
-  const InnerWrapper = styled.div``;
+  const NextButton = styled.button`
+    background-color: inherit;
+    border-color: transparent
+      ${(props) => (props.direction == "left" ? props.color : "transparent")}
+      transparent
+      ${(props) => (props.direction == "right" ? props.color : "transparent")};
+    border-width: 10px
+      ${(props) => (props.direction == "left" ? "15px" : "0px")} 10px
+      ${(props) => (props.direction == "right" ? "15px" : "0px")};
+    height: 0;
+    width: 0;
+    margin: 0 10px;
+    border-style: solid;
+
+    vertical-align: 12px;
+
+    &: hover {
+      border-color: transparent
+        ${(props) =>
+          props.direction == "left" ? props.hoverColor : "transparent"}
+        transparent
+        ${(props) =>
+          props.direction == "right" ? props.hoverColor : "transparent"};
+
+      transition: all 0.2s linear;
+    }
+
+    &:active {
+      border-color: transparent
+        ${(props) =>
+          props.direction == "left" ? props.activeColor : "transparent"}
+        transparent
+        ${(props) =>
+          props.direction == "right" ? props.activeColor : "transparent"};
+    }
+  `;
+
+  const CalendarDate = styled.div`
+    display: flex;
+    float: right;
+    margin-right: 10px;
+    font-family: Aboreto;
+    font-weight: bold;
+    font-size: 12px;
+  `;
+
+  const SojuImg = styled.div`
+    width: 30px;
+    margin-top: 80px;
+    margin-left: 6px;
+  `;
   // 스타일 끝
 
   return (
     <>
-      <InnerWrapper>
-        <TopMenuWrap>
-          <div>
-            <NextMonthButton onClick={onHandleDecreaseMonth}>
-              &#60;
-            </NextMonthButton>
-          </div>
-          <CalendarTitle>
-            {curDate.getFullYear()}년 {curDate.getMonth() + 1}월
-          </CalendarTitle>
-          <div className="calendarBox">
-            <NextMonthButton onClick={onHandleIncreaseMonth}>
-              &#62;
-            </NextMonthButton>
-          </div>
-        </TopMenuWrap>
-        <TopMenuWrap></TopMenuWrap>
-        <div className="App">
-          <div className="wrapper">
-            <CalendarWeek className="grid date_form date_head">
-              {dayOfWeek.map((item, index) => {
-                return <DayOfWeek key={index}>{item}</DayOfWeek>;
-              })}
-            </CalendarWeek>
+      <CalendarWrapper>
+        <NextButton
+          onClick={onHandleDecreaseMonth}
+          direction="left"
+          color="red"
+          hoverColor="blue"
+          activeColor="orange"
+        />
+        <CalendarTitle>
+          {curDate.getFullYear()}년 {curDate.getMonth() + 1}월
+        </CalendarTitle>
+        <NextButton
+          onClick={onHandleIncreaseMonth}
+          direction="right"
+          color="red"
+          hoverColor="blue"
+          activeColor="orange"
+        />
+        <CalendarWeek className="grid date_form date_head">
+          {dayOfWeek.map((item, index) => {
+            return <DayOfWeek key={index}>{item}</DayOfWeek>;
+          })}
+        </CalendarWeek>
 
-            <DayOfMonth className="dateSel">
-              {first.map((index) => {
-                return <OffDay key={index} background="lightgrey"></OffDay>;
-              })}
-              {calendar.map((item, index) => {
-                if (index > 0) {
-                  if (item) {
-                    return (
-                      <OnDay
-                        {...item}
-                        key={index}
-                        onClick={() => daily(year, month, index)}
-                      >
-                        {index}
-                        <i className="fas fa-glass-cheers"></i>
-                      </OnDay>
-                    );
-                  } else {
-                    return (
-                      <OffDay key={index} background="smoke">
-                        {index}
-                      </OffDay>
-                    );
-                  }
-                }
-              })}
-              {last.map((index) => {
-                return <OffDay key={index} background="lightgrey"></OffDay>;
-              })}
-            </DayOfMonth>
-          </div>
-        </div>
-      </InnerWrapper>
+        <DayOfMonth>
+          {first.map((index) => {
+            return <OffDay key={index} background="lightgrey"></OffDay>;
+          })}
+          {calendar.map((item, index) => {
+            if (index > 0) {
+              return (
+                <OnDay
+                  {...item}
+                  key={index}
+                  onClick={() => daily(year, month, index)}
+                >
+                  <CalendarDate>{index}</CalendarDate>
+                  {item ? (
+                    <SojuImg>
+                      <img
+                        src="/assets/community/calendar/soju.png"
+                        width="100%"
+                      />
+                    </SojuImg>
+                  ) : (
+                    <></>
+                  )}
+                </OnDay>
+              );
+            }
+          })}
+          {last.map((index) => {
+            return <OffDay key={index} background="lightgrey"></OffDay>;
+          })}
+        </DayOfMonth>
+      </CalendarWrapper>
     </>
   );
 };

@@ -4,6 +4,9 @@ import MonthlyCalendar from "./MonthlyCalendar";
 import DailyCalendar from "./DailyCalendar";
 
 // 스타일 지정
+const CalendarWrapper = styled.div`
+  text-align: center;
+`;
 
 const CalendarCommunity = () => {
   const [calendarMode, setCalendaryMode] = useState("monthly");
@@ -28,23 +31,23 @@ const CalendarCommunity = () => {
 
   return (
     <>
-      <h1>월간게시판</h1>
-
-      {calendarMode == "monthly" ? (
-        <MonthlyCalendar
-          year={date.year}
-          month={date.month}
-          daily={openDailyCalendar}
-          setYearAndMonth={setYearAndMonth}
-        />
-      ) : (
-        <DailyCalendar
-          year={date.year}
-          month={date.month}
-          day={date.day}
-          monthly={openMonthlyCalendar}
-        />
-      )}
+      <CalendarWrapper>
+        {calendarMode == "monthly" ? (
+          <MonthlyCalendar
+            year={date.year}
+            month={date.month}
+            daily={openDailyCalendar}
+            setYearAndMonth={setYearAndMonth}
+          />
+        ) : (
+          <DailyCalendar
+            year={date.year}
+            month={date.month}
+            day={date.day}
+            monthly={openMonthlyCalendar}
+          />
+        )}
+      </CalendarWrapper>
     </>
   );
 };

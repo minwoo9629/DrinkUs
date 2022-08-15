@@ -80,9 +80,7 @@ const DailyCalendar = ({ year, month, day, monthly }) => {
       .then(function (response) {
         setDailyCalendar([...response.data.content]);
       })
-      .catch(function (error) {
-        setDailyCalendar([]);
-      });
+      .catch(function (error) {});
   };
 
   const [modalState, setModalState] = useState(false);

@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/layout/Header";
-import { Wrapper } from "../../components/styled/Wrapper";
 import { client } from "../../utils/client";
 
 import CalendarCommunity from "./calendarContents/CalendarCommunity";
@@ -33,6 +32,7 @@ const Community = () => {
   `;
 
   const ContentWrapper = styled.div`
+    margin-top: 40px;
     text-align: center;
   `;
 
@@ -41,33 +41,31 @@ const Community = () => {
   return (
     <>
       <Header location={"lightzone"} />
-      <Wrapper color="#fff" alignItems="baseline">
-        <InnerWrapper>
-          <CalendarButtonWrapper>
-            <CalendarButton
-              onClick={() => setCommunityMode("calendar")}
-              color={communityMode == "calendar" ? "#bdcff2" : "#ffffff"}
-              textColor={communityMode == "calendar" ? "#fff" : "#6F92BF"}
-            >
-              월간
-            </CalendarButton>
-            <CalendarButton
-              onClick={() => setCommunityMode("daily")}
-              color={communityMode == "calendar" ? "#fff" : "#bdcff2"}
-              textColor={communityMode == "calendar" ? "#6F92BF" : "#fff"}
-            >
-              일간
-            </CalendarButton>
-          </CalendarButtonWrapper>
-          <ContentWrapper>
-            {communityMode == "calendar" ? (
-              <CalendarCommunity />
-            ) : (
-              <DailyCommunity />
-            )}
-          </ContentWrapper>
-        </InnerWrapper>
-      </Wrapper>
+      <InnerWrapper>
+        <CalendarButtonWrapper>
+          <CalendarButton
+            onClick={() => setCommunityMode("calendar")}
+            color={communityMode == "calendar" ? "#bdcff2" : "#ffffff"}
+            textColor={communityMode == "calendar" ? "#fff" : "#6F92BF"}
+          >
+            월간
+          </CalendarButton>
+          <CalendarButton
+            onClick={() => setCommunityMode("daily")}
+            color={communityMode == "calendar" ? "#fff" : "#bdcff2"}
+            textColor={communityMode == "calendar" ? "#6F92BF" : "#fff"}
+          >
+            일간
+          </CalendarButton>
+        </CalendarButtonWrapper>
+        <ContentWrapper>
+          {communityMode == "calendar" ? (
+            <CalendarCommunity />
+          ) : (
+            <DailyCommunity />
+          )}
+        </ContentWrapper>
+      </InnerWrapper>
     </>
   );
 };
