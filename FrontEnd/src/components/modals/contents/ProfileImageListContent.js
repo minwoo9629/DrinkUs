@@ -1,5 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
+import ModalCloseButton from "../../common/buttons/ModalCloseButton";
 
 const pictureArray = [];
 for (let i = 1; i <= 25; i++) {
@@ -28,12 +29,10 @@ const ProfileImageGridWrapper = styled.div`
   grid-gap: 25px;
   grid-template-columns: repeat(5, 1fr);
 `;
-const ProfileImageListContent = ({ onClcik, profileImageState }) => {
+const ProfileImageListContent = ({ onClcik, profileImageState, close }) => {
   return (
     <>
-      <button>
-        <i class="fas fa-times"></i>
-      </button>
+      <ModalCloseButton close={close} />
       <ProfileImageGridWrapper>
         {pictureArray.map((item, idx) => (
           <ProfileImageWrapper key={item}>
