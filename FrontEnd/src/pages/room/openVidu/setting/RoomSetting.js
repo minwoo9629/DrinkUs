@@ -69,8 +69,9 @@ const StyeldCategoryNameWrapper = styled.div`
   background-color: #bdcff2;
   text-align: center;
   margin: 0px 10px;
-  padding: 8px 20px;
+  padding: 12px 20px;
   border-radius: 10px;
+  font-size: 15px;
   color: black;
 `;
 
@@ -83,13 +84,13 @@ const RoomSetting = ({ settingDisplay, roomSettingTitle }) => {
   const ages = ["20", "30", "40", "50", "60", "70↑"];
   const roomInfo = useSelector((state) => state.room);
   const fetchRoomData = async (roomId) => {
+    console.log("새로고침하면 어떻게 될깡");
     const result = await getRoomInfo(roomId);
     setRoomInfoState({ ...result });
   };
   useEffect(() => {
     fetchRoomData(roomInfo.roomId);
   }, []);
-  console.log(roomInfoState);
   return (
     <StyledRoomSettingContainer display={settingDisplay}>
       <StyledRoomSettingComponent>
@@ -112,7 +113,9 @@ const RoomSetting = ({ settingDisplay, roomSettingTitle }) => {
         <div>
           <StyeldTitle>관심사</StyeldTitle>
           <StyeldCategoryNameWrapper>
-            {roomInfoState.categoryName}
+            {roomInfoState.categoryName !== null
+              ? roomInfoState.categoryName
+              : "등록된 관심사가 없습니다"}
           </StyeldCategoryNameWrapper>
         </div>
       </StyledRoomSettingComponent>

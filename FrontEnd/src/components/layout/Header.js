@@ -18,6 +18,7 @@ const DrinkUsHeader = styled(BaseFlexWrapper)`
   padding: 40px 100px;
   background-color: ${(props) => props.color};
   width: 100%;
+  z-index: 10;
   box-sizing: border-box;
   opacity: ${(props) => props.opacity};
   transition: opacity 0.5s, background-color 0.5s linear;

@@ -37,6 +37,20 @@ const Wrapper = styled.div`
   align-items: center;
 `;
 
+const NeonWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  border-radius: 13px;
+  padding: 10px;
+  height: 680px;
+  background: linear-gradient(
+    146deg,
+    rgba(56, 56, 56, 0.9248074229691877) 0%,
+    rgba(20, 20, 20, 1) 61%
+  );
+  width: 450px;
+`;
+
 const NeonLoginWrapper = styled.div`
   display: flex;
   justify-content: center;
@@ -57,7 +71,6 @@ const JoinWrapper = styled.div`
   display: flex;
   justify-content: center;
   height: 60px;
-  background-color: #131317;
   width: 400px;
   margin-top: 35px;
 `;
@@ -92,7 +105,7 @@ const JoinType = () => {
     <div>
       <BackButton />
       <Wrapper>
-        <NeonLoginWrapper>
+        <NeonWrapper>
           <JoinForm>
             <div>
               <Link to="/join">
@@ -121,7 +134,7 @@ const JoinType = () => {
               />
             </JoinWrapper>
           </JoinForm>
-        </NeonLoginWrapper>
+        </NeonWrapper>
       </Wrapper>
     </div>
   );
