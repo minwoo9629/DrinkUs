@@ -38,36 +38,11 @@ public class CustomSimpleRulAuthenticationSuccessHandler extends SimpleUrlAuthen
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 
-        User findUser = userRepository.findByUserName(userPrincipal.getUsername())
-                .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
-
-        // 사용자 정지 여부 확인
-        if(findUser.getUserStopDate() != null && LocalDateTime.now().isBefore(findUser.getUserStopDate())){
-            throw new LoginBlockException(
-                    "해당 사용자는 다음 기한까지 정지되었습니다.\n"
-                            + findUser.getUserStopDate().getYear() + "년 "
-                            + findUser.getUserStopDate().getMonthValue() + "월 "
-                            + findUser.getUserStopDate().getDayOfMonth() + "일 "
-                            + findUser.getUserStopDate().getHour() + "시 "
-                            + findUser.getUserStopDate().getMinute() + "분"
-            );
-        }
-
-        // 이전에 존재하던 RefreshToken들 모두 삭제
-        authRepository.deleteByUserId(findUser.getUserId());
-
         String accessToken = jwtUtil.createToken(userPrincipal.getUserId(), TokenType.ACCESS_TOKEN);
         String refreshToken = jwtUtil.createToken(userPrincipal.getUserId(), TokenType.REFRESH_TOKEN);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         response.addHeader("AccessToken", accessToken);
         response.addHeader("RefreshToken", refreshToken);
-
-        // RefreshToken 저장
-        Auth auth = Auth.builder()
-                .userId(findUser.getUserId())
-                .refreshToken(refreshToken)
-                .build();
-        authRepository.save(auth);
 
         String target = UriComponentsBuilder.fromUriString(AUTHENTICATION_REDIRECT_URI)
                 .queryParam("accesstoken", accessToken)
