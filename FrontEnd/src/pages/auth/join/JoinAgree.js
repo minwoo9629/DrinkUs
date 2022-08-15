@@ -7,6 +7,7 @@ import {
 } from "../../../components/styled/Wrapper";
 import { BackButton } from "../../../components/common/buttons/BackButton";
 import { AuthButton } from "../../../components/common/buttons/AuthButton";
+import { JOIN_AGREE_GUIDES } from "./JoinAgreeGuides";
 
 const neon_text_color = "#5904de";
 const neon_border_color = "#08f";
@@ -14,8 +15,8 @@ const disagreeColor = "white";
 const agreeColor = "#6F92BF";
 
 // 개인정보 수집 이용 안내, 이용 약관 안내 문구
-let personalInformationGuide = "노팅엄은 이번 시즌 폭풍 영입을 하고 있다. 23년 만에 프리미어리그 무대로 승격한 노팅엄은 구단주의 전폭적인 지원 아래 제시 린가드, 니코 윌리엄스 등 굵직한 영입을 이뤘다. 그 중 맨체스터 유나이티드 출신인 딘 헨더슨도 영입되며 주전 골키퍼 자리를 꿰찼다. 이날 경기에도 헨더슨은 노팅엄의 골문을 지켰다. 초반부터 노팅엄은 웨스트햄을 강하게 밀어붙였다. 결국 전반 46분 린가드의 슈팅에 이어 웨스트햄 골문 앞으로 흐른 공을 아워니이가 밀어 넣으며 선제골을 만들었다. 노팅엄이 리드를 지킬 수 있던 건 헨더슨의 역할이 컸다. 후반이 시작되자마자 포르날스가 오른발 중거리 슈팅을 날렸지만 골대를 맞고 나왔다. 이어 헨더슨의 선방이 빛났다. 토마스 소우체크가 뒤이어 골문 앞에서 헤더 슈팅을 날렸지만 헨더슨이 날아오르며 손으로 쳐냈다. 페널티킥을 막아내기도 했다. 후반 18분 웨스트햄에 페널티킥이 선언됐고 웨스트햄의 에이스 데클란 라이스가 키커로 나섰다. 하지만 헨더슨이 정확히 왼쪽으로 가는 슈팅을 읽어내며 막아냈다. 결국 노팅엄은 23년 만에 프리미어리그 승격 후 첫 승리를 따냈다. 노팅엄의 승리의 주역은 결승골을 터뜨린 아워니이였지만, 헨더슨이 없었다면 승리를 장담할 수 없었다. 헨더슨은 훌륭한 반사신경과 수비 리딩 능력 그리고 무엇보다 페널티킥 선방으로 팀의 승리를 견인했다.";
-let termsGuide = "이용 약관 안내 문구";
+let personalInformationGuide = JOIN_AGREE_GUIDES[0].message;
+let termsGuide = JOIN_AGREE_GUIDES[1].message;
 
 const NeonSignAnimationTitle = keyframes`
 0%,
@@ -46,8 +47,6 @@ const NeonSignTitle = styled.h1`
   font-style: italic;
   color: #fff;
   padding: 2rem 2rem;
-  //border: 0.2rem solid #fff;
-  //border-radius: 1rem;
   text-transform: uppercase;
   animation: ${NeonSignAnimationTitle} 1.5s infinite alternate;
 
@@ -84,7 +83,6 @@ const AgreeWrapper = styled.div`
   align-items: center;
   width: 400px;
   height: 64px;
-  //background-color: #131317;
   margin: 4px;
   position: relative;
   color: white;
