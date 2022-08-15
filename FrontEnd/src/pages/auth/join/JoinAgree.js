@@ -1,9 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 import {
   Wrapper,
-  RoundedWrapper,
   BaseFlexColWrapper,
 } from "../../../components/styled/Wrapper";
 import { BackButton } from "../../../components/common/buttons/BackButton";
@@ -55,9 +54,21 @@ const NeonSignTitle = styled.h1`
   @media screen and (max-width: 500px) {
     font-size: 4vw;
   }
-
 `;
 
+const NeonWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  border-radius: 13px;
+  padding: 10px;
+  height: 680px;
+  background: linear-gradient(
+    146deg,
+    rgba(56, 56, 56, 0.9248074229691877) 0%,
+    rgba(20, 20, 20, 1) 61%
+  );
+  width: 450px;
+`;
 
 const AgreeForm = styled.div`
   display: flex;
@@ -73,7 +84,7 @@ const AgreeWrapper = styled.div`
   align-items: center;
   width: 400px;
   height: 64px;
-  background-color: #131317;
+  //background-color: #131317;
   margin: 4px;
   position: relative;
   color: white;
@@ -152,7 +163,7 @@ const JoinAgree = () => {
     <>
       <BackButton />
       <Wrapper>
-        <RoundedWrapper
+        <NeonWrapper
           width={"450"}
           height={"700"}
           mWidth={"300"}
@@ -238,7 +249,7 @@ const JoinAgree = () => {
               </AuthButton>
             </Link>
           </BaseFlexColWrapper>
-        </RoundedWrapper>
+        </NeonWrapper>
       </Wrapper>
     </>
   );
