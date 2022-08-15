@@ -7,7 +7,6 @@ import { Wrapper } from "../../components/styled/Wrapper";
 import { client } from "../../utils/client";
 
 const Calendar = () => {
-
   const navigate = useNavigate();
 
   const dayOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
@@ -16,13 +15,15 @@ const Calendar = () => {
   const [calendar, setCalendar] = useState([]);
   const [first, setFirst] = useState([]);
   const [last, setLast] = useState([]);
-  const calendarTitle = `${curDate.getFullYear()}년 ${curDate.getMonth() + 1
-    }월`;
+  const calendarTitle = `${curDate.getFullYear()}년 ${
+    curDate.getMonth() + 1
+  }월`;
   const fetchData = async () => {
     const response = await client
       .get(
-        `calendar/month?year=${curDate.getFullYear()}&month=${curDate.getMonth() + 1
-        }`,
+        `calendar/month?year=${curDate.getFullYear()}&month=${
+          curDate.getMonth() + 1
+        }`
       )
       .then((response) => response);
     setCalendar([...response.data]);
@@ -42,31 +43,25 @@ const Calendar = () => {
     const diffLast = (7 - ((lastDay + diffFirst) % 7)) % 7; // 달력에 마지막 채워지는 칸들
 
     const first = new Array(diffFirst);
+    first.fill(0);
     const last = new Array(diffLast);
+    last.fill(0);
 
     setFirst([...first]);
     setLast([...last]);
   };
 
   const onHandleDecreaseMonth = () => {
-    // 한 달 앞으로 
+    // 한 달 앞으로
     setCurDate(
-      new Date(
-        curDate.getFullYear(),
-        curDate.getMonth() - 1,
-        curDate.getDate(),
-      ),
+      new Date(curDate.getFullYear(), curDate.getMonth() - 1, curDate.getDate())
     );
   };
 
   const onHandleIncreaseMonth = () => {
     // 한 달 뒤로
     setCurDate(
-      new Date(
-        curDate.getFullYear(),
-        curDate.getMonth() + 1,
-        curDate.getDate(),
-      ),
+      new Date(curDate.getFullYear(), curDate.getMonth() + 1, curDate.getDate())
     );
   };
 
@@ -81,7 +76,7 @@ const Calendar = () => {
     width: 20px;
     height: 30px;
     background-color: white;
-    color: #495F7C;
+    color: #495f7c;
     text-transform: uppercase;
     font-size: 25px;
     font-weight: 800;
@@ -91,7 +86,7 @@ const Calendar = () => {
 
   const CalendarTitle = styled.div`
     font-size: 25px;
-    color: #6F92BF;
+    color: #6f92bf;
   `;
   const CalendarWeek = styled.div`
     display: grid;
@@ -100,22 +95,22 @@ const Calendar = () => {
   `;
 
   const DayOfWeek = styled.div`
-        background: darkblue;
-        color: #495F7C;
-        text-align: center;
-        font-size: 15px;
-        line-height: 40px;
-        height: 50px;
-        width: 100%;
-        border: 1px solid #bdcff2;
+    background: darkblue;
+    color: #495f7c;
+    text-align: center;
+    font-size: 15px;
+    line-height: 40px;
+    height: 50px;
+    width: 100%;
+    border: 1px solid #bdcff2;
 
-        :nth-child(even){
-          background-color: #EAF1FF;
-        }
-        :nth-child(odd){
-          background-color: #fff;
-        }
-`;
+    :nth-child(even) {
+      background-color: #eaf1ff;
+    }
+    :nth-child(odd) {
+      background-color: #fff;
+    }
+  `;
 
   const DayOfMonth = styled.div`
     display: grid;
@@ -125,78 +120,100 @@ const Calendar = () => {
   `;
 
   const OnDay = styled.div`
-        background: tomato;
-        color: #495F7C;
-        text-align: center;
-        font-size: 15px;
-        line-height: 40px;
-        height: 100px;
-        width: 100%;
-        border: 1px #bdcff2 solid;
-        display: inline-block;
-        &:hover{
-            background-color: red; 
-            transition: all 0.4s linear;
-        }
+    background: tomato;
+    color: #495f7c;
+    text-align: center;
+    font-size: 15px;
+    line-height: 40px;
+    height: 100px;
+    width: 100%;
+    border: 1px #bdcff2 solid;
+    display: inline-block;
+    &:hover {
+      background-color: red;
+      transition: all 0.4s linear;
+    }
 
-        :nth-child(even){
-          background-color: #EAF1FF;
-        }
-        :nth-child(odd){
-          background-color: #fff;
-        }
+    :nth-child(even) {
+      background-color: #eaf1ff;
+    }
+    :nth-child(odd) {
+      background-color: #fff;
+    }
 
-        :hover{
-          background-color: #11335c;
-          color: #ffeb57;
-        }
-`;
+    :hover {
+      background-color: #11335c;
+      color: #ffeb57;
+    }
+  `;
 
   const OffDay = styled.div`
-        background:  ${(props) => props.background};
-        color: #495F7C;
-        text-align: center;
-        font-size: 15px;
-        line-height: 40px;
-        height: 100px;
-        width: 100%;
-        display: inline-block;
-        border: 1px #bdcff2 solid;
+    background: ${(props) => props.background};
+    color: #495f7c;
+    text-align: center;
+    font-size: 15px;
+    line-height: 40px;
+    height: 100px;
+    width: 100%;
+    display: inline-block;
+    border: 1px #bdcff2 solid;
 
-        :nth-child(even){
-          background-color: #EAF1FF;
-        }
-        :nth-child(odd){
-          background-color: #fff;
-        }
-`;
+    :nth-child(even) {
+      background-color: #eaf1ff;
+    }
+    :nth-child(odd) {
+      background-color: #fff;
+    }
+  `;
 
   const InnerWrapper = styled.div`
-        width: 60%;
-  `
+    width: 60%;
+  `;
   // 스타일 끝
 
   return (
     <>
-      <Header location={'lightzone'} />
-      <Wrapper color={'#fff'}>
+      <Header location={"lightzone"} />
+      <Wrapper color={"#fff"}>
         <InnerWrapper>
           <TopMenuWrap>
             <div>
-              <CalendarButton onClick={() => navigate("/calendar")} color={"#bdcff2"} textColor={"#fff"}>월간</CalendarButton>
-              <CalendarButton onClick={() => navigate("/daily")} color={"#ffffff"} textColor={"#6F92BF"}>일간</CalendarButton>
+              <CalendarButton
+                onClick={() => navigate("/calendar")}
+                color={"#bdcff2"}
+                textColor={"#fff"}
+              >
+                월간
+              </CalendarButton>
+              <CalendarButton
+                onClick={() => navigate("/daily")}
+                color={"#ffffff"}
+                textColor={"#6F92BF"}
+              >
+                일간
+              </CalendarButton>
             </div>
             <TopMenuWrap>
               <div>
-                <NextMonthButton onClick={onHandleDecreaseMonth}>&#60;</NextMonthButton>
+                <NextMonthButton onClick={onHandleDecreaseMonth}>
+                  &#60;
+                </NextMonthButton>
               </div>
 
               <CalendarTitle>{calendarTitle}</CalendarTitle>
               <div className="calendarBox">
-                <NextMonthButton onClick={onHandleIncreaseMonth}>&#62;</NextMonthButton>
+                <NextMonthButton onClick={onHandleIncreaseMonth}>
+                  &#62;
+                </NextMonthButton>
               </div>
             </TopMenuWrap>
-            <CalendarButton onClick={() => navigate("/calendar/create")} color={"#bdcff2"} textColor={"#fff"}>글쓰기</CalendarButton>
+            <CalendarButton
+              onClick={() => navigate("/calendar/create")}
+              color={"#bdcff2"}
+              textColor={"#fff"}
+            >
+              글쓰기
+            </CalendarButton>
           </TopMenuWrap>
           <div className="App">
             <div className="wrapper">
@@ -207,7 +224,7 @@ const Calendar = () => {
               </CalendarWeek>
 
               <DayOfMonth className="dateSel">
-
+                {console.log(first)}
                 {first.map((index) => {
                   return <OffDay key={index} background="lightgrey"></OffDay>;
                 })}
@@ -219,8 +236,16 @@ const Calendar = () => {
                           {...item}
                           key={index}
                           onClick={() => {
-                            navigate(`/calendar/${curDate.getFullYear()}/${curDate.getMonth() + 1}/${index}`
-                              , { year: curDate.getFullYear(), month: curDate.getMonth() + 1, index: index });
+                            navigate(
+                              `/calendar/${curDate.getFullYear()}/${
+                                curDate.getMonth() + 1
+                              }/${index}`,
+                              {
+                                year: curDate.getFullYear(),
+                                month: curDate.getMonth() + 1,
+                                index: index,
+                              }
+                            );
                           }}
                         >
                           {index}
@@ -228,10 +253,15 @@ const Calendar = () => {
                         </OnDay>
                       );
                     } else {
-                      return <OffDay key={index} background="smoke">{index}</OffDay>;
+                      return (
+                        <OffDay key={index} background="smoke">
+                          {index}
+                        </OffDay>
+                      );
                     }
                   }
                 })}
+                {console.log(last)}
                 {last.map((index) => {
                   return <OffDay key={index} background="lightgrey"></OffDay>;
                 })}
@@ -242,6 +272,6 @@ const Calendar = () => {
       </Wrapper>
     </>
   );
-}
+};
 
 export default Calendar;

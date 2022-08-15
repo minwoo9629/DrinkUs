@@ -9,6 +9,9 @@ const StyeldModalCloseButton = styled.button`
   background-color: transparent;
   cursor: pointer;
   z-index: 1000;
+  & i {
+    font-family: "Font Awesome 5 Free";
+  }
 `;
 const ModalCloseButton = ({ close }) => {
   return (
