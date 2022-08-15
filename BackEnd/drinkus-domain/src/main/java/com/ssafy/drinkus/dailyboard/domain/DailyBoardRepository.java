@@ -9,13 +9,13 @@ import java.util.List;
 public interface DailyBoardRepository extends JpaRepository<DailyBoard,Long> {
 
     // 원글 찾기
-    List<DailyBoard> findByParentIdIsNull(Pageable page);
+    List<DailyBoard> findByParentIdIsNullOrderByCreatedDateDesc(Pageable page);
 
     // 데일리 게시판 총 원글 개수
     Long countByParentIdIsNull();
 
     // 원글 번호로 댓글 찾기
-    List<DailyBoard> findByParentId(Long parentId);
+    List<DailyBoard> findByParentIdOrderByCreatedDateDesc(Long parentId);
 
     // 원글에 대한 댓글 모두 지우기
     void deleteByParentId(Long parentId);

@@ -94,7 +94,7 @@ public class UserService {
         User findUser = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
 
-        findUser.updateUser(request.getUserNickname(), request.getUserIntroduce(), request.getUserSoju(), request.getUserBeer(), request.getUserImg(), request.getUserBirthday());
+        findUser.updateUser(request.getUserNickname(), request.getUserIntroduce(), request.getUserSoju(), request.getUserBeer(), request.getUserImg(), request.getUserBirthday(), request.getUserFullname());
     }
 
     //비밀번호 수정
@@ -157,6 +157,14 @@ public class UserService {
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
         return UserProfileResponse.from(user);
     }
+
+    // 닉네임으로 회원 프로필 조회
+    public UserProfileResponse findUserByUserNickname(String userNickname) {
+        User user = userRepository.findUserByUserNickname(userNickname);
+
+        return UserProfileResponse.from(user);
+    }
+
 
     // 회원 내정보 조회
     public UserMyInfoResponse findUserMyInfo(Long userId) {

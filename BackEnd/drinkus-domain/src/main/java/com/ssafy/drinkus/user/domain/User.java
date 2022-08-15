@@ -85,7 +85,6 @@ public class User extends BaseEntity {
         userPoint = 0L;
         userSoju = 0;
         userBeer = 0;
-
     }
 
     // 로컬 회원가입
@@ -100,7 +99,6 @@ public class User extends BaseEntity {
         user.userEmail = userEmail;
         user.userRole = UserRole.ROLE_USER;
         user.userProvider = UserProvider.local;
-        user.userImg = String.valueOf((int) (Math.random() * 25) + 1);
         return user;
     }
 
@@ -114,19 +112,19 @@ public class User extends BaseEntity {
         user.userProviderId = userProviderId;
         user.userName = userName;
         user.userEmail = userEmail;
-        user.userImg = String.valueOf((int) (Math.random() * 25) + 1);
         return user;
     }
 
     // 회원수정
     // 닉네임 주량 자기소개
-    public void updateUser(String userNickname, String userIntroduce, Integer userSoju, Integer userBeer, String userImg, String userBirthday) {
+    public void updateUser(String userNickname, String userIntroduce, Integer userSoju, Integer userBeer, String userImg, String userBirthday, String userFullname) {
         this.userNickname = userNickname;
         this.userIntroduce = userIntroduce;
         this.userSoju = userSoju;
         this.userBeer = userBeer;
         this.userImg = userImg;
         this.userBirthday = userBirthday;
+        this.userFullname = userFullname;
     }
 
     //비밀번호 수정

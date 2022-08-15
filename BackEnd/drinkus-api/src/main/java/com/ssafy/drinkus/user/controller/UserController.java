@@ -79,7 +79,7 @@ public class UserController {
     @PatchMapping("/popularity/{user_id}")
     public ResponseEntity<Void> updatePopularity(@LoginUser User user,
                                                  @PathVariable("user_id") Long userId,
-                                                 @RequestBody UserPopularityRequest request) {
+                                                 @RequestBody @Valid UserPopularityRequest request) {
         userService.updatePopularity(user, userId, request.getPopularNum());
         return ResponseEntity.ok().build();
     }
@@ -88,6 +88,13 @@ public class UserController {
     @GetMapping("/profile/{user_id}")
     public ResponseEntity<UserProfileResponse> findUserProfile(@PathVariable("user_id") Long userId) {
         UserProfileResponse body = userService.findUserProfile(userId);
+        return ResponseEntity.ok().body(body);
+    }
+    
+    // 닉네임으로 프로필 조회
+    @GetMapping("/profile")
+    public ResponseEntity<UserProfileResponse> findUserByUserNickname(@RequestParam String userNickname) {
+        UserProfileResponse body = userService.findUserByUserNickname(userNickname);
         return ResponseEntity.ok().body(body);
     }
 

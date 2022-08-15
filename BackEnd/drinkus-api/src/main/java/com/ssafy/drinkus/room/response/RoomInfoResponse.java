@@ -31,11 +31,11 @@ public class RoomInfoResponse {
         roomInfoResponse.roomId = room.getRoomId();
         roomInfoResponse.roomName = room.getRoomName();
         roomInfoResponse.user = UserMyInfoResponse.from(room.getUser());
-        roomInfoResponse.roomPw = room.getRoomPw();
         roomInfoResponse.placeTheme = room.getPlaceTheme();
         roomInfoResponse.peopleLimit = room.getPeopleLimit();
         roomInfoResponse.createdDate = room.getCreatedDate();
         roomInfoResponse.ages = room.getAges();
+        roomInfoResponse.roomPw = room.getRoomPw();
 
         roomInfoResponse.categoryId = room.getCategory() != null ? room.getCategory().getCategoryId() : null;
         roomInfoResponse.categoryName = room.getCategory() != null ? room.getCategory().getCategoryName() : null;
