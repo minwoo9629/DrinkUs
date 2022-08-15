@@ -272,7 +272,7 @@ const RoomDetail = () => {
 
   return (
     <>
-      <Modal
+      {createdUser.userId !== undefined ? (<><Modal
         width={"800px"}
         height={"600px"}
         isOpen={modalState}
@@ -280,7 +280,7 @@ const RoomDetail = () => {
         modalContent={
           <UserProfileContent userId={createdUser.userId} close={closeModal} />
         }
-      />
+      /></>):(<></>)}
       <BackButton />
       <Wrapper color={"#0a0a0a"}>
         <RoomDetailWrapper>
