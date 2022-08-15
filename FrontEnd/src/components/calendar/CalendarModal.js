@@ -321,19 +321,17 @@ const CalendarModal = ({ isOpen, close, calendarId }) => {
     setModalState(false);
   };
   
-  const userId = calendar.createrId
-
   return (
     <>
-    <Modal
+    {calendar.createrId !== undefined ? (<><Modal
       width={"800px"}
       height={"600px"}
       isOpen={modalState}
       closeModal={closeModal}
       modalContent={
-        <UserProfileContent userId={userId} close={closeModal} />
+        <UserProfileContent userId={calendar.createrId} close={closeModal} />
       }
-    />
+    /></>):(<></>)}
     <ModalWrapper className={isOpen ? "active" : ""} top={ScrollY}>
       <ModalContentWrapper>
         <ModalHeader>
