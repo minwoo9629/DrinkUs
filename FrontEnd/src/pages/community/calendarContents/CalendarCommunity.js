@@ -7,7 +7,11 @@ import DailyCalendar from "./DailyCalendar";
 
 const CalendarCommunity = () => {
   const [calendarMode, setCalendaryMode] = useState("monthly");
-  const [date, setDate] = useState({ year: 0, month: 0, day: 0 });
+  const [date, setDate] = useState({
+    year: new Date().getFullYear(),
+    month: new Date().getMonth() + 1,
+    day: new Date().getDate(),
+  });
 
   const setYearAndMonth = (y, m) => {
     setDate({ year: y, month: m, day: date.day });
@@ -21,15 +25,6 @@ const CalendarCommunity = () => {
     setDate({ year: y, month: m, day: d });
     setCalendaryMode("daily");
   };
-
-  useEffect(() => {
-    const today = new Date();
-    setDate({
-      year: today.getFullYear(),
-      month: today.getMonth() + 1,
-      day: today.getDate(),
-    });
-  }, []);
 
   return (
     <>
@@ -48,7 +43,6 @@ const CalendarCommunity = () => {
           month={date.month}
           day={date.day}
           monthly={openMonthlyCalendar}
-          setYearAndMonth={setYearAndMonth}
         />
       )}
     </>

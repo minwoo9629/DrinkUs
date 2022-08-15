@@ -9,13 +9,11 @@ const MonthlyCalendar = ({ year, month, daily, setYearAndMonth }) => {
 
   const dayOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 
-  const [curDate, setCurDate] = useState(new Date());
+  const [curDate, setCurDate] = useState(new Date(year, month - 1));
   const [calendar, setCalendar] = useState([]);
   const [first, setFirst] = useState([]);
   const [last, setLast] = useState([]);
-  const calendarTitle = `${curDate.getFullYear()}년 ${
-    curDate.getMonth() + 1
-  }월`;
+
   const fetchData = async () => {
     const response = await client
       .get(
@@ -31,6 +29,7 @@ const MonthlyCalendar = ({ year, month, daily, setYearAndMonth }) => {
   useEffect(() => {
     fetchData();
     drawCalendar();
+    setYearAndMonth(curDate.getFullYear(), curDate.getMonth() + 1);
   }, [curDate]);
 
   const drawCalendar = () => {
@@ -58,7 +57,6 @@ const MonthlyCalendar = ({ year, month, daily, setYearAndMonth }) => {
         curDate.getDate(),
       ),
     );
-    setYearAndMonth(curDate.getFullYear(), curDate.getMonth() + 2);
   };
 
   const onHandleIncreaseMonth = () => {
@@ -70,7 +68,6 @@ const MonthlyCalendar = ({ year, month, daily, setYearAndMonth }) => {
         curDate.getDate(),
       ),
     );
-    setYearAndMonth(curDate.getFullYear(), curDate.getMonth() + 2);
   };
 
   // 스타일 지정
@@ -207,7 +204,6 @@ const MonthlyCalendar = ({ year, month, daily, setYearAndMonth }) => {
             </CalendarWeek>
 
             <DayOfMonth className="dateSel">
-              {console.log(first)}
               {first.map((index) => {
                 return <OffDay key={index} background="lightgrey"></OffDay>;
               })}
@@ -233,7 +229,6 @@ const MonthlyCalendar = ({ year, month, daily, setYearAndMonth }) => {
                   }
                 }
               })}
-              {console.log(last)}
               {last.map((index) => {
                 return <OffDay key={index} background="lightgrey"></OffDay>;
               })}

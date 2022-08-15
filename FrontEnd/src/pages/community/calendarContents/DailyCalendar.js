@@ -59,7 +59,7 @@ const PromiseLetter = styled.p`
   margin-top: 10px;
 `;
 
-const DailyCalendar = ({ year, month, day, monthly, setYearAndMonth }) => {
+const DailyCalendar = ({ year, month, day, monthly }) => {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -139,7 +139,6 @@ const DailyCalendar = ({ year, month, day, monthly, setYearAndMonth }) => {
           </ButtonWrapper>
           <CalendarButton
             onClick={() => {
-              setYearAndMonth();
               monthly();
             }}
             color={"#bdcff2"}

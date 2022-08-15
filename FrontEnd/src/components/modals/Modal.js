@@ -27,8 +27,8 @@ const ModalContentWrapper = styled.div`
   flex-direction: column;
   overflow: hidden;
   opacity: 1;
-  background-color: #eaf1ff;
-  border: 5px solid #6f92bf;
+  background-color: ${(props) => props.background};
+  border: ${(props) => props.borderWidth} solid ${(props) => props.borderColor};
   position: relative;
 `;
 
@@ -53,10 +53,25 @@ const ModalContent = styled.div`
   align-items: center;
   padding: 20px;
 `;
-const Modal = ({ isOpen, close, modalContent, width, height }) => {
+const Modal = ({
+  isOpen,
+  close,
+  modalContent,
+  width,
+  height,
+  background,
+  borderColor,
+  borderWidth,
+}) => {
   return (
     <ModalWrapper className={isOpen ? "active" : ""}>
-      <ModalContentWrapper width={width} heigth={height}>
+      <ModalContentWrapper
+        width={width}
+        heigth={height}
+        background={background}
+        borderColor={borderColor}
+        borderWidth={borderWidth}
+      >
         <ModalContent>{modalContent}</ModalContent>
       </ModalContentWrapper>
     </ModalWrapper>
@@ -68,4 +83,7 @@ export default Modal;
 Modal.defaultProps = {
   width: "620px",
   height: "480px",
+  background: "#eaf1ff",
+  borderColor: "#6f92bf",
+  borderWidth: "5px",
 };
