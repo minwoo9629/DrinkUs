@@ -1,6 +1,7 @@
 package com.ssafy.drinkus.dailyboard.response;
 
 import com.ssafy.drinkus.dailyboard.domain.DailyBoard;
+import com.ssafy.drinkus.user.response.UserMyInfoResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,8 +16,11 @@ public class DailyBoardResponse {
     // 글 번호
     Long boardId;
 
-    // 작성자
+    //작성자 번호
     Long createrId;
+
+    // 작성자 닉네임
+    String userNickname;
 
     // 작성일
     LocalDateTime createdDate;
@@ -28,6 +32,13 @@ public class DailyBoardResponse {
     String boardContent;
 
     public static DailyBoardResponse from(DailyBoard dailyBoard) {
-        return new DailyBoardResponse(dailyBoard.getBoardId(), dailyBoard.getCreater().getUserId(), dailyBoard.getCreatedDate(), dailyBoard.getModifiedDate(), dailyBoard.getBoardContent());
+        DailyBoardResponse dailyBoardResponse = new DailyBoardResponse();
+        dailyBoardResponse.boardId = dailyBoard.getBoardId();
+        dailyBoardResponse.createrId = dailyBoard.getCreater().getUserId();
+        dailyBoardResponse.userNickname = dailyBoard.getCreater().getUserNickname();
+        dailyBoardResponse.createdDate = dailyBoard.getCreatedDate();
+        dailyBoardResponse.modifiedDate = dailyBoard.getModifiedDate();
+        dailyBoardResponse.boardContent = dailyBoard.getBoardContent();
+        return dailyBoardResponse;
     }
 }
