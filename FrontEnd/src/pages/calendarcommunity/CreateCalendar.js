@@ -1,6 +1,5 @@
 import { useState } from "react";
 import styled from "styled-components";
-import Header from "../../components/layout/Header";
 import FetchProfile from "../../components/room/FetchProfile";
 import { Wrapper } from "../../components/styled/Wrapper";
 import { client } from "../../utils/client";
@@ -16,6 +15,7 @@ const CreateCalendarBlock = styled.div`
   background-color: #6F92BF;
   border-radius: 30px;
   padding: 30px;
+  box-shadow: inset 0px 0px 4px 4px #BDCFF2;
 `
 
 const InputBlock = styled.div`
@@ -57,6 +57,7 @@ const CreateButton = styled.button `
   border: 4px solid #BDCFF2;
   border-radius: 5px;
   box-shadow: 0px 4px 6px rgba(0,0,0,0.25);
+  cursor: pointer;
 `
 
 const InputForm = styled.input`
@@ -313,17 +314,15 @@ const CreateCalendar = () => {
                 <option>술집</option>
                 <option>펍</option>
                 <option>칵테일바</option>
-                {/* <option>야구장</option>
+                <option>야구장</option>
                 <option>축구장</option>
                 <option>페스티벌</option>
                 <option>클럽</option>
-                <option>엘리니아</option>
                 <option>편의점</option>
                 <option>한강공원</option>
                 <option>미술관</option>
                 <option>영화관</option>
-                <option>협곡</option>
-                <option>독서실</option> */}
+                <option>도서관</option>
               </SelectBox>
               에서 만나요!
             </InputRightWrap>

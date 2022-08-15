@@ -39,7 +39,6 @@ const CommentList = React.memo(({ parentId }) => {
         </>
       ) : (
         <>
-          <p>해당 게시글에 댓글이 없습니다.</p>
         </>
       )}
     </div>

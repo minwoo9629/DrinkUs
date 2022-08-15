@@ -9,7 +9,7 @@ const ModalWrapper = styled.div`
   left: 0;
   width: 100%;
   height: 100vh;
-  z-index: 10;
+  z-index: 100000;
   background-color: rgb(0, 0, 0, 0.6);
   &.active {
     justify-content: center;
@@ -19,8 +19,8 @@ const ModalWrapper = styled.div`
 `;
 
 const ModalContentWrapper = styled.div`
-  width: 620px;
-  height: 480px;
+  width: ${(props) => props.width};
+  height: ${(props) => props.height};
   background-color: #fff;
   border-radius: 10px;
   display: flex;
@@ -29,6 +29,7 @@ const ModalContentWrapper = styled.div`
   opacity: 1;
   background-color: #eaf1ff;
   border: 5px solid #6f92bf;
+  position: relative;
 `;
 
 const ModalHeader = styled.div`
@@ -52,10 +53,10 @@ const ModalContent = styled.div`
   align-items: center;
   padding: 20px;
 `;
-const Modal = ({ isOpen, close, modalContent }) => {
+const Modal = ({ isOpen, close, modalContent, width, height }) => {
   return (
     <ModalWrapper className={isOpen ? "active" : ""}>
-      <ModalContentWrapper>
+      <ModalContentWrapper width={width} heigth={height}>
         <ModalContent>{modalContent}</ModalContent>
       </ModalContentWrapper>
     </ModalWrapper>
@@ -63,3 +64,8 @@ const Modal = ({ isOpen, close, modalContent }) => {
 };
 
 export default Modal;
+
+Modal.defaultProps = {
+  width: "620px",
+  height: "480px",
+};
