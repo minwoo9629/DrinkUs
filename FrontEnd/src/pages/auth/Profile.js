@@ -100,7 +100,6 @@ const ReportsButton = styled.button`
   color: #676775;
 `;
 
-// console.log(result);
 const Profile = ({ userId, changeTypeState }) => {
   const [state, setState] = useState({
     userNickname: "",
@@ -167,7 +166,6 @@ const Profile = ({ userId, changeTypeState }) => {
     fetchCategory();
   }, []);
 
-  console.log(state);
   return (
     <div>
       <Wrapper>
