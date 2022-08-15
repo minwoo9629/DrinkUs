@@ -1,12 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/layout/Header";
 import styled from "styled-components";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { client } from "../../utils/client";
 import LiveListItem from "../../components/room/LiveListItem";
 import Banner from "../../components/room/Banner";
 import { useSelector } from "react-redux";
-import { getAllByPlaceholderText } from "@testing-library/react";
+import { LiveButton } from "../../components/common/buttons/LiveButton";
 
 // 버튼, 배너
 const LiveWrapper = styled.div`
@@ -19,21 +19,6 @@ const LiveWrapper = styled.div`
 const LiveButtonWrapper = styled.div`
   width: 1200px;
   height: 110px;
-`;
-
-const LiveButton = styled.button`
-  width: 160px;
-  height: 48px;
-  margin-right: 20px;
-  border-radius: 30px;
-  background-color: #eaf1ff;
-  color: #676775;
-  font-size: 18px;
-  margin-top: 40px;
-  line-height: 3px;
-  border: 3px solid #bdcff2;
-  box-shadow: inset 0px 0px 4px 4px rgba(234, 241, 255, 0.5);
-  cursor: pointer;
 `;
 
 const LiButton = styled.button`
@@ -59,7 +44,7 @@ const RecommendInnerWrapper = styled.div`
   background-color: ${(props) => props.backgroundcolor};
 `;
 
-const RecommendLetter = styled.div`
+const RecommendLetter = styled.p`
   font-size: ${(props) => props.size};
   background-color: black;
   color: ${(props) => props.color};
@@ -91,7 +76,7 @@ const DrinkLive = () => {
   useEffect(() => {
     if (user.userBirthday === null) {
       alert("생년월일 설정해야해!@!!!!");
-      navigate("/user/edit/profile");
+      navigate("/edit/profile");
     }
     onMakeAgeList();
     onCategoryList();
