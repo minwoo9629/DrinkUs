@@ -7,7 +7,7 @@ const CommentWrapper = styled.div`
   justify-content: space-between;
   width: 100%;
   height: 11vh;
-  margin: 12px;
+  margin: 12px 0;
   position: relative;
   display: flex;
   justify-content: center;
@@ -15,13 +15,13 @@ const CommentWrapper = styled.div`
 `
 
 const CommentContentWrapper = styled.div`
-  width: 90%;
+  width: 100%;
   height: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 20px auto;
-  border-radius: 4px;
+  margin: 20px 0;
+  border-radius: 1px;
   border: 1px solid #bdcff2;
   background-color: white;
   
@@ -55,8 +55,8 @@ align-items: center;
 const DailyCommentInput = styled.input`
   justify-content: space-between;
   width: 64vw;
-  height: 8vh;
-  border-radius: 4px;
+  height: 11vh;
+  border-radius: 1px;
   border: #6f92bf;
   background-color: #eaf1ff;
   margin: 4px;
