@@ -86,7 +86,7 @@ const Daily = () => {
   const getItems = useCallback(async () => {
     setLoading(true)
     await client.get(`/daily?page=${page}&size=10`).then((res) => {
-      console.log(res.data.content);
+      console.log(res.data);
       setItems(prevState => [...prevState, ...res.data.content])
     })
     await new Promise((resolve) => setTimeout(resolve, 1000));

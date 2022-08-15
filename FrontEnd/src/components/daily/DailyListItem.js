@@ -23,10 +23,9 @@ const DailyContent = styled.div`
 const ProfileImg = styled.img`
   padding: 8px;
   border-radius: 24px;
-  width: 24px;
-  height: 24px;
+  width: 40px;
+  height: 40px;
   margin: 12px;
-  background-color: #6f92bf;
 `;
 
 const DailyContentWrapper = styled.div`
@@ -83,6 +82,16 @@ const DailyModifyWrapper = styled.div`
   background-color: white;
 `
 
+const ProfileEditRowWapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: ${(props) => props.alignItems};
+  padding: ${(props) => props.padding};
+  border: ${(props) => props.border};
+  border-radius: ${(props) => props.borderRadius};
+  margin-left: ${(props) => props.marginLeft};
+`;
+
 // 글 수정 인풋
 const DailyModifyInput = styled.input`
   width: 87%;
@@ -130,7 +139,7 @@ const DailyCommentPostButton = styled.button`
 
 const DailyListItem = (
   {
-    // userImg,
+    userImg,
     createrId,
     userNickname,
     boardId,
@@ -228,7 +237,6 @@ const DailyListItem = (
     if (!comment.showComment) {
       setComment({ ...comment, showComment: !comment.showComment })
       const response = await getDailyComment(parentId)
-      console.log(response.data[0].userNickname)
       setCommentList([...response.data])
     }
     if (state.showEditArticle) {
@@ -263,12 +271,23 @@ const DailyListItem = (
       <DailyContent>
         <DailyContentWrapper>
           <div>
-            <ProfileImg onClick={() => navigate(`/users/profile/${createrId}`)} src="assets/google_icon.png">
+            <ProfileImg onClick={() => navigate(`/users/profile/${createrId}`)} src={`assets/profileImage/profile${userImg}.png`}>
             </ProfileImg>
           </div>
           <ContentWrapper>
-            <div>{userNickname}</div>
-            <div>{boardContent}</div>
+            <div style={{ color: "#6f92bf" }}>{userNickname}</div>
+            <div style={{ display: state.showEditArticle === true ? "none" : "block" }}>{boardContent}</div>
+            <div style={{ display: state.showEditArticle === false ? "none" : "block" }}>
+                  <DailyModifyInput
+                    placeholder="수정칸 입력"
+                    type="string"
+                    value={state.boardArticle}
+                    name="boardArticle"
+                    onChange={onEditArticleInput}
+                    onKeyPress={onEnterPress}
+                  />
+                  <DailyModifyButton onClick={() => onArticleEdit(boardId)}>글수정</DailyModifyButton>
+            </div>
           </ContentWrapper>
         </DailyContentWrapper>
         <DailyEditWrapper>
@@ -298,9 +317,9 @@ const DailyListItem = (
           </DailyContentWrapper>
         </DailyEditWrapper>
       </DailyContent>
-      <DailyModifyWrapper style={{ display: state.showEditArticle === false ? "none" : "block" }}>
+      {/* <DailyModifyWrapper style={{ display: state.showEditArticle === false ? "none" : "block" }}>
           <DailyModifyInput
-            placeholder="boardContent"
+            placeholder={state.boardContent}
             type="string"
             value={state.boardArticle}
             name="boardArticle"
@@ -308,7 +327,7 @@ const DailyListItem = (
             onKeyPress={onEnterPress}
           />
           <DailyModifyButton onClick={() => onArticleEdit(boardId)}>글수정</DailyModifyButton>
-        </DailyModifyWrapper>
+        </DailyModifyWrapper> */}
       <div>
         <div style={{ display: comment.isComment === false ? "none" : "block" }}>
           <DailyCommentInput
