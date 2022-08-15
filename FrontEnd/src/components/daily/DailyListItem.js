@@ -130,26 +130,59 @@ const DailyModifyButton = styled.button`
   font-size: 16px;
 `
 
+const CommentWrapper = styled.div`
+  width: 100%;
+  height: 11vh;
+  margin: 12px auto;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+
+  // 댓글 화살표
+  const CommentArrow = styled.img`
+    width: 4vw;
+    /* border: 1px solid #bdcff2; */
+    padding: 11px 12px;
+    background-color: white;
+    position: relative;
+    font-size: 24px;
+    color: #6f92bf;
+  `
+
+  const CommentInputWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  `
+
 // 댓글 인풋
 const DailyCommentInput = styled.input`
   justify-content: space-between;
-  width: 64vw;
-  height: 8vh;
-  border-radius: 4px;
-  border: #6f92bf;
-  background-color: #eaf1ff;
-  margin: 4px;
+  width: 85%;
+  height: 100%;
+  align-items: center;
+  margin: 20px 0;
+  border-radius: 1px;
+  border: solid #6F92BF 0.1em;
+  background-color: #EAF1FF;
   position: relative;
+  padding-left: 20px;
 `
 
 // 댓글 달기 버튼
 const DailyCommentPostButton = styled.button`
-  border-radius: 3px;
+  padding: 12px 24px;
+  border-radius: 1px;
+  height: 102%;
+  width: 10%;
   background-color: #bdcff2;
+  border: solid #bdcff2 0.1em;
   color: white;
   font-size: 16px;
-  margin: 4px;
-  border: 1px #eaf1ff;
 `
 
 const NoCommentItem = styled.div`
@@ -223,10 +256,10 @@ const DailyListItem = (
       setState({ ...state, showEditArticle: !state.showEditArticle, boardArticle: "" })
     }
     if (comment.showComment) {
-      setComment({...comment, showComment: !comment.showComment})
+      setComment({ ...comment, showComment: !comment.showComment })
     }
     if (comment.isComment) {
-      setComment({...comment, isComment: !comment.isComment})
+      setComment({ ...comment, isComment: !comment.isComment })
     }
     else {
       setState({ ...state, showEditArticle: !state.showEditArticle, boardArticle: "" })
@@ -262,8 +295,8 @@ const DailyListItem = (
       setCommentList([...response.data])
     }
     if (state.showEditArticle) {
-      setState({...state, showEditArticle: !state.showEditArticle})
-    } 
+      setState({ ...state, showEditArticle: !state.showEditArticle })
+    }
     else {
       setComment({ ...comment, showComment: !comment.showComment })
     }
@@ -275,7 +308,7 @@ const DailyListItem = (
       setComment({ ...comment, isComment: !comment.isComment, boardComment: "" })
     }
     if (state.showEditArticle) {
-      setState({...state, showEditArticle: !state.showEditArticle})
+      setState({ ...state, showEditArticle: !state.showEditArticle })
     }
     else {
       setComment({ ...comment, isComment: !comment.isComment, boardComment: "" })
@@ -284,7 +317,7 @@ const DailyListItem = (
 
   // 엔터 키 눌렀을 때 입력
   const onEnterPress = (e) => {
-    if(e.key === 'Enter') {
+    if (e.key === 'Enter') {
       onArticleEdit(boardId);
     }
   }
@@ -299,16 +332,16 @@ const DailyListItem = (
           <ContentWrapper>
             <Nickname style={{ color: "#6f92bf" }}>{userNickname}</Nickname>
             <BoardContent style={{ display: state.showEditArticle === true ? "none" : "block" }}>{boardContent}
-            <div style={{ display: state.showEditArticle === false ? "none" : "block" }}>
-                  <DailyModifyInput
-                    placeholder="수정칸 입력"
-                    type="string"
-                    value={state.boardArticle}
-                    name="boardArticle"
-                    onChange={onEditArticleInput}
-                    onKeyPress={onEnterPress}
-                  />
-                  <DailyModifyButton onClick={() => onArticleEdit(boardId)}>글수정</DailyModifyButton>
+              <div style={{ display: state.showEditArticle === false ? "none" : "block" }}>
+                <DailyModifyInput
+                  placeholder="수정칸 입력"
+                  type="string"
+                  value={state.boardArticle}
+                  name="boardArticle"
+                  onChange={onEditArticleInput}
+                  onKeyPress={onEnterPress}
+                />
+                <DailyModifyButton onClick={() => onArticleEdit(boardId)}>글수정</DailyModifyButton>
               </div>
             </BoardContent>
           </ContentWrapper>
@@ -352,17 +385,21 @@ const DailyListItem = (
           <DailyModifyButton onClick={() => onArticleEdit(boardId)}>글수정</DailyModifyButton>
         </DailyModifyWrapper> */}
       <div>
-        <div style={{ display: comment.isComment === false ? "none" : "block" }}>
+        <CommentWrapper style={{ display: comment.isComment === false ? "none" : "flex" }}>
+          <CommentArrow src="assets/commentarrow.png">
+          </CommentArrow>
+          <CommentInputWrapper>
           <DailyCommentInput
-            placeholder="댓글칸"
+            placeholder="댓글을 입력해주세요"
             type="string"
             value={comment.boardComment}
             name="boardComment"
             onChange={onHandleInput}
             onKeyPress={onEnterPress}
           />
-          <DailyCommentPostButton onClick={() => onCommentPost(boardId)}>댓글달기</DailyCommentPostButton>
-        </div>
+          <DailyCommentPostButton onClick={() => onCommentPost(boardId)}>완료</DailyCommentPostButton>
+          </CommentInputWrapper>
+        </CommentWrapper>
       </div>
       <div style={{ display: comment.showComment === false ? "none" : "block" }}>
         {commentList.length !== 0 ?

@@ -43,7 +43,9 @@ const Calendar = () => {
     const diffLast = (7 - ((lastDay + diffFirst) % 7)) % 7; // 달력에 마지막 채워지는 칸들
 
     const first = new Array(diffFirst);
+    first.fill(0);
     const last = new Array(diffLast);
+    last.fill(0);
 
     setFirst([...first]);
     setLast([...last]);
