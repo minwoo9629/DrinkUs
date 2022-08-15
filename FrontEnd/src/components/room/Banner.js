@@ -17,6 +17,7 @@ const Container = styled.div`
     }
   }
   margin-top: 20px;
+  margin-bottom: 30px;
   overflow: hidden;
 `;
 

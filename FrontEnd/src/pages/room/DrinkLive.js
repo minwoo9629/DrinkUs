@@ -32,7 +32,7 @@ const LiveButton = styled.button`
   margin-top: 40px;
   line-height: 3px;
   border: 3px solid #bdcff2;
-  box-shadow: inset 0px 0px 4px 4px rgba(189, 207, 242, 0.5);
+  box-shadow: inset 0px 0px 4px 4px rgba(234, 241, 255, 0.5);
   cursor: pointer;
 `;
 
@@ -43,20 +43,6 @@ const LiButton = styled.button`
 `;
 
 // 추천방
-const RecommendLetter = styled.div`
-  background-color: black;
-  color: white;
-  margin-top: 30px;
-`;
-
-const LetterWrapper = styled.div`
-  display: flex;
-  background-color: black;
-  justify-content: center;
-  margin: auto;
-  width: 100vw;
-`;
-
 const RecommendWrapper = styled.div`
   display: flex;
   background-color: black;
@@ -70,7 +56,31 @@ const RecommendInnerWrapper = styled.div`
   margin-top: 20px;
   margin-bottom: 50px;
   width: 1200px;
+  background-color: ${(props) => props.backgroundcolor};
 `;
+
+const RecommendLetter = styled.div`
+  font-size: ${(props) => props.size};
+  background-color: black;
+  color: ${(props) => props.color};
+  margin-top: ${(props) => props.margintop};
+  margin-bottom: ${(props) => props.marginbottom};
+  background-color: ${(props) => props.backgroundcolor};
+`;
+
+const LetterWrapper = styled.div`
+  display: flex;
+  background-color: black;
+  justify-content: center;
+  margin: ${(props) => props.margin};
+  width: 100vw;
+`;
+
+const LetterInnerWrapper = styled.div`
+  display: flex;
+  width: ${(props) => props.width};
+  margin-bottom: ${(props) => props.marginbottom};
+`
 
 const DrinkLive = () => {
   const navigate = useNavigate();
@@ -135,16 +145,15 @@ const DrinkLive = () => {
         <Banner></Banner>
       </LiveWrapper>
       <LetterWrapper>
-        <RecommendLetter>내 나이대로 설정된 방</RecommendLetter>
+        <LetterInnerWrapper width={'1200px'} marginbottom={'20px'}>
+          <RecommendLetter size={'24px'} color={"#EAF1FF"}>내 나이대로 설정된 방</RecommendLetter>
+        </LetterInnerWrapper> 
       </LetterWrapper>
       <RecommendWrapper>
         <RecommendInnerWrapper>
           {ageList.length === 0 ? (
-            <RecommendLetter>
+            <RecommendLetter color={"#EAF1FF"}>
               내 나이대로 설정된 방이 없어요.
-              <LiButton onClick={() => navigate("/user/edit/profile")}>
-                생년월일 입력하러 가기
-              </LiButton>
             </RecommendLetter>
           ) : (
             <>
@@ -158,12 +167,14 @@ const DrinkLive = () => {
         </RecommendInnerWrapper>
       </RecommendWrapper>
       <LetterWrapper>
-        <RecommendLetter>내 관심사로 설정된 방</RecommendLetter>
+        <LetterInnerWrapper width={'1200px'} marginbottom={'20px'}>
+          <RecommendLetter size={'24px'} color={"#EAF1FF"}>내 관심사로 설정된 방</RecommendLetter>
+        </LetterInnerWrapper>
       </LetterWrapper>
       <RecommendWrapper>
         <RecommendInnerWrapper>
           {categoryList.length === 0 ? (
-            <RecommendLetter>
+            <RecommendLetter color={"#EAF1FF"}>
               관심사를 추가로 설정해 주세요
               <LiButton onClick={() => navigate("/user/edit/profile")}>
                 관심사 설정하기
@@ -179,12 +190,14 @@ const DrinkLive = () => {
         </RecommendInnerWrapper>
       </RecommendWrapper>
       <LetterWrapper>
-        <RecommendLetter>최근에 만들어진 방</RecommendLetter>
+        <LetterInnerWrapper width={'1200px'} marginbottom={'20px'}>
+          <RecommendLetter size={'24px'} color={"#EAF1FF"}>최근에 만들어진 방</RecommendLetter>
+        </LetterInnerWrapper>
       </LetterWrapper>
       <RecommendWrapper>
         <RecommendInnerWrapper>
           {currentList.length === 0 ? (
-            <RecommendLetter>
+            <RecommendLetter color={"#EAF1FF"}>
               최근에 만들어진 방이 없어요.
               <LiButton onClick={() => navigate("/createroom")}>
                 방을 만들어볼까요?
