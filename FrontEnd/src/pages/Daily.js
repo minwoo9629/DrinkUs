@@ -74,6 +74,7 @@ const Daily = () => {
     boardComment: "",
     // 댓글 창 여닫을 때 필요한 값
     isComment: false,
+    isRender: false,
   })
   const [items, setItems] = useState([])
   const [page, setPage] = useState(0)
@@ -120,6 +121,13 @@ const Daily = () => {
     }
     window.location.replace("/daily")
   };
+
+  // 엔터 키 눌렀을 때 입력
+  const onEnterPress = (e) => {
+    if(e.key === 'Enter') {
+      onArticlePost(e);
+    }
+  }
   return (
     <>
       <Header />
@@ -136,6 +144,7 @@ const Daily = () => {
               value={state.boardArticle}
               name="boardArticle"
               onChange={onHandleInput}
+              onKeyPress={onEnterPress}
             />
             <DailyArticlePostButton onClick={onArticlePost}>
               글쓰기

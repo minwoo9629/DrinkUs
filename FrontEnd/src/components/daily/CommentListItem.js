@@ -55,7 +55,7 @@ const DailyCommentInput = styled.input`
 const CommentListItem = ({
   boardId,
   boardContent,
-  parentId,
+  userNickname,
   createrId
   }) => {
   const [state, setState] = useState({
@@ -118,7 +118,7 @@ const fetchUser = async () => {
   };
 
   // 댓글 화살표
-  const CommentArrow = styled.div`
+  const CommentArrow = styled.img`
     width: 4vw;
     /* border: 1px solid #bdcff2; */
     padding: 11px 12px;
@@ -131,20 +131,18 @@ const fetchUser = async () => {
   return (
     <div>
       <DailyWrapper>
-      <CommentArrow><i class="fa fa-arrow-right" aria-hidden="true"></i></CommentArrow>
-      <DailyWrapper>
-
-          <ProfileWrapper style={{ width: "20%" }}>{createrId}: 작성자 id</ProfileWrapper>
-            <div style={{ width: "60%" }}>{boardContent}</div>
-            <div style = {{ display: state.userId === createrId ? "block" : "none"}}>
-              <DailyBoardEditButton onClick={() => onHandleCommentEdit()}>
-                  수정
-              </DailyBoardEditButton>
-              <DailyBoardEditButton onClick={() => onCommentDelete(boardId)}>
-                  삭제
-              </DailyBoardEditButton>
-            </div>
-      </DailyWrapper>
+        <CommentArrow src="assets/commentarrow.png">
+        </CommentArrow>
+        <ProfileWrapper style={{ width: "20%" }}>{userNickname}</ProfileWrapper>
+          <div style={{ width: "60%" }}>{boardContent}</div>
+          <div style = {{ display: state.userId === createrId ? "block" : "none"}}>
+            <DailyBoardEditButton onClick={() => onHandleCommentEdit()}>
+                수정
+            </DailyBoardEditButton>
+            <DailyBoardEditButton onClick={() => onCommentDelete(boardId)}>
+                삭제
+            </DailyBoardEditButton>
+          </div>
       </DailyWrapper>
           <div>
             <div style = {{ display: state.showCommentEdit === false ? "none" : "block"}}>

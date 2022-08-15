@@ -132,6 +132,7 @@ const DailyListItem = (
   {
     // userImg,
     createrId,
+    userNickname,
     boardId,
     boardContent
   }) => {
@@ -189,7 +190,14 @@ const DailyListItem = (
   const onHandleArticleEdit = (e) => {
     if (!state.showEditArticle) {
       setState({ ...state, showEditArticle: !state.showEditArticle, boardArticle: "" })
-    } else {
+    }
+    if (comment.showComment) {
+      setComment({...comment, showComment: !comment.showComment})
+    }
+    if (comment.isComment) {
+      setComment({...comment, isComment: !comment.isComment})
+    }
+    else {
       setState({ ...state, showEditArticle: !state.showEditArticle, boardArticle: "" })
     }
   }
@@ -220,9 +228,13 @@ const DailyListItem = (
     if (!comment.showComment) {
       setComment({ ...comment, showComment: !comment.showComment })
       const response = await getDailyComment(parentId)
-      console.log(response.data)
+      console.log(response.data[0].userNickname)
       setCommentList([...response.data])
-    } else {
+    }
+    if (state.showEditArticle) {
+      setState({...state, showEditArticle: !state.showEditArticle})
+    } 
+    else {
       setComment({ ...comment, showComment: !comment.showComment })
     }
   };
@@ -231,8 +243,19 @@ const DailyListItem = (
   const onHandleComment = (e) => {
     if (!comment.isComment) {
       setComment({ ...comment, isComment: !comment.isComment, boardComment: "" })
-    } else {
+    }
+    if (state.showEditArticle) {
+      setState({...state, showEditArticle: !state.showEditArticle})
+    }
+    else {
       setComment({ ...comment, isComment: !comment.isComment, boardComment: "" })
+    }
+  }
+
+  // 엔터 키 눌렀을 때 입력
+  const onEnterPress = (e) => {
+    if(e.key === 'Enter') {
+      onArticleEdit(boardId);
     }
   }
   return (
@@ -244,7 +267,7 @@ const DailyListItem = (
             </ProfileImg>
           </div>
           <ContentWrapper>
-            <div>{createrId}</div>
+            <div>{userNickname}</div>
             <div>{boardContent}</div>
           </ContentWrapper>
         </DailyContentWrapper>
@@ -282,6 +305,7 @@ const DailyListItem = (
             value={state.boardArticle}
             name="boardArticle"
             onChange={onEditArticleInput}
+            onKeyPress={onEnterPress}
           />
           <DailyModifyButton onClick={() => onArticleEdit(boardId)}>글수정</DailyModifyButton>
         </DailyModifyWrapper>
@@ -293,6 +317,7 @@ const DailyListItem = (
             value={comment.boardComment}
             name="boardComment"
             onChange={onHandleInput}
+            onKeyPress={onEnterPress}
           />
           <DailyCommentPostButton onClick={() => onCommentPost(boardId)}>댓글달기</DailyCommentPostButton>
         </div>
@@ -302,7 +327,6 @@ const DailyListItem = (
           <>
             {commentList.map((item, idx) => (
               <React.Fragment key={idx}>
-                {console.log("여기 댓글있음")}
                 <CommentListItem
                   {...item}
                   key={item.parentId}
@@ -312,7 +336,6 @@ const DailyListItem = (
           </>
           :
           <>
-            {console.log("여기 댓글없음")}
             <p>해당 게시글에 댓글이 없습니다.</p>
           </>
         }
