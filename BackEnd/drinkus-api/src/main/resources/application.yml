@@ -75,7 +75,7 @@ spring:
       mail.smtp.socketFactory:fallback: true
 
 token:
-  expiration_time: 7200000 # 2시간 (7200000)
+  expiration_time: 10000 # 2시간 (7200000)
   refresh_token_expiration_time: 604800000 # 7일
   secret: secret
 
