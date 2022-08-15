@@ -109,11 +109,11 @@ const ProfileEditRowWapper = styled.div`
 
 // 글 수정 인풋
 const DailyModifyInput = styled.input`
-  width: 87%;
+  width: 100%;
   height: 100%;
   border-radius: 1px;
   border: solid #6F92BF 0.1em;
-  background-color: #EAF1FF;
+  background-color: white;
   position: relative;
   padding-left: 20px;
 `
@@ -128,6 +128,7 @@ const DailyModifyButton = styled.button`
   border: solid #bdcff2 0.1em;
   color: white;
   font-size: 16px;
+  margin: 16px;
 `
 
 // 댓글 인풋
@@ -298,59 +299,50 @@ const DailyListItem = (
           </div>
           <ContentWrapper>
             <Nickname style={{ color: "#6f92bf" }}>{userNickname}</Nickname>
-            <BoardContent style={{ display: state.showEditArticle === true ? "none" : "block" }}>{boardContent}
-            <div style={{ display: state.showEditArticle === false ? "none" : "block" }}>
-                  <DailyModifyInput
-                    placeholder="수정칸 입력"
-                    type="string"
-                    value={state.boardArticle}
-                    name="boardArticle"
-                    onChange={onEditArticleInput}
-                    onKeyPress={onEnterPress}
-                  />
-                  <DailyModifyButton onClick={() => onArticleEdit(boardId)}>글수정</DailyModifyButton>
-              </div>
+            <BoardContent style={{ display: state.showEditArticle === true ? "none" : "block" }}>{boardContent}</BoardContent>
+            <BoardContent style={{ display: state.showEditArticle === false ? "none" : "block" }}>
+              <DailyModifyInput
+                placeholder="수정칸 입력"
+                type="string"
+                value={state.boardArticle}
+                name="boardArticle"
+                onChange={onEditArticleInput}
+                onKeyPress={onEnterPress}
+              />
             </BoardContent>
           </ContentWrapper>
         </DailyContentWrapper>
         <DailyEditWrapper>
           <DailyEdit>
-            <div style={{ display: state.userId === createrId ? "block" : "none" }}>
+            <div style={{ display: (state.userId === createrId) && (state.showEditArticle === false) ? "block" : "none" }}>
               <DailyBoardEditButton onClick={onHandleArticleEdit}>
                 수정
               </DailyBoardEditButton>
             </div>
-            <div style={{ display: state.userId === createrId ? "block" : "none" }}>
+            <div style={{ display: (state.userId === createrId) && (state.showEditArticle === false) ? "block" : "none" }}>
               <DailyBoardEditButton onClick={() => onArticleDelete(boardId)}>
                 삭제
               </DailyBoardEditButton>
             </div>
           </DailyEdit>
           <DailyContentWrapper>
-            <div>
+            <div style={{ display: state.showEditArticle === false ? "block" : "none"}}>
               <DailyBoardCommentButton onClick={() => onHandleCommentList(boardId)}>
                 {comment.showComment === true ? "댓글닫기" : "댓글보기"}
               </DailyBoardCommentButton>
             </div>
-            <div>
+            <div style={{ display: state.showEditArticle === false ? "block" : "none"}}>
               <DailyBoardCommentButton onClick={onHandleComment}>
                 {comment.isComment === true ? "댓글취소" : "댓글달기"}
               </DailyBoardCommentButton>
             </div>
           </DailyContentWrapper>
+          <div style={{ display: state.showEditArticle === false ? "none" : "block" }}>
+          <DailyModifyButton onClick={onHandleArticleEdit}>수정 취소</DailyModifyButton>
+          <DailyModifyButton onClick={() => onArticleEdit(boardId)}>수정하기</DailyModifyButton>
+          </div>
         </DailyEditWrapper>
       </DailyContent>
-      {/* <DailyModifyWrapper style={{ display: state.showEditArticle === false ? "none" : "block" }}>
-          <DailyModifyInput
-            placeholder={state.boardContent}
-            type="string"
-            value={state.boardArticle}
-            name="boardArticle"
-            onChange={onEditArticleInput}
-            onKeyPress={onEnterPress}
-          />
-          <DailyModifyButton onClick={() => onArticleEdit(boardId)}>글수정</DailyModifyButton>
-        </DailyModifyWrapper> */}
       <div>
         <div style={{ display: comment.isComment === false ? "none" : "block" }}>
           <DailyCommentInput
