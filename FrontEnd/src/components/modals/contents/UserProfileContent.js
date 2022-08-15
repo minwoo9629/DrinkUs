@@ -91,7 +91,7 @@ const ReportsButton = styled.button`
   font-size: 20px;
   color: #676775;
 `;
-const UserProfileContent = ({ userId, close }) => {
+const UserProfileContent = ({ userId, close, userNickname }) => {
   const [typeState, setTypeState] = useState("read");
 
   const changeTypeState = (type) => {
@@ -102,11 +102,19 @@ const UserProfileContent = ({ userId, close }) => {
       <ModalCloseButton close={close} />
       {typeState === "read" ? (
         <>
-          <Profile changeTypeState={changeTypeState} userId={userId} />
+          <Profile
+            changeTypeState={changeTypeState}
+            userId={userId}
+            userNickname={userNickname}
+          />
         </>
       ) : (
         <>
-          <Reports changeTypeState={changeTypeState} userId={userId} />
+          <Reports
+            changeTypeState={changeTypeState}
+            userId={userId}
+            userNickname={userNickname}
+          />
         </>
       )}
     </>
