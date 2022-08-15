@@ -3,22 +3,25 @@ import { TimeGap } from "../../utils/TimeGap";
 import { useNavigate } from "react-router-dom";
 
 const RoomBox = styled.div`
-  padding: 10px 20px 20px 10px;
+  padding: 0px 0px 20px 0px;
   flex-direction: row;
-  background-color: white;
-  width: 260px;
+  background-color: rgba(18, 21, 39, 0.86);
+  width: 278px;
   height: 188px;
-  border-radius: 30px;
-  margin-right: 16px;
-  box-shadow: inset 0px 0px 4px 4px #BDCFF2;
+  border-radius: 10px;
+  margin-right: 26px;
+  &:hover{
+    color: #fff;
+    transition: all 0.5s linear;
+    transform: scale(1.05);
+  }
 `
 
 const ImageWrapper = styled.img`
-  margin: 0px 0px 0px 4px;
-  background-color: gray;
-  width: 260px;
+  width: 278px;
   height: 140px;
-  border-radius: 30px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
 `
 
 const InfoWrapper = styled.div`
@@ -30,17 +33,17 @@ const InfoWrapper = styled.div`
 const InfoInnerWrapper = styled.div`
   height: 20px;
   font-size: 16px;
+  color: ${(props) => props.color};
 `
 
 const TimeBox = styled.div`
   margin-left: 16px;
-  color: gray;
+  color: ${(props) => props.color};
 `
 
 const LiveListItem = ({
   roomId,
   roomName,
-  peopleLimit,
   placeTheme,
   createdDate,
 }) => {
@@ -80,14 +83,11 @@ const LiveListItem = ({
       <ImageWrapper src={process.env.PUBLIC_URL + '/assets/RoomBackground/outside.jpg'} onClick={() => navigate(`/rooms/${roomId}`)}/>
     }
       <InfoWrapper>
-        <InfoInnerWrapper>
+        <InfoInnerWrapper color={'#fff'}>
           {roomName}
         </InfoInnerWrapper>
-        <InfoInnerWrapper>
-          {peopleLimit}
-        </InfoInnerWrapper>
       </InfoWrapper>
-        <TimeBox>
+        <TimeBox color={'#676775'}> 
           {timeGap}
         </TimeBox>
     </RoomBox>

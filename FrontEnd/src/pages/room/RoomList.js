@@ -3,8 +3,9 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useState, useEffect } from "react";
 import { client } from "../../utils/client"
-import RoomListItem from "../../components/room/RoomListItem"
+import LiveListItem from "../../components/room/LiveListItem";
 import PageNation from "../../components/common/buttons/PageNation";
+import { LiveButton } from "../../components/common/buttons/LiveButton";
 
 // 필터
 const FilterWrapper = styled.div`
@@ -19,35 +20,23 @@ const FilterInnerWrapper = styled.div`
   width: ${(props) => props.width};
 `
 
-const Line = styled.hr`
+const Line = styled.div`
+  height: 2px;
+  border-radius: 40px;
   margin: 16px;
-  border: 0.1px solid #676775;
+  border: 0.1px solid rgba(18, 21, 39, 0.86);
   background-color: #676775;
-`
-
-const LiveButton = styled.button`
-  width: 160px;
-  height: 48px;
-  margin-right: 20px;
-  border-radius: 30px;
-  background-color: ${(props) => props.backgroundcolor};
-  color: #676775;
-  font-size: 18px;
-  margin-top: 40px;
-  line-height: 3px;
-  border: 3px solid #BDCFF2;
-  box-shadow: inset 0px 0px 4px 4px rgba(234, 241, 255, 0.5);
-  cursor: pointer;
 `
 
 // 필터 안 박스 / 버튼
 const SearchBox = styled.input`
   display: flex;
-  width: 800px;
+  width: 782px;
   height: 30px;
-  border-radius: 10px;
-  border: 3px solid #BDCFF2;
-  box-shadow: inset 0px 0px 4px 4px rgba(189, 207, 242, 0.5);
+  border-radius: 5px;
+  border: 3px solid rgba(18, 21, 39, 0.86);
+  background-color: #fff;
+  padding: 0px 0px 0px 8px;
 `
 
 const OptionWrapper = styled.div`
@@ -68,14 +57,16 @@ const OptionStyle = styled.option`
 `
 
 const SearchButton = styled.button `
-  color: #6f92bf;
+  color: #676775;
   width: 164px;
   height: 40px;
   border-radius: 30px;
-  border: 3px solid #BDCFF2;
-  box-shadow: inset 0px 0px 4px 4px rgba(189, 207, 242, 0.5);
+  border: 3px solid rgba(18, 21, 39, 0.86);
   font-size: 16px;
   cursor: pointer;
+  &:hover {
+    background-color: rgba(18, 21, 39, 0.86);
+  }
 `
 
 const SearchInnerWrapper = styled.div `
@@ -92,11 +83,11 @@ const AgesWrapper = styled.div`
   line-height: 32px;
   width: 160px;
   color: black;
-  background-color: #ffffff;
+  background-color: #D9D9D9;
   border-radius: 30px;
-  border: 3px solid #eaf1ff;
   text-align: center;
   overflow: hidden;
+  margin-right: 205px;
 
   & input:checked + span {
     background-color: #BDCFF2;
@@ -105,6 +96,9 @@ const AgesWrapper = styled.div`
     cursor: pointer;
     display: block;
     padding: 2px 16px;
+  }
+  &:hover {
+    background-color: rgba(18, 21, 39, 0.86);
   }
 `;
 
@@ -118,14 +112,15 @@ const AgeLetter = styled.span`
 `
 
 const SelectBox = styled.select`
-  width: 380px;
-  height: 40px;
-  background-color: white;
-  border-radius: 10px;
-  font-size: 16px;
-  border: 3px solid #BDCFF2;
-  box-shadow: inset 0px 0px 4px 4px rgba(189, 207, 242, 0.5);
+  padding: 0px 0px 3px 4px;
+  width: 200px;
+  height: 36px;
+  background-color: #fff;
+  border-radius: 5px;
+  font-size: 14px;
+  border: 3px solid rgba(18, 21, 39, 0.86);
   color: ${(props) => props.color};
+  margin-right: 20px;
   cursor: pointer;
 `
 
@@ -133,22 +128,21 @@ const SelectBox = styled.select`
 const ListWrapper = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  padding: 24px 12px 100px 24px;
+  padding: 24px 0px 100px 36px;
   gap: 30px;
   width: 1000px;
   height: 680px;
-  margin-top: 50px;
   margin-bottom: 200px;
+  margin-top: 30px;
   border-radius: 20px;
-  background-color: #6F92BF;
-  box-shadow: inset 0px 0px 4px 4px rgba(189, 207, 242, 0.5);
+  background-color: transparent;
 `;
 
 // 페이지네이션
 const PageNationWrapper = styled.div`
   position: absolute;
-  top: 1230px;
-  margin-left: 30%;
+  top: 1130px;
+  margin-left: 23%;
 `
 
 const RoomList = () => {
@@ -223,7 +217,7 @@ const RoomList = () => {
       <FilterWrapper>
         <FilterInnerWrapper width={'1200px'}>
           <div>
-            <LiveButton onClick={() => navigate("/createroom")} backgroundcolor={"#EAF1FF"}>방 만들기</LiveButton>
+            <LiveButton onClick={() => navigate("/createroom")} backgroundcolor={"#fff"}>방 만들기</LiveButton>
             <LiveButton onClick={() => navigate("/live")} backgroundcolor={"#BDCFF2"}>추천 방 보기</LiveButton>
           </div>
         </FilterInnerWrapper>
@@ -246,8 +240,6 @@ const RoomList = () => {
               <OptionStyle value="4" color={'#676775'}>문화</OptionStyle>
               <OptionStyle value="5" color={'#676775'}>기타</OptionStyle>
             </SelectBox>
-          </OptionInnerWrapper>
-          <OptionInnerWrapper>
             <SelectBox 
               type="selectbox"
               name="sortOrder"
@@ -265,11 +257,11 @@ const RoomList = () => {
               name="sameAge"
               onChange={onSameAgeCheck}
               />
-            <AgeLetter color={'#676775'}>또래만 만날래요</AgeLetter>
+            <AgeLetter color={'#676775'}><i className="fas fa-check"></i>    또래만 만날래요</AgeLetter>
             </label>
           </AgesWrapper>
         </OptionWrapper>
-        </FilterInnerWrapper>        
+        </FilterInnerWrapper>      
       </FilterWrapper>
       <FilterWrapper>
         <FilterInnerWrapper width={'1200px'}>
@@ -279,7 +271,8 @@ const RoomList = () => {
               type="text"
               value={filter.searchKeyword}
               name="searchKeyword"
-              onChange={onFilterInput} 
+              onChange={onFilterInput}
+              placeholder='방 제목으로 검색하세요'
             ></SearchBox>
             </div>
               <SearchButton onClick={()=>{fetchFilterState(0), onHandleReset()}}>검색하기</SearchButton>
@@ -294,7 +287,7 @@ const RoomList = () => {
           ( <div>딱 맞는 방이 없어요. 다른 조건으로 검색해 보세요!</div> ) : (
             <>
               {filterState.content.map((room, index) => (
-              <RoomListItem
+              <LiveListItem
               {...room}
               key={index}
               />
