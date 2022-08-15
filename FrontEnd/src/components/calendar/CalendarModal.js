@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import { FailAlert, SuccessAlert } from "../../utils/sweetAlert";
 import { GetPopularlityPercent } from "../../utils/GetPopularlityPercent";
 import moment from "moment";
+import Modal from "../modals/Modal";
+import UserProfileContent from "../modals/contents/UserProfileContent";
 
 // 모달 스타일
 const ModalWrapper = styled.div`
@@ -204,6 +206,9 @@ const Button = styled.button `
 
 const CalendarModal = ({ isOpen, close, calendarId }) => {
 
+  // 프로필 모달용 STATE
+  const [modalState, setModalState] = useState(false);
+
   const navigate = useNavigate();
 
   // 모달 위치 조정
@@ -301,15 +306,34 @@ const CalendarModal = ({ isOpen, close, calendarId }) => {
     setCalendar(calendar.isParticipate = !calendar.isParticipate)
   }
 
-  const userId = calendar.createrId
-
   // 인기도 아이콘으로 변환
   const popularlityPercent = GetPopularlityPercent(calendar.createrPopularity);
-
+  
   const day = moment(calendar.time).format('YYYY.MM.DD')
   const time = moment(calendar.time).format('hh:mm')
+  
+  // 프로필 모달
+  const openModal = () => {
+    setModalState(true);
+  };
+  
+  const closeModal = () => {
+    setModalState(false);
+  };
+  
+  const userId = calendar.createrId
 
   return (
+    <>
+    <Modal
+      width={"800px"}
+      height={"600px"}
+      isOpen={modalState}
+      closeModal={closeModal}
+      modalContent={
+        <UserProfileContent userId={userId} close={closeModal} />
+      }
+    />
     <ModalWrapper className={isOpen ? "active" : ""} top={ScrollY}>
       <ModalContentWrapper>
         <ModalHeader>
@@ -320,7 +344,7 @@ const CalendarModal = ({ isOpen, close, calendarId }) => {
         <ModalContent>
           <ProfileBlock>
             <ProfileImageWrapper>
-              <ProfileImageThumbnail src={`/assets/profileImage/profile${calendar.createrImg}.png`} onClick={()=>navigate("/profile")}/>
+              <ProfileImageThumbnail src={`/assets/profileImage/profile${calendar.createrImg}.png`} onClick={()=> {openModal(), close()}} />
             </ProfileImageWrapper>
               <>
                 {
@@ -384,6 +408,7 @@ const CalendarModal = ({ isOpen, close, calendarId }) => {
         </ModalContent>
       </ModalContentWrapper>
     </ModalWrapper>
+    </>
   );
 };
 
