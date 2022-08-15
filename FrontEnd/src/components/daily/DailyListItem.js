@@ -1,11 +1,13 @@
 import styled from "styled-components";
-import { getDailyArticle, deleteDailyArticle } from "../../api/DailyAPI";
+import { getDailyArticle, deleteDailyArticle, editDailyArticle } from "../../api/DailyAPI";
 import CommentListItem from "./CommentListItem";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { client } from "../../utils/client";
 import { getDailyComment } from "../../api/DailyAPI";
 import React from "react";
+import Modal from "../modals/Modal";
+import UserProfileContent from "../modals/contents/UserProfileContent"
 
 const DailyContent = styled.div`
   width: 100%;
@@ -21,8 +23,8 @@ const DailyContent = styled.div`
 const ProfileImg = styled.img`
   padding: 8px;
   border-radius: 24px;
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   margin: auto 10px;
   background-color: #6f92bf;
 `;
@@ -193,6 +195,8 @@ const DailyListItem = (
     boardComment: "",
   });
 
+  const [modalState, setModalState] = useState(false);
+
   // 접속한 유저 정보 가져오기
   const fetchUser = async () => {
     client.get("users").then(function (response) {
@@ -222,8 +226,9 @@ const DailyListItem = (
         boardContent: state.boardArticle,
       })
       .then((response) => response);
-    fetchArticle();
+    window.location.replace("/daily")
   };
+
 
   // 글 수정 창 여닫기
   const onHandleArticleEdit = (e) => {
@@ -251,7 +256,9 @@ const DailyListItem = (
   // 글 삭제
   const onArticleDelete = async (boardId) => {
     deleteDailyArticle(boardId);
+    // window.location.replace("/daily")
   };
+  
   // 댓글 입력
   const onHandleInput = (e) => {
     setComment({ ...comment, [e.target.name]: e.target.value });
@@ -264,7 +271,7 @@ const DailyListItem = (
         boardContent: comment.boardComment,
       })
       .then((response) => response);
-    console.log(parent_id);
+      window.location.replace("/daily")
   };
 
   // 댓글 목록 여닫기
@@ -280,13 +287,7 @@ const DailyListItem = (
     else {
       setComment({ ...comment, showComment: !comment.showComment });
       const response = await getDailyComment(parentId);
-      console.log(response.data[0].userNickname);
       setCommentList([...response.data]);
-    }
-    if (state.showEditArticle) {
-      setState({ ...state, showEditArticle: !state.showEditArticle });
-    } else {
-      setComment({ ...comment, showComment: !comment.showComment });
     }
   };
 
@@ -310,21 +311,45 @@ const DailyListItem = (
     }
   };
 
-  // 엔터 키 눌렀을 때 입력
+  // 엔터 키 눌렀을 때 글 수정
   const onEnterPress = (e) => {
     if (e.key === "Enter") {
       onArticleEdit(boardId);
     }
   };
 
-  console.log(boardContent);
-  console.log(state);
+  // 엔터 키 눌렀을 때 댓글 입력
+  const onEnterCommentPost = (e) => {
+    if (e.key === "Enter") {
+      onCommentPost(boardId);
+    }
+    window.location.replace("/daily")
+  }
+
+  // 모달 열기
+  const openModal = () => {
+    setModalState(true);
+  };
+
+  const closeModal = () => {
+    setModalState(false);
+  };
+
   return (
     <div>
+      <Modal
+        width={"800px"}
+        height={"600px"}
+        isOpen={modalState}
+        closeModal={closeModal}
+        modalContent={
+          <UserProfileContent userId={createrId} close={closeModal} />
+        }
+      />
       <DailyContent>
         <DailyContentWrapper>
           <div>
-            <ProfileImg onClick={() => navigate(`/users/profile/${createrId}`)} src={`assets/profileImage/profile${userImg}.png`}>
+            <ProfileImg onClick={openModal} src={`assets/profileImage/profile${userImg}.png`}>
             </ProfileImg>
           </div>
           <ContentWrapper>
@@ -372,21 +397,6 @@ const DailyListItem = (
           </div>
         </DailyEditWrapper>
       </DailyContent>
-      <DailyModifyWrapper
-        style={{ display: state.showEditArticle === false ? "none" : "block" }}
-      >
-        <DailyModifyInput
-          placeholder="boardContent"
-          type="string"
-          value={state.boardArticle}
-          name="boardArticle"
-          onChange={onEditArticleInput}
-          onKeyPress={onEnterPress}
-        />
-        <DailyModifyButton onClick={() => onArticleEdit(boardId)}>
-          글수정
-        </DailyModifyButton>
-      </DailyModifyWrapper>
       <div>
         <CommentWrapper style={{ display: comment.isComment === false ? "none" : "flex" }}>
           <CommentArrow src="assets/commentarrow.png">
@@ -398,14 +408,11 @@ const DailyListItem = (
             value={comment.boardComment}
             name="boardComment"
             onChange={onHandleInput}
-            onKeyPress={onEnterPress}
+            onKeyPress={onEnterCommentPost}
           />
           <DailyCommentPostButton onClick={() => onCommentPost(boardId)}>완료</DailyCommentPostButton>
           </CommentInputWrapper>
         </CommentWrapper>
-          <DailyCommentPostButton onClick={() => onCommentPost(boardId)}>
-            댓글달기
-          </DailyCommentPostButton>
         </div>
       <div
         style={{ display: comment.showComment === false ? "none" : "block" }}

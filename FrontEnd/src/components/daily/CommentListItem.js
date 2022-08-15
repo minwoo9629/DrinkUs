@@ -103,7 +103,7 @@ const CommentListItem = ({
   userImg
 }) => {
   const [state, setState] = useState({
-    boardComment: "",
+    boardComment: boardContent,
     showCommentEdit: false,
     userImg: "",
   })
@@ -124,6 +124,7 @@ const CommentListItem = ({
   // 댓글 삭제
   const onCommentDelete = async (boardId) => {
     deleteDailyComment(boardId)
+    window.location.replace("/daily")
   };
 
   useEffect(() => {
@@ -142,9 +143,9 @@ const CommentListItem = ({
   // 댓글 수정 창 여닫기
   const onHandleCommentEdit = (e) => {
     if (!state.showCommentEdit) {
-      setState({ ...state, showCommentEdit: !state.showCommentEdit, boardComment: "" })
+      setState({ ...state, showCommentEdit: !state.showCommentEdit, boardComment: boardContent })
     } else {
-      setState({ ...state, showCommentEdit: !state.showCommentEdit, boardComment: "" })
+      setState({ ...state, showCommentEdit: !state.showCommentEdit, boardComment: boardContent })
     }
   };
 
@@ -162,6 +163,13 @@ const CommentListItem = ({
     font-size: 24px;
     color: #6f92bf;
   `
+
+  // 엔터 키 눌렀을 때 입력
+  const onEnterPress = (e) => {
+    if (e.key === "Enter") {
+      onCommentEdit(boardId);
+    }
+  };
 
   return (
     <div>
@@ -186,6 +194,7 @@ const CommentListItem = ({
                     value={state.boardComment}
                     name="boardComment"
                     onChange={onHandleInput}
+                    onKeyPress={onEnterPress}
                   />
               </div>
             </ContentWrapper>
