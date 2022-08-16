@@ -18,9 +18,11 @@ const OpenProfileImageModalButton = styled.button`
   background: transparent;
   color: cornflowerblue;
 `;
-const ProfileTitle = ({ isEdit, imageId, userName, openModal }) => {
+const ProfileTitle = ({ isEdit, imageId, userName, openModal, marginLeft }) => {
   return (
-    <div style={{ display: "flex", alignItems: "center" }}>
+    <div
+      style={{ display: "flex", alignItems: "center", marginLeft: marginLeft }}
+    >
       <ProfileImageWrapper>
         <ProfileImageThumbnail
           src={`/assets/profileImage/profile${imageId}.png`}
@@ -46,4 +48,5 @@ export default ProfileTitle;
 
 ProfileTitle.defaultProps = {
   isEdit: false,
+  marginLeft: "0px",
 };
