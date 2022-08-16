@@ -199,6 +199,7 @@ class VideoRoomComponent extends Component {
     window.addEventListener("resize", this.checkSize);
     this.joinSession();
     this.connectGameServer();
+    navigator.mediaDevices.getUserMedia({ video: true, audio: true });
 
     this.getRoomInfo(this.props.sessionInfo.roomId);
   }
