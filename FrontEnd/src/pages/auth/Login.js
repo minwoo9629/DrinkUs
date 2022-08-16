@@ -81,6 +81,7 @@ const Login = () => {
     const data = {
       userName: state.userId,
       userPw: state.password,
+      fcmToken: sessionStorage.getItem("FCM_TOKEN")
     };
 
     const response = await login(data);
