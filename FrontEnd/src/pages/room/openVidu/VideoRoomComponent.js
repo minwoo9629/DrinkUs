@@ -40,7 +40,7 @@ const Theme = {
   한강공원: "river",
   미술관: "art",
   영화관: "movie",
-  도서관: "libary",
+  도서관: "library",
 };
 
 const ButtonContentComponentWrapper = styled.div`
