@@ -5,6 +5,7 @@ import CalendarListItem from "../../../components/calendar/CalendarListItem";
 import Modal from "../../../components/modals/Modal";
 import CreateCalendar from "./CreateCalendar";
 import { CommunityConFirmButton } from "../../../components/common/buttons/CommunityConfirmButton";
+import ModalCloseButton from "../../../components/common/buttons/ModalCloseButton";
 
 const TextDiv = styled.div`
   margin: 21px 0;

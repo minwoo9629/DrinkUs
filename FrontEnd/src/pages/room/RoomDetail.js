@@ -188,7 +188,7 @@ const RoomDetail = () => {
 
   // user 정보 state
   const [createdUser, setCreatedUser] = useState([]);
- 
+
   // 방 입장 세션 정보
   const onHandleEnterRoom = () => {
     const participants = client
@@ -272,15 +272,24 @@ const RoomDetail = () => {
 
   return (
     <>
-      {createdUser.userId !== undefined ? (<><Modal
-        width={"800px"}
-        height={"600px"}
-        isOpen={modalState}
-        closeModal={closeModal}
-        modalContent={
-          <UserProfileContent userId={createdUser.userId} close={closeModal} />
-        }
-      /></>):(<></>)}
+      {createdUser.userId !== undefined ? (
+        <>
+          <Modal
+            width={"800px"}
+            height={"600px"}
+            isOpen={modalState}
+            closeModal={closeModal}
+            modalContent={
+              <UserProfileContent
+                userId={createdUser.userId}
+                close={closeModal}
+              />
+            }
+          />
+        </>
+      ) : (
+        <></>
+      )}
       <BackButton />
       <Wrapper color={"#0a0a0a"}>
         <RoomDetailWrapper>
@@ -377,6 +386,11 @@ const RoomDetail = () => {
               src={
                 process.env.PUBLIC_URL + "/assets/RoomBackground/livrary.jpg"
               }
+              onClick={() => navigate(`/rooms/${roomId}`)}
+            />
+          ) : data.placeTheme === "집" ? (
+            <ImageWrapper
+              src={process.env.PUBLIC_URL + "/assets/RoomBackground/house.jpg"}
               onClick={() => navigate(`/rooms/${roomId}`)}
             />
           ) : (
