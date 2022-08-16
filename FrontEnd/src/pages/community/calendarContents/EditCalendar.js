@@ -4,25 +4,28 @@ import { client } from "../../../utils/client";
 import { FailAlert, SuccessAlert, EmptyAlert } from "../../../utils/sweetAlert";
 import ModalCloseButton from "../../../components/common/buttons/ModalCloseButton";
 import { useSelector } from "react-redux";
-import { useEffect } from "react";
 import UserProfile from "../../../components/room/UserProfile";
 import { CommunityConFirmButton } from "../../../components/common/buttons/CommunityConfirmButton";
 
 const DateText = styled.div`
+  margin-top: 40px;
   font-weight: bold;
   font-size: 14px;
-  margin-left: 10px;
+  margin-left: 15%;
   text-align: left;
 `;
 
-const CreateCalendarBlock = styled.div``;
+const CreateCalendarBlock = styled.div`
+  width: 85%;
+  padding: 20px 0;
+`;
 
 const CreateHeader = styled.div``;
 
 const CheckBoxWrapper = styled.div`
   display: flex;
   float: right;
-  margin: 3px 6px 30px 10px;
+  margin: 5px 10px 15px 10px;
   font-size: 11px;
   font-weight: bold;
 `;
@@ -89,7 +92,7 @@ const DateInputForm = styled.input`
 
 const SelectBox = styled.select`
   margin: 0 10px;
-  width: 100px;
+  width: 120px;
   background-color: white;
   border: 2px solid #bdcff2;
   height: 33px;
@@ -148,7 +151,7 @@ const CheckBoxStyled = styled.input`
 `;
 
 const InputWrapper = styled.div`
-  margin: 10px 0;
+  margin: 20px 0 30px 0;
 `;
 
 const PeopleLimitWrapper = styled.div`
@@ -193,7 +196,13 @@ const AgeCheckBox = styled.input`
   margin-right: 3px;
 `;
 
-const CreateCalendar = ({ calendarId, content, close, successHandler }) => {
+const CreateCalendar = ({
+  calendarId,
+  content,
+  close,
+  successHandler,
+  setModalType,
+}) => {
   const date = new Date(content.time);
   const user = useSelector((state) => state.user);
   const userAge = Math.floor(
@@ -308,7 +317,7 @@ const CreateCalendar = ({ calendarId, content, close, successHandler }) => {
         />
         {/* 프로필 + 생성버튼 부분 */}
         <CreateHeader>
-          <UserProfile />
+          <UserProfile user={user} />
         </CreateHeader>
         {/* 방 설명 */}
         <InputForm
@@ -409,9 +418,21 @@ const CreateCalendar = ({ calendarId, content, close, successHandler }) => {
           </PeopleLimitWrapper>
         </InputWrapper>
         <CommunityConFirmButton
-          marginRight="0"
           event={onCalendarInfoSubmit}
-          content="수정"
+          content="수정완료"
+        />
+
+        <CommunityConFirmButton
+          background="#fff"
+          color="#bdcff2"
+          borderColor="#bdcff2"
+          hoverBackground="#c4c4c4"
+          hoverColor="#fff"
+          hoverBorderColor="#c4c4c4"
+          event={() => {
+            setModalType("show");
+          }}
+          content="취소"
         />
       </CreateCalendarBlock>
     </>

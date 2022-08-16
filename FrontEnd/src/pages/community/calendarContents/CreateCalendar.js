@@ -11,18 +11,21 @@ import { CommunityConFirmButton } from "../../../components/common/buttons/Commu
 const DateText = styled.div`
   font-weight: bold;
   font-size: 14px;
-  margin-left: 10px;
+  margin-left: 15%;
   text-align: left;
 `;
 
-const CreateCalendarBlock = styled.div``;
+const CreateCalendarBlock = styled.div`
+  width: 85%;
+  padding: 20px 0;
+`;
 
 const CreateHeader = styled.div``;
 
 const CheckBoxWrapper = styled.div`
   display: flex;
   float: right;
-  margin: 3px 6px 15px 10px;
+  margin: 5px 10px 15px 10px;
   font-size: 11px;
   font-weight: bold;
 `;
@@ -89,7 +92,7 @@ const DateInputForm = styled.input`
 
 const SelectBox = styled.select`
   margin: 0 10px;
-  width: 100px;
+  width: 120px;
   background-color: white;
   border: 2px solid #bdcff2;
   height: 33px;
@@ -148,7 +151,7 @@ const CheckBoxStyled = styled.input`
 `;
 
 const InputWrapper = styled.div`
-  margin: 10px 0;
+  margin: 20px 0 30px 0;
 `;
 
 const PeopleLimitWrapper = styled.div`
@@ -354,7 +357,7 @@ const CreateCalendar = ({ calendarDate, close, successHandler }) => {
         />
         {/* 프로필 + 생성버튼 부분 */}
         <CreateHeader>
-          <UserProfile />
+          <UserProfile user={user} />
         </CreateHeader>
         {/* 방 설명 */}
         <InputForm
