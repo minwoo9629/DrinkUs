@@ -25,6 +25,12 @@ const DrinkUsHeader = styled(BaseFlexWrapper)`
   &.active {
     transition: opacity 0.5s, background-color 0.5s linear;
   }
+  @media screen and (max-width: 1120px) {
+    padding: 40px 70px;
+  }
+  @media screen and (max-width: 740px) {
+    padding: 40px 30px;
+  }
 `;
 
 const HeaderMenu = styled(BaseFlexWrapper)`
@@ -33,6 +39,9 @@ const HeaderMenu = styled(BaseFlexWrapper)`
   gap: 120px;
   box-sizing: border-box;
   justify-content: ${(props) => props.justify};
+  /* @media screen and (max-width: 1120px) {
+    width: 50%;
+  } */
   @media screen and (max-width: 960px) {
     gap: 60px;
   }
@@ -40,13 +49,20 @@ const HeaderMenu = styled(BaseFlexWrapper)`
 
 const HeaderMenuLinkWrapper = styled.div`
   display: flex;
+  align-items: center;
   justify-content: ${({ justify }) => justify};
   width: ${({ width }) => `${width}%`};
+  @media screen and (max-width: 1050px) {
+    width: 55%;
+  }
+  @media screen and (max-width: 740px) {
+    width: 60%;
+  }
 `;
 
 const HeaderMenuLink = styled(NavLink)`
   text-decoration: none;
-  color: #6F92BF;
+  color: #6f92bf;
   font-family: "Black Han Sans";
   font-size: 20px;
   transition: color 0.5s linear;
@@ -56,6 +72,9 @@ const HeaderMenuLink = styled(NavLink)`
   &.active {
     color: #5904de;
     transition: color 0.5s linear;
+  }
+  @media screen and (max-width: 740px) {
+    font-size: 14px;
   }
 `;
 
@@ -63,7 +82,7 @@ const LogOutButton = styled.button`
   cursor: pointer;
   background-color: transparent;
   border: none;
-  color: #6F92BF;
+  color: #6f92bf;
   font-family: "Black Han Sans";
   font-size: 20px;
   transition: color 0.5s linear;
@@ -74,10 +93,12 @@ const LogOutButton = styled.button`
     color: #5904de;
     transition: color 0.5s linear;
   }
+  @media screen and (max-width: 740px) {
+    font-size: 14px;
+  }
 `;
 
 const Header = ({ position, location }) => {
-
   const navigate = useNavigate();
 
   const [ScrollY, setHeaderColor] = useState(0);
@@ -106,36 +127,41 @@ const Header = ({ position, location }) => {
   });
 
   // 모달
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
 
-  const modalOpen = () =>{
+  const modalOpen = () => {
     setIsOpen(true);
-  }
+  };
 
-  const modalClose = () =>{
+  const modalClose = () => {
     setIsOpen(false);
-  }
+  };
 
   const user = useSelector((state) => state.user);
   return (
     <DrinkUsHeader
-      color={location === 'home' ? (
-        HeaderStatus ? "white" : "black"
-      ) : (location === 'lightzone' ? "white" : "black")}
-      opacity={location === 'home' ? (
-        HeaderStatus ? "0.9" : "0.7"
-      ) : '1'}
+      color={
+        location === "home"
+          ? HeaderStatus
+            ? "white"
+            : "black"
+          : location === "lightzone"
+          ? "white"
+          : "black"
+      }
+      opacity={location === "home" ? (HeaderStatus ? "0.9" : "0.7") : "1"}
       position={position}
     >
-      <AlarmModal close={modalClose}
-      isOpen={isOpen}/>
+      <AlarmModal close={modalClose} isOpen={isOpen} />
       <HeaderMenu width={100} justify={"space-between"}>
         <HeaderMenuLinkWrapper width={"60"} justify={"space-between"}>
           {BASIC_MENU.map((item, idx) => (
             <HeaderMenuLink
               key={idx}
               to={item.link}
-              className={location === 'lightzone' ? "" : ( HeaderStatus ? "" : "light" )}
+              className={
+                location === "lightzone" ? "" : HeaderStatus ? "" : "light"
+              }
             >
               {item.menuName}
             </HeaderMenuLink>
@@ -149,36 +175,46 @@ const Header = ({ position, location }) => {
             <>
               <HeaderMenuLink
                 to={"/user/edit/profile"}
-                className={location === 'lightzone' ? "" : ( HeaderStatus ? "" : "light" )}
+                className={
+                  location === "lightzone" ? "" : HeaderStatus ? "" : "light"
+                }
               >
                 {user.data.userNickname}님
               </HeaderMenuLink>
               <LogOutButton
-                className={location === 'lightzone' ? "" : ( HeaderStatus ? "" : "light" )}
+                className={
+                  location === "lightzone" ? "" : HeaderStatus ? "" : "light"
+                }
                 onClick={modalOpen}
               >
                 <i className="far fa-heart" />
               </LogOutButton>
-              {
-                user.data.userRole === "ROLE_ADMIN" ? (
-                  <>
-                    {LOGINED_MENU_ADMIN.map((item, idx) => (
-                      <HeaderMenuLink
-                        key={idx}
-                        to={item.link}
-                        className={location === 'lightzone' ? "" : ( HeaderStatus ? "" : "light" )}
-                      >
-                        <i className={item.className} />
-                      </HeaderMenuLink>
-                    ))}
-                  </>
-                ) : (
-                  <></>
-                )
-              }
+              {user.data.userRole === "ROLE_ADMIN" ? (
+                <>
+                  {LOGINED_MENU_ADMIN.map((item, idx) => (
+                    <HeaderMenuLink
+                      key={idx}
+                      to={item.link}
+                      className={
+                        location === "lightzone"
+                          ? ""
+                          : HeaderStatus
+                          ? ""
+                          : "light"
+                      }
+                    >
+                      <i className={item.className} />
+                    </HeaderMenuLink>
+                  ))}
+                </>
+              ) : (
+                <></>
+              )}
               <LogOutButton
                 onClick={onHandleLogout}
-                className={location === 'lightzone' ? "" : ( HeaderStatus ? "" : "light" )}
+                className={
+                  location === "lightzone" ? "" : HeaderStatus ? "" : "light"
+                }
               >
                 로그아웃
               </LogOutButton>
@@ -189,7 +225,9 @@ const Header = ({ position, location }) => {
                 <HeaderMenuLink
                   key={idx}
                   to={item.link}
-                  className={location === 'lightzone' ? "" : ( HeaderStatus ? "" : "light" )}
+                  className={
+                    location === "lightzone" ? "" : HeaderStatus ? "" : "light"
+                  }
                 >
                   {item.menuName}
                 </HeaderMenuLink>
