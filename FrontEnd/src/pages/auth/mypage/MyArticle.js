@@ -53,11 +53,12 @@ const MyArticle = () => {
     fetchData(articleState.number);
   }, [articleState.numberOfElements]);
   return (
-    <div style={{ padding: "30px 0px 30px 60px" }}>
+    <div style={{ padding: "30px 0px 30px 20px" }}>
       <ProfileTitle
         isEdit={false}
         imageId={profileImageState}
         userName={userNameState}
+        marginLeft={"40px"}
       />
       <div style={{ marginTop: "30px" }}>
         <ArticleTap>
