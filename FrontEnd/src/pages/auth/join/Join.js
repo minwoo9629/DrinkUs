@@ -29,6 +29,7 @@ import {
   doubleCheckEmail,
 } from "../../../api/JoinAPI";
 import { FailAlert, EmptyAlert, SuccessAlert } from "../../../utils/sweetAlert";
+import { BackButton } from "../../../components/common/buttons/BackButton";
 
 const Wrapper = styled.div`
   background-color: black;
@@ -494,7 +495,7 @@ const Join = () => {
 
   return (
     <div>
-      <Header />
+      <BackButton />
       <Wrapper>
         <NeonLoginWrapper>
           <JoinWrapper>

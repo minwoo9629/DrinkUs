@@ -7,6 +7,7 @@ import LiveListItem from "../../components/room/LiveListItem";
 import Banner from "../../components/room/Banner";
 import { useSelector } from "react-redux";
 import { LiveButton } from "../../components/common/buttons/LiveButton";
+import { SocialBirthDayAlert } from "../../utils/sweetAlert";
 
 // 버튼, 배너
 const LiveWrapper = styled.div`
@@ -65,7 +66,7 @@ const LetterInnerWrapper = styled.div`
   display: flex;
   width: ${(props) => props.width};
   margin-bottom: ${(props) => props.marginbottom};
-`
+`;
 
 const DrinkLive = () => {
   const navigate = useNavigate();
@@ -75,8 +76,8 @@ const DrinkLive = () => {
 
   useEffect(() => {
     if (user.userBirthday === null) {
-      alert("생년월일 설정해야해!@!!!!");
-      navigate("/edit/profile");
+      SocialBirthDayAlert("생년월일 설정해주세요!!");
+      navigate("/user/edit/profile");
     }
     onMakeAgeList();
     onCategoryList();
@@ -130,9 +131,11 @@ const DrinkLive = () => {
         <Banner></Banner>
       </LiveWrapper>
       <LetterWrapper>
-        <LetterInnerWrapper width={'1200px'} marginbottom={'20px'}>
-          <RecommendLetter size={'24px'} color={"#EAF1FF"}>내 나이대로 설정된 방</RecommendLetter>
-        </LetterInnerWrapper> 
+        <LetterInnerWrapper width={"1200px"} marginbottom={"20px"}>
+          <RecommendLetter size={"24px"} color={"#EAF1FF"}>
+            내 나이대로 설정된 방
+          </RecommendLetter>
+        </LetterInnerWrapper>
       </LetterWrapper>
       <RecommendWrapper>
         <RecommendInnerWrapper>
@@ -152,8 +155,10 @@ const DrinkLive = () => {
         </RecommendInnerWrapper>
       </RecommendWrapper>
       <LetterWrapper>
-        <LetterInnerWrapper width={'1200px'} marginbottom={'20px'}>
-          <RecommendLetter size={'24px'} color={"#EAF1FF"}>내 관심사로 설정된 방</RecommendLetter>
+        <LetterInnerWrapper width={"1200px"} marginbottom={"20px"}>
+          <RecommendLetter size={"24px"} color={"#EAF1FF"}>
+            내 관심사로 설정된 방
+          </RecommendLetter>
         </LetterInnerWrapper>
       </LetterWrapper>
       <RecommendWrapper>
@@ -175,8 +180,10 @@ const DrinkLive = () => {
         </RecommendInnerWrapper>
       </RecommendWrapper>
       <LetterWrapper>
-        <LetterInnerWrapper width={'1200px'} marginbottom={'20px'}>
-          <RecommendLetter size={'24px'} color={"#EAF1FF"}>최근에 만들어진 방</RecommendLetter>
+        <LetterInnerWrapper width={"1200px"} marginbottom={"20px"}>
+          <RecommendLetter size={"24px"} color={"#EAF1FF"}>
+            최근에 만들어진 방
+          </RecommendLetter>
         </LetterInnerWrapper>
       </LetterWrapper>
       <RecommendWrapper>

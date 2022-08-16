@@ -12,6 +12,7 @@ const EditPasswordWrapper = styled.div`
   padding: 30px;
   display: flex;
   flex-direction: column;
+  margin-top: 25px;
 `;
 const EditPasswordInputWrapper = styled.div`
   padding: 30px 0px;
@@ -158,6 +159,7 @@ const EditPassword = () => {
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "flex-start",
+                marginTop: "25px",
               }}
             >
               <EditPasswordButton onClick={onHandleSubmit}>

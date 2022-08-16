@@ -45,6 +45,9 @@ const SubCategoryWrapper = styled.div`
     display: block;
     padding: 2px 16px;
   }
+  &:hover {
+    background-color: #eaf1ff;
+  }
 `;
 const EditInterest = () => {
   const [categoryState, setCategoryState] = useState([]);
@@ -86,11 +89,12 @@ const EditInterest = () => {
     setCategoryState([...updatedCategoryState]);
   };
   return (
-    <div style={{ padding: "30px 0px 30px 60px" }}>
+    <div style={{ padding: "30px 0px 30px 20px" }}>
       <ProfileTitle
         isEdit={false}
         imageId={profileImageState}
         userName={userNameState}
+        marginLeft={"40px"}
       />
       <div
         style={{
