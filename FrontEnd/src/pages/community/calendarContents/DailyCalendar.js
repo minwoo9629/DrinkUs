@@ -160,8 +160,7 @@ const DailyCalendar = ({ year, month, day, monthly, setNewDate }) => {
               successHandler={fetchData}
             />
           }
-          width="500px"
-          height="900px"
+          width="600px"
           background="#fcfcfc"
           borderColor="none"
         />

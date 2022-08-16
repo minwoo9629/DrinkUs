@@ -10,12 +10,14 @@ const CalendarListItemWrapper = styled.div`
   padding-top: 20px;
   padding-bottom: 45px;
 
+  background-color: ${(props) => props.background};
+
   border-bottom: 1px solid #f5f5f5;
 
   margin-bottom: -1px;
 
   &:hover {
-    background-color: #f7f7f7;
+    background-color: ${(props) => props.hoverColor || "#f7f7f7"};
   }
 `;
 
@@ -34,6 +36,7 @@ const InfoWrapper = styled.span`
 `;
 
 const CalendarListItem = ({ content, successHandler }) => {
+  console.log("content", content);
   // 사용자 정보 확인
   const user = useSelector((state) => state.user);
 
@@ -61,6 +64,7 @@ const CalendarListItem = ({ content, successHandler }) => {
           modalType == "show" ? (
             <CalendarDetail
               calendarId={content.calendarId}
+              content={content}
               successHandler={successHandler}
               close={modalClose}
               setModalType={setModalType}
@@ -76,15 +80,19 @@ const CalendarListItem = ({ content, successHandler }) => {
               successHandler={successHandler}
               width="500px"
               height="900px"
+              setModalType={setModalType}
             />
           )
         }
-        background={modalType == "show" ? "#fcfcfc" : "white"}
-        width="500px"
-        height="900px"
+        background={modalType == "show" ? "#f7faff" : "white"}
+        width="600px"
         borderColor="none"
       />
-      <CalendarListItemWrapper onClick={modalOpen}>
+      <CalendarListItemWrapper
+        onClick={modalOpen}
+        background={new Date(content.time) < new Date() ? "#ededed" : ""}
+        hoverColor={new Date(content.time) < new Date() ? "#e0e0e0" : ""}
+      >
         <Content width="230px" textAlign="left" marginLeft="50px">
           {content.createrNickname}
         </Content>
