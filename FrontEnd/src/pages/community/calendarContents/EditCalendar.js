@@ -202,6 +202,7 @@ const CreateCalendar = ({
   close,
   successHandler,
   setModalType,
+  modalType,
 }) => {
   const date = new Date(content.time);
   const user = useSelector((state) => state.user);
@@ -277,11 +278,13 @@ const CreateCalendar = ({
       })
       .then(function () {
         SuccessAlert("수정 성공!");
+        modalType == "show" ? setModalType("none") : setModalType("show");
         successHandler();
         close();
       })
       .catch(function (error) {
         console.log("error: ", error);
+        modalType == "show" ? setModalType("none") : setModalType("show");
         FailAlert("실패!");
       });
   };

@@ -61,12 +61,13 @@ const CalendarListItem = ({ content, successHandler }) => {
       <Modal
         isOpen={isOpen}
         modalContent={
-          modalType == "show" ? (
+          modalType == "show" || modalType == "none" ? (
             <CalendarDetail
               calendarId={content.calendarId}
               content={content}
               successHandler={successHandler}
               close={modalClose}
+              modalType={modalType}
               setModalType={setModalType}
             />
           ) : (
@@ -81,6 +82,7 @@ const CalendarListItem = ({ content, successHandler }) => {
               width="500px"
               height="900px"
               setModalType={setModalType}
+              modalType={modalType}
             />
           )
         }

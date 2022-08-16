@@ -313,15 +313,18 @@ const CreateCalendar = ({ calendarDate, close, successHandler }) => {
         place: state.place,
         ages: state.ages,
       })
-      .then(function () {
+      .then(() => {
         initState();
         SuccessAlert("글쓰기 성공!");
         successHandler();
         close();
       })
-      .catch(function (error) {
+      .catch((error) => {
         console.log("error: ", error);
-        FailAlert("실패!");
+        FailAlert(error.response.data.attributes.calendarDatetime);
+        initState();
+        successHandler();
+        close();
       });
   };
 

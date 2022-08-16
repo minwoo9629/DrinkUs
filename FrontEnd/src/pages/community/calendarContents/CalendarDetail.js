@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import ModalCloseButton from "../../../components/common/buttons/ModalCloseButton";
 import UserProfile from "../../../components/room/UserProfile";
@@ -172,7 +172,13 @@ const StyledAmountWrapper = styled.div`
   color: ${(props) => props.color || "#404040"};
 `;
 
-const CalendarDetail = ({ content, close, successHandler, setModalType }) => {
+const CalendarDetail = ({
+  content,
+  close,
+  successHandler,
+  setModalType,
+  modalType,
+}) => {
   // 사용자 정보 확인
   const user = useSelector((state) => state.user);
   const date = new Date(content.time);
@@ -206,17 +212,20 @@ const CalendarDetail = ({ content, close, successHandler, setModalType }) => {
   const onPost = async () => {
     if (state.participant === state.peopleLimit) {
       FailAlert("방 인원이 다 찼어요!");
+      modalType == "show" ? setModalType("none") : setModalType("show");
       close();
     }
     const result = await client
       .post(`/calendar/join/${state.calendarId}`)
       .then(() => {
         SuccessAlert("참가신청이 완료되었습니다!");
+        modalType == "show" ? setModalType("none") : setModalType("show");
         successHandler();
         close();
       })
       .catch((e) => {
         FailAlert("일정 참가에 실패하였습니다!");
+        modalType == "show" ? setModalType("none") : setModalType("show");
         close();
         console.log(e);
       });
@@ -228,11 +237,13 @@ const CalendarDetail = ({ content, close, successHandler, setModalType }) => {
       .then(() => {
         SuccessAlert("취소되었습니다!");
         successHandler();
+        modalType == "show" ? setModalType("none") : setModalType("show");
         close();
       })
       .catch((e) => {
         FailAlert("취소에 실패하였습니다!");
         close();
+        modalType == "show" ? setModalType("none") : setModalType("show");
         console.log(e);
       });
   };
@@ -243,6 +254,7 @@ const CalendarDetail = ({ content, close, successHandler, setModalType }) => {
       .delete(`/calendar/${state.calendarId}`)
       .then(() => SuccessAlert("게시글이 삭제되었습니다!"))
       .catch((error) => console.log(error));
+    modalType == "show" ? setModalType("none") : setModalType("show");
     close();
     successHandler();
   };
@@ -252,8 +264,82 @@ const CalendarDetail = ({ content, close, successHandler, setModalType }) => {
     setState({ ...state, isParticipate: !state.isParticipate });
   };
 
-  console.log("state", state);
-  console.log(user);
+  const rendering = () => {
+    console.log(user.data.userId + " " + state.createrId);
+    if (user.data.userId == state.createrId) {
+      return (
+        <>
+          <CommunityConFirmButton
+            event={() => {
+              setModalType("edit");
+            }}
+            content="수정하기"
+          />
+          <CommunityConFirmButton
+            background="white"
+            color="#bdcff2"
+            event={onDeleteCalendar}
+            content="삭제하기"
+            hoverColor="white"
+            hoverBackground="#f06c6c"
+            hoverBorderColor="#f06c6c"
+          />
+        </>
+      );
+    }
+    if (date < new Date() || state.participant >= state.peopleLimit) {
+      if (user.data.userId == state.createrId) {
+        return (
+          <CommunityConFirmButton
+            background="white"
+            color="#bdcff2"
+            event={onDeleteCalendar}
+            content="삭제하기"
+            hoverColor="white"
+            hoverBackground="#f06c6c"
+            hoverBorderColor="#f06c6c"
+          />
+        );
+      } else {
+        return (
+          <CommunityConFirmButton
+            marginRight="0"
+            color="white"
+            background="#b5b5b5"
+            content="참여불가"
+            borderColor="#b5b5b5"
+            hoverBackground="#b5b5b5"
+            hoverBorderColor="#b5b5b5"
+            cursor=""
+          />
+        );
+      }
+    }
+
+    if (state.isParticipate) {
+      return (
+        <CommunityConFirmButton
+          event={() => {
+            onDelete();
+            onHandleParticipate();
+          }}
+          marginRight="0"
+          content="취소"
+        />
+      );
+    } else {
+      return (
+        <CommunityConFirmButton
+          event={() => {
+            onPost();
+            onHandleParticipate();
+          }}
+          marginRight="0"
+          content="참가"
+        />
+      );
+    }
+  };
 
   return (
     <>
@@ -310,67 +396,7 @@ const CalendarDetail = ({ content, close, successHandler, setModalType }) => {
         </InputWrapper>
 
         <CalendarButtonWrapper>
-          <>
-            {date < new Date() ? (
-              <CommunityConFirmButton
-                marginRight="0"
-                color="white"
-                background="#b5b5b5"
-                content="참여불가"
-                borderColor="#b5b5b5"
-                hoverBackground="#b5b5b5"
-                hoverBorderColor="#b5b5b5"
-                cursor=""
-              />
-            ) : user.data.userId === state.createrId ? (
-              <>
-                <CommunityConFirmButton
-                  event={() => {
-                    setModalType("edit");
-                  }}
-                  content="수정하기"
-                />
-                <CommunityConFirmButton
-                  background="white"
-                  color="#bdcff2"
-                  event={onDeleteCalendar}
-                  content="삭제하기"
-                  hoverColor="white"
-                  hoverBackground="#f06c6c"
-                  hoverBorderColor="#f06c6c"
-                />
-              </>
-            ) : state.isParticipate === true ? (
-              <CommunityConFirmButton
-                event={() => {
-                  onDelete();
-                  onHandleParticipate();
-                }}
-                marginRight="0"
-                content="취소"
-              />
-            ) : state.participant >= state.peopleLimit ? (
-              <CommunityConFirmButton
-                marginRight="0"
-                color="white"
-                background="#b5b5b5"
-                content="참여불가"
-                borderColor="#b5b5b5"
-                hoverBackground="#b5b5b5"
-                hoverBorderColor="#b5b5b5"
-                cursor=""
-              />
-            ) : (
-              <CommunityConFirmButton
-                event={() => {
-                  onPost();
-                  onHandleParticipate();
-                }}
-                marginRight="0"
-                content="참가"
-              />
-            )}
-          </>
+          <>{rendering()}</>
         </CalendarButtonWrapper>
       </CreateCalendarBlock>
     </>
