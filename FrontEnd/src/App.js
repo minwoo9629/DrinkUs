@@ -66,8 +66,9 @@ function App() {
     });
 
     messaging.onMessage((payload) => {
-      console.log(payload);
-      alert(payload.data.title + '\n' + payload.data.message);
+      const title  =  payload.data.content;
+      console.log("댓글확인 "+title);
+      alert(title);
     })
   }, [])
 

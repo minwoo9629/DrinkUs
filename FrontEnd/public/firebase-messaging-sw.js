@@ -13,10 +13,11 @@ const firebaseConfig = {
   const messaging = firebase.messaging();
 
 messaging.setBackgroundMessageHandler((payload) => {
-	const title  =  payload.data.title;
-	const options  = {
-		body: payload.data.message,
-	};
-    console.log(payload);
-	return self.registration.showNotification(title, options);
-})
+  const notificationTitle = '알림';
+    const notificationOptions = {
+      body: payload.data.content,
+    };
+    console.log("payload"+payload.data.content);
+    return self.registration.showNotification(notificationTitle,
+        notificationOptions);
+});
