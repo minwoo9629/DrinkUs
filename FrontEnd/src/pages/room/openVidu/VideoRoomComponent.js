@@ -197,9 +197,9 @@ class VideoRoomComponent extends Component {
     window.addEventListener("beforeunload", this.onbeforeunload);
     window.addEventListener("resize", this.updateLayout);
     window.addEventListener("resize", this.checkSize);
+    navigator.mediaDevices.getUserMedia({ video: true, audio: true });
     this.joinSession();
     this.connectGameServer();
-    navigator.mediaDevices.getUserMedia({ video: true, audio: true });
 
     this.getRoomInfo(this.props.sessionInfo.roomId);
   }
