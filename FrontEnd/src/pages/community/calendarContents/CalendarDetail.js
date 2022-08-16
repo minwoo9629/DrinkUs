@@ -287,7 +287,7 @@ const CalendarDetail = ({
         </>
       );
     }
-    if (date < new Date() || state.participant >= state.peopleLimit) {
+    if (date < new Date()) {
       if (user.data.userId == state.createrId) {
         return (
           <CommunityConFirmButton
@@ -328,16 +328,31 @@ const CalendarDetail = ({
         />
       );
     } else {
-      return (
-        <CommunityConFirmButton
-          event={() => {
-            onPost();
-            onHandleParticipate();
-          }}
-          marginRight="0"
-          content="참가"
-        />
-      );
+      if (state.participant < state.peopleLimit) {
+        return (
+          <CommunityConFirmButton
+            event={() => {
+              onPost();
+              onHandleParticipate();
+            }}
+            marginRight="0"
+            content="참가"
+          />
+        );
+      } else {
+        return (
+          <CommunityConFirmButton
+            marginRight="0"
+            color="white"
+            background="#b5b5b5"
+            content="참여불가"
+            borderColor="#b5b5b5"
+            hoverBackground="#b5b5b5"
+            hoverBorderColor="#b5b5b5"
+            cursor=""
+          />
+        );
+      }
     }
   };
 
