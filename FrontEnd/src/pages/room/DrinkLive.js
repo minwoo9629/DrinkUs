@@ -1,12 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/layout/Header";
 import styled from "styled-components";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { client } from "../../utils/client";
 import LiveListItem from "../../components/room/LiveListItem";
 import Banner from "../../components/room/Banner";
 import { useSelector } from "react-redux";
-import { getAllByPlaceholderText } from "@testing-library/react";
+import { LiveButton } from "../../components/common/buttons/LiveButton";
 
 // 버튼, 배너
 const LiveWrapper = styled.div`
@@ -21,21 +21,6 @@ const LiveButtonWrapper = styled.div`
   height: 110px;
 `;
 
-const LiveButton = styled.button`
-  width: 160px;
-  height: 48px;
-  margin-right: 20px;
-  border-radius: 30px;
-  background-color: #eaf1ff;
-  color: #676775;
-  font-size: 18px;
-  margin-top: 40px;
-  line-height: 3px;
-  border: 3px solid #bdcff2;
-  box-shadow: inset 0px 0px 4px 4px rgba(189, 207, 242, 0.5);
-  cursor: pointer;
-`;
-
 const LiButton = styled.button`
   background-color: transparent;
   cursor: pointer;
@@ -43,20 +28,6 @@ const LiButton = styled.button`
 `;
 
 // 추천방
-const RecommendLetter = styled.div`
-  background-color: black;
-  color: white;
-  margin-top: 30px;
-`;
-
-const LetterWrapper = styled.div`
-  display: flex;
-  background-color: black;
-  justify-content: center;
-  margin: auto;
-  width: 100vw;
-`;
-
 const RecommendWrapper = styled.div`
   display: flex;
   background-color: black;
@@ -70,7 +41,31 @@ const RecommendInnerWrapper = styled.div`
   margin-top: 20px;
   margin-bottom: 50px;
   width: 1200px;
+  background-color: ${(props) => props.backgroundcolor};
 `;
+
+const RecommendLetter = styled.p`
+  font-size: ${(props) => props.size};
+  background-color: black;
+  color: ${(props) => props.color};
+  margin-top: ${(props) => props.margintop};
+  margin-bottom: ${(props) => props.marginbottom};
+  background-color: ${(props) => props.backgroundcolor};
+`;
+
+const LetterWrapper = styled.div`
+  display: flex;
+  background-color: black;
+  justify-content: center;
+  margin: ${(props) => props.margin};
+  width: 100vw;
+`;
+
+const LetterInnerWrapper = styled.div`
+  display: flex;
+  width: ${(props) => props.width};
+  margin-bottom: ${(props) => props.marginbottom};
+`
 
 const DrinkLive = () => {
   const navigate = useNavigate();
@@ -81,7 +76,7 @@ const DrinkLive = () => {
   useEffect(() => {
     if (user.userBirthday === null) {
       alert("생년월일 설정해야해!@!!!!");
-      navigate("/user/edit/profile");
+      navigate("/edit/profile");
     }
     onMakeAgeList();
     onCategoryList();
@@ -135,16 +130,15 @@ const DrinkLive = () => {
         <Banner></Banner>
       </LiveWrapper>
       <LetterWrapper>
-        <RecommendLetter>내 나이대로 설정된 방</RecommendLetter>
+        <LetterInnerWrapper width={'1200px'} marginbottom={'20px'}>
+          <RecommendLetter size={'24px'} color={"#EAF1FF"}>내 나이대로 설정된 방</RecommendLetter>
+        </LetterInnerWrapper> 
       </LetterWrapper>
       <RecommendWrapper>
         <RecommendInnerWrapper>
           {ageList.length === 0 ? (
-            <RecommendLetter>
+            <RecommendLetter color={"#EAF1FF"}>
               내 나이대로 설정된 방이 없어요.
-              <LiButton onClick={() => navigate("/user/edit/profile")}>
-                생년월일 입력하러 가기
-              </LiButton>
             </RecommendLetter>
           ) : (
             <>
@@ -158,12 +152,14 @@ const DrinkLive = () => {
         </RecommendInnerWrapper>
       </RecommendWrapper>
       <LetterWrapper>
-        <RecommendLetter>내 관심사로 설정된 방</RecommendLetter>
+        <LetterInnerWrapper width={'1200px'} marginbottom={'20px'}>
+          <RecommendLetter size={'24px'} color={"#EAF1FF"}>내 관심사로 설정된 방</RecommendLetter>
+        </LetterInnerWrapper>
       </LetterWrapper>
       <RecommendWrapper>
         <RecommendInnerWrapper>
           {categoryList.length === 0 ? (
-            <RecommendLetter>
+            <RecommendLetter color={"#EAF1FF"}>
               관심사를 추가로 설정해 주세요
               <LiButton onClick={() => navigate("/user/edit/profile")}>
                 관심사 설정하기
@@ -179,12 +175,14 @@ const DrinkLive = () => {
         </RecommendInnerWrapper>
       </RecommendWrapper>
       <LetterWrapper>
-        <RecommendLetter>최근에 만들어진 방</RecommendLetter>
+        <LetterInnerWrapper width={'1200px'} marginbottom={'20px'}>
+          <RecommendLetter size={'24px'} color={"#EAF1FF"}>최근에 만들어진 방</RecommendLetter>
+        </LetterInnerWrapper>
       </LetterWrapper>
       <RecommendWrapper>
         <RecommendInnerWrapper>
           {currentList.length === 0 ? (
-            <RecommendLetter>
+            <RecommendLetter color={"#EAF1FF"}>
               최근에 만들어진 방이 없어요.
               <LiButton onClick={() => navigate("/createroom")}>
                 방을 만들어볼까요?

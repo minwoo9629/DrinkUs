@@ -5,6 +5,7 @@ import Header from "../components/layout/Header";
 import { useNavigate } from "react-router-dom";
 import { CalendarButton } from "../components/common/buttons/CalendarButton";
 import {
+  getDailyArticle,
   postDailyArticle,
 } from "../api/DailyAPI";
 import { useInView } from "react-intersection-observer"
@@ -26,7 +27,7 @@ const DailyArticleInputWrapper = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  height: 9vh;
+  height: 11vh;
   background-color: white;
 `
 
@@ -86,7 +87,6 @@ const Daily = () => {
   const getItems = useCallback(async () => {
     setLoading(true)
     await client.get(`/daily?page=${page}&size=10`).then((res) => {
-      console.log(res.data.content);
       setItems(prevState => [...prevState, ...res.data.content])
     })
     await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -127,6 +127,7 @@ const Daily = () => {
     if(e.key === 'Enter') {
       onArticlePost(e);
     }
+    getDailyArticle();
   }
   return (
     <>

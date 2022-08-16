@@ -10,6 +10,8 @@ import { BackButton } from "../../components/common/buttons/BackButton";
 import { TimeGap } from "../../utils/TimeGap";
 import { FailAlert } from "../../utils/sweetAlert";
 import { GetPopularlityPercent } from "../../utils/GetPopularlityPercent";
+import Modal from "../../components/modals/Modal";
+import UserProfileContent from "../../components/modals/contents/UserProfileContent";
 
 const RoomDetailWrapper = styled.div`
   position: relative;
@@ -186,7 +188,7 @@ const RoomDetail = () => {
 
   // user 정보 state
   const [createdUser, setCreatedUser] = useState([]);
-
+ 
   // 방 입장 세션 정보
   const onHandleEnterRoom = () => {
     const participants = client
@@ -257,8 +259,28 @@ const RoomDetail = () => {
   // 인기도 아이콘으로 변환
   const popularlityPercent = GetPopularlityPercent(createdUser.userPopularity);
 
+  // 프로필 모달
+  const [modalState, setModalState] = useState(false);
+
+  const openModal = () => {
+    setModalState(true);
+  };
+
+  const closeModal = () => {
+    setModalState(false);
+  };
+
   return (
     <>
+      {createdUser.userId !== undefined ? (<><Modal
+        width={"800px"}
+        height={"600px"}
+        isOpen={modalState}
+        closeModal={closeModal}
+        modalContent={
+          <UserProfileContent userId={createdUser.userId} close={closeModal} />
+        }
+      /></>):(<></>)}
       <BackButton />
       <Wrapper color={"#0a0a0a"}>
         <RoomDetailWrapper>
@@ -374,7 +396,7 @@ const RoomDetail = () => {
             <ProfileImageWrapper>
               <ProfileImageThumbnail
                 src={`/assets/profileImage/profile${createdUser.userImg}.png`}
-                onClick={() => navigate("/profile")}
+                onClick={openModal}
               />
             </ProfileImageWrapper>
 

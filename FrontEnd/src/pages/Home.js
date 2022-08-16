@@ -3,11 +3,12 @@ import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
 import HomeSlide from "../components/mainpage/HomeSlide";
 import TopButton from "../components/common/buttons/TopButton";
-import { BaseFlexWrapper, BaseFlexColWrapper } from "../components/styled/Wrapper";
-import { useEffect } from "react";
+import { BaseFlexWrapper } from "../components/styled/Wrapper";
+import { useState, useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { tokenCheck } from "../utils/tokenCheck";
 import { getUserProfile } from "../store/actions/user";
+import "./Home.css";
 
 const neon_text_color = "#5904de";
 const neon_border_color = "#08f";
@@ -70,19 +71,88 @@ const ContentWrapper = styled(BaseFlexWrapper)`
   &.gradientBackground{}
 `;
 
+const ImageWrapper = styled.img`
+  width: 440px;
+`;
+
+const LetterWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: ${({ ta }) => ta};
+`;
+
 const Letter = styled.p`
   font-size: ${(props) => props.size};
   font-weight: ${(props) => props.weight};
-  font-family: "맑은고딕","Malgun Gothic",serif;
-`
+  margin-left: 2rem;
+  margin-right: 2rem;
+  margin-bottom: 0.5rem;
+`;
+
+const LeftSlideContent = styled.div`
+  display: none;
+  flex-direction: row;
+  position: absolute;
+  top: ${({ top }) => top};
+  width: 100vw;
+  height: 40rem;
+  align-items: center;
+  justify-content: center;
+  left: 0px;
+
+  @media screen and (max-width: 900px) {
+    flex-direction: column;
+  }
+`;
+
+const RightSlideContent = styled.div`
+  display: none;
+  flex-direction: row;
+  position: absolute;
+  top: ${({ top }) => top};
+  width: 100vw;
+  height: 40rem;
+  align-items: center;
+  justify-content: center;
+  right: 0px;
+
+  @media screen and (max-width: 900px) {
+    flex-direction: column;
+  }
+`;
 
 const Home = () => {
+
   const dispatch = useDispatch();
+
   useEffect(() => {
     if (tokenCheck()) {
       dispatch(getUserProfile());
     }
+    window.addEventListener('scroll', updateScroll);
   });
+
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const isSlide = useRef([]);
+
+  const updateScroll = () => {
+    setScrollPosition(window.scrollY); // 스크롤 위치 저장
+
+    if(scrollPosition > 600){
+      isSlide.current[0].style.display = `flex`;
+      isSlide.current[0].style.animation = `slideLeft 1.0s ease-out forwards`;
+    } 
+    if(scrollPosition > 1250){
+      isSlide.current[1].style.display = `flex`;
+      isSlide.current[1].style.animation = `slideRight 1.0s ease-out forwards`;
+    } 
+    if(scrollPosition > 1900){
+      isSlide.current[2].style.display = `flex`;
+      isSlide.current[2].style.animation = `slideLeft 1.0s ease-out forwards`;
+    } 
+  }
+
   return (
     <>
       <Header position={'fixed'} location={'home'} />
@@ -91,40 +161,67 @@ const Home = () => {
       </ContentWrapper>
       <ContentWrapper background={"#000"} height={"20vh"}/>
       <ContentWrapper className="gradientBackground" background={"#FFF"} height={"70vh"}>
-        <img src={process.env.PUBLIC_URL + '/assets/room.png'} width="30%" height="55%"/>
-        <BaseFlexColWrapper>
-          <Letter size={"2rem"} weight={"bold"}>
-            화상 채팅방
-          </Letter>
-          <Letter size={"1.3rem"}>
-            화상 채팅방을 통해 새로운 사람을 만날 수 있어요<br/>
-            우리끼리만 만나고 싶다면 비밀번호를 설정할 수 있어요
-          </Letter>
-        </BaseFlexColWrapper>
+        <LeftSlideContent
+          top="60rem"
+          ref={el => (isSlide.current[0] = el)}
+        >
+          <ImageWrapper 
+            src={process.env.PUBLIC_URL + '/assets/room.png'}
+          />
+          <LetterWrapper
+            ta="right"
+          >
+            <Letter size={"2rem"} weight={"bold"}>
+              화상 채팅방
+            </Letter>
+            <Letter size={"1.1rem"}>
+              화상 채팅방을 통해 새로운 사람을 만날 수 있어요<br/>
+              우리끼리만 만나고 싶다면 비밀번호를 설정할 수 있어요
+            </Letter>
+          </LetterWrapper>
+        </LeftSlideContent>
+      </ContentWrapper>
+      <ContentWrapper background={"#FFF"} height={"120vh"}>
+        <RightSlideContent
+          top="100rem"
+          ref={el => (isSlide.current[1] = el)}
+        >
+          <LetterWrapper
+            ta="left"
+          >
+            <Letter size={"2rem"} weight={"bold"}>
+              커뮤니티
+            </Letter>
+            <Letter size={"1.1rem"}>
+              술약속을 잡을 수 있는 월간 커뮤니티와<br/>
+              자유롭게 대화할 수 있는 일간 커뮤니티가 있어요
+            </Letter>
+          </LetterWrapper>
+          <ImageWrapper
+            src={process.env.PUBLIC_URL + '/assets/community.png'}
+          />
+        </RightSlideContent>
       </ContentWrapper>
       <ContentWrapper background={"#FFF"} height={"70vh"}>
-        <img src={process.env.PUBLIC_URL + '/assets/community.png'} width="30%" height="55%"/>
-        <BaseFlexColWrapper>
-          <Letter size={"2rem"} weight={"bold"}>
-            커뮤니티
-          </Letter>
-          <Letter size={"1.3rem"}>
-            술약속을 잡을 수 있는 월간 커뮤니티와<br/>
-            자유롭게 대화할 수 있는 일간 커뮤니티가 있어요
-          </Letter>
-        </BaseFlexColWrapper>
-      </ContentWrapper>
-      <ContentWrapper background={"#FFF"} height={"70vh"}>
-        <img src={process.env.PUBLIC_URL + '/assets/filter.png'} width="30%" height="55%"/>
-        <BaseFlexColWrapper>
-          <Letter size={"2rem"} weight={"bold"}>
-            관심사
-          </Letter>
-          <Letter size={"1.3rem"}>
-            내 관심사를 설정하고, 다른 사람의 관심사를 볼 수 있어요<br/>
-            관심있는 방을 필터로 찾을 수 있어요
-          </Letter>
-        </BaseFlexColWrapper>
+        <LeftSlideContent
+          top="140rem"
+          ref={el => (isSlide.current[2] = el)}
+        >
+          <ImageWrapper
+            src={process.env.PUBLIC_URL + '/assets/filter.png'}
+          />
+          <LetterWrapper
+            ta="right"
+          >
+            <Letter size={"2rem"} weight={"bold"}>
+              관심사
+            </Letter>
+            <Letter size={"1.1rem"}>
+              내 관심사를 설정하고, 다른 사람의 관심사를 볼 수 있어요<br/>
+              관심있는 방을 필터로 찾을 수 있어요
+            </Letter>
+          </LetterWrapper>
+        </LeftSlideContent>
       </ContentWrapper>
       <ContentWrapper height={"20vh"}/>
       <HomeSlide />
