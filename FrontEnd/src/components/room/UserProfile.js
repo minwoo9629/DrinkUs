@@ -35,9 +35,7 @@ const Popularity = styled.div`
   color: #484d59;
 `;
 
-const UserProfile = () => {
-  const user = useSelector((state) => state.user);
-
+const UserProfile = ({ user }) => {
   const popularlityPercent = GetPopularlityPercent(user.data.userPopularity);
 
   return (
