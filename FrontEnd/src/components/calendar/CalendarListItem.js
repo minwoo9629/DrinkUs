@@ -33,9 +33,7 @@ const InfoWrapper = styled.span`
   color: #7dd47d;
 `;
 
-const CalendarListItem = ({ content, successHandler, year, month, day }) => {
-  console.log(content);
-
+const CalendarListItem = ({ content, successHandler }) => {
   // 사용자 정보 확인
   const user = useSelector((state) => state.user);
 
@@ -71,14 +69,20 @@ const CalendarListItem = ({ content, successHandler, year, month, day }) => {
             <EditCalendar
               calendarId={content.calendarId}
               content={content}
-              calendarDate={{ y: year, m: month, d: day }}
-              close={modalClose}
+              close={() => {
+                setModalType("show");
+                modalClose();
+              }}
               successHandler={successHandler}
+              width="500px"
+              height="900px"
             />
           )
         }
-        width="800px"
-        height="500px"
+        background={modalType == "show" ? "#fcfcfc" : "white"}
+        width="500px"
+        height="900px"
+        borderColor="none"
       />
       <CalendarListItemWrapper onClick={modalOpen}>
         <Content width="230px" textAlign="left" marginLeft="50px">

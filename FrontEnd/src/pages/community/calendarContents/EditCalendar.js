@@ -193,7 +193,8 @@ const AgeCheckBox = styled.input`
   margin-right: 3px;
 `;
 
-const CreateCalendar = ({ calendarDate, close, successHandler }) => {
+const CreateCalendar = ({ calendarId, content, close, successHandler }) => {
+  const date = new Date(content.time);
   const user = useSelector((state) => state.user);
   const userAge = Math.floor(
     (new Date().getFullYear() - user.data.userBirthday.substring(0, 4) + 1) /
@@ -202,24 +203,17 @@ const CreateCalendar = ({ calendarDate, close, successHandler }) => {
   userAge >= 7 ? 7 : userAge;
 
   const [state, setState] = useState({
-    content: "",
-    ages: [
-      userAge == 2 ? "Y" : "N",
-      userAge == 3 ? "Y" : "N",
-      userAge == 4 ? "Y" : "N",
-      userAge == 5 ? "Y" : "N",
-      userAge == 6 ? "Y" : "N",
-      userAge == 7 ? "Y" : "N",
-    ],
+    content: content.calendarContent,
+    ages: content.ages,
     date: {
-      year: calendarDate.y,
-      month: calendarDate.m,
-      day: calendarDate.d,
+      year: date.getFullYear(),
+      month: date.getMonth() + 1,
+      day: date.getDate(),
     },
-    hour: 0,
-    minute: 0,
-    place: "술집",
-    peopleLimit: 2,
+    hour: date.getHours(),
+    minute: date.getMinutes(),
+    place: content.place,
+    peopleLimit: content.peopleLimit,
   });
 
   const [checkAllAges, setCheckAllAges] = useState(false);
@@ -257,29 +251,6 @@ const CreateCalendar = ({ calendarDate, close, successHandler }) => {
     });
   };
 
-  const initState = () => {
-    setState({
-      content: "",
-      ages: [
-        userAge == 2 ? "Y" : "N",
-        userAge == 3 ? "Y" : "N",
-        userAge == 4 ? "Y" : "N",
-        userAge == 5 ? "Y" : "N",
-        userAge == 6 ? "Y" : "N",
-        userAge == 7 ? "Y" : "N",
-      ],
-      date: {
-        year: calendarDate.y,
-        month: calendarDate.m,
-        day: calendarDate.d,
-      },
-      hour: 0,
-      minute: 0,
-      place: "술집",
-      peopleLimit: 2,
-    });
-  };
-
   const onCalendarInfoSubmit = (e) => {
     e.preventDefault();
     // 방 설명 유효성 체크
@@ -298,7 +269,7 @@ const CreateCalendar = ({ calendarDate, close, successHandler }) => {
       }
     }
     client
-      .post("calendar", {
+      .put(`calendar/${calendarId}`, {
         calendarContent: state.content,
         calendarDatetime:
           state.date.year +
@@ -311,8 +282,7 @@ const CreateCalendar = ({ calendarDate, close, successHandler }) => {
         ages: state.ages,
       })
       .then(function () {
-        initState();
-        SuccessAlert("글쓰기 성공!");
+        SuccessAlert("수정 성공!");
         successHandler();
         close();
       })
@@ -348,7 +318,6 @@ const CreateCalendar = ({ calendarDate, close, successHandler }) => {
       <CreateCalendarBlock>
         <ModalCloseButton
           close={() => {
-            initState();
             close();
           }}
         />
@@ -467,7 +436,7 @@ const CreateCalendar = ({ calendarDate, close, successHandler }) => {
         <CommunityConFirmButton
           marginRight="0"
           event={onCalendarInfoSubmit}
-          content="생성"
+          content="수정"
         />
       </CreateCalendarBlock>
     </>
