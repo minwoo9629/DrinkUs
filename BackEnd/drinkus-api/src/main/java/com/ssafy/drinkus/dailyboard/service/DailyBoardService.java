@@ -12,6 +12,8 @@ import com.ssafy.drinkus.dailyboard.request.DailyBoardUpdateRequest;
 import com.ssafy.drinkus.dailyboard.response.DailyBoardResponse;
 import com.ssafy.drinkus.dailyboard.response.MyBoardResponse;
 import com.ssafy.drinkus.external.fcm.FirebaseClient;
+import com.ssafy.drinkus.notification.domain.Notification;
+import com.ssafy.drinkus.notification.domain.NotificationRepository;
 import com.ssafy.drinkus.user.domain.User;
 import com.ssafy.drinkus.user.domain.type.UserRole;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +36,7 @@ public class DailyBoardService {
     private final DailyBoardQueryRepository dailyBoardQueryRepository;
     private final DailyBoardRepository dailyBoardRepository;
     private final FirebaseClient firebaseClient;
+    private final NotificationRepository notificationRepository;
 
     // 총 데일리 게시판 페이지 개수 반환
     public Long countByParentIdIsNull() {
@@ -108,10 +111,11 @@ public class DailyBoardService {
     // 댓글 작성
     @Transactional
     public void createComment(User user, DailyBoardCreateRequest request, Long parentId) {
-//        DailyBoard parentBoard = dailyBoardQueryRepository.findDailyAndUserById(parentId)
-//                .orElseThrow(() -> new NotFoundException(NotFoundException.BOARD_DAILY_NOT_FOUND));
-        DailyBoard parentBoard = dailyBoardRepository.findById(parentId)
+        DailyBoard parentBoard = dailyBoardQueryRepository.findDailyAndUserById(parentId)
                 .orElseThrow(() -> new NotFoundException(NotFoundException.BOARD_DAILY_NOT_FOUND));
+//        DailyBoard parentBoard = dailyBoardRepository.findById(parentId)
+//                .orElseThrow(() -> new NotFoundException(NotFoundException.BOARD_DAILY_NOT_FOUND));
+//
         if (parentBoard.getParentId() != null) {
             throw new InvalidException("답글에는 답글을 작성할 수 없습니다.");
         }
@@ -120,9 +124,11 @@ public class DailyBoardService {
         dailyBoardRepository.save(dailyBoard);
 
         //유저 아이디와 해당 유저의 fcm토큰을 가져옴
-//        String fcmToken = parentBoard.getCreater().getFcmToken();
-//        String userNickname = parentBoard.getCreater().getUserNickname();
-//        firebaseClient.send(fcmToken,userNickname + "님의 글에 댓글이 달렸습니다.");
+        String userNickname = parentBoard.getCreater().getUserNickname();
+//        firebaseClient.send(parentBoard.getCreater().getFcmToken(),userNickname + "님의 글에 댓글이 달렸습니다.");
+
+        Notification findNotification = Notification.createNotification(parentBoard.getCreater().getUserId(), userNickname + "님의 글에 댓글이 달렸습니다.");
+        notificationRepository.save(findNotification);
     }
 
     // 글 수정
