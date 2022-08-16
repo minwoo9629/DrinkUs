@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Profile from "../../../pages/auth/Profile";
 import Reports from "../../../pages/auth/Reports";
@@ -97,6 +97,7 @@ const UserProfileContent = ({ userId, close, userNickname }) => {
   const changeTypeState = (type) => {
     setTypeState(type);
   };
+
   return (
     <>
       <ModalCloseButton close={close} />
