@@ -158,11 +158,10 @@ public class UserService {
         return UserProfileResponse.from(user);
     }
 
-    // 닉네임으로 회원 프로필 조회
-    public UserProfileResponse findUserByUserNickname(String userNickname) {
+    // 닉네임으로 회원번호 조회
+    public Long findUserByUserNickname(String userNickname) {
         User user = userRepository.findUserByUserNickname(userNickname);
-
-        return UserProfileResponse.from(user);
+        return user.getUserId();
     }
 
 

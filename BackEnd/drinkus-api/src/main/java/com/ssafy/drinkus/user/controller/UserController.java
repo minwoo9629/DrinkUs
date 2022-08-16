@@ -91,10 +91,10 @@ public class UserController {
         return ResponseEntity.ok().body(body);
     }
     
-    // 닉네임으로 프로필 조회
-    @GetMapping("/profile")
-    public ResponseEntity<UserProfileResponse> findUserByUserNickname(@RequestParam String userNickname) {
-        UserProfileResponse body = userService.findUserByUserNickname(userNickname);
+    // 닉네임으로 유저 번호 조회
+    @GetMapping("/id")
+    public ResponseEntity<Long> findUserByUserNickname(@RequestParam String userNickname) {
+        Long body = userService.findUserByUserNickname(userNickname);
         return ResponseEntity.ok().body(body);
     }
 
