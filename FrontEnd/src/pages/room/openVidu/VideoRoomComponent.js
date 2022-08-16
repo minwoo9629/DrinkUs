@@ -947,7 +947,6 @@ class VideoRoomComponent extends Component {
       <>
         {this.state.targetUserId !== "" ? (
           <>
-            {console.log("모달을 열자")}
             <Modal
               modalContent={
                 <UserProfileContent
