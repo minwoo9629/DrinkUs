@@ -125,7 +125,7 @@ public class DailyBoardService {
 
         //유저 아이디와 해당 유저의 fcm토큰을 가져옴
         String userNickname = parentBoard.getCreater().getUserNickname();
-//        firebaseClient.send(parentBoard.getCreater().getFcmToken(),userNickname + "님의 글에 댓글이 달렸습니다.");
+        firebaseClient.send(parentBoard.getCreater().getFcmToken(),userNickname + "님의 글에 댓글이 달렸습니다.");
 
         Notification findNotification = Notification.createNotification(parentBoard.getCreater().getUserId(), userNickname + "님의 글에 댓글이 달렸습니다.");
         notificationRepository.save(findNotification);
