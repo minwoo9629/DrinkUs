@@ -9,19 +9,12 @@ import FindId from "./pages/auth/find/FindId";
 import Join from "./pages/auth/join/Join";
 import JoinAgree from "./pages/auth/join/JoinAgree";
 import JoinType from "./pages/auth/join/JoinType";
-import Profile from "./pages/auth/Profile";
-import Reports from "./pages/auth/Reports";
 import SocialLogin from "./pages/auth/SocialLogin";
 import MyPage from "./pages/auth/MyPage";
 import DrinkLive from "./pages/room/DrinkLive";
 import CreateRoom from "./pages/room/CreateRoom";
 import RoomDetail from "./pages/room/RoomDetail";
 import RoomList from "./pages/room/RoomList";
-import Daily from "./pages/Daily";
-import Calendar from "./pages/calendarcommunity/Calendar";
-import DailyCalendarList from "./pages/calendarcommunity/DailyCalendarList";
-import CreateCalendar from "./pages/community/calendarContents/CreateCalendar";
-import EditCalendar from "./pages/calendarcommunity/EditCalendar";
 import EditProfile from "./pages/auth/mypage/EditProfile";
 import EditPassword from "./pages/auth/mypage/EditPassword";
 import EditInterest from "./pages/auth/mypage/EditInterest";
@@ -71,25 +64,10 @@ function App() {
                 path="/rooms/:roomId"
                 element={<PrivateRoute component={<RoomDetail />} />}
               />
+
               <Route
-                path="/daily"
-                element={<PrivateRoute component={<Daily />} />}
-              />
-              <Route
-                path="/calendar"
-                element={<PrivateRoute component={<Calendar />} />}
-              />
-              <Route
-                path="/calendar/:year/:month/:index"
-                element={<PrivateRoute component={<DailyCalendarList />} />}
-              />
-              <Route
-                path="/calendar/create"
-                element={<PrivateRoute component={<CreateCalendar />} />}
-              />
-              <Route
-                path="/calendar/:calendarId/edit"
-                element={<PrivateRoute component={<EditCalendar />} />}
+                path="/community"
+                element={<PrivateRoute component={<Community />} />}
               />
               <Route
                 path="/user"

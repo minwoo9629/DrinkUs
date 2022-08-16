@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import { useState } from "react";
-import CalendarModal from "../../components/calendar/CalendarModal";
+import Modal from "../modals/Modal";
+import CalendarDetail from "../../pages/community/calendarContents/CalendarDetail";
+import EditCalendar from "../../pages/community/calendarContents/EditCalendar";
 
 const CalendarListItemWrapper = styled.div`
   width: 100%;
@@ -8,6 +10,8 @@ const CalendarListItemWrapper = styled.div`
   padding-bottom: 45px;
 
   border-bottom: 1px solid #f5f5f5;
+
+  margin-bottom: -1px;
 
   &:hover {
     background-color: #f7f7f7;
@@ -23,8 +27,10 @@ const Content = styled.div`
   float: left;
 `;
 
-const CalendarListItem = (content) => {
+const CalendarListItem = ({ content, successHandler }) => {
+  console.log(content);
   const [isOpen, setIsOpen] = useState(false);
+  const [modalType, setModalType] = useState("show");
 
   const modalOpen = () => {
     setIsOpen(true);
@@ -41,10 +47,27 @@ const CalendarListItem = (content) => {
 
   return (
     <>
-      <CalendarModal
-        close={modalClose}
+      <Modal
         isOpen={isOpen}
-        calendarId={content.calendarId}
+        modalContent={
+          modalType == "show" ? (
+            <CalendarDetail
+              calendarId={content.calendarId}
+              successHandler={successHandler}
+              close={modalClose}
+              setModalType={setModalType}
+            />
+          ) : (
+            <EditCalendar
+              calendarId={content.calendarId}
+              close={modalClose}
+              setModalType={setModalType}
+              successHandler={successHandler}
+            />
+          )
+        }
+        width="800px"
+        height="500px"
       />
       <CalendarListItemWrapper onClick={modalOpen}>
         <Content

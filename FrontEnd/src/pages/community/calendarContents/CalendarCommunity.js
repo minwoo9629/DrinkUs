@@ -20,6 +20,10 @@ const CalendarCommunity = () => {
     setDate({ year: y, month: m, day: date.day });
   };
 
+  const setNewDate = (y, m, d) => {
+    setDate({ year: y, month: m, day: d });
+  };
+
   const openMonthlyCalendar = () => {
     setCalendaryMode("monthly");
   };
@@ -45,6 +49,7 @@ const CalendarCommunity = () => {
             month={date.month}
             day={date.day}
             monthly={openMonthlyCalendar}
+            setNewDate={setNewDate}
           />
         )}
       </CalendarWrapper>

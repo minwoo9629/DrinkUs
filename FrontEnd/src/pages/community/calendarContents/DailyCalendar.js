@@ -5,12 +5,8 @@ import CalendarListItem from "../../../components/calendar/CalendarListItem";
 import Modal from "../../../components/modals/Modal";
 import CreateCalendar from "./CreateCalendar";
 
-const TopMenuWrap = styled.div`
-  margin: 20px;
-  justify-content: space-between;
-  display: flex;
-  align-items: center;
-  width: 1000px;
+const TextDiv = styled.div`
+  margin: 21px 0;
 `;
 
 const NextDayButton = styled.button`
@@ -26,9 +22,13 @@ const NextDayButton = styled.button`
   margin: 0px 8px 5px 8px;
 `;
 
+const DescriptionWrapper = styled.div`
+  margin-left: 670px;
+`;
 const TitleWrapper = styled.div`
-  margin-left: 200px;
   text-align: center;
+
+  margin-bottom: ${(props) => props.marginBottom};
 `;
 
 const ButtonWrapper = styled.span`
@@ -70,8 +70,8 @@ const CalendarButton = styled.button`
   font-size: 15px;
   font-weight: bold;
   margin-right: 10px;
-  cursor: pointer;
-  border-radius: 7px;
+  cursor: ${(props) => props.cursor};
+  border-radius: 4px;
   background-color: ${(props) => props.background};
   color: ${(props) => props.color};
   border: 2px solid ${(props) => props.borderColor};
@@ -84,25 +84,45 @@ const CalendarButton = styled.button`
   }
 `;
 
-const DailyCalendar = ({ year, month, day, monthly }) => {
+const Description = styled.span`
+  position: absolute;
+  background-color: rgba(255, 67, 67, 0.3);
+  color: #404040;
+  width: fit-content;
+  border-radius: 3px;
+  padding: 10px 8px;
+  margin-top: -10px;
+
+  font-size: 10px;
+
+  &:hover ${CalendarButton} {
+    display: none;
+  }
+`;
+
+const DailyCalendar = ({ year, month, day, monthly, setNewDate }) => {
+  const [showDescription, setShowDescription] = useState(false);
   const [dailyCalendar, setDailyCalendar] = useState([]);
+  const [curDate, setCurDate] = useState(new Date(year, month - 1, day));
   const dailyCalendarTitle = `
-    ${year}.
-    ${month}.
-    ${day}
+    ${curDate.getFullYear()}.
+    ${curDate.getMonth() + 1}.
+    ${curDate.getDate()}
   `;
 
   const fetchData = async () => {
     const response = await client
       .get(
-        `/calendar/daily?year=${year}
-      &month=${month}
-      &day=${day}`,
+        `/calendar/daily?year=${curDate.getFullYear()}
+      &month=${curDate.getMonth() + 1}
+      &day=${curDate.getDate()}`,
       )
       .then(function (response) {
         setDailyCalendar([...response.data.content]);
       })
-      .catch(function (error) {});
+      .catch(function (error) {
+        console.log(error);
+      });
   };
 
   const [modalState, setModalState] = useState({ write: false, list: false });
@@ -116,7 +136,13 @@ const DailyCalendar = ({ year, month, day, monthly }) => {
 
   useEffect(() => {
     fetchData();
-  });
+
+    setNewDate(
+      curDate.getFullYear(),
+      curDate.getMonth() + 1,
+      curDate.getDate(),
+    );
+  }, [curDate]);
 
   const nextDay = parseInt(day) + 1;
 
@@ -139,7 +165,13 @@ const DailyCalendar = ({ year, month, day, monthly }) => {
         <TitleWrapper>
           <NextDayButton
             onClick={() => {
-              window.location.replace(`/calendar/${year}/${month}/${day - 1}`);
+              setCurDate(
+                new Date(
+                  curDate.getFullYear(),
+                  curDate.getMonth(),
+                  curDate.getDate() - 1,
+                ),
+              );
             }}
           >
             &#60;
@@ -147,24 +179,61 @@ const DailyCalendar = ({ year, month, day, monthly }) => {
           <Title>{dailyCalendarTitle}</Title>
           <NextDayButton
             onClick={() => {
-              window.location.replace(`/calendar/${year}/${month}/${nextDay}`);
+              setCurDate(
+                new Date(
+                  curDate.getFullYear(),
+                  curDate.getMonth(),
+                  curDate.getDate() + 1,
+                ),
+              );
             }}
           >
             &#62;
           </NextDayButton>
+        </TitleWrapper>
 
+        <TitleWrapper marginBottom="60px">
           <ButtonWrapper>
-            <CalendarButton
-              onClick={openWriteModal}
-              background="#bdcff2"
-              color="#fff"
-              borderColor="#bdcff2"
-              hoverBackground="#5d81c9"
-              hoverColor="#fff"
-              hoverBorderColor="#5d81c9"
-            >
-              일정 생성
-            </CalendarButton>
+            {new Date(
+              curDate.getFullYear(),
+              curDate.getMonth(),
+              curDate.getDate() + 1,
+            ) <= new Date() ? (
+              <>
+                <CalendarButton
+                  background="#c4c4c4"
+                  color="#fff"
+                  borderColor="#c4c4c4"
+                  hoverBorderColor="#c4c4c4"
+                  onMouseLeave={() => {
+                    setShowDescription(false);
+                    console.log("sd: " + showDescription);
+                  }}
+                  onMouseOver={() => {
+                    setShowDescription(true);
+                    console.log("sd: " + showDescription);
+                  }}
+                >
+                  생성 불가
+                </CalendarButton>
+              </>
+            ) : (
+              <>
+                <CalendarButton
+                  onClick={openWriteModal}
+                  background="#bdcff2"
+                  color="#fff"
+                  borderColor="#bdcff2"
+                  hoverBackground="#5d81c9"
+                  hoverColor="#fff"
+                  hoverBorderColor="#5d81c9"
+                  cursor="pointer"
+                >
+                  일정 생성
+                </CalendarButton>
+              </>
+            )}
+
             <CalendarButton
               onClick={() => {
                 monthly();
@@ -175,11 +244,23 @@ const DailyCalendar = ({ year, month, day, monthly }) => {
               hoverBackground="#c4c4c4"
               hoverColor="#fff"
               hoverBorderColor="#c4c4c4"
+              cursor="pointer"
             >
               달력으로
             </CalendarButton>
           </ButtonWrapper>
         </TitleWrapper>
+        <DescriptionWrapper>
+          {showDescription ? (
+            <>
+              <Description>
+                지난 날짜에는 일정을 생성할 수 없습니다!
+              </Description>
+            </>
+          ) : (
+            <></>
+          )}
+        </DescriptionWrapper>
       </CalendarWrapper>
 
       <ContentWrapper>
@@ -193,11 +274,15 @@ const DailyCalendar = ({ year, month, day, monthly }) => {
         </ContentTitle>
         <ContentListWrapper>
           {dailyCalendar.length == 0 ? (
-            <>오늘 잡힌 약속이 없어요. 약속을 잡아보세요!</>
+            <TextDiv>오늘 잡힌 약속이 없어요. 약속을 잡아보세요!</TextDiv>
           ) : (
             <>
               {dailyCalendar.map((content, index) => (
-                <CalendarListItem {...content} key={index} />
+                <CalendarListItem
+                  content={content}
+                  key={index}
+                  successHandler={fetchData}
+                />
               ))}
             </>
           )}

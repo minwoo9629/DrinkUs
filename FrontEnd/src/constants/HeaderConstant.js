@@ -1,7 +1,7 @@
 export const BASIC_MENU = [
   { link: "/", menuName: "DrinkUs" },
   { link: "/live", menuName: "Live" },
-  { link: "/calendar", menuName: "커뮤니티" },
+  { link: "/community", menuName: "커뮤니티" },
 ];
 
 export const LOGINED_MENU = [
@@ -10,7 +10,7 @@ export const LOGINED_MENU = [
 
 export const LOGINED_MENU_ADMIN = [
   { link: "/admin", className: "fa fa-briefcase" },
-]
+];
 
 export const UNLOGINED_MENU = [
   { link: "/login", menuName: "로그인" },
