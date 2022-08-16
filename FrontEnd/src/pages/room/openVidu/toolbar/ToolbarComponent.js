@@ -71,6 +71,7 @@ const ChatAlertPoint = styled.div`
 const FontAwesomeStyled = styled.i`
   font-size: ${({ fontSize }) => fontSize};
   font-weight: 900;
+  font-family: "Font Awesome 5 Free";
 `;
 
 FontAwesomeStyled.defaultProps = {
@@ -199,10 +200,8 @@ export default class ToolbarComponent extends Component {
             <RoomContentButtonWrapper>
               <RoomContentButton onClick={this.micStatusChanged}>
                 {localUser !== undefined && localUser.isAudioActive() ? (
-                  // <p>마이크킨 상태</p>
                   <FontAwesomeStyled className="fas fa-microphone" />
                 ) : (
-                  // <p>마이크끈상태</p>
                   <FontAwesomeStyled className="fas fa-microphone-slash" />
                 )}
               </RoomContentButton>
@@ -210,15 +209,32 @@ export default class ToolbarComponent extends Component {
             <RoomContentButtonWrapper>
               <RoomContentButton onClick={this.camStatusChanged}>
                 {localUser !== undefined && localUser.isVideoActive() ? (
-                  // <p>캠 켠 상태</p>
                   <FontAwesomeStyled className="fas fa-video" />
                 ) : (
-                  // <p>캠끈상태</p>
                   <FontAwesomeStyled className="fas fa-video-slash" />
                 )}
               </RoomContentButton>
             </RoomContentButtonWrapper>
+            <RoomContentButtonWrapper>
+              {localUser !== undefined && localUser.isScreenShareActive() ? (
+                <RoomContentButton
+                  onClick={this.stopScreenShare}
+                  className="active"
+                >
+                  <FontAwesomeStyled className="fas fa-desktop active" />
+                </RoomContentButton>
+              ) : (
+                <RoomContentButton onClick={this.screenShare}>
+                  <FontAwesomeStyled className="fas fa-desktop" />
+                </RoomContentButton>
+              )}
+            </RoomContentButtonWrapper>
           </RoomContentWrapper>
+          {/* {localUser !== undefined && localUser.isScreenShareActive() && (
+            <button onClick={this.stopScreenShare} id="navScreenButton">
+              <p>StopScreenShare</p>
+            </button>
+          )} */}
           {/* <div className="buttonsContent">
             <button
               color="inherit"
