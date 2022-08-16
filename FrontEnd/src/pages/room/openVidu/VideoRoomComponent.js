@@ -26,6 +26,22 @@ import {
   recommendToasts,
 } from "../../../utils/sweetAlert";
 import { getTargetUserId } from "../../../api/ProfileAPI";
+import { getRoomInfo } from "../../../api/RoomAPI";
+
+const Theme = {
+  술집: "publichouse",
+  펍: "pub",
+  칵테일바: "cocktail",
+  야구장: "baseball",
+  축구장: "soccer",
+  페스티벌: "festival",
+  클럽: "club",
+  편의점: "outside",
+  한강공원: "river",
+  미술관: "art",
+  영화관: "movie",
+  도서관: "libary",
+};
 
 const ButtonContentComponentWrapper = styled.div`
   width: 330px;
@@ -42,6 +58,11 @@ const StyledLayoutBounds = styled.div`
   height: 100%;
   min-width: 400px !important;
   width: 100%;
+  overflow-y: hidden;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-image: url(${(props) =>
+    "/assets/RoomBackground/" + Theme[props.bgImg] + ".jpg"});
 `;
 
 var localUser = new UserModel();
@@ -128,6 +149,7 @@ class VideoRoomComponent extends Component {
       second: 0,
       modalState: false,
       targetUserId: "",
+      placeTheme: "",
     };
 
     this.joinSession = this.joinSession.bind(this);
@@ -151,6 +173,7 @@ class VideoRoomComponent extends Component {
     this.onDecreaseCount = this.onDecreaseCount.bind(this);
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
+    this.getRoomInfo = this.getRoomInfo.bind(this);
   }
 
   componentDidMount() {
@@ -176,6 +199,8 @@ class VideoRoomComponent extends Component {
     window.addEventListener("resize", this.checkSize);
     this.joinSession();
     this.connectGameServer();
+
+    this.getRoomInfo(this.props.sessionInfo.roomId);
   }
 
   componentWillUnmount() {
@@ -907,7 +932,14 @@ class VideoRoomComponent extends Component {
     this.setState({ modalState: false });
   }
 
+  async getRoomInfo(roomId) {
+    const result = await getRoomInfo(this.props.sessionInfo.roomId);
+    console.log(result);
+    this.setState({ placeTheme: result.placeTheme });
+  }
+
   render() {
+    console.log(this.state.placeTheme);
     const mySessionId = this.state.mySessionId;
     const localUser = this.state.localUser;
     return (
@@ -997,7 +1029,7 @@ class VideoRoomComponent extends Component {
             showDialog={this.state.showExtensionDialog}
             cancelClicked={this.closeDialogExtension}
           />
-          <StyledLayoutBounds id="layout">
+          <StyledLayoutBounds id="layout" bgImg={this.state.placeTheme}>
             {localUser !== undefined &&
               localUser.getStreamManager() !== undefined && (
                 <div
