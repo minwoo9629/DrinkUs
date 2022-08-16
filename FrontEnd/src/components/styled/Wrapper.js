@@ -8,10 +8,6 @@ export const BaseFlexWrapper = styled.div`
 
 export const BaseFlexColWrapper = styled(BaseFlexWrapper)`
   flex-direction: column;
-
-  @media screen and (max-width: 600px) {
-    flex-direction: row;
-  }
 `;
 
 export const Wrapper = styled(BaseFlexWrapper)`

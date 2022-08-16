@@ -6,8 +6,4 @@ export const SocialJoinButton = styled.img`
   border-radius: 12px;
   cursor: pointer;
   background-color: ${({ color }) => color};
-  @media screen and (max-width: 500px) {
-    width: 20px;
-    height: 20px;
-  }
 `;

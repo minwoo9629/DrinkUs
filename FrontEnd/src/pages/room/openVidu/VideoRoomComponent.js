@@ -65,6 +65,23 @@ const StyledLayoutBounds = styled.div`
     "/assets/RoomBackground/" + Theme[props.bgImg] + ".jpg"});
 `;
 
+const StyeldBombAction = styled.div`
+  width: 100vw;
+  height: 100vh;
+  top: -50%;
+  left: -50%;
+  position: absolute;
+  animation: bombAnimation 0.2s infinite;
+  @keyframes bombAnimation {
+    0% {
+      background-color: #dcf2fb;
+    }
+    100% {
+      background-color: #ffead8;
+    }
+  }
+`;
+
 var localUser = new UserModel();
 let missionFailedUser = [];
 let userCnt = 0;
@@ -79,26 +96,55 @@ function withNavigation(Component) {
 
 const StyeldBombCount = styled.div`
   position: absolute;
-  font-size: 100px;
+  font-size: 40px;
   transform: translate(-140%, -25%);
   color: white;
+  width: 200px;
   position: absolute;
   top: 50%;
   left: 50%;
 `;
-const BombGame = ({ clickCount, toggleBombGame, display, onDecreaseCount }) => {
+
+const StyledBombSecond = styled.div`
+  position: absolute;
+  font-size: 100px;
+  transform: translate(-140%, -25%);
+  color: yellow;
+`;
+const BombGame = ({
+  second,
+  clickCount,
+  toggleBombGame,
+  display,
+  onDecreaseCount,
+}) => {
+  const [secondState, setSecondState] = useState(parseInt(second));
+
   useEffect(() => {
     if (clickCount === 0) {
       toggleBombGame("none");
     }
   }, [clickCount]);
+
+  useEffect(() => {
+    const countDown = setInterval(() => {
+      if (parseInt(secondState) >= 1) {
+        setSecondState((prevState) => prevState - 1);
+      }
+      if (parseInt(secondState) === 1) {
+        clearInterval(countDown);
+        toggleBombGame("none");
+      }
+    }, 1000);
+    return () => clearInterval(countDown);
+  }, [secondState]);
   return (
     <div
       style={{
         position: "absolute",
         zIndex: 1000000,
         top: "50%",
-        left: "50%",
+        left: "70%",
         transform: "translate(-50%, -50%)",
         display: display,
       }}
@@ -106,8 +152,10 @@ const BombGame = ({ clickCount, toggleBombGame, display, onDecreaseCount }) => {
       <div onClick={onDecreaseCount} style={{ position: "relative" }}>
         <img src="/assets/game/bomb.png" />
         <StyeldBombCount style={{ position: "absolute" }}>
-          {clickCount}
+          폭탄을 클릭하세요! {clickCount}
+          <StyeldBombAction />
         </StyeldBombCount>
+        <StyledBombSecond>{secondState}초남음</StyledBombSecond>
       </div>
     </div>
   );
@@ -146,7 +194,7 @@ class VideoRoomComponent extends Component {
       settingDisplay: "none",
       currentVideoDevice: undefined,
       clickCount: 10,
-      second: 0,
+      second: null,
       modalState: false,
       targetUserId: "",
       placeTheme: "",
@@ -346,7 +394,6 @@ class VideoRoomComponent extends Component {
       ({ body }) => {
         // 여기에 화면에 띄우는 로직 작성
         const obj = JSON.parse(body);
-
         this.setState(
           { second: obj.second, clickCount: obj.clickCount },
           () => {
@@ -363,6 +410,7 @@ class VideoRoomComponent extends Component {
           if (second < 0) {
             this.pubEndBombGame();
             this.toggleBombGame("none");
+            this.setState({ second: null });
             clearInterval(interval);
           }
         }, 1000);
@@ -388,11 +436,9 @@ class VideoRoomComponent extends Component {
   }
 
   subEndBombGame() {
-    console.log(this.state.subscribers.length);
     gameClient.current.subscribe(
       `/sub/bomb/result/${ROOM_ID}`,
       ({ body }) => {
-        console.log(this.state.subscribers.length);
         // 여기에 화면에 띄우는 로직 작성
         const resultObj = JSON.parse(body);
         if (!resultObj.result) {
@@ -445,11 +491,6 @@ class VideoRoomComponent extends Component {
               status: error.status,
             });
           }
-          console.log(
-            "There was an error getting the token:",
-            error.code,
-            error.message
-          );
           alert("There was an error getting the token:", error.message);
         });
     }
@@ -861,7 +902,6 @@ class VideoRoomComponent extends Component {
         gameDisplay: "none",
       });
     } else {
-      console.log(display);
       this.setState({ settingDisplay: display });
     }
     this.updateLayout();
@@ -924,7 +964,6 @@ class VideoRoomComponent extends Component {
       userNickname,
     };
     const result = await getTargetUserId(data);
-    console.log(result);
     this.setState({ targetUserId: result.data });
     this.setState({ modalState: true });
   }
@@ -935,19 +974,16 @@ class VideoRoomComponent extends Component {
 
   async getRoomInfo(roomId) {
     const result = await getRoomInfo(this.props.sessionInfo.roomId);
-    console.log(result);
     this.setState({ placeTheme: result.placeTheme });
   }
 
   render() {
-    console.log(this.state.placeTheme);
     const mySessionId = this.state.mySessionId;
     const localUser = this.state.localUser;
     return (
       <>
         {this.state.targetUserId !== "" ? (
           <>
-            {console.log("모달을 열자")}
             <Modal
               modalContent={
                 <UserProfileContent
@@ -961,13 +997,20 @@ class VideoRoomComponent extends Component {
         ) : (
           <></>
         )}
+        {this.state.second !== null ? (
+          <>
+            <BombGame
+              onDecreaseCount={this.onDecreaseCount}
+              clickCount={this.state.clickCount}
+              second={this.state.second}
+              toggleBombGame={this.toggleBombGame}
+              display={this.state.bombGameDisplay}
+            />
+          </>
+        ) : (
+          <></>
+        )}
 
-        <BombGame
-          onDecreaseCount={this.onDecreaseCount}
-          clickCount={this.state.clickCount}
-          toggleBombGame={this.toggleBombGame}
-          display={this.state.bombGameDisplay}
-        />
         <div
           style={{ height: "100vh", width: "100vw", display: "flex" }}
           className="container"
@@ -1094,7 +1137,6 @@ class VideoRoomComponent extends Component {
           },
         })
         .then((response) => {
-          console.log("CREATE SESION", response);
           resolve(response.data.id);
         })
         .catch((response) => {
@@ -1145,7 +1187,6 @@ class VideoRoomComponent extends Component {
           }
         )
         .then((response) => {
-          console.log("TOKEN", response);
           resolve(response.data.token);
         })
         .catch((error) => reject(error));
