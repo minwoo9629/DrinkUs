@@ -103,3 +103,12 @@ export const gameResult = (title, subTitle) => {
     },
   });
 };
+
+export const SocialBirthDayAlert = (text) => {
+  MySwal.fire({
+    icon: "info",
+    text: `${text}`,
+    showConfirmButton: false,
+    timer: 2000,
+  });
+};

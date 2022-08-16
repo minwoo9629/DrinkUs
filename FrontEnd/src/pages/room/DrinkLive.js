@@ -7,7 +7,7 @@ import LiveListItem from "../../components/room/LiveListItem";
 import Banner from "../../components/room/Banner";
 import { useSelector } from "react-redux";
 import { LiveButton } from "../../components/common/buttons/LiveButton";
-import { FailAlert } from "../../utils/sweetAlert";
+import { SocialBirthDayAlert } from "../../utils/sweetAlert";
 
 // 버튼, 배너
 const LiveWrapper = styled.div`
@@ -76,7 +76,7 @@ const DrinkLive = () => {
 
   useEffect(() => {
     if (user.userBirthday === null) {
-      FailAlert("생년월일 설정해주세요!!");
+      SocialBirthDayAlert("생년월일 설정해주세요!!");
       navigate("/user/edit/profile");
     }
     onMakeAgeList();
