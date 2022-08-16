@@ -19,7 +19,7 @@ public class DailyBoardQueryRepository {
         DailyBoard dailyBoard = queryFactory
                 .selectFrom(QDailyBoard.dailyBoard)
                 .join(QDailyBoard.dailyBoard.creater, user).fetchJoin()
-                .where(QDailyBoard.dailyBoard.parentId.eq(parentId))
+                .where(QDailyBoard.dailyBoard.boardId.eq(parentId))
                 .fetchOne();
         return Optional.ofNullable(dailyBoard);
     }
