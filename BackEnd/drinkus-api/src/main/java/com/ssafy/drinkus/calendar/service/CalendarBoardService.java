@@ -47,9 +47,9 @@ public class CalendarBoardService {
         int endDay = month == 2 ? ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0 ? 29 : 28) : (month % 2 + month / 8) % 2 == 0 ? 30 : 31;
         LocalDateTime end = LocalDateTime.of(year, month, endDay, 23, 59);
 
-        Boolean[] response = new Boolean[endDay + 1];
-
         List<LocalDateTime> monthlySchedules = calendarBoardQueryRepository.findMonthlySchedule(start, end);
+
+        Boolean[] response = new Boolean[endDay + 1];
 
         for (LocalDateTime localDateTime : monthlySchedules) {
             response[localDateTime.getDayOfMonth()] = true;
@@ -64,9 +64,9 @@ public class CalendarBoardService {
         LocalDateTime end = LocalDateTime.of(year, month, day, 23, 59);
 
         List<CalendarBoard> results = calendarBoardRepository.findByCalendarDatetimeBetween(start, end, page);
-        if (results.size() == 0) {
-            throw new NotExistException("일정이 존재하지 않습니다.");
-        }
+//        if (results.size() == 0) {
+//            throw new NotExistException("일정이 존재하지 않습니다.");
+//        }
 
         List<CalendarResponse> response = new ArrayList<>();
         for (CalendarBoard calendarBoard : results) {
