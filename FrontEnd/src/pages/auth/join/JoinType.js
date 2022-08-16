@@ -51,14 +51,14 @@ const NeonWrapper = styled.div`
   width: 450px;
 `;
 
-const NeonLoginWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  border-radius: 40px;
-  height: 700px;
-  background-color: #131317;
-  width: 450px;
-`;
+// const NeonLoginWrapper = styled.div`
+//   display: flex;
+//   justify-content: center;
+//   border-radius: 40px;
+//   height: 700px;
+//   background-color: #131317;
+//   width: 450px;
+// `;
 
 const JoinForm = styled.form`
   display: flex;
@@ -97,7 +97,7 @@ const LocalButton = styled.button`
 const JoinType = () => {
   const moveSocialJoin = (provider) => {
     window.location.replace(
-      `https://i7b306.p.ssafy.io/oauth2/authorization/${provider}`,
+      `https://i7b306.p.ssafy.io/oauth2/authorization/${provider}`
     );
   };
 

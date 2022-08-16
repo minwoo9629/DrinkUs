@@ -1,267 +1,313 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
-import FetchProfile from "../../../components/room/FetchProfile";
 import { client } from "../../../utils/client";
-import moment from "moment";
-import { SuccessAlert } from "../../../utils/sweetAlert";
-import { useNavigate } from "react-router-dom";
-import { BackButton } from "../../../components/common/buttons/BackButton";
+import { FailAlert, SuccessAlert, EmptyAlert } from "../../../utils/sweetAlert";
 import ModalCloseButton from "../../../components/common/buttons/ModalCloseButton";
+import { useSelector } from "react-redux";
+import UserProfile from "../../../components/room/UserProfile";
+import { CommunityConFirmButton } from "../../../components/common/buttons/CommunityConfirmButton";
 
-// 스타일
-const CreateCalendarBlock = styled.div``;
-
-const InputBlock = styled.div`
-  display: block;
-  line-height: 1;
-  margin-top: 5px;
-  margin-bottom: 5px;
-  height: 60px;
-`;
-
-const InputLeftWrap = styled.div`
-  float: left;
-  margin-left: 2%;
-  width: 18%;
-  height: 30px;
-  line-height: 30px;
-  padding: 17px 0;
-  font-size: 18px;
+const DateText = styled.div`
+  margin-top: 40px;
+  font-weight: bold;
+  font-size: 14px;
+  margin-left: 15%;
   text-align: left;
 `;
 
-const InputRightWrap = styled.div`
-  float: left;
-  width: 80%;
-  height: 30px;
-  line-height: 30px;
-  padding: 17px 0;
+const CreateCalendarBlock = styled.div`
+  width: 85%;
+  padding: 20px 0;
 `;
 
-const CreateButton = styled.button`
+const CreateHeader = styled.div``;
+
+const CheckBoxWrapper = styled.div`
+  display: flex;
   float: right;
-  margin-right: 4%;
-  background-color: #eaf1ff;
-  color: #676775;
-  width: 120px;
-  height: 50px;
-  font-size: 20px;
+  margin: 5px 10px 15px 10px;
+  font-size: 11px;
   font-weight: bold;
-  border: 4px solid #bdcff2;
-  border-radius: 5px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.25);
 `;
 
-const InputForm = styled.input`
+const InputForm = styled.textarea`
   background-color: white;
-  width: 95%;
-  height: 30px;
+  width: 90%;
+  height: 80px;
   line-height: 30px;
   border: 1px solid #bdcff2;
-  border-radius: 10px;
+  border-radius: 5px;
+  padding: 10px 15px;
+  margin: 20px 0;
+  outline: none;
+  font-size: 14px;
+
+  &::placeholder {
+    font-size: 14px;
+    color: #b1b1b1;
+  }
+
+  &:focus {
+    box-shadow: 0px 0px 5px #5983ff;
+  }
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background: #80a8d1;
+  }
+`;
+
+const InputDateBlock = styled.div`
+  clear: both;
+  width: 100%;
+  height: 60px;
 `;
 
 const DateInputForm = styled.input`
-  margin-left: ${({ ml }) => ml};
-  margin-right: 4px;
-  background-color: white;
-  width: 10%;
+  width: 40px;
   height: 30px;
   line-height: 30px;
   border: 1px solid #bdcff2;
-  border-radius: 10px;
+  border-radius: 8px;
   text-align: center;
+
+  margin-left: 5px;
+  margin-right: 3px;
+
+  outline: none;
+  font-size: 14px;
+
+  &::placeholder {
+    font-size: 14px;
+    color: #b1b1b1;
+  }
+
+  &:focus {
+    box-shadow: 0px 0px 2px #5983ff;
+  }
 `;
 
 const SelectBox = styled.select`
-  width: 200px;
+  margin: 0 10px;
+  width: 120px;
   background-color: white;
+  border: 2px solid #bdcff2;
+  height: 33px;
+  border-radius: 3px;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+
+  outline: none;
+  font-size: 14px;
+
+  &::placeholder {
+    font-size: 14px;
+    color: #b1b1b1;
+  }
+
+  &:focus {
+    box-shadow: 0px 0px 2px #5983ff;
+  }
+`;
+
+const InputAgesBlock = styled.div`
+  height: 30px;
+  width: 97.5%;
   border: 3px solid #bdcff2;
-  height: 36px;
-  border-radius: 20px;
-  font-size: 16px;
-  margin-right: 4px;
+  border-radius: 3px;
+  border-collapse: collapse;
 `;
 
 const AgesWrapper = styled.div`
-  display: inline-block;
-  height: 28px;
-  line-height: 28px;
-  width: 80px;
-  color: black;
-  margin: 4px 12px 4px 4px;
-  background-color: #ffffff;
-  border-radius: 4px;
-  border: 3px solid #eaf1ff;
-  text-align: center;
-  overflow: hidden;
+  display: table-cell;
+  color: ${(props) => props.color};
+  height: 27px;
+  padding-top: 3px;
 
-  & input:checked + span {
-    background-color: #bdcff2;
-  }
-  & span {
-    cursor: pointer;
-    display: block;
-    padding: 2px 16px;
+  background-color: ${(props) => props.background};
+  border-left: 1px solid ${(props) => props.borderColor};
+  border-right: 1px solid ${(props) => props.borderColor};
+  text-align: center;
+
+  width: 4.4%;
+  font-size: 14px;
+  font-weight: bold;
+
+  cursor: pointer;
+
+  &:hover {
+    transition: all 0.1s linear;
+    color: ${(props) => props.hoverColor};
+    background-color: ${(props) => props.hoverBackground};
   }
 `;
 
 const CheckBoxStyled = styled.input`
   display: none;
-  cursor: pointer;
 `;
 
-const StyledAmountWrapper = styled.div`
-  width: 28px;
-  height: 28px;
-  border: 3px solid #bdcff2;
-  border-radius: 10px;
-  font-size: 16px;
-  margin: 0px 18px;
-  background-color: white;
-  color: black;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-sizing: border-box;
-`;
-
-const StyledButton = styled.button`
-  adding: 4px;
-  border: none;
-  background-color: transparent;
-  font-size: 16px;
-  color: white;
-  cursor: pointer;
+const InputWrapper = styled.div`
+  margin: 20px 0 30px 0;
 `;
 
 const PeopleLimitWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: baseline;
-  padding: 8px;
+  font-size: 10px;
+  font-weight: bold;
+  margin-bottom: 10px;
 `;
 
-const EditCalendar = ({ calendarId, close, setModalType, successHandler }) => {
-  const navigate = useNavigate();
+const StyledAmountWrapper = styled.div`
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  border: 3px solid #bdcff2;
+  border-radius: 50%;
+  font-size: 20px;
+  font-weight: bold;
+  line-height: 40px;
+  background-color: white;
+  color: #404040;
+`;
 
-  // 기본값 요청
-  const onEditBasicData = async () => {
-    const result = await client
-      .get(`calendar/${calendarId}`)
-      .then((response) => response);
-    setCalendarInfo({ ...result.data });
-    return result;
-  };
+const StyledMinusButton = styled.button`
+  display: inline-block;
+  border: none;
+  background-color: transparent;
+  font-size: 16px;
+  color: #92a9d6;
+  cursor: pointer;
+  margin-right: 5px;
+`;
 
-  useEffect(() => {
-    onEditBasicData();
-  }, []);
+const StyledPlusButton = styled.button`
+  border: none;
+  background-color: transparent;
+  font-size: 16px;
+  color: #92a9d6;
+  cursor: pointer;
+  margin-left: 5px;
+`;
 
-  const [calendarInfo, setCalendarInfo] = useState({
-    calendarContent: "",
-    peopleLimit: 2,
-    place: "",
+const AgeCheckBox = styled.input`
+  margin-right: 3px;
+`;
+
+const CreateCalendar = ({
+  calendarId,
+  content,
+  close,
+  successHandler,
+  setModalType,
+  modalType,
+}) => {
+  const date = new Date(content.time);
+  const user = useSelector((state) => state.user);
+  const userAge = Math.floor(
+    (new Date().getFullYear() - user.data.userBirthday.substring(0, 4) + 1) /
+      10,
+  );
+  userAge >= 7 ? 7 : userAge;
+
+  const [state, setState] = useState({
+    content: content.calendarContent,
+    ages: content.ages,
+    date: {
+      year: date.getFullYear(),
+      month: date.getMonth() + 1,
+      day: date.getDate(),
+    },
+    hour: date.getHours(),
+    minute: date.getMinutes(),
+    place: content.place,
+    peopleLimit: content.peopleLimit,
   });
 
   const onCalendarInfoInput = (e) => {
-    setCalendarInfo({ ...calendarInfo, [e.target.name]: e.target.value });
+    if (e.target.name == "hour" || e.target.name == "minute") {
+      let onlyNumber = e.target.value.replace(/[^0-9]/g, "");
+      onlyNumber = Math.max(
+        0,
+        Math.min(e.target.name == "hour" ? 23 : 59, onlyNumber),
+      );
+      setState({
+        ...state,
+        [e.target.name]: onlyNumber,
+      });
+      return;
+    }
+
+    setState({
+      ...state,
+      [e.target.name]: e.target.value,
+    });
   };
 
   const onCalendarInfoSubmit = (e) => {
     e.preventDefault();
     // 방 설명 유효성 체크
-    if (calendarInfo.calendarContent === []) {
-      alert(
-        `방 설명을 써 주세요. '${calendarInfo.place}에서 만날 사람~' 은 어때요?`,
-      );
-      return;
-    }
-    // x월, x일, x시, x분 => 0x월, 0x일, 0x시, 0x분
-    // 방 시간 초과 유효성 체크
-    if (
-      dateState.year +
-        dateState.month +
-        dateState.day +
-        dateState.hour +
-        dateState.minute <=
-      moment().format("YYYYMMDDHHmm")
-    ) {
-      alert("시간 형식을 맞춰주세요!");
+    if (!state.content.length) {
+      alert(`방 설명을 써 주세요. '${state.place}에서 만날 사람~' 은 어때요?`);
       return;
     }
 
-    // api 요청
+    for (let i = 0; i < state.ages.length; i++) {
+      if (state.ages[i] == "Y") {
+        break;
+      }
+      if (i == state.ages.length - 1) {
+        alert("최소 한 개 이상의 나이대를 선택해주세요!");
+        return;
+      }
+    }
     client
       .put(`calendar/${calendarId}`, {
-        calendarContent: calendarInfo.calendarContent,
+        calendarContent: state.content,
         calendarDatetime:
-          dateState.year +
-          dateState.month +
-          dateState.day +
-          dateState.hour +
-          dateState.minute,
-        peopleLimit: calendarInfo.peopleLimit,
-        place: calendarInfo.place,
-        ages: ageCheckedItems,
+          state.date.year +
+          (state.date.month < 10 ? "0" + state.date.month : state.date.month) +
+          (state.date.day < 10 ? "0" + state.date.day : state.date.day) +
+          (state.hour < 10 ? "0" + state.hour : state.hour) +
+          (state.minute < 10 ? "0" + state.minute : state.minute),
+        peopleLimit: state.peopleLimit,
+        place: state.place,
+        ages: state.ages,
       })
-      .then(function (response) {
+      .then(function () {
         SuccessAlert("수정 성공!");
-        close();
+        modalType == "show" ? setModalType("none") : setModalType("show");
         successHandler();
-        setModalType("show");
+        close();
+      })
+      .catch(function (error) {
+        console.log("error: ", error);
+        modalType == "show" ? setModalType("none") : setModalType("show");
+        FailAlert("실패!");
       });
-    // .catch(function (error) {
-    //   FailAlert(`시간 형식을 맞춰주세요!
-    //   ex) ${moment().format('YYYY')}년${moment().format('MM')}월${moment().format('DD')}일${moment().format('HH')}시${moment().format('mm')}분`)
-    // })
   };
 
-  // Age 관련 체크 로직
-  const [ageCheckedItems, setAgeCheckedItems] = useState([
-    "N",
-    "N",
-    "N",
-    "N",
-    "N",
-    "N",
-  ]);
-
-  const onCheckedAgeItemHandler = (id, isChecked) => {
-    const newageCheckedItems = [...ageCheckedItems];
-    newageCheckedItems[id] = isChecked ? "Y" : "N";
-    setAgeCheckedItems([...newageCheckedItems]);
-  };
-
-  const [CheckedAges, setIsCheckedAges] = useState(false);
-
-  const onAgeCheckbox = ({ target }) => {
-    setIsCheckedAges(!CheckedAges);
-    onCheckedAgeItemHandler(target.id, target.checked);
+  const onAgeCheckbox = (id) => {
+    console.log(state);
+    const tmpAge = state.ages;
+    tmpAge[id] = state.ages[id] == "Y" ? "N" : "Y";
+    setState({
+      ...state,
+      ages: tmpAge,
+    });
   };
 
   // 인원 플러스 마이너스 버튼
-  const onHandleIncrease = (type) => {
-    const amount = calendarInfo[type] + 1 > 8 ? 8 : calendarInfo[type] + 1;
-    setCalendarInfo({ ...calendarInfo, [type]: amount });
+  const onHandleIncrease = () => {
+    const amount = state.peopleLimit + 1 > 8 ? 8 : state.peopleLimit + 1;
+    setState({ ...state, peopleLimit: amount });
   };
 
-  const onHandleDecrease = (type) => {
-    const amount = calendarInfo[type] - 1 < 2 ? 2 : calendarInfo[type] - 1;
-    setCalendarInfo({ ...calendarInfo, [type]: amount });
-  };
-
-  // 날짜 형식
-  const [dateState, setDateState] = useState({
-    year: "",
-    month: "",
-    day: "",
-    hour: "",
-    minute: "",
-  });
-
-  const onDaterInfoInput = (e) => {
-    setDateState({ ...dateState, [e.target.name]: e.target.value });
+  const onHandleDecrease = () => {
+    const amount = state.peopleLimit - 1 < 2 ? 2 : state.peopleLimit - 1;
+    setState({ ...state, peopleLimit: amount });
   };
 
   return (
@@ -270,193 +316,130 @@ const EditCalendar = ({ calendarId, close, setModalType, successHandler }) => {
         <ModalCloseButton
           close={() => {
             close();
-            setModalType("show");
           }}
         />
-        <FetchProfile />
-        <InputBlock>
-          <InputLeftWrap>방 설명</InputLeftWrap>
-          <InputRightWrap>
-            <InputForm
-              type="text"
-              value={calendarInfo.calendarContent}
-              name="calendarContent"
-              onChange={onCalendarInfoInput}
-              required
-            ></InputForm>
-          </InputRightWrap>
-        </InputBlock>
-        <InputBlock>
-          <InputLeftWrap>일시</InputLeftWrap>
-          <InputRightWrap>
-            <DateInputForm
-              value={dateState.year}
-              name="year"
-              placeholder="ex)2022"
-              onChange={onDaterInfoInput}
-              required
-            ></DateInputForm>
-            년
-            <DateInputForm
-              ml={"20px"}
-              value={dateState.month}
-              name="month"
-              placeholder="ex)08"
-              onChange={onDaterInfoInput}
-              required
-            ></DateInputForm>
-            월
-            <DateInputForm
-              ml={"20px"}
-              value={dateState.day}
-              name="day"
-              placeholder="ex)09"
-              onChange={onDaterInfoInput}
-              required
-            ></DateInputForm>
-            일
-            <DateInputForm
-              ml={"20px"}
-              value={dateState.hour}
-              name="hour"
-              placeholder="ex)22"
-              onChange={onDaterInfoInput}
-              required
-            ></DateInputForm>
-            시
-            <DateInputForm
-              ml={"20px"}
-              value={dateState.minute}
-              name="minute"
-              placeholder="ex)30"
-              onChange={onDaterInfoInput}
-              required
-            ></DateInputForm>
-            분
-          </InputRightWrap>
-        </InputBlock>
-        <InputBlock>
-          <InputLeftWrap>장소</InputLeftWrap>
-          <InputRightWrap>
-            <SelectBox
-              type="selectbox"
-              value={calendarInfo.place}
-              name="place"
-              onChange={onCalendarInfoInput}
-              required
-            >
-              <option>술집</option>
-              <option>펍</option>
-              <option>칵테일바</option>
-              <option>야구장</option>
-              <option>축구장</option>
-              <option>페스티벌</option>
-              <option>클럽</option>
-              <option>엘리니아</option>
-              <option>편의점</option>
-              <option>한강공원</option>
-              <option>미술관</option>
-              <option>영화관</option>
-              <option>협곡</option>
-              <option>독서실</option>
-            </SelectBox>
-            에서 만나요!
-          </InputRightWrap>
-        </InputBlock>
-        <InputBlock>
-          <InputLeftWrap>연령대</InputLeftWrap>
-          <InputRightWrap>
-            <AgesWrapper>
-              <label>
-                <CheckBoxStyled
-                  type="checkbox"
-                  id="0"
-                  name="ages"
-                  value={CheckedAges.roomage}
-                  onChange={onAgeCheckbox}
-                />
-                <span>20대</span>
-              </label>
-            </AgesWrapper>
-            <AgesWrapper>
-              <label>
-                <CheckBoxStyled
-                  type="checkbox"
-                  id="1"
-                  name="ages"
-                  onChange={onAgeCheckbox}
-                />
-                <span>30대</span>
-              </label>
-            </AgesWrapper>
-            <AgesWrapper>
-              <label>
-                <CheckBoxStyled
-                  type="checkbox"
-                  id="2"
-                  name="ages"
-                  onChange={onAgeCheckbox}
-                />
-                <span>40대</span>
-              </label>
-            </AgesWrapper>
-            <AgesWrapper>
-              <label>
-                <CheckBoxStyled
-                  type="checkbox"
-                  id="3"
-                  name="ages"
-                  onChange={onAgeCheckbox}
-                />
-                <span>50대</span>
-              </label>
-            </AgesWrapper>
-            <AgesWrapper>
-              <label>
-                <CheckBoxStyled
-                  type="checkbox"
-                  id="4"
-                  name="ages"
-                  onChange={onAgeCheckbox}
-                />
-                <span>60대</span>
-              </label>
-            </AgesWrapper>
-            <AgesWrapper>
-              <label>
-                <CheckBoxStyled
-                  type="checkbox"
-                  id="5"
-                  name="ages"
-                  onChange={onAgeCheckbox}
-                />
-                <span>70대↑</span>
-              </label>
-            </AgesWrapper>
-          </InputRightWrap>
-        </InputBlock>
-        <InputBlock>
-          <InputLeftWrap>인원</InputLeftWrap>
-          <InputRightWrap>
-            <PeopleLimitWrapper>
-              <StyledButton onClick={() => onHandleDecrease("peopleLimit")}>
-                <i className="fas fa-minus"></i>
-              </StyledButton>
-              <StyledAmountWrapper>
-                {calendarInfo.peopleLimit}
-              </StyledAmountWrapper>
-              <StyledButton onClick={() => onHandleIncrease("peopleLimit")}>
-                <i className="fas fa-plus"></i>
-              </StyledButton>
-            </PeopleLimitWrapper>
-          </InputRightWrap>
-        </InputBlock>
-        <InputBlock>
-          <CreateButton onClick={onCalendarInfoSubmit}>수정하기</CreateButton>
-        </InputBlock>
+        {/* 프로필 + 생성버튼 부분 */}
+        <CreateHeader>
+          <UserProfile user={user} />
+        </CreateHeader>
+        {/* 방 설명 */}
+        <InputForm
+          type="text"
+          value={state.content}
+          name="content"
+          placeholder="일정에 대한 설명을 입력하세요."
+          onChange={onCalendarInfoInput}
+          required
+        />
+        {/* 연령대 선택 */}
+        <InputAgesBlock>
+          {state.ages.map((item, index) => {
+            return (
+              <>
+                <AgesWrapper
+                  borderColor={index % 5 == 0 ? "none" : "#bdcff2"}
+                  background={item == "Y" ? "#ebf1ff" : "#white"}
+                  hoverBackground={item == "Y" ? "none" : "#ebf1ff"}
+                  color="#3b3b3b"
+                  onClick={() => {
+                    onAgeCheckbox(index);
+                  }}
+                >
+                  <label>
+                    <CheckBoxStyled
+                      type="checkbox"
+                      id={index}
+                      name="ages"
+                      value={state.ages}
+                      onChange={() => {
+                        onAgeCheckbox(index);
+                      }}
+                    />
+                  </label>
+                  {index + 2}0대
+                </AgesWrapper>
+              </>
+            );
+          })}
+        </InputAgesBlock>
+        <CheckBoxWrapper></CheckBoxWrapper>
+        <InputDateBlock>
+          <DateText>
+            {state.date.year}년 {state.date.month}월 {state.date.day}일
+          </DateText>
+          <DateInputForm
+            value={state.hour}
+            name="hour"
+            placeholder="00"
+            onChange={onCalendarInfoInput}
+            pattern={"[0-9]+"}
+            required
+          />
+          시
+          <DateInputForm
+            value={state.minute}
+            name="minute"
+            placeholder="00"
+            onChange={onCalendarInfoInput}
+            required
+          />
+          분에
+          <SelectBox
+            type="selectbox"
+            value={state.place}
+            name="place"
+            onChange={onCalendarInfoInput}
+            required
+          >
+            <option>술집</option>
+            <option>펍</option>
+            <option>칵테일바</option>
+            <option>야구장</option>
+            <option>축구장</option>
+            <option>페스티벌</option>
+            <option>클럽</option>
+            <option>편의점</option>
+            <option>한강공원</option>
+            <option>미술관</option>
+            <option>영화관</option>
+            <option>도서관</option>
+          </SelectBox>
+          에서 만나요!
+        </InputDateBlock>
+        {/* 장소 선택 */}
+        <InputWrapper>
+          {/* 인원수 선택 */}
+          <PeopleLimitWrapper>
+            <div>인원</div>
+            <StyledMinusButton onClick={() => onHandleDecrease("peopleLimit")}>
+              <i className="fas fa-minus"></i>
+            </StyledMinusButton>
+            <StyledAmountWrapper>{state.peopleLimit}</StyledAmountWrapper>
+            <StyledPlusButton onClick={() => onHandleIncrease("peopleLimit")}>
+              <i className="fas fa-plus"></i>
+            </StyledPlusButton>
+          </PeopleLimitWrapper>
+        </InputWrapper>
+        <CommunityConFirmButton
+          event={onCalendarInfoSubmit}
+          content="수정완료"
+        />
+
+        <CommunityConFirmButton
+          background="#fff"
+          color="#bdcff2"
+          borderColor="#bdcff2"
+          hoverBackground="#c4c4c4"
+          hoverColor="#fff"
+          hoverBorderColor="#c4c4c4"
+          event={() => {
+            setModalType("show");
+          }}
+          content="취소"
+        />
       </CreateCalendarBlock>
     </>
   );
 };
 
-export default EditCalendar;
+export default CreateCalendar;
