@@ -285,6 +285,9 @@ const CreateCalendar = ({ calendarDate, close, successHandler }) => {
 
   const onCalendarInfoSubmit = (e) => {
     e.preventDefault();
+    console.log(state.date);
+    console.log(state.hour);
+    console.log(state.minute);
     // 방 설명 유효성 체크
     if (!state.content.length) {
       alert(`방 설명을 써 주세요. '${state.place}에서 만날 사람~' 은 어때요?`);
@@ -304,11 +307,17 @@ const CreateCalendar = ({ calendarDate, close, successHandler }) => {
       .post("calendar", {
         calendarContent: state.content,
         calendarDatetime:
-          state.date.year +
-          (state.date.month < 10 ? "0" + state.date.month : state.date.month) +
-          (state.date.day < 10 ? "0" + state.date.day : state.date.day) +
-          (state.hour < 10 ? "0" + state.hour : state.hour) +
-          (state.minute < 10 ? "0" + state.minute : state.minute),
+          String(state.date.year) +
+          (state.date.month < 10
+            ? "0" + String(state.date.month)
+            : String(state.date.month)) +
+          (state.date.day < 10
+            ? "0" + String(state.date.day)
+            : String(state.date.day)) +
+          (state.hour < 10 ? "0" + String(state.hour) : String(state.hour)) +
+          (state.minute < 10
+            ? "0" + String(state.minute)
+            : String(state.minute)),
         peopleLimit: state.peopleLimit,
         place: state.place,
         ages: state.ages,
@@ -442,6 +451,7 @@ const CreateCalendar = ({ calendarDate, close, successHandler }) => {
             required
           >
             <option>술집</option>
+            <option>집</option>
             <option>펍</option>
             <option>칵테일바</option>
             <option>야구장</option>
