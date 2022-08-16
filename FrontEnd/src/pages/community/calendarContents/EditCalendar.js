@@ -22,7 +22,7 @@ const CreateHeader = styled.div``;
 const CheckBoxWrapper = styled.div`
   display: flex;
   float: right;
-  margin: 3px 6px 15px 10px;
+  margin: 3px 6px 30px 10px;
   font-size: 11px;
   font-weight: bold;
 `;
@@ -216,21 +216,6 @@ const CreateCalendar = ({ calendarId, content, close, successHandler }) => {
     peopleLimit: content.peopleLimit,
   });
 
-  const [checkAllAges, setCheckAllAges] = useState(false);
-  useEffect(() => {
-    setState({
-      ...state,
-      ages: [
-        checkAllAges ? "Y" : "N",
-        checkAllAges ? "Y" : "N",
-        checkAllAges ? "Y" : "N",
-        checkAllAges ? "Y" : "N",
-        checkAllAges ? "Y" : "N",
-        checkAllAges ? "Y" : "N",
-      ],
-    });
-  }, [checkAllAges]);
-
   const onCalendarInfoInput = (e) => {
     if (e.target.name == "hour" || e.target.name == "minute") {
       let onlyNumber = e.target.value.replace(/[^0-9]/g, "");
@@ -365,17 +350,7 @@ const CreateCalendar = ({ calendarId, content, close, successHandler }) => {
             );
           })}
         </InputAgesBlock>
-        <CheckBoxWrapper>
-          <AgeCheckBox
-            type="checkbox"
-            checked={checkAllAges}
-            onChange={() => {
-              setCheckAllAges(!checkAllAges);
-            }}
-          />
-          {checkAllAges ? "전부해제" : "전부선택"}
-        </CheckBoxWrapper>
-        {/* 일자 선택 */}
+        <CheckBoxWrapper></CheckBoxWrapper>
         <InputDateBlock>
           <DateText>
             {state.date.year}년 {state.date.month}월 {state.date.day}일
