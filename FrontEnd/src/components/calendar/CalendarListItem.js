@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import Modal from "../modals/Modal";
 import CalendarDetail from "../../pages/community/calendarContents/CalendarDetail";
 import EditCalendar from "../../pages/community/calendarContents/EditCalendar";
@@ -27,8 +28,17 @@ const Content = styled.div`
   float: left;
 `;
 
-const CalendarListItem = ({ content, successHandler }) => {
+const InfoWrapper = styled.span`
+  margin-left: 10px;
+  color: #7dd47d;
+`;
+
+const CalendarListItem = ({ content, successHandler, year, month, day }) => {
   console.log(content);
+
+  // 사용자 정보 확인
+  const user = useSelector((state) => state.user);
+
   const [isOpen, setIsOpen] = useState(false);
   const [modalType, setModalType] = useState("show");
 
@@ -60,8 +70,9 @@ const CalendarListItem = ({ content, successHandler }) => {
           ) : (
             <EditCalendar
               calendarId={content.calendarId}
+              content={content}
+              calendarDate={{ y: year, m: month, d: day }}
               close={modalClose}
-              setModalType={setModalType}
               successHandler={successHandler}
             />
           )
@@ -70,22 +81,28 @@ const CalendarListItem = ({ content, successHandler }) => {
         height="500px"
       />
       <CalendarListItemWrapper onClick={modalOpen}>
-        <Content
-          width="600px"
-          textAlign="left"
-          marginLeft="50px"
-          color="#3b3b3b"
-        >
-          {content.calendarContent}
+        <Content width="230px" textAlign="left" marginLeft="50px">
+          {content.createrNickname}
         </Content>
-        <Content width="150px" color="#3b3b3b">
+
+        <Content width="500px" textAlign="left" color="#3b3b3b">
+          {content.calendarContent}
+          {content.isParticipate && content.createrId != user.data.userId ? (
+            <InfoWrapper>
+              <i class="fa fa-check"></i>
+            </InfoWrapper>
+          ) : (
+            <></>
+          )}
+        </Content>
+        <Content width="90px" color="#3b3b3b">
           {time}
         </Content>
-        <Content width="200px" color="#3b3b3b">
+        <Content width="90px" color="#3b3b3b">
           {content.place}
         </Content>
         <Content
-          width="100px"
+          width="90px"
           color={
             content.participant >= content.peopleLimit ? "#e64c4c" : "#3b3b3b"
           }

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import CalendarListItem from "../../../components/calendar/CalendarListItem";
 import Modal from "../../../components/modals/Modal";
 import CreateCalendar from "./CreateCalendar";
+import { CommunityConFirmButton } from "../../../components/common/buttons/CommunityConfirmButton";
 
 const TextDiv = styled.div`
   margin: 21px 0;
@@ -61,6 +62,7 @@ const Content = styled.div`
   font-size: 17px;
   margin-left: ${(props) => props.marginLeft || "30px"};
   text-align: ${(props) => props.textAlign || "center"};
+  padding-left: ${(props) => props.paddingLeft};
   float: left;
 `;
 
@@ -158,8 +160,10 @@ const DailyCalendar = ({ year, month, day, monthly, setNewDate }) => {
               successHandler={fetchData}
             />
           }
-          width="800px"
-          height="500px"
+          width="500px"
+          height="900px"
+          background="#fcfcfc"
+          borderColor="none"
         />
 
         <TitleWrapper>
@@ -219,23 +223,14 @@ const DailyCalendar = ({ year, month, day, monthly, setNewDate }) => {
               </>
             ) : (
               <>
-                <CalendarButton
-                  onClick={openWriteModal}
-                  background="#bdcff2"
-                  color="#fff"
-                  borderColor="#bdcff2"
-                  hoverBackground="#5d81c9"
-                  hoverColor="#fff"
-                  hoverBorderColor="#5d81c9"
-                  cursor="pointer"
-                >
-                  일정 생성
-                </CalendarButton>
+                <CommunityConFirmButton
+                  event={openWriteModal}
+                  content="일정 생성"
+                />
               </>
             )}
-
-            <CalendarButton
-              onClick={() => {
+            <CommunityConFirmButton
+              event={() => {
                 monthly();
               }}
               background="#fff"
@@ -244,10 +239,8 @@ const DailyCalendar = ({ year, month, day, monthly, setNewDate }) => {
               hoverBackground="#c4c4c4"
               hoverColor="#fff"
               hoverBorderColor="#c4c4c4"
-              cursor="pointer"
-            >
-              달력으로
-            </CalendarButton>
+              content="달력으로"
+            />
           </ButtonWrapper>
         </TitleWrapper>
         <DescriptionWrapper>
@@ -265,12 +258,15 @@ const DailyCalendar = ({ year, month, day, monthly, setNewDate }) => {
 
       <ContentWrapper>
         <ContentTitle>
-          <Content width="600px" textAlign="left" marginLeft="50px">
+          <Content width="230px" marginLeft="0">
+            작성자
+          </Content>
+          <Content width="500px" paddingLeft="50px" textAlign="left">
             내용
           </Content>
-          <Content width="150px">시간</Content>
-          <Content width="200px">장소</Content>
-          <Content width="100px">인원</Content>
+          <Content width="90px">시간</Content>
+          <Content width="90px">장소</Content>
+          <Content width="90px">인원</Content>
         </ContentTitle>
         <ContentListWrapper>
           {dailyCalendar.length == 0 ? (
@@ -279,6 +275,9 @@ const DailyCalendar = ({ year, month, day, monthly, setNewDate }) => {
             <>
               {dailyCalendar.map((content, index) => (
                 <CalendarListItem
+                  year={year}
+                  month={month}
+                  day={day}
                   content={content}
                   key={index}
                   successHandler={fetchData}

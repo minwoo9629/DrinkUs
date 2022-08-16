@@ -121,21 +121,13 @@ const LetterBlock = styled.p`
 
 const AgeBlock = styled.div`
   display: flex;
-  width: 700px;
-  align-items: center;
-  justify-content: center;
 `;
 
 const AgeLetter = styled.div`
-  display: flex;
-  background-color: white;
+  background-color: ${(props) => props.background};
   border: 2px solid #6f92bf;
   margin: 12px 0px 10px 20px;
-  border-radius: 20px;
-  height: 40px;
   align-items: center;
-  justify-content: center;
-  padding: 0px 30px 0px 30px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 `;
 
@@ -156,14 +148,16 @@ const Button = styled.button`
   float: right;
   margin-right: 2%;
   background-color: white;
+  background-color: ${(props) => props.background};
   color: #676775;
+  color: ${(props) => props.color};
   width: 100px;
   height: 40px;
   font-size: 16px;
   border: 2px solid #6f92bf;
   border-radius: 20px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.25);
-  cursor: pointer;
+  cursor: ${(props) => props.cursor};
 `;
 
 const CalendarDetail = ({
@@ -200,10 +194,14 @@ const CalendarDetail = ({
 
   const [ageState, setAgeState] = useState([]);
   // 나이대 값 ~대 로 변경
-  const rendering = () => {
+  const renderingAges = () => {
     const result = [];
     for (let i = 0; i < 6; i++) {
-      result.push(<AgeLetter key={i}>{i + 2 + "0대"}</AgeLetter>);
+      result.push(
+        <AgeLetter background={ageState[i] == "Y" ? "white" : "gray"} key={i}>
+          {i + 2 + "0대"}
+        </AgeLetter>,
+      );
     }
     return result;
   };
@@ -212,11 +210,13 @@ const CalendarDetail = ({
   const onPost = async () => {
     if (calendar.participant === calendar.peopleLimit) {
       FailAlert("방 인원이 다 찼어요!");
+      close();
     }
     const result = await client
       .post(`/calendar/join/${calendarId}`)
       .then(() => {
         SuccessAlert("참가신청이 완료되었습니다!");
+        successHandler();
         close();
       })
       .catch((e) => {
@@ -230,6 +230,7 @@ const CalendarDetail = ({
       .delete(`/calendar/join/${calendarId}`)
       .then(() => {
         SuccessAlert("취소되었습니다!");
+        successHandler();
         close();
       })
       .catch((e) => {
@@ -299,14 +300,20 @@ const CalendarDetail = ({
                 </>
               ) : calendar.isParticipate === true ? (
                 <Button
+                  cursor="pointer"
                   onClick={() => {
                     onDelete(), onHandleParticipate();
                   }}
                 >
                   취소
                 </Button>
+              ) : calendar.participant >= calendar.peopleLimit ? (
+                <Button color="white" background="gray">
+                  참여불가
+                </Button>
               ) : (
                 <Button
+                  cursor="pointer"
                   onClick={() => {
                     onPost(), onHandleParticipate();
                   }}
@@ -336,11 +343,7 @@ const CalendarDetail = ({
         </CalendarWrapper>
 
         {/* 연령대 */}
-        {rendering().length === 0 ? (
-          <AgeLetter>아무나 다 참여할 수 있어요</AgeLetter>
-        ) : (
-          <AgeBlock>{rendering()}</AgeBlock>
-        )}
+        <AgeBlock>{renderingAges()}</AgeBlock>
 
         {/* 참여인원 */}
         <ParticipantBlock>
