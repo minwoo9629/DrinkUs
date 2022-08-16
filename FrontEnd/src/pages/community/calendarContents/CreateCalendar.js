@@ -305,11 +305,12 @@ const CreateCalendar = ({ calendarDate, close, successHandler }) => {
     <>
       <CreateCalendarBlock>
         <ModalCloseButton close={close} />
+        {/* 프로필 + 생성버튼 부분 */}
         <CreateHeader>
           <FetchProfile />
           <CreateButton onClick={onCalendarInfoSubmit}>생성하기</CreateButton>
         </CreateHeader>
-
+        {/* 방 설명 */}
         <InputForm
           type="text"
           value={calendarInfo.calendarContent}
@@ -318,6 +319,7 @@ const CreateCalendar = ({ calendarDate, close, successHandler }) => {
           onChange={onCalendarInfoInput}
           required
         ></InputForm>
+        {/* 연령대 선택 */}
         <InputAgesBlock>
           <AgesWrapper>
             <label>
@@ -387,6 +389,7 @@ const CreateCalendar = ({ calendarDate, close, successHandler }) => {
             </label>
           </AgesWrapper>
         </InputAgesBlock>
+        {/* 일자 선택 */}
         <InputDateBlock>
           <DateInput>{calendarDate.y}년 {calendarDate.m}월 {calendarDate.d}일</DateInput>
           <DateInputForm
@@ -410,6 +413,7 @@ const CreateCalendar = ({ calendarDate, close, successHandler }) => {
           ></DateInputForm>
           분
         </InputDateBlock>
+        {/* 장소 선택 */}
         <InputWrapper>
           <SelectBoxBlock>
             <SelectBox
@@ -434,6 +438,7 @@ const CreateCalendar = ({ calendarDate, close, successHandler }) => {
             </SelectBox>
             에서 만나요!
           </SelectBoxBlock>
+          {/* 인원수 선택 */}
           <PeopleLimitWrapper>
             <StyledMinusButton onClick={() => onHandleDecrease("peopleLimit")}>
               <i className="fas fa-minus"></i>

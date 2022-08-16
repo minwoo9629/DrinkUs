@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
+import FetchProfile from "../../components/room/FetchProfile";
 import { client } from "../../utils/client"
 import { useNavigate } from "react-router-dom";
 import { FailAlert, SuccessAlert } from "../../utils/sweetAlert";
@@ -25,15 +26,13 @@ const ModalWrapper = styled.div`
 `;
 
 const ModalContentWrapper = styled.div`
-  width: 800px;
-  min-height: 500px;
   background-color: #EAF1FF;
   border-radius: 30px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
   opacity: 1;
-  padding: 30px;
+  padding: 20px;
   box-shadow: inset 0px 0px 4px 4px #BDCFF2;
 `;
 
@@ -51,16 +50,30 @@ const ModalCloseButton = styled.button`
 `;
 
 const ModalContent = styled.div`
-  padding: 20px;
+  margin: auto 100px;
+  color: black;
 `;
 
 // 프로필 스타일
+const ProfileWrapper = styled.div`
+display: flex;
+  justify-content: space-between;
+  align-items: center;
+`
+
 const ProfileBlock = styled.div`
   line-height: 1;
-  display: block;
+  display: flex;
+  justify-content: left;
   align-items: center;
   margin-bottom: 10px;
 `;
+
+const CalendarButtonWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items:center;
+`
 
 const ProfileImageWrapper = styled.div`
   float: left;
@@ -68,6 +81,10 @@ const ProfileImageWrapper = styled.div`
   height: 60px;
   margin: 0px 20px 0px 20px;
 `;
+
+const ProfileInfo = styled.div`
+  align-items: center;
+`
 
 const ProfileImageThumbnail = styled.img`
   width: 100%;
@@ -77,43 +94,35 @@ const ProfileImageThumbnail = styled.img`
   border: 3px solid white;
 `;
 
+
 const Nickname = styled.div`
-  display: inline-block;
-  display: block;
-  margin-bottom: 4px;
   height: 30px;
   line-height: 30px;
-  font-size: 20px;
-  color: #000;
+  font-size: 15px;
+  font-weight: bold;
+  color: #000000;
 `;
 
 const Popularity = styled.div`
-  display: inline-block;
-  display: flex;
+  text-align: center;
+  align-items: center;
   height: 30px;
+  font-size: 15px;
   line-height: 30px;
   font-weight: bold;
-  color: #000;
+  color: #484D59;
 `;
 
-// 모달 내부 스타일
-const InnerWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  width: 700px;
-`
 
 const ContentBlock = styled.div`
-  display: flex;
   background-color: white;
-  border: 2px solid #6F92BF;
-  margin: 24px 0px 10px 60px;
-  border-radius: 20px;
-  height: 80px;
-  width: 680px;
+  margin: 20px auto;
+  border-radius: 10px;
+  line-height: 30px;
+  height: 30px;
+  width: 90%;
   padding: 20px;
+  border: 1px solid #bdcff2;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 `
 
@@ -130,11 +139,10 @@ const PlaceBlock = styled.div`
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 `
 
-const TImeWrapper = styled.div`
+const CalendarWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 700px;
 `
 
 const TimeBlock = styled.div`
@@ -184,11 +192,11 @@ const ParticipantBlock = styled.div`
   align-items: center;
   background: #FFFFFF;
   border: 2px solid #6F92BF;
-  margin: 12px 0px 10px 20px;
+  margin: 20px auto;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 `
 
-const Button = styled.button `
+const Button = styled.button`
   float: right;
   margin-right: 2%;
   background-color: white;
@@ -208,12 +216,12 @@ const CalendarModal = ({ isOpen, close, calendarId }) => {
 
   // 모달 위치 조정
   const [ScrollY, setModalLocation] = useState(0);
-  
+
   const onHandleLocation = () => {
     setModalLocation(window.pageYOffset);
   }
 
-  useEffect(()=> {
+  useEffect(() => {
     const watch = () => {
       window.addEventListener("scroll", onHandleLocation);
     };
@@ -239,9 +247,9 @@ const CalendarModal = ({ isOpen, close, calendarId }) => {
   }
 
   // 모달에 들어오면 바로 api 요청 보내기
-  useEffect(()=>{
+  useEffect(() => {
     onHandleData();
-  },[])
+  }, [])
 
   // api 요청으로 받은 데이터(result)를 state에 담아주기
   const onHandleData = async () => {
@@ -259,9 +267,9 @@ const CalendarModal = ({ isOpen, close, calendarId }) => {
     for (let i = 0; i < 6; i++) {
       if (ageState[i] === 'Y') {
         result.push(
-        <AgeLetter key={i}>
-          {i+2 + '0대'}
-        </AgeLetter>
+          <AgeLetter key={i}>
+            {i + 2 + '0대'}
+          </AgeLetter>
         )
       }
     }
@@ -276,22 +284,22 @@ const CalendarModal = ({ isOpen, close, calendarId }) => {
     const result = await client
       .post(`/calendar/join/${calendarId}`)
       .then((response) => response)
-      SuccessAlert('참가신청이 완료되었습니다!')
-      onHandleData()
+    SuccessAlert('참가신청이 완료되었습니다!')
+    onHandleData()
     return result
   }
 
   const onDelete = async () => {
     await client
       .delete(`/calendar/join/${calendarId}`)
-      SuccessAlert('취소되었습니다!')
-      onHandleData()
+    SuccessAlert('취소되었습니다!')
+    onHandleData()
   }
 
   // 일정 삭제 api 요청
   const onDeleteCalendar = async () => {
     await client
-    .delete(`/calendar/${calendarId}`)
+      .delete(`/calendar/${calendarId}`)
     SuccessAlert('게시글이 삭제되었습니다!')
     navigate(-1);
   }
@@ -312,75 +320,89 @@ const CalendarModal = ({ isOpen, close, calendarId }) => {
   return (
     <ModalWrapper className={isOpen ? "active" : ""} top={ScrollY}>
       <ModalContentWrapper>
+        {/* X 닫기 버튼 */}
         <ModalHeader>
           <ModalCloseButton onClick={close}>
-          <i className="fas fa-times"></i>
+            <i className="fas fa-times"></i>
           </ModalCloseButton>
         </ModalHeader>
         <ModalContent>
-          <ProfileBlock>
-            <ProfileImageWrapper>
-              <ProfileImageThumbnail src={`/assets/profileImage/profile${calendar.createrImg}.png`} onClick={()=>navigate("/profile")}/>
-            </ProfileImageWrapper>
+          {/* 프로필 + 버튼 */}
+          <ProfileWrapper>
+            <ProfileBlock>
+              <ProfileImageWrapper>
+                <ProfileImageThumbnail src={`/assets/profileImage/profile${calendar.createrImg}.png`} onClick={() => navigate("/profile")} />
+              </ProfileImageWrapper>
+              <ProfileInfo>
+                <Nickname>{calendar.createrNickname}</Nickname>
+                <Popularity>
+                  인기도 {calendar.createrPopularity}°
+                  <img
+                    style={{ width: "30px", height: "30px", marginLeft: "20px" }}
+                    src={
+                      process.env.PUBLIC_URL +
+                      `/assets/alcoholImage/${popularlityPercent}.png`
+                    }
+                  />
+                </Popularity>
+              </ProfileInfo>
+            </ProfileBlock>
+            <CalendarButtonWrapper>
               <>
                 {
                   user.data.userId === calendar.createrId ?
-                  <>
-                  <Button onClick={() => navigate(`/calendar/${calendar.calendarId}/edit`)}>수정하기</Button>
-                  <Button onClick={onDeleteCalendar}>삭제하기</Button>
-                  </> : (calendar.isParticipate === true ?
-                  <Button onClick={ () => {onDelete(), onHandleParticipate()} }>취소</Button> : 
-                  <Button onClick={ () => {onPost(), onHandleParticipate()} }>참가</Button>)
+                    <>
+                      <Button onClick={() => navigate(`/calendar/${calendar.calendarId}/edit`)}>수정하기</Button>
+                      <Button onClick={onDeleteCalendar}>삭제하기</Button>
+                    </> : (calendar.isParticipate === true ?
+                      <Button onClick={() => { onDelete(), onHandleParticipate() }}>취소</Button> :
+                      <Button onClick={() => { onPost(), onHandleParticipate() }}>참가</Button>)
                 }
               </>
-            <Nickname>{calendar.createrNickname}</Nickname>
-            <Popularity>
-              인기도 {calendar.createrPopularity}° 
-              <img
-                style={{ width: "30px", height: "30px", marginLeft: "20px" }}
-                src={
-                  process.env.PUBLIC_URL +
-                  `/assets/alcoholImage/${popularlityPercent}.png`
-                }
-                />
-            </Popularity>
-          </ProfileBlock>
-          <InnerWrapper>
+            </CalendarButtonWrapper>
+          </ProfileWrapper>
+
+          {/* 방 설명 */}
           <ContentBlock>
             {calendar.calendarContent}
           </ContentBlock>
-          <TImeWrapper>
+
+          {/* 시간 */}
+          <CalendarWrapper>
+            <TimeBlock>
+              {day} {time}
+            </TimeBlock>
+            <LetterBlock>
+              에
+            </LetterBlock>
+          </CalendarWrapper>
+
+          {/* 장소 */}
+          <CalendarWrapper>
             <PlaceBlock>
               {calendar.place}
             </PlaceBlock>
             <LetterBlock>
-              에서
+              에서 만나요
             </LetterBlock>
-          </TImeWrapper>
-          <TImeWrapper>
-            <TimeBlock>
-              {day}
-            </TimeBlock>
-            <TimeBlock>
-              {time}
-            </TimeBlock>
-            <LetterBlock>
-              에 만나요
-            </LetterBlock>
-          </TImeWrapper>
-          { rendering().length === 0 ? 
-          <AgeLetter>
-            아무나 다 참여할 수 있어요
-          </AgeLetter> : 
-          <AgeBlock>
-            {rendering()}
-          </AgeBlock>
+          </CalendarWrapper>
+
+
+          {/* 연령대 */}
+          {rendering().length === 0 ?
+            <AgeLetter>
+              아무나 다 참여할 수 있어요
+            </AgeLetter> :
+            <AgeBlock>
+              {rendering()}
+            </AgeBlock>
           }
+
+          {/* 참여인원 */}
           <ParticipantBlock>
             {calendar.participant} / {calendar.peopleLimit}
           </ParticipantBlock>
-          </InnerWrapper>
-      
+
         </ModalContent>
       </ModalContentWrapper>
     </ModalWrapper>
