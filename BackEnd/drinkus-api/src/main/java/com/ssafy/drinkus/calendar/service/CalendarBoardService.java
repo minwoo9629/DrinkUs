@@ -153,12 +153,12 @@ public class CalendarBoardService {
         UserCalendar userCalendar = UserCalendar.createUserCalendar(user, calendarBoard);
         userCalendarRepository.save(userCalendar);
 
-        String userNickname = calendarBoard.getCreater().getUserNickname();
-        firebaseClient.send(calendarBoard.getCreater().getFcmToken(),userNickname + "님의 일정에 누군가가 참여했습니다");
+//        String userNickname = calendarBoard.getCreater().getUserNickname();
+//        firebaseClient.send(calendarBoard.getCreater().getFcmToken(),userNickname + "님의 일정에 누군가가 참여했습니다");
 
         // 일정 저장
-        Notification findNotification = Notification.createNotification(calendarBoard.getCreater().getUserId(), userNickname + "님의 일정에 누군가가 참여했습니다");
-        notificationRepository.save(findNotification);
+//        Notification findNotification = Notification.createNotification(calendarBoard.getCreater().getUserId(), userNickname + "님의 일정에 누군가가 참여했습니다");
+//        notificationRepository.save(findNotification);
     }
 
     // 일정 참가 취소
