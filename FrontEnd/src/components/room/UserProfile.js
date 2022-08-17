@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { useSelector } from "react-redux";
 import { GetPopularlityPercent } from "../../utils/GetPopularlityPercent";
 
 const ProfileBlock = styled.div`
@@ -20,7 +19,7 @@ const ProfileInfo = styled.div`
 const ProfileImageThumbnail = styled.img`
   width: 100%;
   border-radius: 100%;
-  border: 4px solid #6e9dcc;
+  border: 4px solid ${(props) => props.borderColor || "#6e9dcc"};
 `;
 
 const Nickname = styled.span`
@@ -35,13 +34,14 @@ const Popularity = styled.div`
   color: #484d59;
 `;
 
-const UserProfile = ({ user }) => {
+const UserProfile = ({ user, borderColor }) => {
   const popularlityPercent = GetPopularlityPercent(user.data.userPopularity);
 
   return (
     <ProfileBlock>
       <ProfileImageWrapper>
         <ProfileImageThumbnail
+          borderColor={borderColor}
           src={`/assets/profileImage/profile${user.data.userImg}.png`}
         />
       </ProfileImageWrapper>
