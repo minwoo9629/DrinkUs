@@ -9,7 +9,7 @@ const ModalWrapper = styled.div`
   left: 0;
   width: 100%;
   height: 100vh;
-  z-index: 100000;
+  z-index: ${(props) => props.zIndex};
   background-color: rgb(0, 0, 0, 0.6);
   &.active {
     justify-content: center;
@@ -17,6 +17,10 @@ const ModalWrapper = styled.div`
     display: flex;
   }
 `;
+
+ModalWrapper.defaultProps = {
+  zIndex: 100000,
+};
 
 const ModalContentWrapper = styled.div`
   width: ${(props) => props.width};
@@ -62,9 +66,10 @@ const Modal = ({
   background,
   borderColor,
   borderWidth,
+  zIndex,
 }) => {
   return (
-    <ModalWrapper className={isOpen ? "active" : ""}>
+    <ModalWrapper className={isOpen ? "active" : ""} zIndex={zIndex}>
       <ModalContentWrapper
         width={width}
         heigth={height}

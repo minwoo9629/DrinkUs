@@ -180,6 +180,7 @@ const DailyCalendar = ({ year, month, day, monthly, setNewDate }) => {
             />
           }
           width="600px"
+          zIndex={1}
           background="#fcfcfc"
           borderColor="none"
         />

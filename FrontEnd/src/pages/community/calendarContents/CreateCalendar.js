@@ -199,8 +199,7 @@ const AgeCheckBox = styled.input`
 const CreateCalendar = ({ calendarDate, close, successHandler }) => {
   const user = useSelector((state) => state.user);
   const userAge = Math.floor(
-    (new Date().getFullYear() - user.data.userBirthday.substring(0, 4) + 1) /
-      10,
+    (new Date().getFullYear() - user.data.userBirthday.substring(0, 4) + 1) / 10
   );
   userAge >= 7 ? 7 : userAge;
 
@@ -245,7 +244,7 @@ const CreateCalendar = ({ calendarDate, close, successHandler }) => {
       let onlyNumber = e.target.value.replace(/[^0-9]/g, "");
       onlyNumber = Math.max(
         0,
-        Math.min(e.target.name == "hour" ? 23 : 59, onlyNumber),
+        Math.min(e.target.name == "hour" ? 23 : 59, onlyNumber)
       );
       setState({
         ...state,
@@ -290,7 +289,9 @@ const CreateCalendar = ({ calendarDate, close, successHandler }) => {
     console.log(state.minute);
     // 방 설명 유효성 체크
     if (!state.content.length) {
-      alert(`방 설명을 써 주세요. '${state.place}에서 만날 사람~' 은 어때요?`);
+      FailAlert(
+        `방 설명을 써 주세요. '${state.place}에서 만날 사람~' 은 어때요?`
+      );
       return;
     }
 
