@@ -269,12 +269,17 @@ const CalendarDetail = ({
     if (user.data.userId == state.createrId) {
       return (
         <>
-          <CommunityConFirmButton
-            event={() => {
-              setModalType("edit");
-            }}
-            content="수정하기"
-          />
+          {date < new Date() ? (
+            <></>
+          ) : (
+            <CommunityConFirmButton
+              event={() => {
+                setModalType("edit");
+              }}
+              content="수정하기"
+            />
+          )}
+
           <CommunityConFirmButton
             background="white"
             color="#bdcff2"
@@ -286,34 +291,19 @@ const CalendarDetail = ({
           />
         </>
       );
-    }
-    if (date < new Date()) {
-      if (user.data.userId == state.createrId) {
-        return (
-          <CommunityConFirmButton
-            background="white"
-            color="#bdcff2"
-            event={onDeleteCalendar}
-            content="삭제하기"
-            hoverColor="white"
-            hoverBackground="#f06c6c"
-            hoverBorderColor="#f06c6c"
-          />
-        );
-      } else {
-        return (
-          <CommunityConFirmButton
-            marginRight="0"
-            color="white"
-            background="#b5b5b5"
-            content="지난 일정"
-            borderColor="#b5b5b5"
-            hoverBackground="#b5b5b5"
-            hoverBorderColor="#b5b5b5"
-            cursor=""
-          />
-        );
-      }
+    } else if (date < new Date()) {
+      return (
+        <CommunityConFirmButton
+          marginRight="0"
+          color="white"
+          background="#b5b5b5"
+          content="지난 일정"
+          borderColor="#b5b5b5"
+          hoverBackground="#b5b5b5"
+          hoverBorderColor="#b5b5b5"
+          cursor=""
+        />
+      );
     }
 
     if (state.isParticipate) {
