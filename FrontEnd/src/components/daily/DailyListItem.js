@@ -56,7 +56,9 @@ const BoardContent = styled.div`
   font-size: 15px;
   font-weight: 500;
   padding: 5px 0;
-  /* margin-left: 40px; */
+  max-width: 700px;
+  text-align: left;
+  overflow: hidden;
 `;
 
 // 수정, 삭제, 댓글달기 감싸는 div
