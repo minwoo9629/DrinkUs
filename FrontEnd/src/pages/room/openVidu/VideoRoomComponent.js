@@ -154,7 +154,6 @@ const BombGame = ({
         <img src="/assets/game/bomb.png" />
         <StyeldBombCount style={{ position: "absolute" }}>
           폭탄을 클릭하세요! {clickCount}
-          <StyeldBombAction />
         </StyeldBombCount>
         <StyledBombSecond>{secondState}초남음</StyledBombSecond>
       </div>
