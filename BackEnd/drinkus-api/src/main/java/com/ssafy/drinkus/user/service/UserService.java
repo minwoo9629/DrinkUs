@@ -154,7 +154,8 @@ public class UserService {
 
     // 회원 프로필 조회
     public UserProfileResponse findUserProfile(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
         return UserProfileResponse.from(user);
     }
 
@@ -174,6 +175,8 @@ public class UserService {
     // 회원 삭제
     @Transactional
     public void deleteUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
         userRepository.deleteById(userId);
     }
 
