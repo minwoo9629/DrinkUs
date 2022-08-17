@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import styled from "styled-components";
 import {
@@ -73,7 +74,7 @@ const EditButton = styled.button`
 
 const IntroduceWrapper = styled.div`
   background-color: white;
-  width: 40vw;
+  width: 100%;
   height: 10vh;
   display: flex;
   justify-content: center;
@@ -106,6 +107,8 @@ const Profile = ({ userId, changeTypeState }) => {
     userSoju: "",
     userBeer: "",
   });
+
+  const user = useSelector((state) => state.user);
 
   // App.js의 변수명 지정해주기
   const [popular, setPopular] = useState({
@@ -175,22 +178,28 @@ const Profile = ({ userId, changeTypeState }) => {
             <div>{state.userNickname} 님의 프로필 입니다.</div>
             <div style={{ display: "flex", alignItems: "center" }}>
               <div>인기도: {state.userPopularity}°</div>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <EditButton
-                  onClick={() => onPopularityPlus(userId)}
-                  name="plus"
-                  disabled={popular.popularityNumber === 5}
-                >
-                  <i className="fas fa-caret-up"></i>
-                </EditButton>
-                <EditButton
-                  onClick={() => onPopularityMinus(userId)}
-                  name="minus"
-                  disabled={popular.popularityNumber === 5}
-                >
-                  <i className="fas fa-caret-down"></i>
-                </EditButton>
-              </div>
+              {user.data.userNickname !== state.userNickname ? (
+                <>
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <EditButton
+                      onClick={() => onPopularityPlus(userId)}
+                      name="plus"
+                      disabled={popular.popularityNumber === 5}
+                    >
+                      <i className="fas fa-caret-up"></i>
+                    </EditButton>
+                    <EditButton
+                      onClick={() => onPopularityMinus(userId)}
+                      name="minus"
+                      disabled={popular.popularityNumber === 5}
+                    >
+                      <i className="fas fa-caret-down"></i>
+                    </EditButton>
+                  </div>
+                </>
+              ) : (
+                <></>
+              )}
             </div>
           </div>
         </ProfileWrapper>
