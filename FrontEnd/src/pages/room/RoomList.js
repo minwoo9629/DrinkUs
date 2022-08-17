@@ -35,7 +35,8 @@ const Line = styled.div`
 // 필터 안 박스 / 버튼
 const SearchBox = styled.input`
   display: flex;
-  width: 782px;
+  /* width: 782px; */
+  width: 80%;
   height: 30px;
   border-radius: 5px;
   border: 3px solid rgba(18, 21, 39, 0.86);
@@ -62,7 +63,7 @@ const OptionStyle = styled.option`
 
 const SearchButton = styled.button`
   color: #676775;
-  width: 164px;
+  width: 26%;
   height: 40px;
   border-radius: 30px;
   border: 3px solid rgba(18, 21, 39, 0.86);
@@ -233,8 +234,8 @@ const RoomList = () => {
           background="#a8a8a8"
         />
 
-        <FilterInnerWrapper width={"1200px"}>
-          <div>
+        <FilterInnerWrapper width={"1000px"}>
+          <div style={{ padding: "0px 20px" }}>
             <LiveButton onClick={openModal} backgroundcolor={"#fff"}>
               방 만들기
             </LiveButton>
@@ -248,7 +249,7 @@ const RoomList = () => {
         </FilterInnerWrapper>
       </FilterWrapper>
       <FilterWrapper color={"white"}>
-        <FilterInnerWrapper width={"1200px"}>
+        <FilterInnerWrapper width={"1000px"}>
           <Line />
           <OptionWrapper>
             <OptionInnerWrapper>
@@ -307,9 +308,9 @@ const RoomList = () => {
         </FilterInnerWrapper>
       </FilterWrapper>
       <FilterWrapper>
-        <FilterInnerWrapper width={"1200px"}>
-          <SearchInnerWrapper width={"1200px"}>
-            <div>
+        <FilterInnerWrapper width={"1000px"}>
+          <SearchInnerWrapper width={"1000px"}>
+            <div style={{ width: "100%" }}>
               <SearchBox
                 type="text"
                 value={filter.searchKeyword}
