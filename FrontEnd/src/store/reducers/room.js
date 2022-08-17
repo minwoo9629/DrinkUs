@@ -10,7 +10,6 @@ const roomReducer = (prevState = initialState, action) => {
         ...action.data,
       };
     case "CLEAR_ROOM_SESSION":
-      console.log("세션 클리어");
       return {
         sessionName: null,
         roomId: null,

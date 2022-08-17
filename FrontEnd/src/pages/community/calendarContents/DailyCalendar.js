@@ -230,11 +230,9 @@ const DailyCalendar = ({ year, month, day, monthly, setNewDate }) => {
                   hoverBorderColor="#c4c4c4"
                   onMouseLeave={() => {
                     setShowDescription(false);
-                    console.log("sd: " + showDescription);
                   }}
                   onMouseOver={() => {
                     setShowDescription(true);
-                    console.log("sd: " + showDescription);
                   }}
                 >
                   생성 불가

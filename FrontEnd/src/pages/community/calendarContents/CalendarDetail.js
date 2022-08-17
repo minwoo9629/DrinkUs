@@ -227,7 +227,6 @@ const CalendarDetail = ({
         FailAlert("일정 참가에 실패하였습니다!");
         modalType == "show" ? setModalType("none") : setModalType("show");
         close();
-        console.log(e);
       });
   };
 
@@ -244,7 +243,6 @@ const CalendarDetail = ({
         FailAlert("취소에 실패하였습니다!");
         close();
         modalType == "show" ? setModalType("none") : setModalType("show");
-        console.log(e);
       });
   };
 
@@ -265,7 +263,6 @@ const CalendarDetail = ({
   };
 
   const rendering = () => {
-    console.log(user.data.userId + " " + state.createrId);
     if (user.data.userId == state.createrId) {
       return (
         <>

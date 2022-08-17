@@ -16,7 +16,7 @@ const StyeldModalCloseButton = styled.button`
 const ModalCloseButton = ({ close }) => {
   return (
     <StyeldModalCloseButton onClick={close}>
-      <i class="fas fa-times" />
+      <i className="fas fa-times" />
     </StyeldModalCloseButton>
   );
 };
