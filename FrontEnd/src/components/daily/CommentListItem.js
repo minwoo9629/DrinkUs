@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
-import { deleteDailyComment } from "../../api/DailyAPI";
+
 import { client } from "../../utils/client";
 
 const CommentWrapper = styled.div`
@@ -101,6 +101,8 @@ const CommentListItem = ({
   userNickname,
   createrId,
   userImg,
+  onCommentEdit,
+  onCommentDelete,
 }) => {
   const [state, setState] = useState({
     boardComment: boardContent,
@@ -119,24 +121,9 @@ const CommentListItem = ({
     });
   };
 
-  // 댓글 삭제
-  const onCommentDelete = async (boardId) => {
-    deleteDailyComment(boardId);
-    window.location.replace("/daily");
-  };
-
   useEffect(() => {
     fetchUser();
   }, []);
-
-  // 댓글 수정
-  const onCommentEdit = (boardId) => {
-    client
-      .put(`/daily/${boardId}`, {
-        boardContent: state.boardComment,
-      })
-      .then((response) => response);
-  };
 
   // 댓글 수정 창 여닫기
   const onHandleCommentEdit = (e) => {
@@ -173,7 +160,8 @@ const CommentListItem = ({
   // 엔터 키 눌렀을 때 입력
   const onEnterPress = (e) => {
     if (e.key === "Enter") {
-      onCommentEdit(boardId);
+      onCommentEdit(boardId, state.boardComment);
+      onHandleCommentEdit();
     }
   };
 
@@ -237,7 +225,12 @@ const CommentListItem = ({
             <DailyModifyButton onClick={onHandleCommentEdit}>
               수정 취소
             </DailyModifyButton>
-            <DailyModifyButton onClick={() => onCommentEdit(boardId)}>
+            <DailyModifyButton
+              onClick={() => {
+                onCommentEdit(boardId, state.boardComment);
+                onHandleCommentEdit();
+              }}
+            >
               수정하기
             </DailyModifyButton>
           </div>
