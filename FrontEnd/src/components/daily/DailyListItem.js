@@ -1,8 +1,8 @@
 import styled from "styled-components";
 import {
   getDailyArticle,
-  deleteDailyArticle,
   editDailyArticle,
+  deleteDailyComment,
 } from "../../api/DailyAPI";
 import CommentListItem from "./CommentListItem";
 import { useEffect, useState } from "react";
@@ -186,6 +186,8 @@ const DailyListItem = ({
   userNickname,
   boardId,
   boardContent,
+  onArticleEdit,
+  onArticleDelete,
 }) => {
   const [commentList, setCommentList] = useState([]);
   const [state, setState] = useState({
@@ -229,16 +231,6 @@ const DailyListItem = ({
     setState({ ...state, [e.target.name]: e.target.value });
   };
 
-  // 글 수정
-  const onArticleEdit = (boardId) => {
-    client
-      .put(`/daily/${boardId}`, {
-        boardContent: state.boardArticle,
-      })
-      .then((response) => response);
-    window.location.replace("/daily");
-  };
-
   // 글 수정 창 여닫기
   const onHandleArticleEdit = (e) => {
     if (!state.showEditArticle) {
@@ -260,12 +252,6 @@ const DailyListItem = ({
         boardArticle: boardContent,
       });
     }
-  };
-
-  // 글 삭제
-  const onArticleDelete = async (boardId) => {
-    deleteDailyArticle(boardId);
-    // window.location.replace("/daily")
   };
 
   // 댓글 입력
@@ -326,7 +312,8 @@ const DailyListItem = ({
   // 엔터 키 눌렀을 때 글 수정
   const onEnterPress = (e) => {
     if (e.key === "Enter") {
-      onArticleEdit(boardId);
+      onArticleEdit(boardId, state.boardArticle);
+      onHandleArticleEdit();
     }
   };
 
@@ -335,6 +322,30 @@ const DailyListItem = ({
     if (e.key === "Enter") {
       onCommentPost(boardId);
     }
+  };
+  // 댓글 수정
+  const onCommentEdit = (boardId, boardComment) => {
+    console.log(boardId, boardComment);
+    client
+      .put(`/daily/${boardId}`, {
+        boardContent: boardComment,
+      })
+      .then((response) => response);
+    setCommentList((prevState) =>
+      prevState.map((item) =>
+        item.boardId === boardId
+          ? { ...item, boardContent: boardComment }
+          : item
+      )
+    );
+  };
+
+  // 댓글 삭제
+  const onCommentDelete = async (boardId) => {
+    deleteDailyComment(boardId);
+    setCommentList((prevState) =>
+      prevState.filter((item) => item.boardId !== boardId)
+    );
   };
 
   // 모달 열기
@@ -437,7 +448,12 @@ const DailyListItem = ({
             <DailyModifyButton onClick={onHandleArticleEdit}>
               수정 취소
             </DailyModifyButton>
-            <DailyModifyButton onClick={() => onArticleEdit(boardId)}>
+            <DailyModifyButton
+              onClick={() => {
+                onArticleEdit(boardId, state.boardArticle);
+                onHandleArticleEdit();
+              }}
+            >
               수정하기
             </DailyModifyButton>
           </div>
@@ -470,7 +486,12 @@ const DailyListItem = ({
           <>
             {commentList.map((item, idx) => (
               <React.Fragment key={idx}>
-                <CommentListItem {...item} key={item.parentId} />
+                <CommentListItem
+                  {...item}
+                  key={item.parentId}
+                  onCommentEdit={onCommentEdit}
+                  onCommentDelete={onCommentDelete}
+                />
               </React.Fragment>
             ))}
           </>
