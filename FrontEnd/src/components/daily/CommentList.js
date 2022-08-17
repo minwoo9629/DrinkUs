@@ -14,32 +14,29 @@ const CommentBoard = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
-`
+`;
 const CommentList = React.memo(({ parentId }) => {
-  const [commentList, setCommentList] = useState([])
-  const fetchComment = async (parentId) =>{
-    if(!parentId) {
-      const response = await getDailyComment(parentId)
-      setCommentList([...response.data])
+  const [commentList, setCommentList] = useState([]);
+  const fetchComment = async (parentId) => {
+    if (!parentId) {
+      const response = await getDailyComment(parentId);
+      setCommentList([...response.data]);
     }
-  }
-  useEffect(()=>{
-      fetchComment(parentId);
-  },[])
+  };
+  useEffect(() => {
+    fetchComment(parentId);
+  }, []);
+
   return (
     <div>
       {commentList.length !== 0 ? (
         <>
           {commentList.map((content) => (
-            <CommentListItem
-              {...content}
-              key={content.parentId}
-            />
+            <CommentListItem {...content} key={content.parentId} />
           ))}
         </>
       ) : (
-        <>
-        </>
+        <></>
       )}
     </div>
   );
@@ -47,6 +44,6 @@ const CommentList = React.memo(({ parentId }) => {
 
 export default CommentList;
 
-CommentList.defaultProps= {
-  commentList : [],
-}
+CommentList.defaultProps = {
+  commentList: [],
+};
