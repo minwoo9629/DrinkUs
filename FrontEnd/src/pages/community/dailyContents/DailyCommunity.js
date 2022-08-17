@@ -63,6 +63,14 @@ const DailyWrapper = styled.div`
   width: 100%;
 `;
 
+const DailyInitMessage = styled.div`
+  width: 100%;
+  display: flex;
+  color: #9797a3;
+  margin-bottom: 10px;
+  font-size: 14px;
+`;
+
 const DailyCommunity = () => {
   const [state, setState] = useState({
     // 보낼 정보
@@ -127,7 +135,9 @@ const DailyCommunity = () => {
   return (
     <>
       <BaseFlexColWrapper>
-        <>일간 게시판은 매일 오전 6시에 초기화됩니다.</>
+        <DailyInitMessage>
+          일간 게시판은 매일 오전 6시에 초기화됩니다.
+        </DailyInitMessage>
         <DailyArticleInputWrapper>
           <DailyArticleInput
             placeholder="글을 작성하세요"
