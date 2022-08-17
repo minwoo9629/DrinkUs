@@ -252,13 +252,32 @@ const CreateRoom = ({ close }) => {
     setRoomInfo({ ...roomInfo, ["peoplelimit"]: amount });
   };
 
+  const initState = () => {
+    setRoomInfo({
+      roomname: "",
+      peoplelimit: 2,
+      placetheme: "술집",
+      roompw: "",
+      categoryId: "",
+    });
+
+    setAgeCheckedItems(["N", "N", "N", "N", "N", "N"]);
+
+    setIsCheckedAges(false);
+  };
+
   return (
     <>
       <CreateRoomBlock>
         <ProfileWrapper>
           <UserProfile user={user} borderColor="white" />
         </ProfileWrapper>
-        <ModalCloseButton close={close} />
+        <ModalCloseButton
+          close={() => {
+            initState();
+            close();
+          }}
+        />
         <InputBlock>
           <InputLeftWrap>방 이름</InputLeftWrap>
           <InputRightWrap>
