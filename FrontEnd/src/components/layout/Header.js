@@ -181,14 +181,6 @@ const Header = ({ position, location }) => {
               >
                 {user.data.userNickname}님
               </HeaderMenuLink>
-              <LogOutButton
-                className={
-                  location === "lightzone" ? "" : HeaderStatus ? "" : "light"
-                }
-                onClick={modalOpen}
-              >
-                <i className="far fa-heart" />
-              </LogOutButton>
               {user.data.userRole === "ROLE_ADMIN" ? (
                 <>
                   {LOGINED_MENU_ADMIN.map((item, idx) => (
