@@ -62,6 +62,15 @@ public class DailyBoardService {
         return new PageImpl<>(response, page, countByParentIdIsNull());
     }
 
+    // 글 번호로 글 정보 조회
+    public DailyBoardResponse findById(Long boardId) {
+        DailyBoard dailyBoard = dailyBoardRepository.findById(boardId)
+                .orElseThrow(() -> new NotFoundException(NotFoundException.BOARD_DAILY_NOT_FOUND));
+
+        return DailyBoardResponse.from(dailyBoard);
+    }
+
+
     // 댓글 조회
     public List<DailyBoardResponse> findByParentIdOrderByCreatedDateDesc(Long parentId) {
         List<DailyBoard> results = dailyBoardRepository.findByParentIdOrderByCreatedDateDesc(parentId);
@@ -103,9 +112,10 @@ public class DailyBoardService {
 
     // 원글 작성
     @Transactional
-    public void createDailyBoard(User user, DailyBoardCreateRequest request) {
+    public Long createDailyBoard(User user, DailyBoardCreateRequest request) {
         DailyBoard dailyBoard = DailyBoard.createDailyBoard(user, user, request.getBoardContent());
         dailyBoardRepository.save(dailyBoard);
+        return dailyBoard.getBoardId();
     }
 
     // 댓글 작성
