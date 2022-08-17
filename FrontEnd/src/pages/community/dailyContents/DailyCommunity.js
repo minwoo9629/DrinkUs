@@ -2,7 +2,11 @@ import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
 import { BaseFlexColWrapper } from "../../../components/styled/Wrapper";
 import { CalendarButton } from "../../../components/common/buttons/CalendarButton";
-import { getDailyArticle, postDailyArticle } from "../../../api/DailyAPI";
+import {
+  getDailyArticle,
+  postDailyArticle,
+  deleteDailyArticle,
+} from "../../../api/DailyAPI";
 import { useInView } from "react-intersection-observer";
 import DailyListItem from "../../../components/daily/DailyListItem";
 import { client } from "../../../utils/client";
@@ -135,6 +139,29 @@ const DailyCommunity = () => {
     }
     getDailyArticle();
   };
+
+  // 글 수정
+  const onArticleEdit = (boardId, boardContent) => {
+    client
+      .put(`/daily/${boardId}`, {
+        boardContent,
+      })
+      .then((response) => response);
+
+    setItems((prevState) =>
+      prevState.map((item) =>
+        item.boardId === boardId ? { ...item, boardContent } : item
+      )
+    );
+  };
+  // 글 삭제
+  const onArticleDelete = async (boardId) => {
+    await deleteDailyArticle(boardId);
+    setItems((prevState) =>
+      prevState.filter((item) => item.boardId !== boardId)
+    );
+  };
+  console.log(items);
   return (
     <>
       <BaseFlexColWrapper>
@@ -160,7 +187,12 @@ const DailyCommunity = () => {
               {items.length - 1 == idx ? (
                 <>
                   <div ref={ref}>
-                    <DailyListItem {...item} key={item.boardId}>
+                    <DailyListItem
+                      {...item}
+                      key={item.boardId}
+                      onArticleEdit={onArticleEdit}
+                      onArticleDelete={onArticleDelete}
+                    >
                       {item.boardContent}
                       {item.boardId}
                       {item.createrId}
@@ -169,7 +201,12 @@ const DailyCommunity = () => {
                 </>
               ) : (
                 <>
-                  <DailyListItem {...item} key={item.boardId}>
+                  <DailyListItem
+                    {...item}
+                    key={item.boardId}
+                    onArticleEdit={onArticleEdit}
+                    onArticleDelete={onArticleDelete}
+                  >
                     {item.boardContent}
                     {item.boardId}
                     {item.createrId}
