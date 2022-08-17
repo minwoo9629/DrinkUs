@@ -162,9 +162,6 @@ const Profile = ({ userId, changeTypeState }) => {
     fetchUsers();
     fetchCategory();
   }, []);
-
-  console.log(state);
-
   return (
     <div style={{ width: "60%" }}>
       <Wrapper>
@@ -184,14 +181,14 @@ const Profile = ({ userId, changeTypeState }) => {
                   name="plus"
                   disabled={popular.popularityNumber === 5}
                 >
-                  <i class="fas fa-caret-up"></i>
+                  <i className="fas fa-caret-up"></i>
                 </EditButton>
                 <EditButton
                   onClick={() => onPopularityMinus(userId)}
                   name="minus"
                   disabled={popular.popularityNumber === 5}
                 >
-                  <i class="fas fa-caret-down"></i>
+                  <i className="fas fa-caret-down"></i>
                 </EditButton>
               </div>
             </div>
