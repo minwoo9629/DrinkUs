@@ -10,26 +10,12 @@ import {
 import { FailAlert } from "../../utils/sweetAlert";
 
 const CategoryWrapper = styled.div`
-  display: flex;
-  margin-bottom: 30px;
-`;
-
-const SubCategoryWrapper = styled.div`
-  margin: 4px 12px 4px 4px;
+  padding: 4px 16px;
+  display: -ms-flexbox;
   background-color: #ffffff;
-  border-radius: 4px;
-  border: 3px solid #eaf1ff;
-  text-align: center;
-  overflow: hidden;
-
-  & input:checked + span {
-    background-color: #eaf1ff;
-  }
-  & span {
-    cursor: pointer;
-    display: block;
-    padding: 2px 16px;
-  }
+  border-radius: 6px;
+  margin: 0px 8px 8px 0px;
+  box-shadow: 2px 2px 2px grey;
 `;
 
 const Wrapper = styled.div`
@@ -42,32 +28,46 @@ const Wrapper = styled.div`
 
 const ProfileWrapper = styled.div`
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: ${(props) => props.justify};
+  flex-direction: ${(props) => props.flexDirection};
+  align-items: ${(props) => props.alignItems};
+  width: 100%;
+  margin-bottom: 10px;
 `;
+
+ProfileWrapper.defaultProps = {
+  justify: "center",
+  flexDirection: "row",
+  alignItems: "center",
+};
 
 const ProfileImgWrapper = styled.div`
   border-radius: 40px;
-  width: 40px;
-  height: 40px;
+  width: 45px;
+  height: 45px;
   background-color: white;
+  margin-right: 10px;
 `;
 
 const ProfileImg = styled.img`
   width: 100%;
   height: 100%;
+
   object-fit: cover;
 `;
 
 const EditButton = styled.button`
-  width: 40px;
-  height: 40px;
-  border-radius: 16px;
-  border: 1px solid black;
+  width: 25px;
+  height: 25px;
+  border-radius: 6px;
+  border: 2px solid #ffffff;
   background-color: #bdcff2;
-  margin: 14px;
-  font-size: 20px;
+  font-size: 18px;
   color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 4px;
   cursor: pointer;
 `;
 
@@ -81,12 +81,9 @@ const IntroduceWrapper = styled.div`
 `;
 
 const InterestWrapper = styled.div`
-  background-color: transparent;
-  width: 40vw;
-  height: 10vh;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-start;
 `;
 
 const ReportsButton = styled.button`
@@ -95,9 +92,9 @@ const ReportsButton = styled.button`
   border-radius: 8px;
   border: 4px white;
   background-color: #bdcff2;
-  margin: 14px;
-  font-size: 20px;
+  font-size: 16px;
   color: #676775;
+  border: 2px solid #ffffff;
 `;
 
 const Profile = ({ userId, changeTypeState }) => {
@@ -166,50 +163,57 @@ const Profile = ({ userId, changeTypeState }) => {
     fetchCategory();
   }, []);
 
+  console.log(state);
+
   return (
-    <div>
+    <div style={{ width: "60%" }}>
       <Wrapper>
-        닉네임: {state.userNickname}
-        <ProfileWrapper>
+        <ProfileWrapper justify={"flex-start"}>
           <ProfileImgWrapper>
             <ProfileImg
               src={`/assets/profileImage/profile${state.userImg}.png`}
             />
           </ProfileImgWrapper>
-          인기도: {state.userPopularity}°
-          <EditButton
-            onClick={() => onPopularityPlus(userId)}
-            name="plus"
-            disabled={popular.popularityNumber === 5}
-          >
-            {" "}
-            +{" "}
-          </EditButton>
-          <EditButton
-            onClick={() => onPopularityMinus(userId)}
-            name="minus"
-            disabled={popular.popularityNumber === 5}
-          >
-            {" "}
-            -{" "}
-          </EditButton>
+          <div>
+            <div>{state.userNickname} 님의 프로필 입니다.</div>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <div>인기도: {state.userPopularity}°</div>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <EditButton
+                  onClick={() => onPopularityPlus(userId)}
+                  name="plus"
+                  disabled={popular.popularityNumber === 5}
+                >
+                  <i class="fas fa-caret-up"></i>
+                </EditButton>
+                <EditButton
+                  onClick={() => onPopularityMinus(userId)}
+                  name="minus"
+                  disabled={popular.popularityNumber === 5}
+                >
+                  <i class="fas fa-caret-down"></i>
+                </EditButton>
+              </div>
+            </div>
+          </div>
         </ProfileWrapper>
-        <ProfileWrapper>관심사</ProfileWrapper>
+        <ProfileWrapper justify={"flex-start"}>관심사</ProfileWrapper>
         <InterestWrapper>
           {category.map((item) => (
             <CategoryWrapper key={item.subCategoryId}>
-              <SubCategoryWrapper>
-                <label>{item.subCategoryName}</label>
-              </SubCategoryWrapper>
+              {item.subCategoryName}
             </CategoryWrapper>
           ))}
         </InterestWrapper>
-        <ProfileWrapper>자기 소개</ProfileWrapper>
+        <ProfileWrapper justify={"flex-start"}>자기 소개</ProfileWrapper>
         <IntroduceWrapper>{state.userIntroduce}</IntroduceWrapper>
-        <ProfileWrapper>주량</ProfileWrapper>
-        소주: {state.userSoju} 잔<hr />
-        맥주: {state.userBeer} 잔
-        <ProfileWrapper>
+        <ProfileWrapper flexDirection={"column"} alignItems={"flex-start"}>
+          <div>주량</div>
+          <div>
+            소주: {state.userSoju} 잔 맥주: {state.userBeer} 잔
+          </div>
+        </ProfileWrapper>
+        <ProfileWrapper justify={"flex-end"}>
           <ReportsButton onClick={() => changeTypeState("report")}>
             유저 신고
           </ReportsButton>
