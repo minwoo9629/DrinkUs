@@ -31,6 +31,13 @@ public class DailyBoardController {
         return ResponseEntity.ok().body(body);
     }
 
+    // 글번호로 조회
+    @GetMapping("/{board_id}")
+    public ResponseEntity<DailyBoardResponse> findById(@PathVariable("board_id") Long boardId) {
+        DailyBoardResponse body = dailyBoardService.findById(boardId);
+        return ResponseEntity.ok().body(body);
+    }
+
     // 댓글 조회
     @GetMapping("/comment/{parent_id}")
     public ResponseEntity<List<DailyBoardResponse>> findByParentIdOrderByCreatedDateDesc( @PathVariable("parent_id") Long parentId) {
