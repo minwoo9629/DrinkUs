@@ -173,7 +173,10 @@ const BombGame = ({
       }}
     >
       <>
-        <div onClick={onDecreaseCount} style={{ position: "relative" }}>
+        <div
+          onClick={secondState > 0 ? onDecreaseCount : ""}
+          style={{ position: "relative" }}
+        >
           <StyeldBombCount style={{ position: "absolute" }}>
             {clickCount <= 0 ? (
               <span style={{ fontSize: "40px", color: "#87e8ae" }}>성공!</span>
