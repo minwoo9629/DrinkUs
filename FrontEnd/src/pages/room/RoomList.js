@@ -16,6 +16,8 @@ const FilterWrapper = styled.div`
   width: 100vw;
   color: ${(props) => props.color};
   justify-content: center;
+  flex-direction: column;
+  align-items: center;
 `;
 
 const FilterInnerWrapper = styled.div`
@@ -134,7 +136,6 @@ const ListWrapper = styled.div`
   gap: 30px;
   width: 1000px;
   height: 680px;
-  margin-bottom: 200px;
   margin-top: 30px;
   border-radius: 20px;
   background-color: transparent;
@@ -142,9 +143,8 @@ const ListWrapper = styled.div`
 
 // 페이지네이션
 const PageNationWrapper = styled.div`
-  position: absolute;
-  top: 1130px;
-  margin-left: 23%;
+  width: 80%;
+  margin-bottom: 20px;
 `;
 
 const RoomList = () => {
@@ -341,15 +341,19 @@ const RoomList = () => {
               ))}
             </>
           )}
-          <PageNationWrapper>
-            <PageNation
-              onClick={onHandlePageButton}
-              number={filterState.number + 1}
-              size={filterState.size}
-              totalPages={filterState.totalPages}
-            />
-          </PageNationWrapper>
         </ListWrapper>
+        <PageNationWrapper>
+          <PageNation
+            onClick={onHandlePageButton}
+            number={filterState.number + 1}
+            size={filterState.size}
+            totalPages={filterState.totalPages}
+            bgColor={"#a2b8ff"}
+            activeNumberColor={"#FFFFFF"}
+            numberColor={"#bdcff2"}
+            directionColor={"#bdcff2"}
+          />
+        </PageNationWrapper>
       </FilterWrapper>
     </>
   );
