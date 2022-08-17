@@ -186,7 +186,7 @@ const CreateRoom = ({ close }) => {
     if (roomInfo.roomname.length === 0) {
       console.log(roomInfo.placetheme);
       alert(
-        `방 이름을 입력해 주세요. '${roomInfo.placetheme}에서 같이 마셔요~' 는 어때요?`,
+        `방 이름을 입력해 주세요. '${roomInfo.placetheme}에서 같이 마셔요~' 는 어때요?`
       );
     }
 
