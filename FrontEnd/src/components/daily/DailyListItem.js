@@ -55,7 +55,7 @@ const Nickname = styled.div`
 const BoardContent = styled.div`
   font-size: 15px;
   font-weight: 500;
-  padding: 10px 0;
+  padding: 5px 0;
   /* margin-left: 40px; */
 `;
 
@@ -170,6 +170,7 @@ const DailyCommentPostButton = styled.button`
   border: solid #bdcff2 0.1em;
   color: white;
   font-size: 16px;
+  cursor: pointer;
 `;
 
 const NoCommentItem = styled.div`
@@ -213,6 +214,10 @@ const DailyListItem = ({
       });
     });
   };
+  useEffect(() => {
+    fetchCommentData();
+  }, [commentList.length]);
+
   useEffect(() => {
     fetchUser();
   }, []);
@@ -269,48 +274,52 @@ const DailyListItem = ({
   };
 
   // 댓글 작성
-  const onCommentPost = (parent_id) => {
-    client
-      .post(`/daily/comment/${parent_id}`, {
+  const onCommentPost = async () => {
+    await client
+      .post(`/daily/comment/${boardId}`, {
         boardContent: comment.boardComment,
       })
       .then((response) => response);
-    window.location.replace("/daily");
+    setComment((prevState) => {
+      return { ...prevState, boardComment: "" };
+    });
+    fetchCommentData();
+  };
+
+  const fetchCommentData = async () => {
+    const result = await getDailyComment(boardId);
+    setCommentList([...result.data]);
   };
 
   // 댓글 목록 여닫기
   const onHandleCommentList = async (parentId) => {
     if (!comment.showComment) {
-      setComment({ ...comment, showComment: !comment.showComment });
+      setComment((prevState) => {
+        return {
+          ...prevState,
+          showComment: !comment.showComment,
+          isComment: !comment.isComment,
+          boardComment: "",
+        };
+      });
       const response = await getDailyComment(parentId);
       setCommentList([...response.data]);
     }
     if (state.showEditArticle) {
-      setState({ ...state, showEditArticle: !state.showEditArticle });
+      setState((prevState) => {
+        return { ...prevState, showEditArticle: !state.showEditArticle };
+      });
     } else {
-      setComment({ ...comment, showComment: !comment.showComment });
+      setComment((prevState) => {
+        return {
+          ...prevState,
+          showComment: !comment.showComment,
+          isComment: !comment.isComment,
+          boardComment: "",
+        };
+      });
       const response = await getDailyComment(parentId);
       setCommentList([...response.data]);
-    }
-  };
-
-  // 댓글 창 여닫기
-  const onHandleComment = (e) => {
-    if (!comment.isComment) {
-      setComment({
-        ...comment,
-        isComment: !comment.isComment,
-        boardComment: "",
-      });
-    }
-    if (state.showEditArticle) {
-      setState({ ...state, showEditArticle: !state.showEditArticle });
-    } else {
-      setComment({
-        ...comment,
-        isComment: !comment.isComment,
-        boardComment: "",
-      });
     }
   };
 
@@ -326,7 +335,6 @@ const DailyListItem = ({
     if (e.key === "Enter") {
       onCommentPost(boardId);
     }
-    window.location.replace("/daily");
   };
 
   // 모달 열기
@@ -420,15 +428,6 @@ const DailyListItem = ({
                 {comment.showComment === true ? "댓글닫기" : "댓글보기"}
               </DailyBoardCommentButton>
             </div>
-            <div
-              style={{
-                display: state.showEditArticle === false ? "block" : "none",
-              }}
-            >
-              <DailyBoardCommentButton onClick={onHandleComment}>
-                {comment.isComment === true ? "댓글취소" : "댓글달기"}
-              </DailyBoardCommentButton>
-            </div>
           </DailyContentWrapper>
           <div
             style={{
@@ -458,7 +457,7 @@ const DailyListItem = ({
               onChange={onHandleInput}
               onKeyPress={onEnterCommentPost}
             />
-            <DailyCommentPostButton onClick={() => onCommentPost(boardId)}>
+            <DailyCommentPostButton onClick={onCommentPost}>
               완료
             </DailyCommentPostButton>
           </CommentInputWrapper>
@@ -485,4 +484,4 @@ const DailyListItem = ({
   );
 };
 
-export default DailyListItem;
+export default React.memo(DailyListItem);
