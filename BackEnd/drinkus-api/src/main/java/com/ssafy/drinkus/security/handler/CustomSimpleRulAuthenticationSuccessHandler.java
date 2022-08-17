@@ -1,14 +1,10 @@
 package com.ssafy.drinkus.security.handler;
 
-import com.ssafy.drinkus.auth.domain.Auth;
-import com.ssafy.drinkus.auth.domain.AuthRepository;
-import com.ssafy.drinkus.common.LoginBlockException;
-import com.ssafy.drinkus.common.NotFoundException;
+
+import com.ssafy.drinkus.auth.service.AuthService;
 import com.ssafy.drinkus.common.type.TokenType;
 import com.ssafy.drinkus.security.service.UserPrincipal;
 import com.ssafy.drinkus.security.util.JwtUtil;
-import com.ssafy.drinkus.user.domain.User;
-import com.ssafy.drinkus.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,7 +16,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
 @Component
@@ -30,9 +25,7 @@ public class CustomSimpleRulAuthenticationSuccessHandler extends SimpleUrlAuthen
     private final String AUTHENTICATION_REDIRECT_URI = "https://i7b306.p.ssafy.io/social/redirect";
     private final JwtUtil jwtUtil;
 
-    private final UserRepository userRepository;
-    private final AuthRepository authRepository;
-
+    private final AuthService authService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -43,6 +36,8 @@ public class CustomSimpleRulAuthenticationSuccessHandler extends SimpleUrlAuthen
         SecurityContextHolder.getContext().setAuthentication(authentication);
         response.addHeader("AccessToken", accessToken);
         response.addHeader("RefreshToken", refreshToken);
+
+        authService.save(userPrincipal.getUserId(), refreshToken);
 
         String target = UriComponentsBuilder.fromUriString(AUTHENTICATION_REDIRECT_URI)
                 .queryParam("accesstoken", accessToken)

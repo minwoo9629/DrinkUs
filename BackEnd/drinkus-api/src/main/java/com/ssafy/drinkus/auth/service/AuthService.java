@@ -27,6 +27,18 @@ public class AuthService {
     private final AuthRepository authRepository;
 
     @Transactional
+    public void save(Long userId, String refreshToken){
+        authRepository.deleteByUserId(userId);
+
+        // RefreshToken 저장
+        Auth auth = Auth.builder()
+                .userId(userId)
+                .refreshToken(refreshToken)
+                .build();
+        authRepository.save(auth);
+    }
+
+    @Transactional
     public TokenResponse reissue(TokenRequest request){
         // 만료된 refresh token 에러
         if(!jwtUtil.isValidToken(request.getRefreshToken())){
