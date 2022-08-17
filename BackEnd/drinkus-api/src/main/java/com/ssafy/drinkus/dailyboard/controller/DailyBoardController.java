@@ -47,9 +47,9 @@ public class DailyBoardController {
 
     // 글 작성
     @PostMapping
-    public ResponseEntity<Void> createDailyBoard(@LoginUser User user, @RequestBody @Valid DailyBoardCreateRequest request) {
-        dailyBoardService.createDailyBoard(user, request);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Long> createDailyBoard(@LoginUser User user, @RequestBody @Valid DailyBoardCreateRequest request) {
+        Long body = dailyBoardService.createDailyBoard(user, request);
+        return ResponseEntity.ok().body(body);
     }
 
     // 댓글 작성

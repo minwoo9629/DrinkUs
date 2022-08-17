@@ -103,9 +103,10 @@ public class DailyBoardService {
 
     // 원글 작성
     @Transactional
-    public void createDailyBoard(User user, DailyBoardCreateRequest request) {
+    public Long createDailyBoard(User user, DailyBoardCreateRequest request) {
         DailyBoard dailyBoard = DailyBoard.createDailyBoard(user, user, request.getBoardContent());
         dailyBoardRepository.save(dailyBoard);
+        return dailyBoard.getBoardId();
     }
 
     // 댓글 작성
