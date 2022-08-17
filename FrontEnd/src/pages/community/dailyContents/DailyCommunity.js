@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
 import { BaseFlexColWrapper } from "../../../components/styled/Wrapper";
-import { useNavigate } from "react-router-dom";
 import { CalendarButton } from "../../../components/common/buttons/CalendarButton";
 import { getDailyArticle, postDailyArticle } from "../../../api/DailyAPI";
 import { useInView } from "react-intersection-observer";
@@ -50,6 +49,7 @@ const DailyArticlePostButton = styled.button`
   border: solid #bdcff2 0.1em;
   color: white;
   font-size: 16px;
+  cursor: pointer;
 `;
 
 const TopMenuWrap = styled.div`
@@ -84,7 +84,6 @@ const DailyCommunity = () => {
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(false);
   const [ref, inView] = useInView();
-  const navigate = useNavigate();
 
   // 전체 글 fetch
   const getItems = useCallback(async () => {
@@ -118,11 +117,15 @@ const DailyCommunity = () => {
     const data = {
       boardContent: state.boardArticle,
     };
+
+    // response로 새로운 글 번호 받기
     const response = await postDailyArticle(data);
     if (response.status === 200) {
       setState({ ...state, boardArticle: "" });
     }
-    window.location.replace("/daily");
+
+    const newDailyArticle = await client.get(`/daily/${response.data}`);
+    setItems((prevState) => [newDailyArticle.data, ...prevState]);
   };
 
   // 엔터 키 눌렀을 때 입력
