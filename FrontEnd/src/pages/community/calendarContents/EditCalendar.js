@@ -207,8 +207,7 @@ const CreateCalendar = ({
   const date = new Date(content.time);
   const user = useSelector((state) => state.user);
   const userAge = Math.floor(
-    (new Date().getFullYear() - user.data.userBirthday.substring(0, 4) + 1) /
-      10,
+    (new Date().getFullYear() - user.data.userBirthday.substring(0, 4) + 1) / 10
   );
   userAge >= 7 ? 7 : userAge;
 
@@ -231,7 +230,7 @@ const CreateCalendar = ({
       let onlyNumber = e.target.value.replace(/[^0-9]/g, "");
       onlyNumber = Math.max(
         0,
-        Math.min(e.target.name == "hour" ? 23 : 59, onlyNumber),
+        Math.min(e.target.name == "hour" ? 23 : 59, onlyNumber)
       );
       setState({
         ...state,
@@ -290,7 +289,6 @@ const CreateCalendar = ({
   };
 
   const onAgeCheckbox = (id) => {
-    console.log(state);
     const tmpAge = state.ages;
     tmpAge[id] = state.ages[id] == "Y" ? "N" : "Y";
     setState({

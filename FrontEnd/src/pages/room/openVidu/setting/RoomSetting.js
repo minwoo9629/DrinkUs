@@ -84,7 +84,6 @@ const RoomSetting = ({ settingDisplay, roomSettingTitle }) => {
   const ages = ["20", "30", "40", "50", "60", "70↑"];
   const roomInfo = useSelector((state) => state.room);
   const fetchRoomData = async (roomId) => {
-    console.log("새로고침하면 어떻게 될깡");
     const result = await getRoomInfo(roomId);
     setRoomInfoState({ ...result });
   };

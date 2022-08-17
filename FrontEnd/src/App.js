@@ -32,7 +32,6 @@ import firebase from "firebase";
 
 function App() {
   useEffect(async () => {
-    console.log("useEffect");
     const config = {
       apiKey: "AIzaSyCeFLVbfX4Lif9cRTFuHXfTnhbJo1rojo8",
       authDomain: "drinkus-1b761.firebaseapp.com",
@@ -47,17 +46,15 @@ function App() {
     await messaging
       .requestPermission()
       .then(async () => {
-        console.log("fcm 허가!");
         const fcmToken = await messaging.getToken({
           vapidKey:
             "BL81pS7Np99KSOR8APDua0Dx46ye35ZZZ6X37oLhAYe0Xp7g2hcncOPMhTw1TOg7QdcnlFhyu374brHtC4L37do",
         });
         window.sessionStorage.setItem("FCM_TOKEN", fcmToken);
-        console.log(fcmToken);
         //토큰을 받는 함수를 추가!
       })
       .catch(function (err) {
-        console.log("fcm에러 : ", err);
+        // console.log("fcm에러 : ", err);
       });
     messaging.onTokenRefresh(() => {
       messaging
@@ -67,16 +64,14 @@ function App() {
         })
         .then(function (refreshedToken) {
           sessionStorage.setItem("FCM_TOKEN", refreshedToken); //토큰이 재 생성될 경우 다시 저장
-          console.log("Token refreshed.");
         })
         .catch(function (err) {
-          console.log("Unable to retrieve refreshed token ", err);
+          // console.log("Unable to retrieve refreshed token ", err);
         });
     });
 
     messaging.onMessage((payload) => {
       const title = payload.data.content;
-      console.log("댓글확인 " + title);
       alert(title);
     });
   }, []);

@@ -85,8 +85,6 @@ const Reports = ({ modalClose }) => {
       reportReason: state.reportReason,
     };
     const response = await reportsSubmit(data);
-    console.log(response);
-    console.log(data);
     if (response.status === 200) {
       SuccessAlert("신고가 접수됐습니다");
       modalClose();

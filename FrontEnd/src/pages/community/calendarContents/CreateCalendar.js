@@ -284,9 +284,6 @@ const CreateCalendar = ({ calendarDate, close, successHandler }) => {
 
   const onCalendarInfoSubmit = (e) => {
     e.preventDefault();
-    console.log(state.date);
-    console.log(state.hour);
-    console.log(state.minute);
     // 방 설명 유효성 체크
     if (!state.content.length) {
       FailAlert(
@@ -339,7 +336,6 @@ const CreateCalendar = ({ calendarDate, close, successHandler }) => {
   };
 
   const onAgeCheckbox = (id) => {
-    console.log(state);
     const tmpAge = state.ages;
     tmpAge[id] = state.ages[id] == "Y" ? "N" : "Y";
     setState({
