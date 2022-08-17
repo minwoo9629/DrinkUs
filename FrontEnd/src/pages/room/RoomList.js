@@ -228,7 +228,9 @@ const RoomList = () => {
         <Modal
           isOpen={modalState}
           modalContent={<CreateRoom close={closeModal} />}
-          width="1000px"
+          width="800px"
+          borderWidth="0"
+          background="#a8a8a8"
         />
 
         <FilterInnerWrapper width={"1200px"}>
