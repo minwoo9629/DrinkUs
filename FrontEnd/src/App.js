@@ -32,46 +32,54 @@ import firebase from "firebase";
 
 function App() {
   useEffect(async () => {
-    console.log("useEffect")
+    console.log("useEffect");
     const config = {
       apiKey: "AIzaSyCeFLVbfX4Lif9cRTFuHXfTnhbJo1rojo8",
       authDomain: "drinkus-1b761.firebaseapp.com",
       projectId: "drinkus-1b761",
       storageBucket: "drinkus-1b761.appspot.com",
       messagingSenderId: "643076771453",
-      appId: "1:643076771453:web:21d4711a8a13ded10cab14"
+      appId: "1:643076771453:web:21d4711a8a13ded10cab14",
     };
     firebase.initializeApp(config);
     const messaging = firebase.messaging();
-  
-    await messaging.requestPermission()
+
+    await messaging
+      .requestPermission()
       .then(async () => {
-        console.log('fcm 허가!');
-        const fcmToken = await messaging.getToken({ vapidKey: 'BL81pS7Np99KSOR8APDua0Dx46ye35ZZZ6X37oLhAYe0Xp7g2hcncOPMhTw1TOg7QdcnlFhyu374brHtC4L37do' });
-        window.sessionStorage.setItem('FCM_TOKEN', fcmToken)
+        console.log("fcm 허가!");
+        const fcmToken = await messaging.getToken({
+          vapidKey:
+            "BL81pS7Np99KSOR8APDua0Dx46ye35ZZZ6X37oLhAYe0Xp7g2hcncOPMhTw1TOg7QdcnlFhyu374brHtC4L37do",
+        });
+        window.sessionStorage.setItem("FCM_TOKEN", fcmToken);
         console.log(fcmToken);
         //토큰을 받는 함수를 추가!
       })
       .catch(function (err) {
-        console.log('fcm에러 : ', err);
-      })
+        console.log("fcm에러 : ", err);
+      });
     messaging.onTokenRefresh(() => {
-      messaging.getToken({ vapidKey: 'BL81pS7Np99KSOR8APDua0Dx46ye35ZZZ6X37oLhAYe0Xp7g2hcncOPMhTw1TOg7QdcnlFhyu374brHtC4L37do' })
+      messaging
+        .getToken({
+          vapidKey:
+            "BL81pS7Np99KSOR8APDua0Dx46ye35ZZZ6X37oLhAYe0Xp7g2hcncOPMhTw1TOg7QdcnlFhyu374brHtC4L37do",
+        })
         .then(function (refreshedToken) {
-          sessionStorage.setItem('FCM_TOKEN', refreshedToken) //토큰이 재 생성될 경우 다시 저장
-          console.log('Token refreshed.');
-        }).catch(function (err) {
-          console.log('Unable to retrieve refreshed token ', err);
+          sessionStorage.setItem("FCM_TOKEN", refreshedToken); //토큰이 재 생성될 경우 다시 저장
+          console.log("Token refreshed.");
+        })
+        .catch(function (err) {
+          console.log("Unable to retrieve refreshed token ", err);
         });
     });
 
     messaging.onMessage((payload) => {
-      const title  =  payload.data.content;
-      console.log("댓글확인 "+title);
+      const title = payload.data.content;
+      console.log("댓글확인 " + title);
       alert(title);
-    })
-  }, [])
-
+    });
+  }, []);
 
   return (
     <Provider store={store}>
@@ -79,7 +87,6 @@ function App() {
         <BrowserRouter>
           <div className="App">
             <Routes>
-              <Route path="/community" element={<Community />} />
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/join/agree" element={<JoinAgree />} />
@@ -131,6 +138,10 @@ function App() {
               <Route
                 path="/room/detail"
                 element={<PrivateRoute component={<VideoRoomComponent />} />}
+              />
+              <Route
+                path="/community"
+                element={<PrivateRoute component={<Community />} />}
               />
               <Route path="/*" element={<NotFound />} />
             </Routes>
