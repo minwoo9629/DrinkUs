@@ -325,7 +325,6 @@ const DailyListItem = ({
   };
   // 댓글 수정
   const onCommentEdit = (boardId, boardComment) => {
-    console.log(boardId, boardComment);
     client
       .put(`/daily/${boardId}`, {
         boardContent: boardComment,

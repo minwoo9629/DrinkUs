@@ -161,7 +161,6 @@ const DailyCommunity = () => {
       prevState.filter((item) => item.boardId !== boardId)
     );
   };
-  console.log(items);
   return (
     <>
       <BaseFlexColWrapper>
