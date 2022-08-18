@@ -13,11 +13,8 @@ import { client } from "../../../utils/client";
 
 // 전체 배경
 const Wrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  width: 100vw;
-  min-height: 100vh;
-  background-color: white;
+width: 1200px;
+margin: auto;
 `;
 
 // 글쓰기 인풋 div
@@ -26,25 +23,26 @@ const DailyArticleInputWrapper = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  height: 11vh;
+  height: 100px;
   background-color: white;
 `;
 
 // 글쓰기 인풋
-const DailyArticleInput = styled.input`
+const DailyArticleInput = styled.textarea`
   justify-content: space-between;
-  width: 64vw;
+  width: 90%;
   height: 100%;
   border-radius: 1px;
   border: solid #6f92bf 0.1em;
   background-color: #eaf1ff;
   position: relative;
   padding-left: 20px;
+  padding-top: 20px;
+  resize: none;
 `;
 
 // 글쓰기 버튼
 const DailyArticlePostButton = styled.button`
-  padding: 12px 24px;
   border-radius: 1px;
   height: 102%;
   width: 10%;
@@ -163,6 +161,7 @@ const DailyCommunity = () => {
   };
   return (
     <>
+    <Wrapper>
       <BaseFlexColWrapper>
         <DailyInitMessage>
           일간 게시판은 매일 오전 6시에 초기화됩니다.
@@ -170,7 +169,6 @@ const DailyCommunity = () => {
         <DailyArticleInputWrapper>
           <DailyArticleInput
             placeholder="글을 작성하세요"
-            type="string"
             value={state.boardArticle}
             name="boardArticle"
             onChange={onHandleInput}
@@ -216,6 +214,7 @@ const DailyCommunity = () => {
           ))}
         </DailyWrapper>
       </BaseFlexColWrapper>
+      </Wrapper>
     </>
   );
 };
