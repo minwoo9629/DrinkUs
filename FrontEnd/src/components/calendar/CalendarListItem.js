@@ -36,7 +36,6 @@ const InfoWrapper = styled.span`
 `;
 
 const CalendarListItem = ({ content, successHandler }) => {
-  console.log("content", content);
   // 사용자 정보 확인
   const user = useSelector((state) => state.user);
 
@@ -59,6 +58,7 @@ const CalendarListItem = ({ content, successHandler }) => {
   return (
     <>
       <Modal
+        bgColor={"transparent"}
         isOpen={isOpen}
         modalContent={
           modalType == "show" || modalType == "none" ? (
