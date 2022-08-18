@@ -11,12 +11,13 @@ const Community = () => {
   // 스타일 지정
 
   const InnerWrapper = styled.div`
-    width: 1200px;
+    width: 100vw;
     margin: 55px 10px 10px 0;
   `;
 
   const CalendarButtonWrapper = styled.div`
-    margin-left: 20px;
+  width: 1200px;
+  margin: auto;
   `;
 
   const CalendarButton = styled.button`
