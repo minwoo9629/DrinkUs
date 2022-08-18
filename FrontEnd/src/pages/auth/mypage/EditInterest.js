@@ -1,7 +1,12 @@
-import { useState } from "react";
+import { useCallback, useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
+import {
+  addUserInterest,
+  getUserInterests,
+  removeUserInterest,
+} from "../../../api/MyPageAPI";
 import ProfileTitle from "../../../components/auth/ProfileTitle";
-import { client } from "../../../utils/client";
 
 const CheckBoxStyled = styled.input`
   display: none;
@@ -11,6 +16,7 @@ const CheckBoxStyled = styled.input`
 const CategoryWrapper = styled.div`
   display: flex;
   margin-bottom: 30px;
+  flex-wrap: wrap;
 `;
 
 const MainCategoryWrapper = styled.div`
@@ -34,21 +40,62 @@ const SubCategoryWrapper = styled.div`
     background-color: #eaf1ff;
   }
   & span {
+    height: 100%;
     cursor: pointer;
     display: block;
     padding: 2px 16px;
   }
+  &:hover {
+    background-color: #eaf1ff;
+  }
 `;
 const EditInterest = () => {
-  const [categoryState, setCategoryState] = useState({});
+  const [categoryState, setCategoryState] = useState([]);
+  const [profileImageState, setProfileImageState] = useState("1");
+  const [userNameState, setUserNameState] = useState("");
+  const user = useSelector((state) => state.user);
+  const fetchInterestsData = useCallback(async () => {
+    const result = await getUserInterests();
+    setCategoryState((prevState) => [...result.data]);
+  }, []);
 
-  const onHandleCategoryCheck = (e) => {
-    console.log(e);
+  useEffect(() => {
+    setProfileImageState(!user.data.userImg ? "1" : user.data.userImg);
+    setUserNameState(user.data.userName);
+  }, []);
+
+  useEffect(() => {
+    fetchInterestsData();
+  }, [fetchInterestsData]);
+  const onHandleCategoryCheck = (checked, subCategoryId, categoryId) => {
+    checked
+      ? removeUserInterest(subCategoryId)
+      : addUserInterest(subCategoryId);
+
+    const prevTargetSubCategory = categoryState.filter(
+      (item) => item.categoryResponse.categoryId === categoryId
+    )[0].subCategoryResponse;
+
+    const updatedTargetSubCategory = prevTargetSubCategory.map((item) =>
+      item.subCategoryId === subCategoryId
+        ? { ...item, checked: !checked }
+        : item
+    );
+    const updatedCategoryState = categoryState.map((item) =>
+      item.categoryResponse.categoryId === categoryId
+        ? { ...item, subCategoryResponse: updatedTargetSubCategory }
+        : item
+    );
+    setCategoryState([...updatedCategoryState]);
   };
-
   return (
-    <div style={{ padding: "30px" }}>
-      <ProfileTitle isEdit={false} />
+    <div style={{ padding: "30px 0px 30px 20px" }}>
+      <ProfileTitle
+        isEdit={false}
+        imageId={profileImageState}
+        userName={userNameState}
+        marginLeft={"40px"}
+      />
       <div
         style={{
           marginTop: "40px",
@@ -71,64 +118,36 @@ const EditInterest = () => {
           }}
         >
           <div>
-            <div>
-              <MainCategoryWrapper>스포츠</MainCategoryWrapper>
-            </div>
-            <CategoryWrapper>
-              <SubCategoryWrapper>
-                <label>
-                  <CheckBoxStyled
-                    type="checkbox"
-                    value="1"
-                    onChange={onHandleCategoryCheck}
-                  />
-                  <span>축구</span>
-                </label>
-              </SubCategoryWrapper>
-              <SubCategoryWrapper>
-                <label>
-                  <CheckBoxStyled
-                    type="checkbox"
-                    value="1"
-                    onChange={() => {
-                      console.log("체크");
-                    }}
-                  />
-                  <span>배드민턴</span>
-                </label>
-              </SubCategoryWrapper>
-            </CategoryWrapper>
-          </div>
-          <div>
-            <div>
-              <MainCategoryWrapper>음악</MainCategoryWrapper>
-            </div>
-            <CategoryWrapper>
-              <SubCategoryWrapper>
-                <label>
-                  <CheckBoxStyled
-                    type="checkbox"
-                    value="1"
-                    onChange={() => {
-                      console.log("체크");
-                    }}
-                  />
-                  <span>아이유</span>
-                </label>
-              </SubCategoryWrapper>
-              <SubCategoryWrapper>
-                <label>
-                  <CheckBoxStyled
-                    type="checkbox"
-                    value="1"
-                    onChange={() => {
-                      console.log("체크");
-                    }}
-                  />
-                  <span>숨참고 deep div</span>
-                </label>
-              </SubCategoryWrapper>
-            </CategoryWrapper>
+            {categoryState.map((item) => (
+              <div key={item.categoryResponse.categoryId}>
+                <div>
+                  <MainCategoryWrapper>
+                    {item.categoryResponse.categoryName}
+                  </MainCategoryWrapper>
+                </div>
+                <CategoryWrapper>
+                  {item.subCategoryResponse.map((subItem) => (
+                    <SubCategoryWrapper key={subItem.subCategoryId}>
+                      <label>
+                        <CheckBoxStyled
+                          checked={subItem.checked}
+                          type="checkbox"
+                          value={subItem.subCategoryId}
+                          onChange={() =>
+                            onHandleCategoryCheck(
+                              subItem.checked,
+                              subItem.subCategoryId,
+                              item.categoryResponse.categoryId
+                            )
+                          }
+                        />
+                        <span>{subItem.subCategoryName}</span>
+                      </label>
+                    </SubCategoryWrapper>
+                  ))}
+                </CategoryWrapper>
+              </div>
+            ))}
           </div>
         </div>
       </div>

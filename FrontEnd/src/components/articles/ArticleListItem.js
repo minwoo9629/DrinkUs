@@ -27,7 +27,16 @@ const ArticleListItem = ({
       }}
     >
       <div style={{ width: "20%" }}>{type}</div>
-      <div style={{ width: "75%" }}>{articleContent}</div>
+      <div
+        style={{
+          width: "75%",
+          textOverflow: "ellipsis",
+          whiteSpace: "nowrap",
+          overflow: "hidden",
+        }}
+      >
+        {articleContent}
+      </div>
       <div style={{ width: "15%" }}>
         <DeleteButton onClick={() => onHandleRemoveArticle(articleId)}>
           삭제

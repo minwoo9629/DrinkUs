@@ -1,8 +1,36 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import Header from "../../../components/layout/Header";
 import { client } from "../../../utils/client";
+import {
+  sendConfirmEmail,
+  confirmEmail,
+  doubleCheckEmail,
+} from "../../../api/JoinAPI";
+import { FailAlert, EmptyAlert, SuccessAlert } from "../../../utils/sweetAlert";
+import { BackButton } from "../../../components/common/buttons/BackButton";
+import { useRef } from "react";
+
+const neon_text_color = "#2d00b4";
+const NeonSignAnimation = keyframes`
+0%,
+  19%,
+  21%,
+  23%,
+  25%,
+  54%,
+  56%,
+  100% {
+    text-shadow: -0.2rem -0.2rem 1rem #fff, 0.2rem 0.2rem 1rem #fff,
+      0 0 2rem ${neon_text_color}, 0 0 4rem ${neon_text_color},
+      0 0 6rem ${neon_text_color}, 0 0 8rem ${neon_text_color},
+      0 0 10rem ${neon_text_color};
+  }
+
+  20%,
+  24%,
+`;
 
 const Wrapper = styled.div`
   background-color: black;
@@ -16,9 +44,15 @@ const Wrapper = styled.div`
 const NeonLoginWrapper = styled.div`
   display: flex;
   justify-content: center;
-  border-radius: 40px;
-  height: 700px;
-  background-color: #131317;
+  border-radius: 13px;
+  padding: 10px;
+  height: 800px;
+  background: rgb(56, 56, 56);
+  background: linear-gradient(
+    146deg,
+    rgba(56, 56, 56, 0.9248074229691877) 0%,
+    rgba(20, 20, 20, 1) 61%
+  );
   width: 450px;
 `;
 
@@ -36,70 +70,65 @@ const JoinForm = styled.div`
   flex-direction: column;
 `;
 
-const GuideLine = styled.div`
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  color: white;
-`;
-
 const InputWrapper = styled.div`
-  justify-content: space-between;
   width: 320px;
-  height: 64px;
-  border-radius: 36px;
-  border: 1px solid black;
-  background-color: #676775;
-  margin: 14px;
+  height: 45px;
+  border-radius: 2px;
+  border: none;
+  background: rgb(230, 230, 230);
+  margin: 5px 10px;
   position: relative;
+  padding-left: 15px;
+
+  input:focus {
+    box-shadow: 0px 0px 6px #5983ff;
+  }
 `;
 
-const EmailInput = styled.input`
-  position: relative;
-  height: 30px;
-  width: 200px;
-  top: 7px;
-  font-size: 18px;
+const Input = styled.input`
+  width: 320px;
+  height: 45px;
+  font-size: 14px;
   background-color: transparent;
+  border-radius: 2px;
   outline: none;
   border: none;
-  margin: 0px;
-  color: white;
+  color: #181818;
+  margin-left: -15px;
+  padding-left: 15px;
+
+  &::placeholder {
+    font-size: 14px;
+    color: #b1b1b1;
+  }
 `;
 
-const JoinInput = styled.input`
-  position: relative;
-  height: 30px;
-  width: 280px;
-  top: 7px;
-  font-size: 18px;
-  background-color: transparent;
-  outline: none;
-  border: none;
-  margin: 0px;
+const InputTag = styled.div`
+  display: block;
   color: white;
+  margin-left: 15px;
+  margin-top: 10px;
+  font-size: 13px;
+  font-weight: bold;
 `;
 
-const DoubleCheckButton = styled.button`
-  width: 40px;
-  height: 40px;
+const InputDiv = styled.div`
+  text-align: left;
+`;
+
+const ChekWrapper = styled.div`
+  justify-content: right;
+  align-items: center;
+`;
+
+const CheckButton = styled.button`
+  width: 120px;
+  height: 35px;
   border-radius: 10px;
   border: 1px solid black;
   background-color: #fff;
-  margin: 14px;
-  font-size: 4px;
   color: #535353;
-`;
-
-const SendEmailButton = styled.button`
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  border: 1px solid black;
-  background-color: #fff;
-  margin: 14px;
-  font-size: 4px;
-  color: #535353;
+  margin: 0 10px;
 `;
 
 const ConfirmButton = styled.button`
@@ -108,23 +137,68 @@ const ConfirmButton = styled.button`
   border-radius: 10px;
   border: 1px solid black;
   background-color: #fff;
-  margin: 14px;
-  font-size: 4px;
   color: #535353;
 `;
 
-const Button = styled.button`
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  border: 1px solid black;
-  background-color: #fff;
-  margin: 14px;
-  font-size: 4px;
-  color: #535353;
+const ButtonWrapper = styled.div`
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  width: 380px;
+  align-items: center;
+`;
+
+const LinkWrapper = styled.div`
+  display: flex;
+  color: #fff;
+  background-color: #131317;
+  font-size: 23px;
+  margin: 0 40px;
+  text-transform: uppercase;
+  animation: ${NeonSignAnimation} 1.5s infinite alternate;
+  box-shadow: none;
+  font-size: 25px;
+  font-weight: bold;
+`;
+
+const DisabledLink = styled.div`
+  display: flex;
+  color: #757575;
+  background-color: #131317;
+  font-size: 23px;
+  margin: 0 40px;
+  box-shadow: none;
+  font-size: 25px;
+  font-weight: bold;
+`;
+
+const Guide = styled.div`
+  font-size: 12px;
+  color: #00b0ff;
+  margin-left: 10px;
+`;
+
+const SendText = styled.a`
+  margin-left: 10px;
+  text-decoration: underline;
+  font-size: 13px;
+  color: white;
+
+  &:hover {
+    transition: all 0.1s linear;
+    color: #dbdbdb;
+    cursor: pointer;
+  }
+`;
+
+const Timer = styled.div`
+  margin-left: 10px;
+  font-size: 13px;
+  color: white;
 `;
 
 const Join = () => {
+  const [second, setSecond] = useState(300);
   const [state, setState] = useState({
     // 회원가입 인풋
     userName: "",
@@ -134,21 +208,69 @@ const Join = () => {
     userFullname: "",
     userBirthday: "",
 
-    // 유효 문구
-    nameMsg: "",
-    confirmMsg: "",
-    nameDoubleMsg: "",
-    userPwMsg: "",
-    userPwCheckMsg: "",
+    enabled: false,
 
-    // 유효 여부
-    nameValid: "",
-    confirmValid: false, // 인증번호 유효
-    userPwValid: "",
-    userPwCheckValid: "",
-    fullNameValid: false, // 이름은 필수 항목
-    bdayValid: false, // 생일은 필수 항목
+    // 안내 문구
+    email: {
+      valid: false,
+      guide: " 이메일을 입력해주세요.",
+    },
+    emailConfirm: {
+      valid: false,
+      guide: " 인증되지 않은 이메일입니다.",
+    },
+    certification: {
+      valid: false,
+      guide: " 인증 코드를 입력해주세요.",
+    },
+    password: {
+      valid: false,
+      guide: " 비밀번호는 8자 이상 20자이내여야 합니다.",
+    },
+    passwordCheck: {
+      valid: false,
+      guide: " 비밀번호가 일치하지 않습니다.",
+    },
+    userNameCheck: {
+      valid: false,
+      guide: " 이름은 필수값입니다.",
+    },
+    userBirthdayCheck: {
+      valid: false,
+      guide: " 생년월일은 필수값입니다.",
+    },
   });
+
+  useEffect(() => {
+    if (
+      state.email.valid &&
+      state.certification.valid &&
+      state.password.valid &&
+      state.passwordCheck.valid &&
+      state.userNameCheck.valid &&
+      state.userBirthdayCheck.valid
+    ) {
+      setState({
+        ...state,
+        enabled: true,
+      });
+    } else {
+      setState({
+        ...state,
+        enabled: false,
+      });
+    }
+  }, [
+    state.email.valid,
+    state.certification.valid,
+    state.password.valid,
+    state.passwordCheck.valid,
+    state.userNameCheck.valid,
+    state.userBirthdayCheck.valid,
+  ]);
+
+  const emailConfirmRef = useRef([]);
+
   const navigate = useNavigate();
 
   const onHandleInput = (e) => {
@@ -157,72 +279,16 @@ const Join = () => {
 
   const onHandleSubmit = (e) => {
     e.preventDefault();
-    // 이메일 유효성 체크
-    const idRegex =
-      /([\w-.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
-    const idCurrent = state.userName;
-    if (!idRegex.test(idCurrent)) {
-      setState({ ...state, nameMsg: "유효하지 않은 이메일 형식입니다" });
-      setState({ ...state, nameValid: false });
-      alert("유효하지 않은 이메일 형식입니다");
-    } else {
-      setState({ ...state, nameMsg: "이메일OK" });
-      setState({ ...state, nameValid: true });
-      console.log("이메일 통과O");
-    }
-
-    // 비밀번호 유효성 체크
-    const userPwRegex =
-      // /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,20}$/
-      /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,20}$/i;
-    const userPwCurrent = state.userPw;
-    if (!userPwRegex.test(userPwCurrent)) {
-      setState({
-        ...state,
-        userPwMsg:
-          "비밀번호는 영문 대,소문자와 숫자,특수기호가 적어도 1개 이상씩 포함된 8자~20자의 비밀번호여야 합니다.",
-      });
-      setState({ ...state, userPwValid: false });
-      alert(
-        "비밀번호는 영문 대,소문자와 숫자,특수기호가 적어도 1개 이상씩 포함된 8자~20자의 비밀번호여야 합니다."
-      );
-      console.log("비밀번호 통과X");
-    } else {
-      setState({ ...state, userPwMsg: "비밀번호OK" });
-      setState({ ...state, userPwValid: true });
-      console.log("비밀번호 통과O");
-    }
-
-    // 비밀번호 중복 체크
-    const userPwCheck = state.userPwCheck;
-    if (userPwCheck !== state.userPw) {
-      setState({ ...state, userPwCheckValid: false });
-      alert("비밀번호가 일치하지 않습니다");
-      console.log("비밀번호 일치X");
-    } else {
-      setState({ ...state, userPwCheckValid: true });
-    }
-
-    // 이름 유효 체크
-    if (state.userFullname.length === 0) {
-      alert("이름은 필수 입력 항목입니다");
-    }
-
-    // 생년월일 유효 체크  나중에 8자리 됐을 때 20살 이상인지 체크하는거 추가하자
-    if (state.userBirthday.length === 0) {
-      alert("생년월일은 필수 입력 항목입니다");
-    }
-
     // 회원가입 client 요청
     client
-      .post("http://localhost:8080/users/join", {
+      .post("/users/join", {
         userName: state.userName,
         userPw: state.userPw,
         userFullname: state.userFullname,
         userBirthday: state.userBirthday,
       })
       .then(function (response) {
-        console.log(response.data.message);
+        SuccessAlert("DRINKUS에 오신걸 환영합니다");
         navigate("/login");
       })
       .catch(function (error) {
@@ -230,143 +296,468 @@ const Join = () => {
       });
   };
 
-  // 이메일 인증번호 전송
-  const onSendEmail = (e) => {
-    e.preventDefault();
-    client
-      .post("http://localhost:8080/email/sendCheckMail", {
-        userName: state.userName,
-      })
-      .then(function (response) {})
-      .catch(function (error) {
-        console.log(error);
+  // 비밀번호 유효성 체크
+  const userPwRegex =
+    // /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,20}$/
+    /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,20}$/i;
+  const userPwCurrent = () => {
+    if (!userPwRegex.test(state.userPw)) {
+      if (state.userPw.length < 8 && state.userPw.length > 20) {
+        setState({
+          ...state,
+          password: {
+            valid: false,
+            guide: " 비밀번호는 9자 이상 20자 이내여야 합니다.",
+          },
+        });
+      } else {
+        setState({
+          ...state,
+          password: {
+            valid: false,
+            guide:
+              " 영문자와 숫자, 특수문자가 적어도 1개 이상 포함되어있어야 합니다.",
+          },
+        });
+      }
+    } else {
+      setState({
+        ...state,
+        password: {
+          valid: true,
+          guide: " 유효한 비밀번호입니다.",
+        },
       });
+    }
+  };
+
+  const nameCkeck = () => {
+    if (!state.userFullname) {
+      setState({
+        ...state,
+        userNameCheck: { valid: false, guide: " 이름은 필수값입니다." },
+      });
+    } else {
+      setState({ ...state, userNameCheck: { valid: true } });
+    }
+  };
+
+  var birthDayRegex = /^[0-9]*$/;
+  const birthCheck = () => {
+    const today = new Date();
+    if (!state.userBirthday) {
+      setState({
+        ...state,
+        userBirthdayCheck: { valid: false, guide: " 생년월일은 필수값입니다." },
+      });
+    } else if (!birthDayRegex.test(state.userBirthday)) {
+      setState({
+        ...state,
+        userBirthdayCheck: { valid: false, guide: " 숫자만 포함해주세요." },
+      });
+    } else if (state.userBirthday.length != 8) {
+      setState({
+        ...state,
+        userBirthdayCheck: {
+          valid: false,
+          guide: " 다음과 같은 형식으로 입력해주세요: 19971101",
+        },
+      });
+    } else if (today.getFullYear() - state.userBirthday.substring(0, 4) < 20) {
+      setState({
+        ...state,
+        userBirthdayCheck: {
+          valid: false,
+          guide: " 20살 이하는 가입할 수 없습니다.",
+        },
+      });
+    } else if (
+      state.userBirthday.substring(4, 6) < 0 ||
+      state.userBirthday.substring(4, 6) > 12 ||
+      state.userBirthday.substring(6, 8) < 0 ||
+      state.userBirthday.substring(6, 8) > 31
+    ) {
+      setState({
+        ...state,
+        userBirthdayCheck: {
+          valid: false,
+          guide: " 유효한 날짜를 입력해주세요.",
+        },
+      });
+    } else {
+      setState({ ...state, userBirthdayCheck: { valid: true } });
+    }
+  };
+
+  // 비밀번호 확인 체크
+  const userPwCheck = () => {
+    if (state.userPw != state.userPwCheck) {
+      setState({
+        ...state,
+        passwordCheck: {
+          valid: false,
+          guide: " 비밀번호가 일치하지 않습니다.",
+        },
+      });
+    } else {
+      setState({ ...state, passwordCheck: { valid: true } });
+    }
+  };
+
+  // 이메일 인증번호 전송
+  const onSendEmail = async (e) => {
+    const data = {
+      userName: state.userName,
+    };
+    const response = await sendConfirmEmail(data);
+    if (response.status === 200) {
+      let s = 300;
+      setSecond(300);
+      let highestIntervalId = setInterval(";");
+      for (let i = 0; i < highestIntervalId; i++) {
+        clearInterval(i);
+      }
+      emailConfirmRef.current[0].disabled = true;
+      emailConfirmRef.current[0].style.backgroundColor = "#757575";
+      SuccessAlert("입력하신 이메일로 인증번호가 발송됐습니다.");
+      const interval = setInterval(() => {
+        if (s === 0) clearInterval(interval);
+        setSecond(s);
+        s--;
+      }, 1000);
+    } else if (response.status === 400) {
+      FailAlert("유효한 이메일을 입력해주세요.");
+    }
   };
 
   // 인증번호 확인
-  const onConfirmEmail = (e) => {
-    e.preventDefault();
-    client
-      .patch("http://localhost:8080/email/confirm", {
-        userName: state.userName,
-        authToken: state.authToken,
-      })
-      .then(function (response) {
-        setState({ ...state, confirmValid: true });
-        alert("유효한 인증번호입니다");
-      })
-      .catch(function (error) {
-        console.log(error);
-        alert("유효하지 않은 인증번호입니다");
+  const onConfirmEmail = async (e) => {
+    const data = {
+      userName: state.userName,
+      authToken: state.authToken,
+    };
+
+    if (data.authToken.length == 0) {
+      setState({
+        ...state,
+        certification: {
+          valid: false,
+          guide: " 인증 코드를 입력해주세요.",
+        },
       });
+    }
+
+    const response = await confirmEmail(data);
+    if (response.status === 200) {
+      setState({
+        ...state,
+        certification: { valid: true, guide: "인증이 완료되었습니다." },
+      });
+      emailConfirmRef.current[1].disabled = true;
+      emailConfirmRef.current[1].style.backgroundColor = "#757575";
+    } else {
+      setState({
+        ...state,
+        certification: {
+          valid: false,
+          guide: " 유효하지 않거나 만료된 인증 코드입니다.",
+        },
+      });
+    }
   };
 
-  // 중복확인 버튼 --> requestBody로 수정되면 확인할 것!!!!!!!!
-  const onDoubleCheck = (e) => {
-    e.preventDefault();
-    client
-      .post("http://localhost:8080/users/join/id", {
-        userName: state.userName,
-      })
-      .then(function (response) {})
-      .catch(function (error) {
-        console.log(error);
+  // 중복확인
+  const onDoubleCheck = async (e) => {
+    if (state.userName.length == 0) {
+      setState({
+        ...state,
+        email: { valid: false, guide: " 이메일을 입력해주세요." },
       });
+      return;
+    }
+
+    const data = {
+      userName: state.userName,
+    };
+    const response = await doubleCheckEmail(data);
+
+    if (response.status === 200) {
+      setState({
+        ...state,
+        email: { valid: true, guide: " 사용 가능한 이메일입니다." },
+      });
+    } else if (response.status === 400) {
+      const msg = response.data.attributes
+        ? response.data.attributes.userName
+        : response.data.message;
+      setState({
+        ...state,
+        email: {
+          valid: false,
+          guide: msg,
+        },
+      });
+    }
   };
 
   return (
     <div>
-      <Header />
+      <BackButton />
       <Wrapper>
         <NeonLoginWrapper>
           <JoinWrapper>
             {/* 제출 폼 */}
             <JoinForm>
-              <GuideLine>이메일</GuideLine>
-              <InputWrapper>
-                <EmailInput
-                  type="email"
-                  value={state.userName}
-                  name="userName"
-                  onChange={onHandleInput}
-                />
-                <DoubleCheckButton onClick={onDoubleCheck}>
-                  중복확인
-                </DoubleCheckButton>
-                <SendEmailButton onClick={onSendEmail}>
-                  이메일 인증 보내기
-                </SendEmailButton>
-              </InputWrapper>
-              <GuideLine>인증번호 입력</GuideLine>
-              <InputWrapper>
-                <JoinInput
-                  type="string"
-                  value={state.authToken}
-                  name="authToken"
-                  onChange={onHandleInput}
-                />
-                <ConfirmButton onClick={onConfirmEmail}>
-                  인증번호 확인
-                </ConfirmButton>
-              </InputWrapper>
-              <GuideLine>비밀번호</GuideLine>
-              <InputWrapper>
-                <JoinInput
-                  type="password"
-                  value={state.userPw}
-                  name="userPw"
-                  onChange={onHandleInput}
-                />
-              </InputWrapper>
-              <GuideLine>비밀번호 확인</GuideLine>
-              <InputWrapper>
-                <JoinInput
-                  type="password"
-                  value={state.userPwCheck}
-                  name="userPwCheck"
-                  onChange={onHandleInput}
-                />
-              </InputWrapper>
-              <GuideLine>이름</GuideLine>
-              <InputWrapper>
-                <JoinInput
-                  type="userFullname"
-                  value={state.userFullname}
-                  name="userFullname"
-                  onChange={onHandleInput}
-                />
-              </InputWrapper>
-              <GuideLine>생년월일</GuideLine>
-              <InputWrapper>
-                <JoinInput
-                  type="userBirthday"
-                  value={state.userBirthday}
-                  name="userBirthday"
-                  onChange={onHandleInput}
-                  placeholder="ex)19991212"
-                />
-              </InputWrapper>
+              <InputDiv>
+                <InputTag>이메일</InputTag>
+                <InputWrapper>
+                  <Input
+                    type="email"
+                    value={state.userName}
+                    name="userName"
+                    placeholder="example@naver.com"
+                    onChange={onHandleInput}
+                    onBlur={() => {
+                      onDoubleCheck();
+                    }}
+                    ref={(el) => (emailConfirmRef.current[0] = el)}
+                  ></Input>
+                </InputWrapper>
+
+                <Guide
+                  style={
+                    state.email.valid
+                      ? { color: "#00b0ff" }
+                      : { color: "#d62929" }
+                  }
+                >
+                  {state.email.valid ? (
+                    <i class="fa fa-check"></i>
+                  ) : (
+                    <i class="fa fa-times"></i>
+                  )}
+                  {state.email.guide}
+                </Guide>
+                {state.certification.valid ? (
+                  <></>
+                ) : (
+                  <>
+                    <Guide
+                      style={
+                        state.emailConfirm.valid
+                          ? { color: "#00b0ff" }
+                          : { color: "#d62929" }
+                      }
+                    >
+                      {state.emailConfirm.valid ? (
+                        <i class="fa fa-check"></i>
+                      ) : (
+                        <i class="fa fa-times"></i>
+                      )}
+                      {state.emailConfirm.guide}
+                    </Guide>
+                  </>
+                )}
+              </InputDiv>
+              <InputDiv>
+                <InputTag>인증번호</InputTag>
+                <InputWrapper>
+                  <Input
+                    type="string"
+                    value={state.authToken}
+                    name="authToken"
+                    onChange={onHandleInput}
+                    onBlur={() => {
+                      onConfirmEmail();
+                    }}
+                    ref={(el) => (emailConfirmRef.current[1] = el)}
+                  />
+                </InputWrapper>
+                {state.emailConfirm.valid ? (
+                  <></>
+                ) : (
+                  <>
+                    <Guide
+                      style={
+                        state.certification.valid
+                          ? { color: "#00b0ff" }
+                          : { color: "#d62929" }
+                      }
+                    >
+                      {state.certification.valid ? (
+                        <i class="fa fa-check"></i>
+                      ) : (
+                        <i class="fa fa-times"></i>
+                      )}
+                      {state.certification.guide}
+                    </Guide>
+                    <SendText onClick={onSendEmail}>인증번호 전송</SendText>
+                    {state.certification.valid ? (
+                      <></>
+                    ) : (
+                      <>
+                        <Timer>
+                          {Math.ceil((second + 1) / 60) - 1}:
+                          {(second % 60 < 10 ? "0" : "") + (second % 60)}
+                        </Timer>
+                      </>
+                    )}
+                  </>
+                )}
+              </InputDiv>
+              <InputDiv>
+                <InputTag>비밀번호</InputTag>
+                <InputWrapper>
+                  <Input
+                    type="password"
+                    value={state.userPw}
+                    name="userPw"
+                    onChange={onHandleInput}
+                    onBlur={() => {
+                      userPwCurrent();
+                    }}
+                  />
+                </InputWrapper>
+
+                {state.password.valid ? (
+                  <></>
+                ) : (
+                  <>
+                    <Guide
+                      style={
+                        state.password.valid
+                          ? { color: "#00b0ff" }
+                          : { color: "#d62929" }
+                      }
+                    >
+                      {state.password.valid ? (
+                        <i class="fa fa-check"></i>
+                      ) : (
+                        <i class="fa fa-times"></i>
+                      )}
+                      {state.password.guide}
+                    </Guide>
+                  </>
+                )}
+              </InputDiv>
+              <InputDiv>
+                <InputTag>비밀번호 확인</InputTag>
+                <InputWrapper>
+                  <Input
+                    type="password"
+                    value={state.userPwCheck}
+                    name="userPwCheck"
+                    onChange={onHandleInput}
+                    onBlur={() => {
+                      userPwCheck();
+                    }}
+                  />
+                </InputWrapper>
+                {state.passwordCheck.valid ? (
+                  <></>
+                ) : (
+                  <>
+                    <Guide
+                      style={
+                        state.passwordCheck.valid
+                          ? { color: "#00b0ff" }
+                          : { color: "#d62929" }
+                      }
+                    >
+                      {state.passwordCheck.valid ? (
+                        <i class="fa fa-check"></i>
+                      ) : (
+                        <i class="fa fa-times"></i>
+                      )}
+                      {state.passwordCheck.guide}
+                    </Guide>
+                  </>
+                )}
+              </InputDiv>
+              <InputDiv>
+                <InputTag>이름</InputTag>
+                <InputWrapper>
+                  <Input
+                    type="userFullname"
+                    value={state.userFullname}
+                    name="userFullname"
+                    onChange={onHandleInput}
+                    onBlur={() => {
+                      nameCkeck();
+                    }}
+                  />
+                </InputWrapper>{" "}
+                {state.userNameCheck.valid ? (
+                  <></>
+                ) : (
+                  <>
+                    <Guide
+                      style={
+                        state.userNameCheck.valid
+                          ? { color: "#00b0ff" }
+                          : { color: "#d62929" }
+                      }
+                    >
+                      {state.userNameCheck.valid ? (
+                        <i class="fa fa-check"></i>
+                      ) : (
+                        <i class="fa fa-times"></i>
+                      )}
+                      {state.userNameCheck.guide}
+                    </Guide>
+                  </>
+                )}
+              </InputDiv>
+              <InputDiv>
+                <InputTag>생년월일</InputTag>
+                <InputWrapper>
+                  <Input
+                    type="text"
+                    value={state.userBirthday}
+                    name="userBirthday"
+                    onChange={onHandleInput}
+                    placeholder="19991212"
+                    onBlur={() => {
+                      birthCheck();
+                    }}
+                  />
+                </InputWrapper>{" "}
+                {state.userBirthdayCheck.valid ? (
+                  <></>
+                ) : (
+                  <>
+                    <Guide
+                      style={
+                        state.userBirthdayCheck.valid
+                          ? { color: "#00b0ff" }
+                          : { color: "#d62929" }
+                      }
+                    >
+                      {state.userBirthdayCheck.valid ? (
+                        <i class="fa fa-check"></i>
+                      ) : (
+                        <i class="fa fa-times"></i>
+                      )}
+                      {state.userBirthdayCheck.guide}
+                    </Guide>
+                  </>
+                )}
+              </InputDiv>
             </JoinForm>
-            {/* 모든 유효성 검사 후 버튼 활성화 */}
-            <Button
-              onClick={onHandleSubmit}
-              disabled={
-                !state.nameValid &&
-                state.confirmValid &&
-                state.userPwValid &&
-                state.userPwCheckValid
-              }
-            >
-              JOIN
-            </Button>
-            <Link to="/">
-              <Button>MAIN</Button>
-            </Link>
+            <ButtonWrapper>
+              <Link to="/join/type" style={{ textDecoration: "none" }}>
+                {state.enabled ? (
+                  <LinkWrapper onClick={onHandleSubmit}>가입하기</LinkWrapper>
+                ) : (
+                  <></>
+                )}
+              </Link>
+              {!state.enabled ? <DisabledLink>가입하기</DisabledLink> : <></>}
+            </ButtonWrapper>
           </JoinWrapper>
         </NeonLoginWrapper>
       </Wrapper>
     </div>
   );
 };
-
 export default Join;
