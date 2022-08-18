@@ -9,25 +9,30 @@ const ModalWrapper = styled.div`
   left: 0;
   width: 100%;
   height: 100vh;
-  z-index: 10;
-  background-color: rgb(0, 0, 0, 0.6);
+  z-index: ${(props) => props.zIndex};
+  background-color: ${(props) => props.bgColor};
   &.active {
     justify-content: center;
     align-items: center;
     display: flex;
   }
 `;
+ModalWrapper.defaultProps = {
+  zIndex: 100000,
+};
 
 const ModalContentWrapper = styled.div`
-  width: 80%;
-  min-height: 600px;
-  max-width: 520px;
+  width: ${(props) => props.width};
+  height: ${(props) => props.height};
   background-color: #fff;
   border-radius: 10px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
   opacity: 1;
+  background-color: ${(props) => props.background};
+  border: ${(props) => props.borderWidth} solid ${(props) => props.borderColor};
+  position: relative;
 `;
 
 const ModalHeader = styled.div`
@@ -51,19 +56,44 @@ const ModalContent = styled.div`
   align-items: center;
   padding: 20px;
 `;
-const Modal = ({ isOpen, close }) => {
+const Modal = ({
+  isOpen,
+  close,
+  modalContent,
+  width,
+  height,
+  background,
+  borderColor,
+  borderWidth,
+  zIndex,
+  bgColor,
+}) => {
   return (
-    <ModalWrapper className={isOpen ? "active" : ""}>
-      <ModalContentWrapper>
-        <ModalHeader>
-          <ModalCloseButton onClick={close}>X</ModalCloseButton>
-        </ModalHeader>
-        <ModalContent>
-          <div>모달에 들어갈 콘텐츠</div>
-        </ModalContent>
+    <ModalWrapper
+      className={isOpen ? "active" : ""}
+      zIndex={zIndex}
+      bgColor={bgColor}
+    >
+      <ModalContentWrapper
+        width={width}
+        heigth={height}
+        background={background}
+        borderColor={borderColor}
+        borderWidth={borderWidth}
+      >
+        <ModalContent>{modalContent}</ModalContent>
       </ModalContentWrapper>
     </ModalWrapper>
   );
 };
 
 export default Modal;
+
+Modal.defaultProps = {
+  width: "620px",
+  height: "480px",
+  background: "#eaf1ff",
+  borderColor: "#6f92bf",
+  borderWidth: "5px",
+  bgColor: "rgb(0, 0, 0, 0.6)",
+};

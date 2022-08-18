@@ -1,5 +1,6 @@
 import { combineReducers } from "redux";
 import user from "./user";
+import room from "./room";
 import { persistReducer } from "redux-persist";
 import storageSession from "redux-persist/lib/storage/session";
 
@@ -9,6 +10,7 @@ const persistConfig = {
 };
 const reducer = combineReducers({
   user,
+  room,
 });
 
 // export default reducer;

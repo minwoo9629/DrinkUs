@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const AuthInput = styled.input`
   position: relative;
   height: 30px;
-  width: 280px;
+  width: 180px;
   top: 7px;
   font-size: 18px;
   background-color: transparent;

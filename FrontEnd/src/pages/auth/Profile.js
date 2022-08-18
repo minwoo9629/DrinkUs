@@ -1,12 +1,26 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { Link, useParams } from "react-router-dom";
 import styled from "styled-components";
-import { client } from "../../utils/client";
+import {
+  getUserCategory,
+  getUserProfile,
+  plusPopularity,
+  minusPopularity,
+} from "../../api/ProfileAPI";
+import { FailAlert } from "../../utils/sweetAlert";
+
+const CategoryWrapper = styled.div`
+  padding: 4px 16px;
+  display: -ms-flexbox;
+  background-color: #ffffff;
+  border-radius: 6px;
+  margin: 0px 8px 8px 0px;
+  box-shadow: 2px 2px 2px grey;
+`;
 
 const Wrapper = styled.div`
   background-color: #eaf2ff;
-  width: 100vw;
-  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -15,38 +29,63 @@ const Wrapper = styled.div`
 
 const ProfileWrapper = styled.div`
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: ${(props) => props.justify};
+  flex-direction: ${(props) => props.flexDirection};
+  align-items: ${(props) => props.alignItems};
+  width: 100%;
+  margin-bottom: 10px;
 `;
 
-const ProfileImg = styled.div`
-  padding: 8px;
+ProfileWrapper.defaultProps = {
+  justify: "center",
+  flexDirection: "row",
+  alignItems: "center",
+};
+
+const ProfileImgWrapper = styled.div`
   border-radius: 40px;
-  width: 30px;
-  height: 30px;
+  width: 45px;
+  height: 45px;
   background-color: white;
+  margin-right: 10px;
+`;
+
+const ProfileImg = styled.img`
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
 `;
 
 const EditButton = styled.button`
-  width: 40px;
-  height: 40px;
-  border-radius: 16px;
-  border: 1px solid black;
+  width: 25px;
+  height: 25px;
+  border-radius: 6px;
+  border: 2px solid #ffffff;
   background-color: #bdcff2;
-  margin: 14px;
-  font-size: 20px;
+  font-size: 18px;
   color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 4px;
   cursor: pointer;
-`
+`;
 
 const IntroduceWrapper = styled.div`
   background-color: white;
-  width: 40vw;
+  width: 100%;
   height: 10vh;
   display: flex;
   justify-content: center;
   align-items: center;
-`
+`;
+
+const InterestWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+`;
 
 const ReportsButton = styled.button`
   width: 100px;
@@ -54,115 +93,137 @@ const ReportsButton = styled.button`
   border-radius: 8px;
   border: 4px white;
   background-color: #bdcff2;
-  margin: 14px;
-  font-size: 20px;
+  font-size: 16px;
   color: #676775;
-`
+  border: 2px solid #ffffff;
+`;
 
-const Profile = () => {
+const Profile = ({ userId, changeTypeState }) => {
   const [state, setState] = useState({
     userNickname: "",
-    userPopularity: "",  // 인기도
-    popularityNumber: 0,  // 인기도 수정 횟수
+    userPopularity: "", // 인기도
     userImg: "",
     userIntroduce: "",
     userSoju: "",
     userBeer: "",
   });
+
+  const user = useSelector((state) => state.user);
+
+  // App.js의 변수명 지정해주기
+  const [popular, setPopular] = useState({
+    popularityNumber: 0,
+  });
+
+  const [category, setCategory] = useState([]);
   // 인기도 수정 횟수 5회 제한 + 5회 넘을 시 alert 창
-  const popularityDisabled = state.popularityNumber === 5;
 
-
-  // 인기도 수정
-  const onPopularityEdit = (e) => {
-    const name = e.target.name;
-    if (name === "plus") {
-      setState({...state, userPopularity: state.userPopularity + 1, popularityNumber: state.popularityNumber + 1});
-    } else if (name === "minus") {
-      setState({...state, userPopularity:state.userPopularity - 1, popularityNumber: state.popularityNumber + 1});
-    }
-    // 인기도 수정 api 요청
-    client
-      .patch(`/users/popularity`, {
-         params: {
-          user_id: "6",
-        }  
-      })
-      .then(function (response) {
-        console.log(response);
-      })
-      .catch(function (error) {
-        console.log(error);
+  // 인기도 더하기
+  const onPopularityPlus = async (userNo) => {
+    const result = await plusPopularity(userNo);
+    if (result.status === 500) {
+      alert("오늘의 인기도 수정 횟수를 모두 사용했습니다.");
+    } else {
+      setState({ ...state, userPopularity: state.userPopularity + 1 });
+      setPopular({
+        ...popular,
+        popularityNumber: popular.popularityNumber + 1,
       });
-    };
+    }
+  };
 
+  // 인기도 내리기
+  const onPopularityMinus = async (userNo) => {
+    const result = await minusPopularity(userNo);
+    if (result.status === 500) {
+      alert("오늘의 인기도 수정 횟수를 모두 사용했습니다.");
+    } else {
+      setState({ ...state, userPopularity: state.userPopularity - 1 });
+      setPopular({
+        ...popular,
+        popularityNumber: popular.popularityNumber + 1,
+      });
+    }
+  };
 
-  // 유저 정보 요청 --> 무한렌더링... setState 쪽 문제인데, 해결방법을 아직 모름,,,
-  client
-    .get(`/users/profile/6`, {
-      //  params: {
-      //   user_no: "6",
-      // }
-    })
-    .then((response) => {
-      console.log(response);
-      console.log(response.data, []);
-      // setState({...state,
-      //   userNickname: response.data.userNickname,
-      //   userPopularity: response.data.userPopularity,
-      //   userImg: response.data.userImg,
-      //   userIntroduce: response.data.userIntroduce,
-      //   userSoju: response.data.userSoju,
-      //   userBeer: response.data.userBeer
-      // }, [])
-    })
-    .catch(function (error) {
-      console.log(error);
-    }, []);
+  // 유저 정보 요청
+  const fetchUsers = async () => {
+    const result = await getUserProfile(userId);
+    setState({ ...result.data });
+  };
 
+  // 유저 관심사 요청
+  const fetchCategory = async () => {
+    const response = await getUserCategory(userId);
+    setCategory([...response.data]);
+  };
+
+  useEffect(() => {
+    fetchUsers();
+    fetchCategory();
+  }, []);
   return (
-  <div>
+    <div style={{ width: "60%" }}>
       <Wrapper>
-          닉네임: {state.userNickname}
-        <ProfileWrapper>
-          <ProfileImg>{state.userImg}</ProfileImg>
-            인기도: {state.userPopularity}°
-            <EditButton
-              onClick={onPopularityEdit}
-              name="plus"
-              disabled={popularityDisabled}
-            > + </EditButton>
-            <EditButton
-              onClick={onPopularityEdit}
-              name="minus"
-              disabled={popularityDisabled}
-            > - </EditButton>
+        <ProfileWrapper justify={"flex-start"}>
+          <ProfileImgWrapper>
+            <ProfileImg
+              src={`/assets/profileImage/profile${state.userImg}.png`}
+            />
+          </ProfileImgWrapper>
+          <div>
+            <div>{state.userNickname} 님의 프로필 입니다.</div>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <div>인기도: {state.userPopularity}°</div>
+              {user.data.userNickname !== state.userNickname ? (
+                <>
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <EditButton
+                      onClick={() => onPopularityPlus(userId)}
+                      name="plus"
+                      disabled={popular.popularityNumber === 5}
+                    >
+                      <i className="fas fa-caret-up"></i>
+                    </EditButton>
+                    <EditButton
+                      onClick={() => onPopularityMinus(userId)}
+                      name="minus"
+                      disabled={popular.popularityNumber === 5}
+                    >
+                      <i className="fas fa-caret-down"></i>
+                    </EditButton>
+                  </div>
+                </>
+              ) : (
+                <></>
+              )}
+            </div>
+          </div>
         </ProfileWrapper>
-        <ProfileWrapper>
-              관심사
+        <ProfileWrapper justify={"flex-start"}>관심사</ProfileWrapper>
+        <InterestWrapper>
+          {category.map((item) => (
+            <CategoryWrapper key={item.subCategoryId}>
+              {item.subCategoryName}
+            </CategoryWrapper>
+          ))}
+        </InterestWrapper>
+        <ProfileWrapper justify={"flex-start"}>자기 소개</ProfileWrapper>
+        <IntroduceWrapper>{state.userIntroduce}</IntroduceWrapper>
+        <ProfileWrapper flexDirection={"column"} alignItems={"flex-start"}>
+          <div>주량</div>
+          <div>
+            소주: {state.userSoju} 잔 맥주: {state.userBeer} 잔
+          </div>
         </ProfileWrapper>
-        <IntroduceWrapper>
-          관심사 data값에 없음
-        </IntroduceWrapper>
-        <ProfileWrapper>
-          자기 소개
-        </ProfileWrapper>
-        <IntroduceWrapper>
-          {state.userIntroduce}
-        </IntroduceWrapper>
-        <ProfileWrapper>
-          주량
-        </ProfileWrapper>
-        소주: {state.userSoju} 잔<hr/>
-        맥주: {state.userBeer} 잔
-        <ProfileWrapper>
-          <Link to="/reports">
-            <ReportsButton>유저 신고</ReportsButton>
-          </Link>
+        <ProfileWrapper justify={"flex-end"}>
+          <ReportsButton onClick={() => changeTypeState("report")}>
+            유저 신고
+          </ReportsButton>
         </ProfileWrapper>
       </Wrapper>
-  </div>
-  )
-}
+    </div>
+  );
+};
 
 export default Profile;

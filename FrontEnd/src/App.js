@@ -1,4 +1,5 @@
 import "./App.css";
+import { useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/auth/Login";
@@ -9,25 +10,72 @@ import FindId from "./pages/auth/find/FindId";
 import Join from "./pages/auth/join/Join";
 import JoinAgree from "./pages/auth/join/JoinAgree";
 import JoinType from "./pages/auth/join/JoinType";
-import Profile from "./pages/auth/Profile";
-import Reports from "./pages/auth/Reports";
 import SocialLogin from "./pages/auth/SocialLogin";
 import MyPage from "./pages/auth/MyPage";
 import DrinkLive from "./pages/room/DrinkLive";
 import CreateRoom from "./pages/room/CreateRoom";
-import Rooms from "./pages/room/Rooms";
-import Daily from "./pages/Daily";
 import RoomDetail from "./pages/room/RoomDetail";
-import Calendar from "./pages/calendarcommunity/Calendar";
-// import CalendarList from "./pages/calendarcommunity/CalendarList";
-import CreateCalendar from "./pages/calendarcommunity/CreateCalendar";
+import RoomList from "./pages/room/RoomList";
 import EditProfile from "./pages/auth/mypage/EditProfile";
 import EditPassword from "./pages/auth/mypage/EditPassword";
 import EditInterest from "./pages/auth/mypage/EditInterest";
 import MyArticle from "./pages/auth/mypage/MyArticle";
 import MySchedule from "./pages/auth/mypage/MySchedule";
 import { PersistGate } from "redux-persist/integration/react";
+import Admin from "./pages/admin/Admin";
+import VideoRoomComponent from "./pages/room/openVidu/VideoRoomComponent";
+import PrivateRoute from "./routes/PrivateRoute";
+import NotFound from "./pages/error/NotFound";
+
+import Community from "./pages/community/Community";
+import firebase from "firebase";
+
 function App() {
+  useEffect(async () => {
+    const config = {
+      apiKey: "AIzaSyCeFLVbfX4Lif9cRTFuHXfTnhbJo1rojo8",
+      authDomain: "drinkus-1b761.firebaseapp.com",
+      projectId: "drinkus-1b761",
+      storageBucket: "drinkus-1b761.appspot.com",
+      messagingSenderId: "643076771453",
+      appId: "1:643076771453:web:21d4711a8a13ded10cab14",
+    };
+    firebase.initializeApp(config);
+    const messaging = firebase.messaging();
+
+    await messaging
+      .requestPermission()
+      .then(async () => {
+        const fcmToken = await messaging.getToken({
+          vapidKey:
+            "BL81pS7Np99KSOR8APDua0Dx46ye35ZZZ6X37oLhAYe0Xp7g2hcncOPMhTw1TOg7QdcnlFhyu374brHtC4L37do",
+        });
+        window.sessionStorage.setItem("FCM_TOKEN", fcmToken);
+        //토큰을 받는 함수를 추가!
+      })
+      .catch(function (err) {
+        // console.log("fcm에러 : ", err);
+      });
+    messaging.onTokenRefresh(() => {
+      messaging
+        .getToken({
+          vapidKey:
+            "BL81pS7Np99KSOR8APDua0Dx46ye35ZZZ6X37oLhAYe0Xp7g2hcncOPMhTw1TOg7QdcnlFhyu374brHtC4L37do",
+        })
+        .then(function (refreshedToken) {
+          sessionStorage.setItem("FCM_TOKEN", refreshedToken); //토큰이 재 생성될 경우 다시 저장
+        })
+        .catch(function (err) {
+          // console.log("Unable to retrieve refreshed token ", err);
+        });
+    });
+
+    messaging.onMessage((payload) => {
+      const title = payload.data.content;
+      alert(title);
+    });
+  }, []);
+
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
@@ -45,18 +93,32 @@ function App() {
               <Route path="/join" element={<Join />} />
               <Route path="/join/agree" element={<JoinAgree />} />
               <Route path="/join/type" element={<JoinType />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/reports" element={<Reports />} />
-              <Route path="/oauth2/redirect" element={<SocialLogin />} />
-              <Route path="/live" element={<DrinkLive />} />
-              <Route path="/createroom" element={<CreateRoom />} />
-              <Route path="/rooms" element={<Rooms />} />
-              <Route path="/daily" element={<Daily />} />
-              <Route path="/rooms/1" element={<RoomDetail />} />
-              <Route path="/calendar" element={<Calendar />} />
-              {/* <Route path="/calendar/list" element={<CalendarList />} /> */}
-              <Route path="/calendar/create" element={<CreateCalendar />} />
-              <Route path="/user" element={<MyPage />}>
+              <Route path="/social/redirect" element={<SocialLogin />} />
+              <Route
+                path="/live"
+                element={<PrivateRoute component={<DrinkLive />} />}
+              />
+              <Route
+                path="/createroom"
+                element={<PrivateRoute component={<CreateRoom />} />}
+              />
+              <Route
+                path="/rooms"
+                element={<PrivateRoute component={<RoomList />} />}
+              />
+              <Route
+                path="/rooms/:roomId"
+                element={<PrivateRoute component={<RoomDetail />} />}
+              />
+
+              <Route
+                path="/community"
+                element={<PrivateRoute component={<Community />} />}
+              />
+              <Route
+                path="/user"
+                element={<PrivateRoute component={<MyPage />} />}
+              >
                 <Route index element={<EditProfile />} />
                 <Route path="edit/profile" element={<EditProfile />} />
                 <Route path="edit/password" element={<EditPassword />} />
@@ -64,6 +126,19 @@ function App() {
                 <Route path="article" element={<MyArticle />} />
                 <Route path="schedule" element={<MySchedule />} />
               </Route>
+              <Route
+                path="/admin"
+                element={<PrivateRoute component={<Admin />} />}
+              />
+              <Route
+                path="/room/detail"
+                element={<PrivateRoute component={<VideoRoomComponent />} />}
+              />
+              <Route
+                path="/community"
+                element={<PrivateRoute component={<Community />} />}
+              />
+              <Route path="/*" element={<NotFound />} />
             </Routes>
           </div>
         </BrowserRouter>

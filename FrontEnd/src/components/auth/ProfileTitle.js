@@ -12,20 +12,29 @@ const ProfileImageThumbnail = styled.img`
   object-fit: cover;
   border-radius: 100%;
 `;
-const ProfileTitle = ({ isEdit }) => {
+const OpenProfileImageModalButton = styled.button`
+  border: none;
+  cursor: pointer;
+  background: transparent;
+  color: cornflowerblue;
+`;
+const ProfileTitle = ({ isEdit, imageId, userName, openModal, marginLeft }) => {
   return (
-    <div style={{ display: "flex", alignItems: "center" }}>
+    <div
+      style={{ display: "flex", alignItems: "center", marginLeft: marginLeft }}
+    >
       <ProfileImageWrapper>
-        <ProfileImageThumbnail src="/assets/muji.jpeg" />
+        <ProfileImageThumbnail
+          src={`/assets/profileImage/profile${imageId}.png`}
+        />
       </ProfileImageWrapper>
       <div>
-        <p>Youji@naver.com</p>
+        <p>{userName}</p>
         {isEdit ? (
           <>
-            <input type="file" id="profileImage" />
-            <label for="profileImage" id="profileImageLabel">
+            <OpenProfileImageModalButton onClick={openModal}>
               프로필 사진 바꾸기
-            </label>
+            </OpenProfileImageModalButton>
           </>
         ) : (
           <></>
@@ -39,4 +48,5 @@ export default ProfileTitle;
 
 ProfileTitle.defaultProps = {
   isEdit: false,
+  marginLeft: "0px",
 };
