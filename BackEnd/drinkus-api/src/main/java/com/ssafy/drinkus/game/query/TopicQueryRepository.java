@@ -23,7 +23,6 @@ public class TopicQueryRepository {
                 .where(categoryIdEq(categoryId))
                 .fetchResults();
         List<Topic> contents = results.getResults();
-        System.out.println(Arrays.toString(contents.toArray()));
         return contents;
     }
 

@@ -23,8 +23,6 @@ public class AuthController {
     public ResponseEntity<TokenResponse> reissueRefreshToken(
             @RequestHeader(value="authorization") String accessToken,
             @RequestHeader(value = "refreshtoken") String refreshToken){
-        System.out.println("accesstoken => " + accessToken);
-        System.out.println("refreshtoken => " + refreshToken);
         TokenRequest request = new TokenRequest(accessToken.substring(7), refreshToken);
         TokenResponse token = authService.reissue(request);
         return ResponseEntity.ok()

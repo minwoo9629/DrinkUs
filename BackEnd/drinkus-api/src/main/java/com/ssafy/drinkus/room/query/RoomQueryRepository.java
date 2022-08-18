@@ -54,7 +54,6 @@ public class RoomQueryRepository {
     private BooleanExpression sameAgeFirstEq(Boolean sameAge, User user) {
         // 나이의 알고리즘을 계산하여 또래 범위 알기
         int sameAgeFirst = getUserAge(user) / 10;
-        System.out.println("sameAgeFirst "+sameAgeFirst);
 
         switch (sameAgeFirst) {
             case 2:
@@ -77,7 +76,6 @@ public class RoomQueryRepository {
     private BooleanExpression sameAgeSecondEq(Boolean sameAge, User user) {
         // 나이의 알고리즘을 계산하여 또래 범위 알기
         Integer sameAgeSecond = getUserAge(user) / 10 + ((getUserAge(user) % 10 >= 5) ? 1 : -1);
-        System.out.println("sameAgeSecond "+sameAgeSecond);
 
         switch (sameAgeSecond) {
             case 1:
@@ -107,8 +105,6 @@ public class RoomQueryRepository {
     }
     public int getUserAge(User user){
         String userBirth = user.getUserBirthday().substring(0,4);
-        System.out.println("userBirth "+userBirth);
-        System.out.println(LocalDate.now().getYear() - Integer.parseInt(userBirth) + 1);
         return LocalDate.now().getYear() - Integer.parseInt(userBirth) + 1;
     }
 }
