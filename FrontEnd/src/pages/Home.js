@@ -78,7 +78,7 @@ ContentWrapper.defaultProps = {
 };
 
 const ImageWrapper = styled.img`
-  width: 440px;
+  width: 550px;
 `;
 
 const LetterWrapper = styled.div`
@@ -94,6 +94,10 @@ const Letter = styled.p`
   margin-left: 2rem;
   margin-right: 2rem;
   margin-bottom: 0.5rem;
+  text-align: ${(props) => props.textAlign};
+  font-family: ${(props) => props.fontFamily};
+  line-height: 25px;
+
 `;
 
 const LeftSlideContent = styled.div`
@@ -172,12 +176,14 @@ const Home = () => {
         position={"relative"}
       >
         <LeftSlideContent ref={(el) => (isSlide.current[0] = el)}>
-          <ImageWrapper src={process.env.PUBLIC_URL + "/assets/room.png"} />
+          <ImageWrapper src={process.env.PUBLIC_URL + "/assets/room1.png"} />
           <LetterWrapper ta="right">
-            <Letter size={"2rem"} weight={"bold"}>
+          <img src={process.env.PUBLIC_URL + "/assets/game/bombGif.gif"} width="150px"/>
+
+            <Letter size={"2rem"} weight={"bold"} textAlign={"left"}>
               화상 채팅방
             </Letter>
-            <Letter size={"1.1rem"}>
+            <Letter size={"1.1rem"} textAlign={"left"}>
               화상 채팅방을 통해 새로운 사람을 만날 수 있어요
               <br />
               우리끼리만 만나고 싶다면 비밀번호를 설정할 수 있어요
@@ -188,28 +194,28 @@ const Home = () => {
       <ContentWrapper background={"#FFF"} height={"60vh"} position={"relative"}>
         <RightSlideContent ref={(el) => (isSlide.current[1] = el)}>
           <LetterWrapper ta="left">
-            <Letter size={"2rem"} weight={"bold"}>
+            <Letter size={"2rem"} weight={"bold"} textAlign={"right"}>
               커뮤니티
             </Letter>
-            <Letter size={"1.1rem"}>
+            <Letter size={"1.1rem"} textAlign={"right"}>
               술약속을 잡을 수 있는 월간 커뮤니티와
               <br />
               자유롭게 대화할 수 있는 일간 커뮤니티가 있어요
             </Letter>
           </LetterWrapper>
           <ImageWrapper
-            src={process.env.PUBLIC_URL + "/assets/community.png"}
+            src={process.env.PUBLIC_URL + "/assets/room2.png"}
           />
         </RightSlideContent>
       </ContentWrapper>
       <ContentWrapper background={"#FFF"} height={"60vh"} position={"relative"}>
         <LeftSlideContent ref={(el) => (isSlide.current[2] = el)}>
-          <ImageWrapper src={process.env.PUBLIC_URL + "/assets/filter.png"} />
+          <ImageWrapper src={process.env.PUBLIC_URL + "/assets/room3.png"} />
           <LetterWrapper ta="right">
-            <Letter size={"2rem"} weight={"bold"}>
+            <Letter size={"2rem"} weight={"bold"} textAlign={"left"}>
               관심사
             </Letter>
-            <Letter size={"1.1rem"}>
+            <Letter size={"1.1rem"} textAlign={"left"}>
               내 관심사를 설정하고, 다른 사람의 관심사를 볼 수 있어요
               <br />
               관심있는 방을 필터로 찾을 수 있어요
