@@ -8,6 +8,11 @@ import { CommunityConFirmButton } from "../../../components/common/buttons/Commu
 import ModalCloseButton from "../../../components/common/buttons/ModalCloseButton";
 import PageNation from "../../../components/common/buttons/PageNation";
 
+const Wrapper = styled.div`
+  width: 1200px;
+  margin:auto;
+`;
+
 const TextDiv = styled.div`
   margin: 21px 0;
 `;
@@ -110,6 +115,7 @@ const PageNationWrapper = styled.div`
   margin-top: 20px;
   margin: 20px auto;
   width: 80%;
+  padding-bottom: 20px;
 `;
 
 const DailyCalendar = ({ year, month, day, monthly, setNewDate }) => {
@@ -169,6 +175,7 @@ const DailyCalendar = ({ year, month, day, monthly, setNewDate }) => {
 
   return (
     <>
+    <Wrapper>
       <CalendarWrapper>
         <Modal
           isOpen={modalState.write}
@@ -316,6 +323,7 @@ const DailyCalendar = ({ year, month, day, monthly, setNewDate }) => {
           directionColor={"#bdcff2"}
         />
       </PageNationWrapper>
+      </Wrapper>
     </>
   );
 };

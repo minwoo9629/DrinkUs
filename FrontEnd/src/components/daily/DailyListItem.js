@@ -35,8 +35,8 @@ const ProfileImg = styled.img`
 
 const DailyContentWrapper = styled.div`
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  width: 70%;
 `;
 
 const ContentWrapper = styled.div`
@@ -44,6 +44,7 @@ const ContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: baseline;
+  width: 100%;
 `;
 
 const Nickname = styled.div`
@@ -92,18 +93,20 @@ const DailyBoardCommentButton = styled.button`
   font-size: 8px;
   margin: 10px;
   border: 1px white;
-  text-align: flex;
+  width: 100%;
+  margin-right: ${(props) => props.marginRight};
 `;
 
 // 글 수정 인풋
-const DailyModifyInput = styled.input`
-  width: 100%;
+const DailyModifyInput = styled.textarea`
+  width: 550px;
   height: 100%;
   border-radius: 1px;
   border: solid #6f92bf 0.1em;
   background-color: #eaf1ff;
   position: relative;
-  padding-left: 20px;
+  padding: 10px;
+  resize: none;  
 `;
 
 // 글 수정 버튼
@@ -392,7 +395,6 @@ const DailyListItem = ({
               }}
             >
               <DailyModifyInput
-                type="string"
                 value={state.boardArticle}
                 name="boardArticle"
                 onChange={onEditArticleInput}
@@ -436,6 +438,7 @@ const DailyListItem = ({
             >
               <DailyBoardCommentButton
                 onClick={() => onHandleCommentList(boardId)}
+                marginRight = {state.showEditArticle ? "0": "30px"}
               >
                 {comment.showComment === true ? "댓글닫기" : "댓글보기"}
               </DailyBoardCommentButton>
