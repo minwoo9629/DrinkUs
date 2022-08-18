@@ -33,16 +33,18 @@ const ReportsSelect = styled.select`
 `;
 
 // 신고 사유 입력 칸
-const ReportsInput = styled.input`
+const ReportsInput = styled.textarea`
   position: relative;
   height: 330px;
-  width: 450px;
+  width: 410px;
   top: 7px;
   font-size: 18px;
   background-color: white;
   border: 12px;
   margin: 14px;
   color: black;
+  padding: 20px;
+  resize: none;
 `;
 
 // 신고하기 버튼
@@ -79,6 +81,7 @@ const Reports = ({ modalClose }) => {
 
   // 신고 제출
   const onReportsSubmit = async (e) => {
+    e.preventDefault();
     const data = {
       toUserId: state.toUserId,
       reportType: state.reportType,
@@ -90,10 +93,11 @@ const Reports = ({ modalClose }) => {
       modalClose();
     }
     if (state.reportReason.length === 0) {
-      e.preventDefault();
       FailAlert("신고 사유를 기입해 주세요");
+      modalClose();
     } else {
       FailAlert("아직 처리되지 않은 동일한 유저를 재신고 할 수 없습니다.");
+      modalClose();
     }
   };
 

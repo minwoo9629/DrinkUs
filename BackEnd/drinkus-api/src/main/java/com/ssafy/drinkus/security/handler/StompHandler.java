@@ -1,6 +1,9 @@
 package com.ssafy.drinkus.security.handler;
 
+<<<<<<< HEAD
 import com.ssafy.drinkus.security.service.UserPrincipal;
+=======
+>>>>>>> b022574098dd090828eeaccd5d274a14522abae7
 import com.ssafy.drinkus.security.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.Message;
@@ -22,12 +25,12 @@ public class StompHandler implements ChannelInterceptor {
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
 
-        // 스톰프 연결
         if (StompCommand.CONNECT == accessor.getCommand()) {
             System.out.println("###trying connect...");
             if (!jwtUtil.isValidToken(extractToken(accessor))) {
                 throw new AccessDeniedException("연결 거부");
             }
+<<<<<<< HEAD
 
             System.out.println("###client connected!!!");
         }
@@ -45,6 +48,8 @@ public class StompHandler implements ChannelInterceptor {
         else if(StompCommand.DISCONNECT == accessor.getCommand()){
             String sessionId = (String) message.getHeaders().get("roomId");
             System.out.println("###disconnect: " + sessionId);
+=======
+>>>>>>> b022574098dd090828eeaccd5d274a14522abae7
         }
         return message;
     }

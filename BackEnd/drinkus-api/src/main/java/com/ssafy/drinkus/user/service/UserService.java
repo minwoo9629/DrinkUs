@@ -226,4 +226,9 @@ public class UserService {
         userRepository.resetUserPopularityLimit(POPULARITY_LIMIT);
     }
 
+    //친구 리스트 조회
+    // 접속 여부도 판단
+
+    //소켓?
+
 }

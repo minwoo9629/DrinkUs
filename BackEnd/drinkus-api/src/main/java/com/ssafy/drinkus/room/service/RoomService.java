@@ -200,6 +200,25 @@ public class RoomService {
     public void findById(RoomConnectRequest request) {
         Room findRoom = roomRepository.findById(request.getRoomId())
                 .orElseThrow(() -> new NotFoundException(NotFoundException.ROOM_NOT_FOUND));
+<<<<<<< HEAD
+=======
+        findRoomHistory.updateRoomHistory(findroom, user);
+    }
+
+    @Transactional
+    // 화상방 입장
+    public void joinRoom(User user, RoomJoinRequest request){
+        // 유저 아이디로 유저 정보 얻어온다
+        User findUser = userRepository.findById(user.getUserId())
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
+        // target room 정보 얻어온다
+//        Room findroom = roomRepository.findById(request.getRoomId());
+    }
+
+    @Transactional
+    // 화상방 퇴장
+    public void exitRoom(User user){
+>>>>>>> b022574098dd090828eeaccd5d274a14522abae7
 
         if (!passwordEncoder.matches(request.getRoomPw(), findRoom.getRoomPw())) {
             throw new NotMatchException(NotMatchException.PW_NOT_MATCH);
