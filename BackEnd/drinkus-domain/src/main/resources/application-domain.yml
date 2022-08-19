@@ -3,7 +3,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://i7b306.p.ssafy.io:3306/drinkus?useSSL=false&useUnicode=true&autoReconnect=true&characterEncoding=utf8&allowMultiQueries=true&serverTimezone=Asia/Seoul
     username: root
-    password:
+    password: He110W0r1d@
 
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect

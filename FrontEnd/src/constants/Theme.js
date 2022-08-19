@@ -1,0 +1,15 @@
+export const Theme = {
+  술집: "publichouse",
+  펍: "pub",
+  칵테일바: "cocktail",
+  야구장: "baseball",
+  축구장: "soccer",
+  페스티벌: "festival",
+  클럽: "club",
+  편의점: "outside",
+  한강공원: "river",
+  미술관: "art",
+  영화관: "movie",
+  도서관: "library",
+  집: "house",
+};

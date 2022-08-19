@@ -14,9 +14,6 @@ public class CategoryResponse {
     private String categoryName;
 
     public static CategoryResponse from(Category category) {
-        return new CategoryResponse(
-                category.getCategoryId(),
-                category.getCategoryName()
-        );
+        return category == null ? null : new CategoryResponse(category.getCategoryId(), category.getCategoryName());
     }
 }
