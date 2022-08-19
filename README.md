@@ -91,6 +91,17 @@ DrinkUs는 나이대 및 관심사 기반 방 추천을 통해 처음 만나도 
 * firebase 8.10.0
 * Openvidu 2.22.0
 
+## EC2 포트 정리
+|**PORT**|**이름**|
+|:---:|:---:|
+|443|HTTPS|
+|80|HTTP, nginx|
+|8443|Openvidu|
+|3306|MySQL|
+|8080|Jenkins|
+|8081, 8082|Spring boot API Server|
+|8888|Kurento Media Server|
+
 <div id="3"></div>
 
 ## 💡 주요 기능
