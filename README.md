@@ -1,4 +1,236 @@
-## commit 메시지 규칙
+<div align="center">
+<br />
+<img src="https://user-images.githubusercontent.com/46440898/185304396-829f77ff-0736-41e6-a164-e8744dc05d76.png" alt="SSAFY MATE" width="800px" height="250px" />
+<br />
+</div>
+
+## 목차
+
+1. [**웹 서비스 소개**](#1)
+1. [**기술 스택**](#2)
+1. [**주요 기능**](#3)
+1. [**프로젝트 아키텍쳐**](#4)
+1. [**데모 영상**](#5)
+1. [**개발 팀 소개**](#6)
+
+[//]: # (1. [**특이사항**]&#40;#7&#41;)
+
+[//]: # (1. [**구글 애널리틱스 통계**]&#40;#8&#41;)
+
+[//]: # (1. [**개발 팀 소개**]&#40;#9&#41;)
+
+[//]: # (1. [**개발 기간 및 일정**]&#40;#10&#41;)
+
+[//]: # (1. [**실행 방법**]&#40;#11&#41;)
+
+<br />
+
+<div id="1"></div>
+
+## 💁 웹 서비스 소개
+
+**DrinkUs** 는 시공간의 제약없이 자유롭게 즐기는 화상채팅 기반 온라인 술자리 서비스입니다.
+
+DrinkUs는 나이대 및 관심사 기반 방 추천을 통해 처음 만나도 대화가 자연스럽게 시작될 수 있도록 유도해 편하게 서비스를<br />즐길 수 있습니다.
+
+커뮤니티를 통한 술자리 예약 기능, 아이스 브레이킹을 위한 간단한 술게임 및 대화 주제 추천 등 다양한 기능을 제공합니다.
+
+<br />
+
+
+<div id="2"></div>
+
+## 🛠 기술 스택
+
+### **Front-end**
+
+| <img src="https://profilinator.rishav.dev/skills-assets/html5-original-wordmark.svg" alt="HTML5" width="50px" height="50px" /> | <img src="https://profilinator.rishav.dev/skills-assets/css3-original-wordmark.svg" alt="CSS3" width="50px" height="50px" /> |
+| :----------------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------------: |
+|                                                             HTML5                                                              |                                                             CSS3                                                             |
+
+| <img src="https://profilinator.rishav.dev/skills-assets/react-original-wordmark.svg" alt="React.js" width="50px" height="50px" /> | <img src="https://profilinator.rishav.dev/skills-assets/redux-original.svg" alt="Redux" width="50px" height="50px" /> |
+| :-------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------: |
+|                                                               React                                                               |                                                         Redux                                                         |
+
+| <img src="https://cdn.worldvectorlogo.com/logos/socket-io.svg" alt="Socket.io" width="50px" height="50px" /> |        <img src="https://user-images.githubusercontent.com/46440898/185293492-b3242ac5-e146-43f5-a484-0e1aa4d45c3b.png" alt="Styled-Component" width="50px" height="50px" />         | <img src="https://axios-http.com/assets/logo.svg" alt="MUI" width="50px" height="50px" /> |
+| :----------------------------------------------------------------------------------------------------------: |:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------:|
+|                                                  Socket.io                                                   |                                         Styled-Component                                                                                                                             |                                           AXIOS                                           |
+
+### **Back-end**
+
+| <img src="https://profilinator.rishav.dev/skills-assets/java-original-wordmark.svg" alt="Java" width="50px" height="50px" /> | <img src="https://www.seekpng.com/png/full/8-80775_spring-logo-png-transparent-spring-java.png" alt="Spring-Boot" width="50px" height="50px" /> |<img src="https://user-images.githubusercontent.com/46440898/185340935-0d35ed10-a892-48ec-819c-92aa989cb60b.png" alt="SpringSecurity" width="50px" height="50px" /> |<img src="https://media.vlpt.us/images/2012monk/post/86ce779f-a08b-438d-836c-8dbe6e5a8cc0/hibernate_icon_whitebkg.svg" alt="Hibernate" width="50px" height="50px" /> |
+| :--------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------: |:--------------------------------------------------------------------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+|                                                             Java                                                             |                                                                   Spring-Boot                                                                   |                                                                            SpringSecurity                                                                            |                                                                                Hibernate                                                                                |
+
+|<img src="https://user-images.githubusercontent.com/46440898/185342183-ab62a7b0-bc3d-4707-a049-12787b75ed08.png" alt="Node.js" width="100px" height="50px" />  | <img src="https://cdn.worldvectorlogo.com/logos/socket-io.svg" alt="Socket.io" width="50px" height="50px" /> | <img src="https://profilinator.rishav.dev/skills-assets/mysql-original-wordmark.svg" alt="MySQL" width="50px" height="50px" /> |
+|:-------------------------------------------------------------------------------------------------------------------------------------------------------------:| :----------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------: |
+|                                                                            Node.js                                                                            |                                                  Socket.io                                                   |                                                             MySQL                                                              |
+
+| <img src="https://res.cloudinary.com/postman/image/upload/t_team_logo/v1629869194/team/2893aede23f01bfcbd2319326bc96a6ed0524eba759745ed6d73405a3a8b67a8" alt="Postman" width="50px" height="50px" /> |
+| :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+|                                                                                               Postman                                                                                                |
+
+### **DevOps**
+
+| <img src="https://profilinator.rishav.dev/skills-assets/nginx-original.svg" alt="NGiNX" width="100px" height="50px" /> | <img src="https://pbs.twimg.com/profile_images/1351702967561252865/aXfcETIt_400x400.jpg" alt="aws" width="50px" height="50px" /> | <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Jenkins_logo.svg/1200px-Jenkins_logo.svg.png" alt="Jenkins" width="50px" height="50px" /> | <img src="https://profilinator.rishav.dev/skills-assets/docker-original-wordmark.svg" alt="docker" width="50px" height="50px" /> |
+| :-------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------: |
+|                                                         NGiNX                                                         |                                                               aws                                                                |                                                                            Jenkins                                                                            |                                                              docker                                                              |
+
+<br />
+
+* React 18.2
+* Redux 4.2.0
+* StyledComponent 5.3.5
+* Redux-Thunk 2.4.1
+* React-Router-Dom 6.4
+* Node 16.16.0
+* Axios 0.27.2
+* Java 1.8
+* Spring Boot 2.7.1
+* Spring Security 2.0
+* JPA 2.0
+* OAuth 2.0
+* JWT 0.9.1
+* MySQL 8.0.30
+* Ubuntu 20.04
+* Docker 20.10.17
+* Jenkins 2.361
+* nginx 1.18.0
+* Stomp 6.1.2
+* firebase 8.10.0
+* Openvidu 2.22.0
+
+<div id="3"></div>
+
+## 💡 주요 기능
+
+| 기능                     | 내용                                                                                            |
+|:-----------------------|:----------------------------------------------------------------------------------------------|
+| WebRTC 기술을 활용한 라이브 기능  | OpenVidu를 사용하여 본 서비스의 비대면 화상채팅 서비스를 구현함                                                       |
+| 커뮤니티 및 알림기능            | 온라인 술자리 예약등록 및 소통공간 제공, 사용자간의 상호작용을 FCM 알림을 통해 시각적으로 도움을 줌                                    |
+| 게임기능                   | StompSocket을 사용하여 화상미팅 방에서 사용자들이 실시간으로 다양한 컨텐츠를 즐길 수 있음                                       |
+| 추천서비스                  | - 회원은 관심사를 추가하여 자신의 추가정보를 입력 할 수 있음<br/>- 방은 대분류 관심사를 두어 포괄적으로 참가자를 포함시킴                      |
+
+<br />
+
+<div id="4"></div>
+
+## 📂 프로젝트 아키텍쳐
+
+<img src="https://user-images.githubusercontent.com/46440898/185341847-2a4a302e-a0da-4658-b1da-5db2d11ed397.png" alt="아키텍처(Architecture)" width="1000px" />
+
+---
+
+<br />
+
+<div id="5"></div>
+
+## 🎥 데모 영상
+
+**[🔗 서비스 소개 영상 바로가기 Click !](https://youtu.be/0q4h3c69dXg)** 👈
+
+> 새 창 열기 방법 : CTRL+click (on Windows and Linux) | CMD+click (on MacOS)
+>
+
+<br />
+
+
+<div id="6"></div>
+
+## 👪 개발 팀 소개
+
+<table>
+<tr>
+<td align="center" width="150px">
+<a href="[https://github.com/rkarud1234](https://github.com/rkarud1234)" target="_blank">
+<a href="https://github.com/rkarud1234"><img height="100px" width="100px" src="https://avatars.githubusercontent.com/u/84266499?v=4" alt="김갑경 프로필"/></a>
+</a>
+</td>
+<td align="center" width="150px">
+<a href="[https://github.com/win9612](https://github.com/win9612)" target="_blank">
+<a href="https://github.com/win9612"><img height="100px" width="100px" src="https://avatars.githubusercontent.com/u/64128134?v=4" alt="조민규 프로필"/></a>
+</a>
+</td>
+<td align="center" width="150px">
+<a href="[https://github.com/daisy6365](https://github.com/daisy6365)" target="_blank">
+<a href="https://github.com/daisy6365"><img height="100px" width="100px" src="https://avatars.githubusercontent.com/u/62869982?v=4" alt="한다빈 프로필"/></a>
+</a>
+</td>
+<td align="center" width="150px">
+<a href="[https://github.com/minwoo9629](https://github.com/minwoo9629)" target="_blank">
+<a href="https://github.com/minwoo9629"><img height="100px" width="100px" src="https://avatars.githubusercontent.com/u/46440898?v=4" alt="이민우 프로필"/></a>
+</a>
+</td>
+<td align="center" width="150px">
+<a href="[https://github.com/mindot7](https://github.com/mindot7)" target="_blank">
+<a href="https://github.com/mindot7"><img height="100px" width="100px" src="https://avatars.githubusercontent.com/u/97648258?v=4" alt="김민정 프로필"/></a>
+</a>
+</td>
+<td align="center" width="150px">
+<a href="[https://github.com/Youji-Sung](https://github.com/Youji-Sung)" target="_blank">
+<a href="https://github.com/Youji-Sung"><img height="100px" width="100px" src="https://avatars.githubusercontent.com/u/97648544?v=4" alt="성유지 프로필"/></a>
+</a>
+</td>
+</tr>
+<tr>
+<td align="center">
+<a href="[https://github.com/rkarud1234](https://github.com/rkarud1234)" target="_blank">
+김갑경<br />(Back-end & 팀장)
+</a>
+</td>
+<td align="center">
+<a href="[https://github.com/win9612](https://github.com/win9612)" target="_blank">
+조민규<br />(Back-end)
+</a>
+</td>
+<td align="center">
+<a href="[https://github.com/daisy6365](https://github.com/daisy6365)" target="_blank">
+한다빈<br />(Back-end)
+</a>
+</td>
+<td align="center">
+<a href="[https://github.com/minwoo9629](https://github.com/minwoo9629)" target="_blank">
+이민우<br />(Front-end)
+</a>
+</td>
+<td align="center">
+<a href="[https://github.com/mindot7](https://github.com/mindot7)" target="_blank">
+김민정<br />(Front-end)
+</a>
+</td>
+<td align="center">
+<a href="[https://github.com/Youji-Sung](https://github.com/Youji-Sung)">
+성유지<br />(Front-end)
+</a>
+</td>
+</tr>
+</table>
+
+<br />
+
+<br />
+
+| 이름 |        역할        | <div align="center">개발 내용</div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+|:--: | :----------------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 김갑경  | Back-end<br />팀장 | - 자신이 개발할 내용 기술 |
+| 조민규 |      Back-end      | - 자신이 개발할 내용 기술 |
+| 한다빈 |      Back-end      | - 초기 스켈레톤 구조 설계 및 작성<br /> - 코드 리팩토링<br /> - 멀티 모듈 구조 적용<br /> - Junit을 이용한 테스트 코드 일부 작성<br /> - Spring Security 적용 및 JWT를 이용한 회원 인증 , 인가 코드 작성<br /> - 회원 기능 : User와 관련된 Entity 작성, 회원가입, 아이디 중복검사, 비밀번호 수정, 회원정보 수정 구현<br /> - 화상방 기능 : Room과 관련된 Entity 작성, 방 상세조회, 동적쿼리를 이용한 화상방 필터링 전체 조회, 화상방 수정, 회원의 관심사에 따른 화상방 추천리스트 동적쿼리 작성<br /> - Stomp Socket 설정 및 연결 - 게임 기능 : 대화주제 추천, 폭탄돌리기, 폭탄 돌리기 게임 결과 구현<br /> - 관심사 기능 : Category와 관련된 Entity 작성, 관심사 관련 기능 모두 구현<br /> - 알림 기능 : Firebase FCM 연결, FCM 알림보내기, 알림 리스트 조회 구현<br /> - Jenkins와 nginX, Docker를 사용하여 Back-End프로젝트 배포 완료<br /> - CI/CD 적용<br /> - Styled-Component를 이용한 CSS-in-JS 방식으로 스타일링 작업<br /> - “무한스크롤”Package를 활용하여 페이지 무한 스크롤 기능 구현<br /> - Firebase FCM 등록 설정 및 FCM 알림 받아서 알림창 띄우기 구현 | |
+| 이민우 |     Front-end      | - 자신이 개발할 내용 기술 |
+| 김민정 |     Front-end      | - 자신이 개발할 내용 기술 |
+| 성유지 |     Front-end      | - 자신이 개발할 내용 기술 |
+<br />
+
+<div id="7"></div>
+
+## 📅 개발 기간
+
+22.07.05. ~ 22.08.19
+
+<br />
+
+<div id='11'></div>
+
+## 커밋 규칙
 
 1. 모두 각자 branch에서 기능개발 후 `PR`
 2. `PR` 후 팀원모두함께 코드리뷰 진행 후 팀장이 `merge`
