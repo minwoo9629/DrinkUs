@@ -2,23 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="89f5d2a8-7505-47e5-a85a-b9b232d9f786" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/exec/dump/drinkus_auth.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/exec/dump/drinkus_calendar_board.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/exec/dump/drinkus_category.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/exec/dump/drinkus_chat.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/exec/dump/drinkus_chat_room.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/exec/dump/drinkus_daily_board.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/exec/dump/drinkus_email_auth.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/exec/dump/drinkus_friend.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/exec/dump/drinkus_report.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/exec/dump/drinkus_room.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/exec/dump/drinkus_room_history.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/exec/dump/drinkus_sub_category.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/exec/dump/drinkus_topic.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/exec/dump/drinkus_user.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/exec/dump/drinkus_user_calendar.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/exec/dump/drinkus_user_sub_category.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/exec/시연 시나리오.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
