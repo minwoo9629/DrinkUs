@@ -6,10 +6,12 @@ import com.ssafy.drinkus.common.NotExistException;
 import com.ssafy.drinkus.common.NotFoundException;
 import com.ssafy.drinkus.dailyboard.domain.DailyBoard;
 import com.ssafy.drinkus.dailyboard.domain.DailyBoardRepository;
+import com.ssafy.drinkus.dailyboard.query.DailyBoardQueryRepository;
 import com.ssafy.drinkus.dailyboard.request.DailyBoardCreateRequest;
 import com.ssafy.drinkus.dailyboard.request.DailyBoardUpdateRequest;
 import com.ssafy.drinkus.dailyboard.response.DailyBoardResponse;
 import com.ssafy.drinkus.dailyboard.response.MyBoardResponse;
+import com.ssafy.drinkus.external.fcm.FirebaseClient;
 import com.ssafy.drinkus.user.domain.User;
 import com.ssafy.drinkus.user.domain.type.UserRole;
 import lombok.RequiredArgsConstructor;
@@ -29,8 +31,9 @@ import java.util.List;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class DailyBoardService {
-
+    private final DailyBoardQueryRepository dailyBoardQueryRepository;
     private final DailyBoardRepository dailyBoardRepository;
+    private final FirebaseClient firebaseClient;
 
     // 총 데일리 게시판 페이지 개수 반환
     public Long countByParentIdIsNull() {
@@ -42,8 +45,8 @@ public class DailyBoardService {
     }
 
     // 데일리 게시판 원글 조회
-    public Page<DailyBoardResponse> findByParentIdIsNull(Pageable page) {
-        List<DailyBoard> results = dailyBoardRepository.findByParentIdIsNull(page);
+    public Page<DailyBoardResponse> findByParentIdIsNullOrderByCreatedDateDesc(Pageable page) {
+        List<DailyBoard> results = dailyBoardRepository.findByParentIdIsNullOrderByCreatedDateDesc(page);
         if (results.size() == 0) {
             throw new NotExistException("해당 페이지에 게시물이 존재하지 않습니다.");
         }
@@ -57,11 +60,11 @@ public class DailyBoardService {
     }
 
     // 댓글 조회
-    public List<DailyBoardResponse> findByParentId(Long parentId) {
-        List<DailyBoard> results = dailyBoardRepository.findByParentId(parentId);
-        if (results.size() == 0) {
-            throw new NotExistException("해당 게시물에 댓글이 존재하지 않습니다.");
-        }
+    public List<DailyBoardResponse> findByParentIdOrderByCreatedDateDesc(Long parentId) {
+        List<DailyBoard> results = dailyBoardRepository.findByParentIdOrderByCreatedDateDesc(parentId);
+//        if (results.size() == 0) {
+//            throw new NotExistException("해당 게시물에 댓글이 존재하지 않습니다.");
+//        }
 
         List<DailyBoardResponse> response = new ArrayList<>();
         for (DailyBoard dailyBoard : results) {
@@ -105,6 +108,8 @@ public class DailyBoardService {
     // 댓글 작성
     @Transactional
     public void createComment(User user, DailyBoardCreateRequest request, Long parentId) {
+//        DailyBoard parentBoard = dailyBoardQueryRepository.findDailyAndUserById(parentId)
+//                .orElseThrow(() -> new NotFoundException(NotFoundException.BOARD_DAILY_NOT_FOUND));
         DailyBoard parentBoard = dailyBoardRepository.findById(parentId)
                 .orElseThrow(() -> new NotFoundException(NotFoundException.BOARD_DAILY_NOT_FOUND));
         if (parentBoard.getParentId() != null) {
@@ -113,6 +118,11 @@ public class DailyBoardService {
 
         DailyBoard dailyBoard = DailyBoard.createDailyBoard(user, user, request.getBoardContent(), parentId);
         dailyBoardRepository.save(dailyBoard);
+
+        //유저 아이디와 해당 유저의 fcm토큰을 가져옴
+//        String fcmToken = parentBoard.getCreater().getFcmToken();
+//        String userNickname = parentBoard.getCreater().getUserNickname();
+//        firebaseClient.send(fcmToken,userNickname + "님의 글에 댓글이 달렸습니다.");
     }
 
     // 글 수정

@@ -6,16 +6,19 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserMyInfoResponse {
-
+    private Long userId;
     private String userName;
     private String userFullname;
     private String userNickname;
     private Integer userPopularity;
     private String userBirthday;
+    private LocalDateTime userCreatedDate;
     private String userIntroduce;
     private String userImg;
     private UserRole userRole;
@@ -24,7 +27,7 @@ public class UserMyInfoResponse {
     private Integer userBeer;
 
     public static UserMyInfoResponse from(User user){
-        return new UserMyInfoResponse(user.getUserName(), user.getUserFullname(), user.getUserNickname(), user.getUserPopularity(), user.getUserBirthday(),
-                user.getUserIntroduce(), user.getUserImg(), user.getUserRole(), user.getUserPoint(), user.getUserSoju(), user.getUserBeer());
+        return new UserMyInfoResponse(user.getUserId(), user.getUserName(), user.getUserFullname(), user.getUserNickname(), user.getUserPopularity(), user.getUserBirthday(),
+                user.getCreatedDate(), user.getUserIntroduce(), user.getUserImg(), user.getUserRole(), user.getUserPoint(), user.getUserSoju(), user.getUserBeer());
     }
 }

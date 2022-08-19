@@ -17,6 +17,8 @@ public class RoomListResponse {
 
     private String placeTheme;
 
+    private int connectedUserNum;
+
     private Integer peopleLimit;
 
     private LocalDateTime createdDate;

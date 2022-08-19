@@ -7,6 +7,5 @@ public enum UserProvider {
     local,
     google,
     kakao,
-    naver,
     facebook
 }

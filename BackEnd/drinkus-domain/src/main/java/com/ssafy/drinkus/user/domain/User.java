@@ -3,22 +3,17 @@ package com.ssafy.drinkus.user.domain;
 import com.ssafy.drinkus.common.BaseEntity;
 import com.ssafy.drinkus.common.NicknameFailException;
 import com.ssafy.drinkus.common.type.YN;
+import com.ssafy.drinkus.external.nickname.RandomNickname;
 import com.ssafy.drinkus.room.domain.Room;
-import com.ssafy.drinkus.room.domain.RoomHistory;
 import com.ssafy.drinkus.user.domain.type.UserProvider;
 import com.ssafy.drinkus.user.domain.type.UserRole;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.json.JSONObject;
 
 import javax.persistence.*;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,11 +49,6 @@ public class User extends BaseEntity {
 
     private String userImg;
 
-    private LocalDateTime userDeleteDate;
-
-    @Enumerated(EnumType.STRING)
-    private YN userDeleted; // Boolean type을 YN enum으로 사용
-
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
@@ -66,8 +56,6 @@ public class User extends BaseEntity {
     private UserProvider userProvider;
 
     private String userProviderId;
-
-    private String userGrade;
 
     private Long userPoint;
 
@@ -77,8 +65,7 @@ public class User extends BaseEntity {
 
     private Integer userBeer;
 
-    @OneToMany(mappedBy = "user")
-    private List<RoomHistory> roomHistoryList = new ArrayList<>();
+    private String fcmToken;
 
     @OneToMany(mappedBy = "user")
     private List<Room> roomList = new ArrayList<>();
@@ -87,18 +74,17 @@ public class User extends BaseEntity {
     private List<UserSubCategory> userSubCategoryList = new ArrayList<>();
 
     private void defaultUserSettings() {
-        try{
-            userNickname = makeRandomNickname();
-        }catch (IOException e){
+        try {
+            userNickname = RandomNickname.makeRandomNickname();
+        } catch (IOException e) {
             throw new NicknameFailException(NicknameFailException.MAKE_FAIL);
         }
         userPopularity = 0;
         userPopularityLimit = 5;
-        userDeleted = YN.N;
+        userImg = Integer.toString((int) (Math.random() * 25) + 1);
         userPoint = 0L;
         userSoju = 0;
         userBeer = 0;
-
     }
 
     // 로컬 회원가입
@@ -131,13 +117,14 @@ public class User extends BaseEntity {
 
     // 회원수정
     // 닉네임 주량 자기소개
-    public void updateUser(String userNickname, String userIntroduce, Integer userSoju, Integer userBeer, String userImg, String userBirthday) {
+    public void updateUser(String userNickname, String userIntroduce, Integer userSoju, Integer userBeer, String userImg, String userBirthday, String userFullname) {
         this.userNickname = userNickname;
         this.userIntroduce = userIntroduce;
         this.userSoju = userSoju;
         this.userBeer = userBeer;
         this.userImg = userImg;
         this.userBirthday = userBirthday;
+        this.userFullname = userFullname;
     }
 
     //비밀번호 수정
@@ -146,43 +133,17 @@ public class User extends BaseEntity {
     }
 
     //인기도 수정
-    public void updatePopularity(Integer popularNum){
+    public void updatePopularity(Integer popularNum) {
         this.userPopularity += popularNum;
     }
 
     //인기도 제한횟수 수정
-    public void updatePopularityLimit(){
+    public void updatePopularityLimit() {
         this.userPopularityLimit -= 1;
     }
 
-    // 닉네임 랜덤 생성
-    public static String makeRandomNickname() throws IOException {
-        URL url = new URL("https://nickname.hwanmoo.kr/?format=json&count=1&max_length=12");
-
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("GET");
-        conn.setRequestProperty("Content-type", "application/json");
-        conn.setConnectTimeout(5000);
-        conn.setReadTimeout(3000);
-
-        BufferedReader rd;
-        if(conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
-            rd = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
-        } else {
-            rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
-        }
-
-        StringBuilder sb = new StringBuilder();
-        String line;
-        while ((line = rd.readLine()) != null) {
-            sb.append(line);
-        }
-
-        rd.close();
-        conn.disconnect();
-        String word = (String) new JSONObject(sb.toString())
-                .getJSONArray("words").get(0);
-        return word;
+    //fcm토큰 재설정
+    public void updateFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
     }
-
 }
