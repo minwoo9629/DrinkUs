@@ -175,8 +175,7 @@ const RoomDetail = () => {
         setCurParticipant(parseInt(response.data));
       })
       .catch(function (error) {
-        FailAlert(error);
-        navigate("/rooms");
+        setCurParticipant(result.data.peopleLimit);
       });
 
     return data;
