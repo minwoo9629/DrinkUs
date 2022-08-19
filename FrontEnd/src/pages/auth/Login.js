@@ -81,10 +81,11 @@ const Login = () => {
     const data = {
       userName: state.userId,
       userPw: state.password,
+      fcmToken: sessionStorage.getItem("FCM_TOKEN")
     };
 
     const response = await login(data);
-    if (response.status === 400) {
+    if (response.status === 400 || response.status === 500) {
       FailAlert(response.data.message);
       return;
     }
@@ -99,7 +100,7 @@ const Login = () => {
   };
   return (
     <>
-      <BackButton />
+      <BackButton type={"main"} />
       <Wrapper>
         <RoundedWrapper
           width={"450"}
@@ -142,10 +143,10 @@ const Login = () => {
               ))}
             </LinkWrapper>
             <SocialWrapper>
-              <a href="">
+              <a href="https://i7b306.p.ssafy.io/oauth2/authorization/kakao">
                 <SocialButton src="assets/kakao_icon.png" color="yellow" />
               </a>
-              <a href="http://localhost:8080/oauth2/authorization/google">
+              <a href="https://i7b306.p.ssafy.io/oauth2/authorization/google">
                 <SocialButton src="assets/google_icon.png" color="white" />
               </a>
             </SocialWrapper>

@@ -1,8 +1,15 @@
 import { client } from "../utils/client";
 
-const createRoom = async (data) =>{
-  const result = await client.post("/rooms", data).then((response)=> response);
+const createRoom = async (data) => {
+  const result = await client.post("/rooms", data).then((response) => response);
   return result;
-}
+};
 
-export { createRoom };
+const getRoomInfo = async (roomId) => {
+  const result = await client
+    .get(`/rooms/${roomId}`)
+    .then((response) => response.data);
+  return result;
+};
+
+export { createRoom, getRoomInfo };
