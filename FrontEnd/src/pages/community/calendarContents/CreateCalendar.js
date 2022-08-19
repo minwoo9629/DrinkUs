@@ -199,8 +199,7 @@ const AgeCheckBox = styled.input`
 const CreateCalendar = ({ calendarDate, close, successHandler }) => {
   const user = useSelector((state) => state.user);
   const userAge = Math.floor(
-    (new Date().getFullYear() - user.data.userBirthday.substring(0, 4) + 1) /
-      10,
+    (new Date().getFullYear() - user.data.userBirthday.substring(0, 4) + 1) / 10
   );
   userAge >= 7 ? 7 : userAge;
 
@@ -245,7 +244,7 @@ const CreateCalendar = ({ calendarDate, close, successHandler }) => {
       let onlyNumber = e.target.value.replace(/[^0-9]/g, "");
       onlyNumber = Math.max(
         0,
-        Math.min(e.target.name == "hour" ? 23 : 59, onlyNumber),
+        Math.min(e.target.name == "hour" ? 23 : 59, onlyNumber)
       );
       setState({
         ...state,
@@ -287,7 +286,9 @@ const CreateCalendar = ({ calendarDate, close, successHandler }) => {
     e.preventDefault();
     // 방 설명 유효성 체크
     if (!state.content.length) {
-      alert(`방 설명을 써 주세요. '${state.place}에서 만날 사람~' 은 어때요?`);
+      FailAlert(
+        `방 설명을 써 주세요. '${state.place}에서 만날 사람~' 은 어때요?`
+      );
       return;
     }
 
@@ -304,11 +305,17 @@ const CreateCalendar = ({ calendarDate, close, successHandler }) => {
       .post("calendar", {
         calendarContent: state.content,
         calendarDatetime:
-          state.date.year +
-          (state.date.month < 10 ? "0" + state.date.month : state.date.month) +
-          (state.date.day < 10 ? "0" + state.date.day : state.date.day) +
-          (state.hour < 10 ? "0" + state.hour : state.hour) +
-          (state.minute < 10 ? "0" + state.minute : state.minute),
+          String(state.date.year) +
+          (state.date.month < 10
+            ? "0" + String(state.date.month)
+            : String(state.date.month)) +
+          (state.date.day < 10
+            ? "0" + String(state.date.day)
+            : String(state.date.day)) +
+          (state.hour < 10 ? "0" + String(state.hour) : String(state.hour)) +
+          (state.minute < 10
+            ? "0" + String(state.minute)
+            : String(state.minute)),
         peopleLimit: state.peopleLimit,
         place: state.place,
         ages: state.ages,
@@ -329,7 +336,6 @@ const CreateCalendar = ({ calendarDate, close, successHandler }) => {
   };
 
   const onAgeCheckbox = (id) => {
-    console.log(state);
     const tmpAge = state.ages;
     tmpAge[id] = state.ages[id] == "Y" ? "N" : "Y";
     setState({
@@ -442,6 +448,7 @@ const CreateCalendar = ({ calendarDate, close, successHandler }) => {
             required
           >
             <option>술집</option>
+            <option>집</option>
             <option>펍</option>
             <option>칵테일바</option>
             <option>야구장</option>

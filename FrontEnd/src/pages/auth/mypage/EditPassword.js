@@ -103,77 +103,95 @@ const EditPassword = () => {
         userName={userNameState}
       />
       <EditPasswordWrapper>
-        <EditPasswordInputWrapper>
-          <div
-            style={{ width: "25%", textAlign: "right", alignItems: "center" }}
-          >
-            이전 비밀번호
-          </div>
-          <div style={{ marginLeft: "24px" }}>
-            <EditPasswordInput
-              onChange={onHandleInput}
-              type="password"
-              name="previousPassword"
-              value={state.previousPassword}
-              ref={previousPasswordInput}
-            />
-          </div>
-        </EditPasswordInputWrapper>
-        <EditPasswordInputWrapper alginItem={"flex-start"}>
-          <div
-            style={{ width: "25%", textAlign: "right", alignItems: "center" }}
-          >
-            새 비밀번호
-          </div>
-          <div style={{ marginLeft: "24px" }}>
-            <EditPasswordInput
-              onChange={onHandleInput}
-              type="password"
-              name="newPassword"
-              value={state.newPassword}
-              ref={newPasswordInput}
-            />
-          </div>
-        </EditPasswordInputWrapper>
-        <EditPasswordInputWrapper alginItem={"baseline"}>
-          <div style={{ width: "25%", textAlign: "right" }}>
-            새 비밀번호 확인
-          </div>
-          <div
-            style={{
-              marginLeft: "24px",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "flex-start",
-            }}
-          >
-            <EditPasswordInput
-              onChange={onHandleInput}
-              type="password"
-              name="confirmNewPassword"
-              value={state.confirmNewPassword}
-              ref={confirmNewPasswordInput}
-            />
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                marginTop: "25px",
-              }}
-            >
-              <EditPasswordButton onClick={onHandleSubmit}>
-                비밀번호 변경
-              </EditPasswordButton>
-              <Link
-                style={{ textDecoration: "none", color: "#6f92bf" }}
-                to="/findPassword"
+        {user.data.userRole !== "ROLE_SOCIAL" ? (
+          <>
+            <EditPasswordInputWrapper>
+              <div
+                style={{
+                  width: "25%",
+                  textAlign: "right",
+                  alignItems: "center",
+                }}
               >
-                비밀번호를 잊으셨나요?
-              </Link>
+                이전 비밀번호
+              </div>
+              <div style={{ marginLeft: "24px" }}>
+                <EditPasswordInput
+                  onChange={onHandleInput}
+                  type="password"
+                  name="previousPassword"
+                  value={state.previousPassword}
+                  ref={previousPasswordInput}
+                />
+              </div>
+            </EditPasswordInputWrapper>
+            <EditPasswordInputWrapper alginItem={"flex-start"}>
+              <div
+                style={{
+                  width: "25%",
+                  textAlign: "right",
+                  alignItems: "center",
+                }}
+              >
+                새 비밀번호
+              </div>
+              <div style={{ marginLeft: "24px" }}>
+                <EditPasswordInput
+                  onChange={onHandleInput}
+                  type="password"
+                  name="newPassword"
+                  value={state.newPassword}
+                  ref={newPasswordInput}
+                />
+              </div>
+            </EditPasswordInputWrapper>
+            <EditPasswordInputWrapper alginItem={"baseline"}>
+              <div style={{ width: "25%", textAlign: "right" }}>
+                새 비밀번호 확인
+              </div>
+              <div
+                style={{
+                  marginLeft: "24px",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                }}
+              >
+                <EditPasswordInput
+                  onChange={onHandleInput}
+                  type="password"
+                  name="confirmNewPassword"
+                  value={state.confirmNewPassword}
+                  ref={confirmNewPasswordInput}
+                />
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "flex-start",
+                    marginTop: "25px",
+                  }}
+                >
+                  <EditPasswordButton onClick={onHandleSubmit}>
+                    비밀번호 변경
+                  </EditPasswordButton>
+                  <Link
+                    style={{ textDecoration: "none", color: "#6f92bf" }}
+                    to="/findPassword"
+                  >
+                    비밀번호를 잊으셨나요?
+                  </Link>
+                </div>
+              </div>
+            </EditPasswordInputWrapper>
+          </>
+        ) : (
+          <>
+            <div style={{ color: "#6F92BF" }}>
+              소셜 로그인은 비밀번호를 변경할 수 없습니다.
             </div>
-          </div>
-        </EditPasswordInputWrapper>
+          </>
+        )}
       </EditPasswordWrapper>
     </div>
   );

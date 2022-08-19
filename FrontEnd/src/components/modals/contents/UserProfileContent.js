@@ -115,6 +115,7 @@ const UserProfileContent = ({ userId, close, userNickname }) => {
             changeTypeState={changeTypeState}
             userId={userId}
             userNickname={userNickname}
+            modalClose={close}
           />
         </>
       )}

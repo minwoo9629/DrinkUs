@@ -31,6 +31,7 @@ const DrinkUsHeader = styled(BaseFlexWrapper)`
   @media screen and (max-width: 740px) {
     padding: 40px 30px;
   }
+  box-shadow: 0px 5px 10px 2px rgb(0 0 0 / 10%);
 `;
 
 const HeaderMenu = styled(BaseFlexWrapper)`
@@ -181,14 +182,6 @@ const Header = ({ position, location }) => {
               >
                 {user.data.userNickname}님
               </HeaderMenuLink>
-              <LogOutButton
-                className={
-                  location === "lightzone" ? "" : HeaderStatus ? "" : "light"
-                }
-                onClick={modalOpen}
-              >
-                <i className="far fa-heart" />
-              </LogOutButton>
               {user.data.userRole === "ROLE_ADMIN" ? (
                 <>
                   {LOGINED_MENU_ADMIN.map((item, idx) => (

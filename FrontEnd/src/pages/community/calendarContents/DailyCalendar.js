@@ -5,6 +5,13 @@ import CalendarListItem from "../../../components/calendar/CalendarListItem";
 import Modal from "../../../components/modals/Modal";
 import CreateCalendar from "./CreateCalendar";
 import { CommunityConFirmButton } from "../../../components/common/buttons/CommunityConfirmButton";
+import ModalCloseButton from "../../../components/common/buttons/ModalCloseButton";
+import PageNation from "../../../components/common/buttons/PageNation";
+
+const Wrapper = styled.div`
+  width: 1200px;
+  margin:auto;
+`;
 
 const TextDiv = styled.div`
   margin: 21px 0;
@@ -45,6 +52,7 @@ const Title = styled.h2`
 
 const ContentWrapper = styled.div`
   border-bottom: 5px solid rgb(228, 228, 228);
+  min-height: 720px;
 `;
 
 const CalendarWrapper = styled.div``;
@@ -102,9 +110,23 @@ const Description = styled.span`
   }
 `;
 
+// 페이지네이션
+const PageNationWrapper = styled.div`
+  margin-top: 20px;
+  margin: 20px auto;
+  width: 80%;
+  padding-bottom: 20px;
+`;
+
 const DailyCalendar = ({ year, month, day, monthly, setNewDate }) => {
   const [showDescription, setShowDescription] = useState(false);
-  const [dailyCalendar, setDailyCalendar] = useState([]);
+  const [dailyCalendar, setDailyCalendar] = useState({
+    content: [],
+    number: 0,
+    numberOfElements: 0,
+    size: 0,
+    totalPages: 0,
+  });
   const [curDate, setCurDate] = useState(new Date(year, month - 1, day));
   const dailyCalendarTitle = `
     ${curDate.getFullYear()}.
@@ -112,19 +134,22 @@ const DailyCalendar = ({ year, month, day, monthly, setNewDate }) => {
     ${curDate.getDate()}
   `;
 
-  const fetchData = async () => {
+  const onHandlePageButton = (pageNum) => {
+    fetchData(pageNum);
+  };
+
+  const fetchData = async (pageNum) => {
     const response = await client
       .get(
         `/calendar/daily?year=${curDate.getFullYear()}
       &month=${curDate.getMonth() + 1}
-      &day=${curDate.getDate()}`,
+      &day=${curDate.getDate()}&page=${pageNum}`
       )
-      .then(function (response) {
-        setDailyCalendar([...response.data.content]);
-      })
+      .then((response) => response)
       .catch(function (error) {
         console.log(error);
       });
+    setDailyCalendar({ ...response.data });
   };
 
   const [modalState, setModalState] = useState({ write: false, list: false });
@@ -137,12 +162,12 @@ const DailyCalendar = ({ year, month, day, monthly, setNewDate }) => {
   };
 
   useEffect(() => {
-    fetchData();
+    fetchData(dailyCalendar.number);
 
     setNewDate(
       curDate.getFullYear(),
       curDate.getMonth() + 1,
-      curDate.getDate(),
+      curDate.getDate()
     );
   }, [curDate]);
 
@@ -150,6 +175,7 @@ const DailyCalendar = ({ year, month, day, monthly, setNewDate }) => {
 
   return (
     <>
+    <Wrapper>
       <CalendarWrapper>
         <Modal
           isOpen={modalState.write}
@@ -161,6 +187,7 @@ const DailyCalendar = ({ year, month, day, monthly, setNewDate }) => {
             />
           }
           width="600px"
+          zIndex={1}
           background="#fcfcfc"
           borderColor="none"
         />
@@ -172,8 +199,8 @@ const DailyCalendar = ({ year, month, day, monthly, setNewDate }) => {
                 new Date(
                   curDate.getFullYear(),
                   curDate.getMonth(),
-                  curDate.getDate() - 1,
-                ),
+                  curDate.getDate() - 1
+                )
               );
             }}
           >
@@ -186,8 +213,8 @@ const DailyCalendar = ({ year, month, day, monthly, setNewDate }) => {
                 new Date(
                   curDate.getFullYear(),
                   curDate.getMonth(),
-                  curDate.getDate() + 1,
-                ),
+                  curDate.getDate() + 1
+                )
               );
             }}
           >
@@ -200,7 +227,7 @@ const DailyCalendar = ({ year, month, day, monthly, setNewDate }) => {
             {new Date(
               curDate.getFullYear(),
               curDate.getMonth(),
-              curDate.getDate() + 1,
+              curDate.getDate() + 1
             ) <= new Date() ? (
               <>
                 <CalendarButton
@@ -210,11 +237,9 @@ const DailyCalendar = ({ year, month, day, monthly, setNewDate }) => {
                   hoverBorderColor="#c4c4c4"
                   onMouseLeave={() => {
                     setShowDescription(false);
-                    console.log("sd: " + showDescription);
                   }}
                   onMouseOver={() => {
                     setShowDescription(true);
-                    console.log("sd: " + showDescription);
                   }}
                 >
                   생성 불가
@@ -272,7 +297,7 @@ const DailyCalendar = ({ year, month, day, monthly, setNewDate }) => {
             <TextDiv>오늘 잡힌 약속이 없어요. 약속을 잡아보세요!</TextDiv>
           ) : (
             <>
-              {dailyCalendar.map((content, index) => (
+              {dailyCalendar.content.map((content, index) => (
                 <CalendarListItem
                   year={year}
                   month={month}
@@ -286,6 +311,19 @@ const DailyCalendar = ({ year, month, day, monthly, setNewDate }) => {
           )}
         </ContentListWrapper>
       </ContentWrapper>
+      <PageNationWrapper>
+        <PageNation
+          onClick={onHandlePageButton}
+          number={dailyCalendar.number + 1}
+          size={dailyCalendar.size}
+          totalPages={dailyCalendar.totalPages}
+          bgColor={"#a2b8ff"}
+          activeNumberColor={"#FFFFFF"}
+          numberColor={"#bdcff2"}
+          directionColor={"#bdcff2"}
+        />
+      </PageNationWrapper>
+      </Wrapper>
     </>
   );
 };

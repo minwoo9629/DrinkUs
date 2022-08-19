@@ -8,6 +8,8 @@ import Banner from "../../components/room/Banner";
 import { useSelector } from "react-redux";
 import { LiveButton } from "../../components/common/buttons/LiveButton";
 import { SocialBirthDayAlert } from "../../utils/sweetAlert";
+import Modal from "../../components/modals/Modal";
+import CreateRoom from "./CreateRoom";
 
 // 버튼, 배너
 const LiveWrapper = styled.div`
@@ -111,15 +113,29 @@ const DrinkLive = () => {
     setCurrentList([...result.data]);
   };
 
+  const [modalState, setModalState] = useState(false);
+  const openModal = () => {
+    setModalState(true);
+  };
+
+  const closeModal = () => {
+    setModalState(false);
+  };
+
   return (
     <>
       <Header />
       <LiveWrapper>
+        <Modal
+          isOpen={modalState}
+          modalContent={<CreateRoom close={closeModal} />}
+          width="800px"
+          borderWidth="0"
+          background="#a8a8a8"
+        />
+
         <LiveButtonWrapper>
-          <LiveButton
-            onClick={() => navigate("/createroom")}
-            color={"cornflowerblue"}
-          >
+          <LiveButton onClick={openModal} color={"cornflowerblue"}>
             방 만들기
           </LiveButton>
           <LiveButton onClick={() => navigate("/rooms")} color={"#EAF1FF"}>

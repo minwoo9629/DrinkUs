@@ -3,6 +3,14 @@ import { Link, useNavigate } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 import Header from "../../../components/layout/Header";
 import { client } from "../../../utils/client";
+import {
+  sendConfirmEmail,
+  confirmEmail,
+  doubleCheckEmail,
+} from "../../../api/JoinAPI";
+import { FailAlert, EmptyAlert, SuccessAlert } from "../../../utils/sweetAlert";
+import { BackButton } from "../../../components/common/buttons/BackButton";
+import { useRef } from "react";
 
 const neon_text_color = "#2d00b4";
 const NeonSignAnimation = keyframes`
@@ -23,13 +31,6 @@ const NeonSignAnimation = keyframes`
   20%,
   24%,
 `;
-import {
-  sendConfirmEmail,
-  confirmEmail,
-  doubleCheckEmail,
-} from "../../../api/JoinAPI";
-import { FailAlert, EmptyAlert, SuccessAlert } from "../../../utils/sweetAlert";
-import { BackButton } from "../../../components/common/buttons/BackButton";
 
 const Wrapper = styled.div`
   background-color: black;
@@ -268,6 +269,8 @@ const Join = () => {
     state.userBirthdayCheck.valid,
   ]);
 
+  const emailConfirmRef = useRef([]);
+
   const navigate = useNavigate();
 
   const onHandleInput = (e) => {
@@ -414,6 +417,8 @@ const Join = () => {
       for (let i = 0; i < highestIntervalId; i++) {
         clearInterval(i);
       }
+      emailConfirmRef.current[0].disabled = true;
+      emailConfirmRef.current[0].style.backgroundColor = "#757575";
       SuccessAlert("입력하신 이메일로 인증번호가 발송됐습니다.");
       const interval = setInterval(() => {
         if (s === 0) clearInterval(interval);
@@ -448,6 +453,8 @@ const Join = () => {
         ...state,
         certification: { valid: true, guide: "인증이 완료되었습니다." },
       });
+      emailConfirmRef.current[1].disabled = true;
+      emailConfirmRef.current[1].style.backgroundColor = "#757575";
     } else {
       setState({
         ...state,
@@ -513,6 +520,7 @@ const Join = () => {
                     onBlur={() => {
                       onDoubleCheck();
                     }}
+                    ref={(el) => (emailConfirmRef.current[0] = el)}
                   ></Input>
                 </InputWrapper>
 
@@ -562,6 +570,7 @@ const Join = () => {
                     onBlur={() => {
                       onConfirmEmail();
                     }}
+                    ref={(el) => (emailConfirmRef.current[1] = el)}
                   />
                 </InputWrapper>
                 {state.emailConfirm.valid ? (

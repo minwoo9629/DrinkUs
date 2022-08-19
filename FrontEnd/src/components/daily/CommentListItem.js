@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
-import { deleteDailyComment } from "../../api/DailyAPI";
+
 import { client } from "../../utils/client";
 
 const CommentWrapper = styled.div`
@@ -12,7 +12,7 @@ const CommentWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-`
+`;
 
 const CommentContentWrapper = styled.div`
   width: 100%;
@@ -24,8 +24,7 @@ const CommentContentWrapper = styled.div`
   border-radius: 1px;
   border: 1px solid #bdcff2;
   background-color: white;
-  
-`
+`;
 
 // 글 수정 삭제 버튼
 const DailyBoardEditButton = styled.button`
@@ -36,12 +35,12 @@ const DailyBoardEditButton = styled.button`
   margin: 4px;
   border: 1px white;
   text-align: flex;
-`
+`;
 
 const ProfileWrapper = styled.div`
   display: flex;
-justify-content: space-between;
-align-items: center;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 // 댓글 수정 인풋
@@ -49,11 +48,11 @@ const DailyModifyInput = styled.input`
   width: 100%;
   height: 100%;
   border-radius: 1px;
-  border: solid #6F92BF 0.1em;
+  border: solid #6f92bf 0.1em;
   background-color: white;
   position: relative;
   padding-left: 20px;
-`
+`;
 
 // 댓글 수정 버튼
 const DailyModifyButton = styled.button`
@@ -66,7 +65,7 @@ const DailyModifyButton = styled.button`
   color: white;
   font-size: 16px;
   margin: 16px;
-`
+`;
 
 const ProfileImg = styled.img`
   padding: 8px;
@@ -78,74 +77,68 @@ const ProfileImg = styled.img`
 `;
 
 const ContentWrapper = styled.div`
-margin-left: 5px;
-`
-
+  margin-left: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
+`;
 
 const Nickname = styled.div`
   font-size: 13px;
   font-weight: 700;
   color: #6f92bf;
-`
+`;
 
 const BoardContent = styled.div`
   font-size: 15px;
   font-weight: 500;
-  padding : 10px 0;
-`
-
+  padding: 5px 0;
+`;
 
 const CommentListItem = ({
   boardId,
   boardContent,
   userNickname,
   createrId,
-  userImg
+  userImg,
+  onCommentEdit,
+  onCommentDelete,
 }) => {
   const [state, setState] = useState({
     boardComment: boardContent,
     showCommentEdit: false,
     userImg: "",
-  })
+  });
 
   // 접속한 유저 정보 가져오기
   const fetchUser = async () => {
-    client
-      .get("users")
-      .then(function (response) {
-        const data = response.data;
-        setState({
-          ...state,
-          userId: data.userId
-        })
-      })
-  };
-
-  // 댓글 삭제
-  const onCommentDelete = async (boardId) => {
-    deleteDailyComment(boardId)
-    window.location.replace("/daily")
+    client.get("users").then(function (response) {
+      const data = response.data;
+      setState({
+        ...state,
+        userId: data.userId,
+      });
+    });
   };
 
   useEffect(() => {
     fetchUser();
   }, []);
 
-  // 댓글 수정
-  const onCommentEdit = (boardId) => {
-    client
-      .put(`/daily/${boardId}`, {
-        boardContent: state.boardComment
-      })
-      .then((response) => response)
-  }
-
   // 댓글 수정 창 여닫기
   const onHandleCommentEdit = (e) => {
     if (!state.showCommentEdit) {
-      setState({ ...state, showCommentEdit: !state.showCommentEdit, boardComment: boardContent })
+      setState({
+        ...state,
+        showCommentEdit: !state.showCommentEdit,
+        boardComment: boardContent,
+      });
     } else {
-      setState({ ...state, showCommentEdit: !state.showCommentEdit, boardComment: boardContent })
+      setState({
+        ...state,
+        showCommentEdit: !state.showCommentEdit,
+        boardComment: boardContent,
+      });
     }
   };
 
@@ -162,44 +155,61 @@ const CommentListItem = ({
     position: relative;
     font-size: 24px;
     color: #6f92bf;
-  `
+  `;
 
   // 엔터 키 눌렀을 때 입력
   const onEnterPress = (e) => {
     if (e.key === "Enter") {
-      onCommentEdit(boardId);
+      onCommentEdit(boardId, state.boardComment);
+      onHandleCommentEdit();
     }
   };
 
   return (
     <div>
       <CommentWrapper>
-        <CommentArrow src="assets/commentarrow.png">
-        </CommentArrow>
+        <CommentArrow src="assets/commentarrow.png"></CommentArrow>
         <CommentContentWrapper>
           <ProfileWrapper>
             <div>
-              <ProfileImg onClick={() => navigate(`/users/profile/${createrId}`)} src={`assets/profileImage/profile${userImg}.png`}>
-              </ProfileImg>
+              <ProfileImg
+                onClick={() => navigate(`/users/profile/${createrId}`)}
+                src={`assets/profileImage/profile${userImg}.png`}
+              ></ProfileImg>
             </div>
             <ContentWrapper>
               <Nickname>{userNickname}</Nickname>
-              <div style={{ display: state.showCommentEdit === true ? "none" : "block" }}>
+              <div
+                style={{
+                  display: state.showCommentEdit === true ? "none" : "block",
+                }}
+              >
                 <BoardContent>{boardContent}</BoardContent>
               </div>
-                <div style={{ display: state.showCommentEdit === false ? "none" : "block" }}>
-                  <DailyModifyInput
-                    placeholder=""
-                    type="string"
-                    value={state.boardComment}
-                    name="boardComment"
-                    onChange={onHandleInput}
-                    onKeyPress={onEnterPress}
-                  />
+              <div
+                style={{
+                  display: state.showCommentEdit === false ? "none" : "block",
+                }}
+              >
+                <DailyModifyInput
+                  placeholder=""
+                  type="string"
+                  value={state.boardComment}
+                  name="boardComment"
+                  onChange={onHandleInput}
+                  onKeyPress={onEnterPress}
+                />
               </div>
             </ContentWrapper>
           </ProfileWrapper>
-          <div style={{ display: (state.userId === createrId) && (state.showCommentEdit === false) ? "block" : "none" }}>
+          <div
+            style={{
+              display:
+                state.userId === createrId && state.showCommentEdit === false
+                  ? "block"
+                  : "none",
+            }}
+          >
             <DailyBoardEditButton onClick={() => onHandleCommentEdit()}>
               수정
             </DailyBoardEditButton>
@@ -207,14 +217,27 @@ const CommentListItem = ({
               삭제
             </DailyBoardEditButton>
           </div>
-          <div style={{ display: state.showCommentEdit === false ? "none" : "block"}}>
-            <DailyModifyButton onClick={onHandleCommentEdit}>수정 취소</DailyModifyButton>
-            <DailyModifyButton onClick={() => onCommentEdit(boardId)}>수정하기</DailyModifyButton>
+          <div
+            style={{
+              display: state.showCommentEdit === false ? "none" : "block",
+            }}
+          >
+            <DailyModifyButton onClick={onHandleCommentEdit}>
+              수정 취소
+            </DailyModifyButton>
+            <DailyModifyButton
+              onClick={() => {
+                onCommentEdit(boardId, state.boardComment);
+                onHandleCommentEdit();
+              }}
+            >
+              수정하기
+            </DailyModifyButton>
           </div>
         </CommentContentWrapper>
       </CommentWrapper>
     </div>
-  )
+  );
 };
 
 export default CommentListItem;

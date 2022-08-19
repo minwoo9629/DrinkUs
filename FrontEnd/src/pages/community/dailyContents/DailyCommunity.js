@@ -1,20 +1,20 @@
 import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
 import { BaseFlexColWrapper } from "../../../components/styled/Wrapper";
-import { useNavigate } from "react-router-dom";
 import { CalendarButton } from "../../../components/common/buttons/CalendarButton";
-import { getDailyArticle, postDailyArticle } from "../../../api/DailyAPI";
+import {
+  getDailyArticle,
+  postDailyArticle,
+  deleteDailyArticle,
+} from "../../../api/DailyAPI";
 import { useInView } from "react-intersection-observer";
 import DailyListItem from "../../../components/daily/DailyListItem";
 import { client } from "../../../utils/client";
 
 // 전체 배경
 const Wrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  width: 100vw;
-  min-height: 100vh;
-  background-color: white;
+width: 1200px;
+margin: auto;
 `;
 
 // 글쓰기 인풋 div
@@ -23,25 +23,26 @@ const DailyArticleInputWrapper = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  height: 11vh;
+  height: 100px;
   background-color: white;
 `;
 
 // 글쓰기 인풋
-const DailyArticleInput = styled.input`
+const DailyArticleInput = styled.textarea`
   justify-content: space-between;
-  width: 64vw;
+  width: 90%;
   height: 100%;
   border-radius: 1px;
   border: solid #6f92bf 0.1em;
   background-color: #eaf1ff;
   position: relative;
   padding-left: 20px;
+  padding-top: 20px;
+  resize: none;
 `;
 
 // 글쓰기 버튼
 const DailyArticlePostButton = styled.button`
-  padding: 12px 24px;
   border-radius: 1px;
   height: 102%;
   width: 10%;
@@ -50,6 +51,7 @@ const DailyArticlePostButton = styled.button`
   border: solid #bdcff2 0.1em;
   color: white;
   font-size: 16px;
+  cursor: pointer;
 `;
 
 const TopMenuWrap = styled.div`
@@ -61,6 +63,14 @@ const TopMenuWrap = styled.div`
 
 const DailyWrapper = styled.div`
   width: 100%;
+`;
+
+const DailyInitMessage = styled.div`
+  width: 100%;
+  display: flex;
+  color: #9797a3;
+  margin-bottom: 10px;
+  font-size: 14px;
 `;
 
 const DailyCommunity = () => {
@@ -76,7 +86,6 @@ const DailyCommunity = () => {
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(false);
   const [ref, inView] = useInView();
-  const navigate = useNavigate();
 
   // 전체 글 fetch
   const getItems = useCallback(async () => {
@@ -110,11 +119,15 @@ const DailyCommunity = () => {
     const data = {
       boardContent: state.boardArticle,
     };
+
+    // response로 새로운 글 번호 받기
     const response = await postDailyArticle(data);
     if (response.status === 200) {
       setState({ ...state, boardArticle: "" });
     }
-    window.location.replace("/daily");
+
+    const newDailyArticle = await client.get(`/daily/${response.data}`);
+    setItems((prevState) => [newDailyArticle.data, ...prevState]);
   };
 
   // 엔터 키 눌렀을 때 입력
@@ -124,14 +137,38 @@ const DailyCommunity = () => {
     }
     getDailyArticle();
   };
+
+  // 글 수정
+  const onArticleEdit = (boardId, boardContent) => {
+    client
+      .put(`/daily/${boardId}`, {
+        boardContent,
+      })
+      .then((response) => response);
+
+    setItems((prevState) =>
+      prevState.map((item) =>
+        item.boardId === boardId ? { ...item, boardContent } : item
+      )
+    );
+  };
+  // 글 삭제
+  const onArticleDelete = async (boardId) => {
+    await deleteDailyArticle(boardId);
+    setItems((prevState) =>
+      prevState.filter((item) => item.boardId !== boardId)
+    );
+  };
   return (
     <>
+    <Wrapper>
       <BaseFlexColWrapper>
-        <>일간 게시판은 매일 오전 6시에 초기화됩니다.</>
+        <DailyInitMessage>
+          일간 게시판은 매일 오전 6시에 초기화됩니다.
+        </DailyInitMessage>
         <DailyArticleInputWrapper>
           <DailyArticleInput
             placeholder="글을 작성하세요"
-            type="string"
             value={state.boardArticle}
             name="boardArticle"
             onChange={onHandleInput}
@@ -147,7 +184,12 @@ const DailyCommunity = () => {
               {items.length - 1 == idx ? (
                 <>
                   <div ref={ref}>
-                    <DailyListItem {...item} key={item.boardId}>
+                    <DailyListItem
+                      {...item}
+                      key={item.boardId}
+                      onArticleEdit={onArticleEdit}
+                      onArticleDelete={onArticleDelete}
+                    >
                       {item.boardContent}
                       {item.boardId}
                       {item.createrId}
@@ -156,7 +198,12 @@ const DailyCommunity = () => {
                 </>
               ) : (
                 <>
-                  <DailyListItem {...item} key={item.boardId}>
+                  <DailyListItem
+                    {...item}
+                    key={item.boardId}
+                    onArticleEdit={onArticleEdit}
+                    onArticleDelete={onArticleDelete}
+                  >
                     {item.boardContent}
                     {item.boardId}
                     {item.createrId}
@@ -167,6 +214,7 @@ const DailyCommunity = () => {
           ))}
         </DailyWrapper>
       </BaseFlexColWrapper>
+      </Wrapper>
     </>
   );
 };
