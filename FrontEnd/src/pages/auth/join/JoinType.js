@@ -97,7 +97,7 @@ const LocalButton = styled.button`
 const JoinType = () => {
   const moveSocialJoin = (provider) => {
     window.location.replace(
-      `https://i7b306.p.ssafy.io/oauth2/authorization/${provider}`
+      `https://i7b306.p.ssafy.io/oauth2/authorization/${provider}`,
     );
   };
 
@@ -124,13 +124,6 @@ const JoinType = () => {
                 src="../assets/google_login.png"
                 color="white"
                 onClick={() => moveSocialJoin("google")}
-              />
-            </JoinWrapper>
-            <JoinWrapper>
-              <SocialJoinButton
-                src="../assets/facebook_login.png"
-                color="#2374F2"
-                onClick={() => moveSocialJoin("facebook")}
               />
             </JoinWrapper>
           </JoinForm>
