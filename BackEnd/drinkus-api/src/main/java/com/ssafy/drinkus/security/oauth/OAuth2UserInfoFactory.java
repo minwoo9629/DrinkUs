@@ -11,8 +11,6 @@ public class OAuth2UserInfoFactory {
             return new GoogleOAuth2UserInfo(attributes);
         } else if (registrationId.equals(UserProvider.kakao.toString())) {
             return new KakaoOAuth2UserInfo(attributes);
-        } else if (registrationId.equals(UserProvider.naver.toString())) {
-            return new NaverOAuth2UserInfo(attributes);
         } else if (registrationId.equals(UserProvider.facebook.toString())) {
             return new FaceBookOAuth2UserInfo(attributes);
         } else {

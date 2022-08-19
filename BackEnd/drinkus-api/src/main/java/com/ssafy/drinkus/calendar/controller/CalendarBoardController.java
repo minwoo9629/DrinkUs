@@ -24,8 +24,8 @@ public class CalendarBoardController {
 
     // 월별 일정 조회
     @GetMapping("/month")
-    public ResponseEntity<Boolean[]> getMonthlySchedule(@RequestParam Integer year, @RequestParam Integer month) {
-        Boolean[] body = calendarBoardService.getMonthlySchedule(year, month);
+    public ResponseEntity<Boolean[]> findMonthlySchedule(@RequestParam Integer year, @RequestParam Integer month) {
+        Boolean[] body = calendarBoardService.findMonthlySchedule(year, month);
         return ResponseEntity.ok().body(body);
     }
 

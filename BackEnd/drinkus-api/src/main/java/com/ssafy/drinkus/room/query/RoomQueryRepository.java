@@ -111,5 +111,4 @@ public class RoomQueryRepository {
         System.out.println(LocalDate.now().getYear() - Integer.parseInt(userBirth) + 1);
         return LocalDate.now().getYear() - Integer.parseInt(userBirth) + 1;
     }
-
 }

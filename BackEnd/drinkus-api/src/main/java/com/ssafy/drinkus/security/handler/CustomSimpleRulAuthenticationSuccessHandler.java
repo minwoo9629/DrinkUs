@@ -19,7 +19,8 @@ import java.io.IOException;
 @Component
 public class CustomSimpleRulAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    private final String AUTHENTICATION_REDIRECT_URI = "http://localhost:3000/oauth2/redirect";
+//    private final String AUTHENTICATION_REDIRECT_URI = "https://i7b306.p.ssafy.io/oauth2/redirect";
+    private final String AUTHENTICATION_REDIRECT_URI = "https://i7b306.p.ssafy.io/social/redirect";
     private final JwtUtil jwtUtil;
 
     @Override
@@ -32,7 +33,8 @@ public class CustomSimpleRulAuthenticationSuccessHandler extends SimpleUrlAuthen
         response.addHeader("RefreshToken", refreshToken);
 
         String target = UriComponentsBuilder.fromUriString(AUTHENTICATION_REDIRECT_URI)
-                .queryParam("token", accessToken)
+                .queryParam("accesstoken", accessToken)
+                .queryParam("refreshtoken", refreshToken)
                 .build().toString();
 
         getRedirectStrategy().sendRedirect(request, response, target);

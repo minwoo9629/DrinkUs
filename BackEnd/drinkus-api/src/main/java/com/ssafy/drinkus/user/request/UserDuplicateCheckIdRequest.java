@@ -10,6 +10,6 @@ import javax.validation.constraints.Email;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDuplicateCheckIdRequest {
-    @Email(message = "이메일 형식에 맞춰주세요")
+    @Email(message = "유효하지 않은 이메일 형식입니다.")
     private String userName;
 }

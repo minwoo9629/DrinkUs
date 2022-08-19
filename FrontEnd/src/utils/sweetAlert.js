@@ -41,3 +41,73 @@ export const loginAlert = () => {
     timer: 1200,
   });
 };
+
+export const randomDrink = (title) => {
+  let timerInterval;
+  MySwal.fire({
+    title,
+    html: "마시세요 빨리빨리! <b></b> milliseconds.",
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: () => {
+      Swal.showLoading();
+      const b = Swal.getHtmlContainer().querySelector("b");
+      timerInterval = setInterval(() => {
+        b.textContent = Swal.getTimerLeft();
+      }, 100);
+    },
+    willClose: () => {
+      clearInterval(timerInterval);
+    },
+  }).then((result) => {
+    /* Read more about handling dismissals below */
+    if (result.dismiss === Swal.DismissReason.timer) {
+    }
+  });
+};
+
+export const randomTopik = (title) => {
+  Swal.fire({
+    title: title,
+    width: "70em",
+    confirmButtonText: "대화시작하기",
+    showClass: {
+      popup: "animate__animated animate__fadeInDown",
+    },
+    hideClass: {
+      popup: "animate__animated animate__fadeOutUp",
+    },
+    timer: 4000,
+  });
+};
+
+export const recommendToasts = (title) => {
+  Swal.fire({
+    title: `<h1 className="animate__jello">${title}</h1>`,
+    width: "70em",
+    showConfirmButton: false,
+    timer: 4000,
+  });
+};
+
+export const gameResult = (title, subTitle) => {
+  let timerInterval;
+  MySwal.fire({
+    title,
+    html: subTitle,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: () => {
+      Swal.showLoading();
+    },
+  });
+};
+
+export const SocialBirthDayAlert = (text) => {
+  MySwal.fire({
+    icon: "info",
+    text: `${text}`,
+    showConfirmButton: false,
+    timer: 2000,
+  });
+};
