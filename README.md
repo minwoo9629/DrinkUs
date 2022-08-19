@@ -177,7 +177,7 @@ DrinkUs는 나이대 및 관심사 기반 방 추천을 통해 처음 만나도 
 <tr>
 <td align="center">
 <a href="[https://github.com/rkarud1234](https://github.com/rkarud1234)" target="_blank">
-김갑경<br />(Back-end & 팀장)
+김갑경<br />(FullStack & 팀장)
 </a>
 </td>
 <td align="center">
@@ -208,7 +208,7 @@ DrinkUs는 나이대 및 관심사 기반 방 추천을 통해 처음 만나도 
 </tr>
 </table>
 
-<br />
+### 팀 노션 [바로가기](https://admitted-evening-312.notion.site/3-Drinkus-97e5baba6ee845ed8ed6a9148c7f6901)
 
 <br />
 
