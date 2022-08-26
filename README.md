@@ -250,3 +250,8 @@ DrinkUs는 나이대 및 관심사 기반 방 추천을 통해 처음 만나도 
    - `style` : 코드 스타일 혹은 포맷 등에 관한 커밋
    - `refactor` : 코드 리팩토링에 대한 커밋
    - `test` : 테스트 코드 수정에 대한 커밋
+
+## 이미지 출처
+### [flaticon](https://www.flaticon.com/)
+- [술 아이콘](https://www.flaticon.com/packs/cocktails-45?word=drink)
+- [프로필 이미지: 강아지](https://www.flaticon.com/packs/dog-breeds-22?word=dogs)
