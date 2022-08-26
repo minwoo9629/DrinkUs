@@ -255,3 +255,6 @@ DrinkUs는 나이대 및 관심사 기반 방 추천을 통해 처음 만나도 
 ### [flaticon](https://www.flaticon.com/)
 - [술 아이콘](https://www.flaticon.com/packs/cocktails-45?word=drink)
 - [프로필 이미지: 강아지](https://www.flaticon.com/packs/dog-breeds-22?word=dogs)
+### [GIPHY](https://giphy.com/)
+- [폭탄 폭발 gif](https://giphy.com/stickers/fire-explosion-boom-4Z9p5iVHTo3CWW1Lpe)
+- [폭탄 gif](https://giphy.com/stickers/this-is-fine-bomb-cutie-samibanley-8TYGXxnNm4REJgoylN)
