@@ -17,7 +17,7 @@ import java.io.InputStream;
 @Component
 public class FirebaseClient {
 
-    private static final String FIREBASE_CONFIG_PATH = "drinkus-1b761-firebase-adminsdk-6h1tx-479427d7d6.json";
+    private static final String FIREBASE_CONFIG_PATH = "";
 
     @PostConstruct
     public void init() throws IOException {

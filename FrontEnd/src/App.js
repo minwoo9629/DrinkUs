@@ -33,12 +33,7 @@ import firebase from "firebase";
 function App() {
   useEffect(async () => {
     const config = {
-      apiKey: "AIzaSyCeFLVbfX4Lif9cRTFuHXfTnhbJo1rojo8",
-      authDomain: "drinkus-1b761.firebaseapp.com",
-      projectId: "drinkus-1b761",
-      storageBucket: "drinkus-1b761.appspot.com",
-      messagingSenderId: "643076771453",
-      appId: "1:643076771453:web:21d4711a8a13ded10cab14",
+      
     };
     firebase.initializeApp(config);
     const messaging = firebase.messaging();
@@ -48,7 +43,7 @@ function App() {
       .then(async () => {
         const fcmToken = await messaging.getToken({
           vapidKey:
-            "BL81pS7Np99KSOR8APDua0Dx46ye35ZZZ6X37oLhAYe0Xp7g2hcncOPMhTw1TOg7QdcnlFhyu374brHtC4L37do",
+            "",
         });
         window.sessionStorage.setItem("FCM_TOKEN", fcmToken);
         //토큰을 받는 함수를 추가!
@@ -60,7 +55,7 @@ function App() {
       messaging
         .getToken({
           vapidKey:
-            "BL81pS7Np99KSOR8APDua0Dx46ye35ZZZ6X37oLhAYe0Xp7g2hcncOPMhTw1TOg7QdcnlFhyu374brHtC4L37do",
+            "",
         })
         .then(function (refreshedToken) {
           sessionStorage.setItem("FCM_TOKEN", refreshedToken); //토큰이 재 생성될 경우 다시 저장
