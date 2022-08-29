@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="89f5d2a8-7505-47e5-a85a-b9b232d9f786" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/exec/배포 가이드.md" beforeDir="false" afterPath="$PROJECT_DIR$/exec/배포 가이드.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/exec/사용했던 리눅스 명령어들.md" beforeDir="false" afterPath="$PROJECT_DIR$/exec/사용했던 리눅스 명령어들.md" afterDir="false" />
-    </list>
+    <list default="true" id="89f5d2a8-7505-47e5-a85a-b9b232d9f786" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
